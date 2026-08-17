@@ -84,16 +84,28 @@ model/library, so a benchmark winner can be dropped in without a rewrite.
 ## Build order (do not skip ahead)
 
 Per `docs/PRD.md` §8, this is being built as a sequential, independently-verifiable pipeline. Land
-and manually verify each stage before starting the next:
+and manually verify each stage before starting the next.
+
+**Pipeline plumbing (technical stages, both done):**
 
 1. **DONE.** Tab-audio capture (extension, 0.3s chunks) → backend receives audio → Japanese
    transcript printed/visible somewhere simple, already distinguishing provisional vs finalized
    text (no translation, no real UI yet). Verified manually against a real Japanese YouTube live
    stream via the unpacked extension + `uvicorn backend.main:app`.
-2. Add translation: provisional text gets simple/literal translation, finalized text gets natural
-   translation — still shown somewhere simple.
-3. Add the real UI: overlay captions on the video + the side panel, both streaming live with the
-   provisional/finalized visual distinction.
+2. **DONE.** Translation added: provisional text gets simple/literal translation, finalized text
+   gets natural translation — still shown somewhere simple (extension popup log, not a real UI).
+
+**Current roadmap (quality/scope phases, in order):**
+
+1. 전사/번역 품질 평가 및 개선 — single-speaker audio (Goal priority §1차 목표). Use
+   `docs/EVAL.md`'s methodology once a reference dataset exists.
+2. 다중화자 전사/번역 품질 평가 및 개선 — multi-speaker audio, per-speaker separation (Goal
+   priority §2차 목표). Not started; do not design for this while phase 1 is open.
+3. 노래가 나오는 환경에서의 전사/번역 품질 평가 및 개선 — song/music sections (PRD §11 open
+   question). Deferred; current behavior (VAD/no-speech filtering incidentally skips most music) is
+   left as-is for now.
+4. UI 설계 및 구현 — overlay captions on the video + the side panel, both streaming live with the
+   provisional/finalized visual distinction (both display modes required, not just one).
 
 ## Commands
 

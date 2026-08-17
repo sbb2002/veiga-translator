@@ -1,0 +1,10 @@
+# Install torch + torchaudio separately first with a CUDA-enabled index, e.g.:
+#   pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
+# (only needed for backend/vad.py's torch.hub silero-vad model — its hubconf
+# imports torchaudio even though our usage never touches it directly. The
+# STT path via faster-whisper/ctranslate2 doesn't depend on torch at all.)
+fastapi
+uvicorn[standard]
+faster-whisper
+numpy
+httpx

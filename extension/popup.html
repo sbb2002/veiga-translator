@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Live Translator</title>
+  <style>
+    body {
+      width: 360px;
+      font-family: system-ui, sans-serif;
+      padding: 12px;
+    }
+    button {
+      width: 100%;
+      padding: 8px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    #status {
+      margin: 8px 0;
+      font-size: 12px;
+      color: #666;
+    }
+    #log {
+      height: 280px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      padding: 6px;
+      font-size: 12px;
+      white-space: pre-wrap;
+    }
+    #log > div {
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #eee;
+    }
+    .ja-line { font-size: 11px; }
+    .ko-line { font-size: 14px; margin-top: 2px; }
+    .partial { color: #999; filter: blur(0.2px); }
+    .final { color: #111; font-weight: 600; }
+    .ko-line.partial { color: #aaa; }
+    .ko-line.final { color: #0a3; }
+  </style>
+</head>
+<body>
+  <button id="toggle">Start Capture</button>
+  <div id="status">idle</div>
+  <div id="log"></div>
+  <script src="popup.js"></script>
+</body>
+</html>

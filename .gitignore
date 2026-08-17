@@ -1,0 +1,24 @@
+# Python backend
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# Models downloaded locally (large binaries — do not commit)
+backend/models/
+*.gguf
+*.bin
+*.onnx
+
+# llama-server prebuilt binaries (downloaded, not vendored — see docs/PRD.md)
+llama-server/
+
+# Chrome extension build output (if a bundler is introduced later)
+extension/dist/
+extension/node_modules/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/

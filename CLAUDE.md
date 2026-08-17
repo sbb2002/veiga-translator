@@ -13,6 +13,14 @@ making architectural decisions.
 This is a **new, mostly-unwritten project**. There is no existing code to reverse-engineer yet;
 treat this file as the intended shape, not a description of what's already built.
 
+## Goal priority
+
+- **1차 목표**: 화자가 1명인 실시간 오디오를 완벽하게 번역한다.
+- **2차 목표**: 화자가 2명 이상인 실시간 오디오에서, 화자별로 구분해 각각 완벽하게 번역한다
+  (화자 분리/디어라이제이션이 전제 조건).
+
+1차 목표가 충족되기 전까지 다중 화자 대응(화자 분리 등)에 설계 노력을 들이지 않는다.
+
 ## Repository note
 
 This repo is its own independent git repository, intentionally separate from the much larger

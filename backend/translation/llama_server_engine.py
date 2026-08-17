@@ -41,14 +41,22 @@ _HONORIFIC_NOTE = (
     "substitute an unrelated Western name that happens to sound similar."
 )
 
+_NO_ENGLISH_NOTE = (
+    "The output must be written entirely in Hangul (plus digits and basic "
+    "punctuation) — never fall back to an English word or phrase, even for "
+    "a fragment you find hard to translate or an interjection like a laugh. "
+    "Every English/foreign word must be rendered as its closest Korean "
+    "equivalent or a Hangul transliteration, never left in Latin script."
+)
+
 _FAST_SYSTEM_PROMPT = (
     "Translate the following Japanese text fragment into Korean. The fragment "
     "may be an incomplete sentence that is still being spoken. Translate every "
     "word into Korean, even if the fragment is ambiguous — use your best-guess "
     "Korean rendering (a Korean loanword approximation is fine) rather than "
     "leaving anything untranslated. " + _SLANG_NOTE + " " + _FILLER_NOTE + " "
-    + _HONORIFIC_NOTE + " Output ONLY the Korean translation, nothing else — "
-    "no notes, no romanization, no quotes."
+    + _HONORIFIC_NOTE + " " + _NO_ENGLISH_NOTE + " Output ONLY the Korean "
+    "translation, nothing else — no notes, no romanization, no quotes."
 )
 
 _FINAL_SYSTEM_PROMPT = (
@@ -60,17 +68,27 @@ _FINAL_SYSTEM_PROMPT = (
     "given only to help you resolve ambiguity or continuity. Do NOT translate "
     "it and do NOT include it in your output; translate ONLY the text under "
     "'[TEXT TO TRANSLATE]'. " + _SLANG_NOTE + " " + _FILLER_NOTE + " "
-    + _HONORIFIC_NOTE + " Output ONLY the Korean translation of that text, "
-    "nothing else — no notes, no romanization, no quotes."
+    + _HONORIFIC_NOTE + " " + _NO_ENGLISH_NOTE + " Output ONLY the Korean "
+    "translation of that text, nothing else — no notes, no romanization, "
+    "no quotes."
 )
 
 # Grammar-constrained decoding: restrict the output alphabet to an explicit
-# ALLOW-list (Hangul + ASCII + general punctuation) rather than a blacklist
+# ALLOW-list (Hangul + digits + general punctuation) rather than a blacklist
 # of "known bad" scripts. A blacklist is whack-a-mole — after blocking CJK
 # script leakage, manual testing turned up Cyrillic leaking through the same
 # way (nothing was excluding it). A whitelist closes off every script we
 # didn't explicitly allow, so no further script-specific patches should be
 # needed. This guarantees script correctness only, not translation accuracy.
+#
+# Latin letters (A-Z/a-z) are deliberately NOT in the whitelist, despite the
+# grammar being nominally about *script* purity rather than *language*
+# purity. Manual review of a real transcript turned up the model falling
+# back to whole raw English words/phrases mid-sentence on hard segments
+# (repetitive filler, unclear STT) — "workplace", "phew", "maybe gonna do
+# it.", even stray "-END-"/"START." markers — because English was an
+# allowed escape hatch under grammar pressure. Blocking Latin letters forces
+# a Hangul transliteration instead of a language-level cop-out.
 #
 # GBNF only supports \xHH (single-byte) escapes, not \x{...}/\u{...}; ranges
 # above U+00FF must appear as literal UTF-8 characters in the grammar text.
@@ -87,8 +105,6 @@ _FINAL_SYSTEM_PROMPT = (
 # closes off that specific escape route.
 _ALLOWED_SCRIPT_RANGES = [
     (0x0030, 0x0039),  # digits
-    (0x0041, 0x005A),  # A-Z
-    (0x0061, 0x007A),  # a-z
     (0x1100, 0x11FF),  # Hangul Jamo
     (0x3130, 0x318F),  # Hangul Compatibility Jamo
     (0xAC00, 0xD7A3),  # Hangul Syllables

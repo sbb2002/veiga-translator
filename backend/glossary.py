@@ -16,9 +16,11 @@ Edit backend/glossary.json directly: {"source term (JP)": "target term (KO)"}.
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 _GLOSSARY_PATH = Path(__file__).parent / "glossary.json"
+_HAS_LATIN_RE = re.compile(r"[A-Za-z]")
 
 
 class Glossary:
@@ -43,6 +45,15 @@ class Glossary:
 
     def match(self, text: str) -> list[tuple[str, str]]:
         return [(src, tgt) for src, tgt in self._entries.items() if src in text]
+
+    def latin_targets(self, text: str) -> tuple[str, ...]:
+        """Latin-script target terms (e.g. a streamer handle like "TY")
+        among the glossary entries matched in `text` — passed to
+        LlamaServerEngine.translate() as `allowed_literals` so the
+        Korean-only grammar mask carves out an exact-match exception for
+        these specific strings instead of blocking Latin script outright.
+        """
+        return tuple(tgt for _src, tgt in self.match(text) if _HAS_LATIN_RE.search(tgt))
 
     def translation_hint(self, text: str) -> str | None:
         """A short instruction listing only entries relevant to this text,

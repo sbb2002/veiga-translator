@@ -36,7 +36,15 @@ async def startup() -> None:
     logger.info("Glossary loaded (%d entries) from backend/glossary.json", len(_glossary))
 
     logger.info("Loading STT model (this also verifies CUDA availability)...")
-    _stt_engine = FasterWhisperEngine(vocabulary_hint=_glossary.whisper_hint)
+    # NOT wiring _glossary.whisper_hint here: `hotwords` measurably increases
+    # Whisper's hallucination rate on short/ambiguous audio (see
+    # faster_whisper_engine.py), and real usage confirmed it — a registered
+    # glossary term (short abbreviation "TY") got hallucinated into audio
+    # that never said it. Glossary still corrects translation output via
+    # Glossary.translation_hint()/latin_targets() whenever STT happens to
+    # transcribe the term correctly on its own; it just no longer biases STT
+    # itself toward "hearing" glossary terms.
+    _stt_engine = FasterWhisperEngine()
     _stt_engine.warmup()
     logger.info("STT model ready.")
 
@@ -68,20 +76,23 @@ async def ws_audio(websocket: WebSocket) -> None:
         glossary=_glossary,
     )
 
-    while True:
-        message = await websocket.receive()
+    try:
+        while True:
+            message = await websocket.receive()
 
-        if message["type"] == "websocket.disconnect":
-            logger.info("Client disconnected")
-            break
-
-        if message.get("bytes") is not None:
-            await session.feed_audio(message["bytes"])
-        elif message.get("text") is not None:
-            try:
-                control = json.loads(message["text"])
-            except json.JSONDecodeError:
-                continue
-            if control.get("type") == "stop_session":
-                logger.info("Client requested stop_session")
+            if message["type"] == "websocket.disconnect":
+                logger.info("Client disconnected")
                 break
+
+            if message.get("bytes") is not None:
+                await session.feed_audio(message["bytes"])
+            elif message.get("text") is not None:
+                try:
+                    control = json.loads(message["text"])
+                except json.JSONDecodeError:
+                    continue
+                if control.get("type") == "stop_session":
+                    logger.info("Client requested stop_session")
+                    break
+    finally:
+        await session.close()

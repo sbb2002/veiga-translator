@@ -34,6 +34,18 @@ VAD_FRAME_SAMPLES = 512  # silero-vad requires fixed frame sizes at 16kHz; 512 s
 VAD_SPEECH_THRESHOLD = 0.5  # speech-probability cutoff
 MAX_UTTERANCE_SECONDS = 10  # hard cap: force-finalize even without silence (run-on speech safety net)
 
+# Sentence-completion correction (CLAUDE.md "Streaming / sentence-finalization
+# strategy": silence is the primary trigger, punctuation/context analysis is a
+# separate correction stage — kept as its own tunable, not folded into
+# VAD_SILENCE_MS). Once VAD_SILENCE_MS is reached, finalize immediately only
+# if the last partial transcript looks like a complete sentence
+# (backend/sentence_completion.py); otherwise wait up to this much extra
+# silence for the speaker to resume before force-finalizing anyway — bounds
+# the added latency instead of waiting indefinitely for a "complete" signal
+# that may never come (hesitation-heavy live-stream speech routinely trails
+# off without a clean sentence-final form).
+FINALIZE_GRACE_MS = 400
+
 # Partial re-transcription cadence: re-run STT on the in-progress buffer at most this often,
 # to avoid re-transcribing on every single 0.3s chunk.
 PARTIAL_UPDATE_INTERVAL_S = 0.6
@@ -48,9 +60,23 @@ MIN_PARTIAL_AUDIO_SECONDS = 0.8
 # running the same llama.cpp engine Ollama wraps, without Ollama's overhead
 # for our single-stream use case; see docs/PRD.md benchmarking notes).
 # Start it separately, e.g.:
-#   llama-server/llama-server.exe -m backend/models/Qwen2.5-7B-Instruct-Q4_K_M.gguf --port 8080 -ngl 999 -c 4096
+#   llama-server/llama-server.exe -m backend/models/google_gemma-3-12b-it-Q4_K_M.gguf --port 8080 -ngl 999 -c 4096
+#
+# Swapped from Qwen2.5-7B-Instruct to Gemma-3-12b-it per
+# docs/MODEL_BENCHMARK_PLAN.md — beats the baseline on every human-graded
+# axis with grammar-constrained decoding on (chrF++ 24.64->28.69, S1 rate
+# 50.8%->43.3%) and zero Latin-script leakage in that config. See
+# docs/EVAL_REPORT_gemma-3-12b-it_2026-08-18.md for the full comparison.
 LLAMA_SERVER_URL = "http://127.0.0.1:8080"
-LLAMA_SERVER_MODEL = "qwen2.5-7b-instruct"  # cosmetic — llama-server serves whatever -m it was launched with
+LLAMA_SERVER_MODEL = "gemma-3-12b-it"  # cosmetic — llama-server serves whatever -m it was launched with
 LLAMA_SERVER_TIMEOUT_S = 15.0
 LLAMA_FAST_MAX_TOKENS = 64  # provisional translation: short, literal is fine
 LLAMA_FINAL_MAX_TOKENS = 200  # finalized translation: full natural sentence
+
+# Short-term context memory (EVAL_REPORT_2026-08-18.md §5-E-1, cheapest first
+# step before any summarization layer): how many previous *final* (JA, KO)
+# sentence pairs to carry into the next final translation call, oldest
+# first. Helps the model resolve dropped subjects/pronouns and continue a
+# speaker's self-correction/reversal across a VAD split, instead of only
+# ever seeing the single immediately-prior sentence.
+FINAL_CONTEXT_HISTORY_SIZE = 3

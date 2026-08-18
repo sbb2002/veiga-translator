@@ -41,6 +41,22 @@ _HONORIFIC_NOTE = (
     "substitute an unrelated Western name that happens to sound similar."
 )
 
+_FALSE_FRIEND_NOTE = (
+    "Watch for Japanese words that happen to sound like an unrelated real "
+    "Korean word — do not substitute the Korean look-alike just because it "
+    "exists. In particular: やばい is a versatile interjection meaning "
+    "roughly 'crazy/insane/awesome/terrible/dangerous' depending on context "
+    "(never translate it as '야바위', the Korean word for a scam/con game — "
+    "that is an unrelated false friend); render it as a natural Korean "
+    "interjection fitting the context (e.g. '헐', '미쳤다', '큰일났다', "
+    "'대박'). Also, a trailing 嘘 (uso) right after a statement is usually "
+    "the speaker tagging their own previous sentence as a joke/retraction "
+    "('just kidding'), not a literal claim that something 'is a lie' — "
+    "translate it as a natural Korean self-correcting tag like '농담이야'/"
+    "'아니 뭐'/'거짓말이고' used the same way, based on what reads naturally, "
+    "rather than a flat statement like '~라는 게 거짓말이다'."
+)
+
 _NO_ENGLISH_NOTE = (
     "The output must be written entirely in Hangul (plus digits and basic "
     "punctuation) — never fall back to an English word or phrase, even for "
@@ -55,22 +71,40 @@ _FAST_SYSTEM_PROMPT = (
     "word into Korean, even if the fragment is ambiguous — use your best-guess "
     "Korean rendering (a Korean loanword approximation is fine) rather than "
     "leaving anything untranslated. " + _SLANG_NOTE + " " + _FILLER_NOTE + " "
-    + _HONORIFIC_NOTE + " " + _NO_ENGLISH_NOTE + " Output ONLY the Korean "
-    "translation, nothing else — no notes, no romanization, no quotes."
+    + _HONORIFIC_NOTE + " " + _FALSE_FRIEND_NOTE + " " + _NO_ENGLISH_NOTE
+    + " Output ONLY the Korean translation, nothing else — no notes, no "
+    "romanization, no quotes."
+)
+
+_CONTINUITY_NOTE = (
+    "The user message may also include '[PREVIOUS SENTENCE]' (the most "
+    "recent Japanese sentences spoken before this one) and '[PREVIOUS "
+    "TRANSLATION]' (how you rendered each in Korean) — when there is more "
+    "than one, they are numbered oldest-first, ending right where the "
+    "current fragment picks up. These are VAD-based utterance splits, not "
+    "necessarily complete sentences — live/casual speech is routinely cut "
+    "mid-thought (a speaker trailing off, dropping a subject/pronoun that "
+    "was already established a couple of sentences back, or correcting/"
+    "reversing themselves across a split, e.g. 'X ... actually not X'). "
+    "Read them only to resolve that kind of ambiguity in the current "
+    "fragment — a missing subject, an unclear referent, or a correction/"
+    "reversal in progress — and translate this fragment so it reads as a "
+    "natural continuation of the most recent [PREVIOUS TRANSLATION] line, "
+    "matching its tone and honorific level (letting a correction/reversal "
+    "actually land as one, not flatly contradicting a walk-back the speaker "
+    "is clearly making). Never translate or repeat any [PREVIOUS SENTENCE]/"
+    "[PREVIOUS TRANSLATION] line in your output — output ONLY the "
+    "translation of the text under '[TEXT TO TRANSLATE]'."
 )
 
 _FINAL_SYSTEM_PROMPT = (
     "You are a professional Japanese-to-Korean translator. Translate the "
     "complete Japanese sentence under the '[TEXT TO TRANSLATE]' heading into "
     "natural, fluent, idiomatic Korean, as it would be spoken or subtitled. "
-    "The user message may also include a '[PREVIOUS SENTENCE]' section — that "
-    "is background context from the sentence spoken just before this one, "
-    "given only to help you resolve ambiguity or continuity. Do NOT translate "
-    "it and do NOT include it in your output; translate ONLY the text under "
-    "'[TEXT TO TRANSLATE]'. " + _SLANG_NOTE + " " + _FILLER_NOTE + " "
-    + _HONORIFIC_NOTE + " " + _NO_ENGLISH_NOTE + " Output ONLY the Korean "
-    "translation of that text, nothing else — no notes, no romanization, "
-    "no quotes."
+    + _CONTINUITY_NOTE + " " + _SLANG_NOTE + " " + _FILLER_NOTE + " "
+    + _HONORIFIC_NOTE + " " + _FALSE_FRIEND_NOTE + " " + _NO_ENGLISH_NOTE
+    + " Output ONLY the Korean translation of that text, nothing else — no "
+    "notes, no romanization, no quotes."
 )
 
 # Grammar-constrained decoding: restrict the output alphabet to an explicit
@@ -116,9 +150,27 @@ _ALLOWED_SCRIPT_RANGES = [
 _ALLOWED_SINGLE_CHARS = " .,!?~'\"()-"
 
 
-def _build_korean_only_grammar() -> str:
+def _gbnf_literal(s: str) -> str:
+    """Quote a fixed string as a GBNF literal (escape backslash/quote)."""
+    return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+
+def _build_korean_only_grammar(extra_literals: tuple[str, ...] = ()) -> str:
+    """Korean-only script grammar, with an optional set of exact-match
+    literal exceptions (e.g. a glossary target like "TY" that's meant to
+    stay in Latin script — see Glossary.latin_targets). Each literal is an
+    alternative "word" the grammar accepts verbatim; every other character
+    still has to come from the Hangul-only safe-char set. Built fresh per
+    request only when extra_literals is non-empty (the common case reuses
+    the cached _KOREAN_ONLY_GRAMMAR below).
+    """
     ranges = "".join(f"{chr(lo)}-{chr(hi)}" for lo, hi in _ALLOWED_SCRIPT_RANGES)
-    return f"root ::= safe-char+\nsafe-char ::= [{ranges}{_ALLOWED_SINGLE_CHARS}]"
+    literal_alts = "".join(f" | {_gbnf_literal(lit)}" for lit in extra_literals if lit)
+    return (
+        "root ::= segment+\n"
+        f"segment ::= safe-char+{literal_alts}\n"
+        f"safe-char ::= [{ranges}{_ALLOWED_SINGLE_CHARS}]"
+    )
 
 
 _KOREAN_ONLY_GRAMMAR = _build_korean_only_grammar()
@@ -138,7 +190,11 @@ class LlamaServerEngine:
         *,
         fast: bool = False,
         context: str | None = None,
+        context_translation: str | None = None,
         glossary_hint: str | None = None,
+        use_grammar: bool = True,
+        use_repeat_penalty: bool = True,
+        allowed_literals: tuple[str, ...] = (),
     ) -> TranslationResult:
         if not text.strip():
             return TranslationResult(text="")
@@ -146,40 +202,54 @@ class LlamaServerEngine:
         system_prompt = _FAST_SYSTEM_PROMPT if fast else _FINAL_SYSTEM_PROMPT
         if glossary_hint:
             system_prompt = f"{system_prompt}\n\n{glossary_hint}"
-        user_content = (
-            f"[PREVIOUS SENTENCE]\n{context}\n\n[TEXT TO TRANSLATE]\n{text}"
-            if context
-            else text
-        )
+        if context:
+            prev_translation_section = (
+                f"\n\n[PREVIOUS TRANSLATION]\n{context_translation}" if context_translation else ""
+            )
+            user_content = (
+                f"[PREVIOUS SENTENCE]\n{context}{prev_translation_section}"
+                f"\n\n[TEXT TO TRANSLATE]\n{text}"
+            )
+        else:
+            user_content = text
         max_tokens = config.LLAMA_FAST_MAX_TOKENS if fast else config.LLAMA_FINAL_MAX_TOKENS
 
-        response = await self._client.post(
-            "/v1/chat/completions",
-            json={
-                "model": config.LLAMA_SERVER_MODEL,
-                "messages": [
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_content},
-                ],
-                "max_tokens": max_tokens,
-                # 0.0 (greedy) instead of a small positive temperature: the
-                # user noticed re-running the exact same segment produced a
-                # different sentence each time, and low-but-nonzero
-                # temperature is also more prone to sampling into a rare/
-                # wrong-script token before the grammar mask corrects it.
-                "temperature": 0.0,
-                "grammar": _KOREAN_ONLY_GRAMMAR,
-                # Grammar-constrained decoding occasionally backs the model
-                # into a corner (its preferred next token is masked out for
-                # containing CJK) and it falls into repeating the same
-                # allowed token/character until max_tokens — observed as
-                # walls of a single repeated character in manual testing.
-                # repeat_penalty discourages immediately re-emitting recent
-                # tokens, which breaks that loop.
-                "repeat_penalty": 1.3,
-                "repeat_last_n": 64,
-            },
-        )
+        request_json = {
+            "model": config.LLAMA_SERVER_MODEL,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_content},
+            ],
+            "max_tokens": max_tokens,
+            # 0.0 (greedy) instead of a small positive temperature: the
+            # user noticed re-running the exact same segment produced a
+            # different sentence each time, and low-but-nonzero
+            # temperature is also more prone to sampling into a rare/
+            # wrong-script token before the grammar mask corrects it.
+            "temperature": 0.0,
+        }
+        if use_grammar:
+            request_json["grammar"] = (
+                _build_korean_only_grammar(allowed_literals)
+                if allowed_literals
+                else _KOREAN_ONLY_GRAMMAR
+            )
+        if use_repeat_penalty:
+            # Grammar-constrained decoding occasionally backs the model
+            # into a corner (its preferred next token is masked out for
+            # containing CJK) and it falls into repeating the same
+            # allowed token/character until max_tokens — observed as
+            # walls of a single repeated character in manual testing.
+            # repeat_penalty discourages immediately re-emitting recent
+            # tokens, which breaks that loop. NOTE: on Qwen3-14B this
+            # backfires badly — combined with the grammar mask it collapses
+            # into verbatim-echoing the system prompt instead of
+            # translating (see docs/MODEL_BENCHMARK_PLAN.md); keep it off
+            # for that model family.
+            request_json["repeat_penalty"] = 1.3
+            request_json["repeat_last_n"] = 64
+
+        response = await self._client.post("/v1/chat/completions", json=request_json)
         response.raise_for_status()
         data = response.json()
         translated = data["choices"][0]["message"]["content"].strip()

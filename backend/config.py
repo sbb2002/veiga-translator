@@ -24,9 +24,16 @@ WHISPER_LANGUAGE = "ja"
 WHISPER_FAST_BEAM_SIZE = 1
 WHISPER_FINAL_BEAM_SIZE = 5
 
-# Drop any Whisper segment whose no_speech_prob is >= this — filters out the
-# classic hallucinated-outro-phrase failure mode on silent/quiet audio.
+# Drop a Whisper segment only when BOTH no_speech_prob is >= this AND
+# avg_logprob is <= WHISPER_AVG_LOGPROB_THRESHOLD (see
+# stt/faster_whisper_engine.py) — no_speech_prob alone was measurably
+# dropping real short/energetic speech, not just silence.
 WHISPER_NO_SPEECH_THRESHOLD = 0.6
+# Whisper's own average per-token log-probability for a segment; -1.0
+# mirrors OpenAI Whisper's reference decoding heuristic for "low
+# confidence" output. Genuine speech, even short exclamations, tends to
+# decode well above this; true silence/garbage tends to fall below it.
+WHISPER_AVG_LOGPROB_THRESHOLD = -1.0
 
 # VAD / segmentation
 VAD_SILENCE_MS = 600  # pause length that triggers "final" (utterance-end candidate)

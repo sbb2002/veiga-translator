@@ -29,6 +29,16 @@ logger = logging.getLogger("live-translator.backend")
 # data, distinct enough from real spoken dialogue to filter unconditionally.
 _BRACKETED_HALLUCINATION_RE = re.compile(r"^【[^】]*】$")
 
+# Direct blocklist for the other recurring hallucination family: YouTube
+# auto-caption stock outro/thank-you phrases (from training data), which
+# Whisper reproduces confidently enough (high avg_logprob) that the
+# no_speech_prob+avg_logprob joint check below can't reliably catch them —
+# the model is "sure" of the hallucinated text even when it's sure the
+# audio itself probably isn't speech. Matched independent of confidence.
+_HALLUCINATED_OUTRO_RE = re.compile(
+    r"^(ご視聴|字幕視聴)?(いただき)?ありがとうございました[!!。]*$"
+)
+
 
 class FasterWhisperEngine:
     def __init__(
@@ -83,30 +93,40 @@ class FasterWhisperEngine:
         # where auto-captioned videos commonly end with exactly that text. Our
         # own VAD gates most silence out, but not perfectly (background
         # music/noise, or trailing silence deliberately kept in the buffer —
-        # see audio_session.py). `no_speech_prob` is faster-whisper's own
-        # per-segment confidence that this segment isn't speech at all;
-        # dropping high-confidence-silence segments filters most of these out
-        # without needing a hardcoded phrase blocklist.
+        # see audio_session.py).
+        #
+        # `no_speech_prob` ALONE turned out too aggressive: real logs showed
+        # it dropping genuine short/energetic speech ("めっちゃ嬉しい！",
+        # "僕って世界一幸せ" — no_speech_prob 0.6-0.87) right alongside actual
+        # silence, because a short excited utterance can score similarly to
+        # silence on that one signal. Per OpenAI Whisper's own reference
+        # decoding heuristic, require BOTH no_speech_prob high AND
+        # avg_logprob (the model's confidence in the tokens it actually
+        # produced) low before treating a segment as silence — genuine
+        # speech should still decode with reasonable confidence even if
+        # no_speech_prob alone is elevated. The specific outro-phrase
+        # hallucination is handled separately (_HALLUCINATED_OUTRO_RE)
+        # since Whisper reproduces it confidently (high avg_logprob) as a
+        # memorized phrase, defeating a confidence-based filter on its own.
         words: list[tuple[str, float, float]] = []
         text_parts: list[str] = []
         for segment in segments:
-            if segment.no_speech_prob >= config.WHISPER_NO_SPEECH_THRESHOLD:
-                # Debug aid for diagnosing whether WHISPER_NO_SPEECH_THRESHOLD
-                # is dropping real content (e.g. laughter-only audio, which
-                # has no clean lexical content and can score similarly to
-                # actual silence) rather than the outro-hallucination noise
-                # it was tuned for — only log when the discarded segment
-                # actually had non-trivial text, so routine true-silence
-                # drops (near-always empty text) don't spam the log.
-                if segment.text.strip():
+            stripped = segment.text.strip()
+            if _HALLUCINATED_OUTRO_RE.match(stripped) or _BRACKETED_HALLUCINATION_RE.match(
+                stripped
+            ):
+                continue
+            if (
+                segment.no_speech_prob >= config.WHISPER_NO_SPEECH_THRESHOLD
+                and segment.avg_logprob <= config.WHISPER_AVG_LOGPROB_THRESHOLD
+            ):
+                if stripped:
                     logger.info(
-                        "STT dropped segment (no_speech_prob=%.3f >= %.3f): %r",
+                        "STT dropped segment (no_speech_prob=%.3f, avg_logprob=%.3f): %r",
                         segment.no_speech_prob,
-                        config.WHISPER_NO_SPEECH_THRESHOLD,
+                        segment.avg_logprob,
                         segment.text,
                     )
-                continue
-            if _BRACKETED_HALLUCINATION_RE.match(segment.text.strip()):
                 continue
             text_parts.append(segment.text)
 

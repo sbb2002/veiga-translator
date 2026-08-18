@@ -22,3 +22,9 @@ extension/node_modules/
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Eval dataset (copyrighted YouTube audio clips — do not push to a public repo)
+data/
+
+# Run logs (transient, not reproducible artifacts)
+*.log

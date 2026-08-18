@@ -23,8 +23,10 @@ extension/node_modules/
 Thumbs.db
 .vscode/
 
-# Eval dataset (copyrighted YouTube audio clips — do not push to a public repo)
-data/
+# Raw eval source data (copyrighted YouTube audio/transcripts — do not push to a public
+# repo). Derived eval outputs (data/*.jsonl) are fine to commit.
+data/json/
+data/wav/
 
 # Run logs (transient, not reproducible artifacts)
 *.log

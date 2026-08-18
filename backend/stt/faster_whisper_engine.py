@@ -9,6 +9,7 @@ config.py.
 
 from __future__ import annotations
 
+import logging
 import re
 
 import numpy as np
@@ -16,6 +17,8 @@ from faster_whisper import WhisperModel
 
 from backend import config
 from backend.stt.base import TranscriptionResult
+
+logger = logging.getLogger("live-translator.backend")
 
 # A second, pattern-based safety net for hallucinated stock phrases that slip
 # past no_speech_prob filtering (observed: "【字幕視聴者の皆さん】" — a
@@ -88,6 +91,20 @@ class FasterWhisperEngine:
         text_parts: list[str] = []
         for segment in segments:
             if segment.no_speech_prob >= config.WHISPER_NO_SPEECH_THRESHOLD:
+                # Debug aid for diagnosing whether WHISPER_NO_SPEECH_THRESHOLD
+                # is dropping real content (e.g. laughter-only audio, which
+                # has no clean lexical content and can score similarly to
+                # actual silence) rather than the outro-hallucination noise
+                # it was tuned for — only log when the discarded segment
+                # actually had non-trivial text, so routine true-silence
+                # drops (near-always empty text) don't spam the log.
+                if segment.text.strip():
+                    logger.info(
+                        "STT dropped segment (no_speech_prob=%.3f >= %.3f): %r",
+                        segment.no_speech_prob,
+                        config.WHISPER_NO_SPEECH_THRESHOLD,
+                        segment.text,
+                    )
                 continue
             if _BRACKETED_HALLUCINATION_RE.match(segment.text.strip()):
                 continue

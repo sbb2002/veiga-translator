@@ -41,13 +41,16 @@ _SLANG_NOTE = (
 )
 
 _LAUGHTER_NOTE = (
-    "A trailing 'w', 'ww', 'www' etc. (from 笑う, 'to laugh') is Japanese "
-    "internet/streamer shorthand for laughter — the direct equivalent of "
-    "Korean 'ㅋㅋㅋ'. It is real content, not disfluency noise to clean up: "
-    "always keep it in the output as 'ㅋㅋㅋ' (scale the number of ㅋ "
-    "roughly with how many w's there are), even when producing a polished "
-    "'natural, fluent' final translation — do not drop it for the sake of "
-    "a cleaner-looking sentence."
+    "IF AND ONLY IF the Japanese input text literally contains a trailing "
+    "'w', 'ww', 'www' (from 笑う, 'to laugh') or 笑/(笑), carry it over as "
+    "Korean 'ㅋㅋㅋ' (scale the number of ㅋ roughly with the w's) instead "
+    "of silently dropping it as disfluency noise when polishing the "
+    "sentence. This is the ONLY situation where 'ㅋㅋㅋ' belongs in the "
+    "output. Never add 'ㅋㅋㅋ' (or any laughter marker) to a translation "
+    "when the source text has no such marker, no matter how funny, "
+    "casual, or joke-like the sentence's content itself sounds — inventing "
+    "one is fabricating content the speaker didn't produce, which is just "
+    "as wrong as dropping one that was actually there."
 )
 
 _CONNOTATION_NOTE = (
@@ -109,7 +112,13 @@ _FAST_SYSTEM_PROMPT = (
     "may be an incomplete sentence that is still being spoken. Translate every "
     "word into Korean, even if the fragment is ambiguous — use your best-guess "
     "Korean rendering (a Korean loanword approximation is fine) rather than "
-    "leaving anything untranslated. " + _SLANG_NOTE + " " + _FILLER_NOTE + " "
+    "leaving anything untranslated. Do NOT pad, rephrase, or restructure the "
+    "fragment into a grammatically complete-sounding Korean sentence — just "
+    "translate as far as the Japanese transcript actually goes and stop "
+    "there, even if the Korean output itself trails off incomplete. Speed "
+    "and covering every transcribed word matter far more here than making "
+    "it read as a polished, complete sentence — that happens later once the "
+    "sentence is actually finished. " + _SLANG_NOTE + " " + _FILLER_NOTE + " "
     + _HONORIFIC_NOTE + " " + _FALSE_FRIEND_NOTE + " " + _LAUGHTER_NOTE
     + " " + _CONNOTATION_NOTE
     + " " + _NO_ENGLISH_NOTE + " Output ONLY the Korean translation, "

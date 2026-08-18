@@ -215,26 +215,50 @@ class AudioSession:
 
     async def _do_finalize(self, utterance: _UtteranceState) -> None:
         audio = utterance.audio()
-        if audio.size == 0:
+        final_text = ""
+        if audio.size > 0:
+            stt_result = await asyncio.to_thread(self._stt.transcribe, audio, fast=False)
+            final_text = stt_result.text
+
+        if not final_text:
+            # The final (beam=5) pass can come back empty even though the
+            # fast partial pass found speech (e.g. no_speech_prob crossing
+            # the drop threshold differently at a different beam size, more
+            # likely now that proactive splitting — see
+            # has_strong_sentence_boundary — creates more, shorter final
+            # candidates). Silently dropping this utterance previously left
+            # its frontend entry frozen on the last "partial" state forever
+            # (extension/popup.js keys entries by segment_id and only
+            # updates an entry when a new event for that id arrives), which
+            # looked like a later sentence's translation finishing first.
+            # Fall back to whatever the last partial pass transcribed so we
+            # still have something to finalize with; only if there was
+            # never a partial either do we emit a genuinely empty final —
+            # but always emit *something* so the UI settles out of
+            # "partial" state instead of hanging on it forever.
+            final_text = utterance.last_partial_text
+
+        if not final_text:
+            await self._on_event(
+                {"type": "final", "text": "", "translation": "", "segment_id": utterance.segment_id}
+            )
             return
-        stt_result = await asyncio.to_thread(self._stt.transcribe, audio, fast=False)
-        if not stt_result.text:
-            return
-        glossary_hint = self._glossary.translation_hint(stt_result.text)
+
+        glossary_hint = self._glossary.translation_hint(final_text)
         context, context_translation = self._format_history()
         translation = await self._translate.translate(
-            stt_result.text,
+            final_text,
             fast=False,
             context=context,
             context_translation=context_translation,
             glossary_hint=glossary_hint,
-            allowed_literals=self._glossary.latin_targets(stt_result.text),
+            allowed_literals=self._glossary.latin_targets(final_text),
         )
-        self._final_history.append((stt_result.text, translation.text))
+        self._final_history.append((final_text, translation.text))
         await self._on_event(
             {
                 "type": "final",
-                "text": stt_result.text,
+                "text": final_text,
                 "translation": translation.text,
                 "segment_id": utterance.segment_id,
             }

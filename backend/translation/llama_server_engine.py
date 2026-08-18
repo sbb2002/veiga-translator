@@ -20,9 +20,48 @@ _SLANG_NOTE = (
     "ゲーム = 'horror game'), and effort/exertion interjections or "
     "onomatopoeia (e.g. よいしょ, どっこいしょ — filler grunts said while "
     "doing something, natural in Korean as things like '영차' or '하나둘'). "
-    "Infer the intended real meaning from context and translate it naturally "
-    "into the closest natural Korean word or interjection — do not "
-    "transliterate literally, and never invent a nonsense word."
+    "It may also contain descriptive mimetic words (擬音語/擬態語) that "
+    "characterize a sound or quality rather than naming a real object — "
+    "e.g. キンキン describing a shrill/piercing high voice. Never "
+    "transliterate these phonetically into Korean syllables that happen to "
+    "sound similar (e.g. キンキン is NOT '금금거리다', which is not a real "
+    "Korean word/expression) — instead render the *quality being "
+    "described* with a natural Korean descriptive phrase (e.g. '귀를 "
+    "찌르는', '쨍쨍한', '새된' for a piercing high voice). Infer the "
+    "intended real meaning from context and translate it naturally into "
+    "the closest natural Korean word or interjection — do not "
+    "transliterate literally, and never invent a nonsense word. Also, "
+    "common slang/filler words are sometimes stretched or emphasized for "
+    "effect (extra long vowels via ー, repeated mora, e.g. ガーッチ for "
+    "ガチ) — recognize these as the same base word and translate its "
+    "actual meaning (e.g. ガーッチ = ガチ = '진짜로'/'제대로', an emphasis "
+    "intensifier), never invent a new nonsense word just because of the "
+    "stretched spelling (e.g. ガーッチ is NOT '가르치', which means 'teach' "
+    "and is unrelated)."
+)
+
+_LAUGHTER_NOTE = (
+    "A trailing 'w', 'ww', 'www' etc. (from 笑う, 'to laugh') is Japanese "
+    "internet/streamer shorthand for laughter — the direct equivalent of "
+    "Korean 'ㅋㅋㅋ'. It is real content, not disfluency noise to clean up: "
+    "always keep it in the output as 'ㅋㅋㅋ' (scale the number of ㅋ "
+    "roughly with how many w's there are), even when producing a polished "
+    "'natural, fluent' final translation — do not drop it for the sake of "
+    "a cleaner-looking sentence."
+)
+
+_CONNOTATION_NOTE = (
+    "ずるい literally means 'unfair/cheating' but is very often used as a "
+    "lighthearted admiring exclamation about someone else's ability or "
+    "charm — closer to '(그렇게 잘하면) 반칙이지'/'부럽다'/'얄밉다' in Korean — "
+    "especially when the surrounding context is clearly praise/envy rather "
+    "than an actual accusation of unfairness. In that admiring context, "
+    "translate it as '부럽다'/'얄밉다' or similar, NOT as a harsh negative "
+    "judgment like '야비하다'(despicable) or '억지'(unreasonable) — those "
+    "carry moral condemnation that isn't there in the affectionate usage, "
+    "and keep the rendering consistent across repeated occurrences of the "
+    "same word in the same conversation rather than drifting more negative "
+    "each time."
 )
 
 _FILLER_NOTE = (
@@ -71,9 +110,10 @@ _FAST_SYSTEM_PROMPT = (
     "word into Korean, even if the fragment is ambiguous — use your best-guess "
     "Korean rendering (a Korean loanword approximation is fine) rather than "
     "leaving anything untranslated. " + _SLANG_NOTE + " " + _FILLER_NOTE + " "
-    + _HONORIFIC_NOTE + " " + _FALSE_FRIEND_NOTE + " " + _NO_ENGLISH_NOTE
-    + " Output ONLY the Korean translation, nothing else — no notes, no "
-    "romanization, no quotes."
+    + _HONORIFIC_NOTE + " " + _FALSE_FRIEND_NOTE + " " + _LAUGHTER_NOTE
+    + " " + _CONNOTATION_NOTE
+    + " " + _NO_ENGLISH_NOTE + " Output ONLY the Korean translation, "
+    "nothing else — no notes, no romanization, no quotes."
 )
 
 _CONTINUITY_NOTE = (
@@ -102,9 +142,10 @@ _FINAL_SYSTEM_PROMPT = (
     "complete Japanese sentence under the '[TEXT TO TRANSLATE]' heading into "
     "natural, fluent, idiomatic Korean, as it would be spoken or subtitled. "
     + _CONTINUITY_NOTE + " " + _SLANG_NOTE + " " + _FILLER_NOTE + " "
-    + _HONORIFIC_NOTE + " " + _FALSE_FRIEND_NOTE + " " + _NO_ENGLISH_NOTE
-    + " Output ONLY the Korean translation of that text, nothing else — no "
-    "notes, no romanization, no quotes."
+    + _HONORIFIC_NOTE + " " + _FALSE_FRIEND_NOTE + " " + _LAUGHTER_NOTE
+    + " " + _CONNOTATION_NOTE
+    + " " + _NO_ENGLISH_NOTE + " Output ONLY the Korean translation of "
+    "that text, nothing else — no notes, no romanization, no quotes."
 )
 
 # Grammar-constrained decoding: restrict the output alphabet to an explicit

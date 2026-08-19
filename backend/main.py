@@ -50,6 +50,7 @@ async def startup() -> None:
 
     logger.info("Connecting to llama-server translation backend...")
     _translation_engine = LlamaServerEngine()
+    await _translation_engine.verify_contract()
     logger.info("Translation engine ready (assumes llama-server is already running).")
 
 

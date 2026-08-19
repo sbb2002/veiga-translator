@@ -11,6 +11,7 @@ product rationale.
 from __future__ import annotations
 
 import asyncio
+import logging
 import time
 import uuid
 from collections import deque
@@ -26,6 +27,8 @@ from backend.stt.base import STTEngine
 from backend.translation.base import TranslationEngine
 from backend.vad import SileroVAD
 
+logger = logging.getLogger("live-translator.backend")
+
 EventSink = Callable[[dict], Awaitable[None]]
 
 
@@ -37,6 +40,7 @@ class _UtteranceState:
     last_partial_at: float = 0.0
     silence_ms: float = 0.0
     last_partial_text: str = ""
+    enqueued_at: float = 0.0
 
     def audio(self) -> np.ndarray:
         return np.concatenate(self.buffer) if self.buffer else np.zeros(0, dtype=np.float32)
@@ -125,6 +129,19 @@ class AudioSession:
             past_silence_threshold and looks_complete(self._utterance.last_partial_text)
         )
         if should_finalize:
+            if past_hard_cap:
+                reason = "hard_cap"
+            elif past_grace_deadline:
+                reason = "grace_expired"
+            else:
+                reason = "silence_complete"
+            logger.info(
+                "finalize trigger=%s seg=%s silence_ms=%.0f dur=%.1fs",
+                reason,
+                self._utterance.segment_id,
+                self._utterance.silence_ms,
+                self._utterance.duration_s(),
+            )
             self._enqueue_finalize()
             return
 
@@ -148,22 +165,38 @@ class AudioSession:
                 and self._utterance.silence_ms == 0.0
                 and has_strong_sentence_boundary(partial_text)
             ):
+                logger.info(
+                    "finalize trigger=strong_boundary seg=%s dur=%.1fs",
+                    self._utterance.segment_id,
+                    self._utterance.duration_s(),
+                )
                 self._enqueue_finalize()
 
     async def _emit_partial(self) -> str:
         utterance = self._utterance
         if utterance is None:
             return ""
+        stt_start = time.monotonic()
         stt_result = await asyncio.to_thread(self._stt.transcribe, utterance.audio(), fast=True)
+        stt_s = time.monotonic() - stt_start
         if not stt_result.text:
             return ""
         utterance.last_partial_text = stt_result.text
         glossary_hint = self._glossary.translation_hint(stt_result.text)
+        llm_start = time.monotonic()
         translation = await self._translate.translate(
             stt_result.text,
             fast=True,
             glossary_hint=glossary_hint,
             allowed_literals=self._glossary.latin_targets(stt_result.text),
+        )
+        llm_s = time.monotonic() - llm_start
+        logger.info(
+            "partial seg=%s buf=%.1fs stt=%.2fs llm=%.2fs",
+            utterance.segment_id,
+            utterance.duration_s(),
+            stt_s,
+            llm_s,
         )
         await self._on_event(
             {
@@ -198,6 +231,7 @@ class AudioSession:
         utterance = self._utterance
         self._utterance = None
         if utterance is not None:
+            utterance.enqueued_at = time.monotonic()
             self._finalize_queue.put_nowait(utterance)
 
     async def _finalize_worker(self) -> None:
@@ -214,10 +248,17 @@ class AudioSession:
         self._finalize_worker_task.cancel()
 
     async def _do_finalize(self, utterance: _UtteranceState) -> None:
+        started = time.monotonic()
+        queue_wait = started - utterance.enqueued_at
+        depth = self._finalize_queue.qsize()
+
         audio = utterance.audio()
         final_text = ""
+        stt_s = 0.0
         if audio.size > 0:
+            stt_start = time.monotonic()
             stt_result = await asyncio.to_thread(self._stt.transcribe, audio, fast=False)
+            stt_s = time.monotonic() - stt_start
             final_text = stt_result.text
 
         if not final_text:
@@ -239,6 +280,14 @@ class AudioSession:
             final_text = utterance.last_partial_text
 
         if not final_text:
+            logger.info(
+                "final seg=%s queue_wait=%.2fs depth=%d stt=%.2fs llm=%.2fs",
+                utterance.segment_id,
+                queue_wait,
+                depth,
+                stt_s,
+                0.0,
+            )
             await self._on_event(
                 {"type": "final", "text": "", "translation": "", "segment_id": utterance.segment_id}
             )
@@ -246,6 +295,7 @@ class AudioSession:
 
         glossary_hint = self._glossary.translation_hint(final_text)
         context, context_translation = self._format_history()
+        llm_start = time.monotonic()
         translation = await self._translate.translate(
             final_text,
             fast=False,
@@ -254,7 +304,16 @@ class AudioSession:
             glossary_hint=glossary_hint,
             allowed_literals=self._glossary.latin_targets(final_text),
         )
+        llm_s = time.monotonic() - llm_start
         self._final_history.append((final_text, translation.text))
+        logger.info(
+            "final seg=%s queue_wait=%.2fs depth=%d stt=%.2fs llm=%.2fs",
+            utterance.segment_id,
+            queue_wait,
+            depth,
+            stt_s,
+            llm_s,
+        )
         await self._on_event(
             {
                 "type": "final",

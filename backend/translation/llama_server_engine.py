@@ -9,10 +9,14 @@ changes to audio_session.py.
 
 from __future__ import annotations
 
+import logging
+
 import httpx
 
 from backend import config
 from backend.translation.base import TranslationResult
+
+logger = logging.getLogger("live-translator.backend")
 
 _SLANG_NOTE = (
     "The Japanese input may contain casual internet/streamer slang, clipped "
@@ -234,6 +238,44 @@ class LlamaServerEngine:
     ) -> None:
         self._client = httpx.AsyncClient(base_url=base_url, timeout=timeout_s)
 
+    async def verify_contract(self) -> None:
+        """Startup probe: server reachable + honors GBNF grammar.
+
+        The grammar below only admits the single string "가" — a server that
+        actually enforces GBNF cannot return anything else. Any other output
+        means the `grammar` field was silently ignored (e.g. a non-llama.cpp
+        OpenAI-compatible server), i.e. Korean-only script enforcement is
+        inactive. Warn loudly either way instead of failing startup — the
+        server is allowed to come up after the backend does.
+        """
+        try:
+            response = await self._client.post(
+                "/v1/chat/completions",
+                json={
+                    "model": config.LLAMA_SERVER_MODEL,
+                    "messages": [{"role": "user", "content": "1+1=?"}],
+                    "max_tokens": 4,
+                    "temperature": 0.0,
+                    "grammar": 'root ::= "가"',
+                },
+            )
+            response.raise_for_status()
+            out = response.json()["choices"][0]["message"]["content"].strip()
+        except Exception:
+            logger.warning(
+                "translation server unreachable at startup — start it and/or check %s",
+                config.LLAMA_SERVER_URL,
+            )
+            return
+        if out != "가":
+            logger.warning(
+                "translation server does NOT honor GBNF grammar (probe returned %r) — "
+                "Korean-only script enforcement is INACTIVE. Is this a llama.cpp server?",
+                out,
+            )
+        else:
+            logger.info("translation server contract verified (GBNF grammar honored)")
+
     async def translate(
         self,
         text: str,
@@ -302,6 +344,14 @@ class LlamaServerEngine:
         response = await self._client.post("/v1/chat/completions", json=request_json)
         response.raise_for_status()
         data = response.json()
+        timings = data.get("timings")
+        if timings:
+            logger.debug(
+                "llm timings fast=%s prompt_ms=%.0f predicted_ms=%.0f",
+                fast,
+                timings.get("prompt_ms", -1),
+                timings.get("predicted_ms", -1),
+            )
         translated = data["choices"][0]["message"]["content"].strip()
         return TranslationResult(text=translated)
 

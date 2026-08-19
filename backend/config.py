@@ -161,6 +161,22 @@ LLAMA_FINAL_MAX_TOKENS = 200  # final translation: full natural sentence
 # shorter, so a healthy-but-slow drain fits comfortably).
 CLOSE_DRAIN_TIMEOUT_S = 10.0
 
+# Speaker identification (2차 목표: 다중 화자, backend/speaker_id/) — started
+# 2026-08-19 after 1차 목표 (단일 화자) reached a live-verified quality
+# milestone (see docs/SESSION_LOG_2026-08-19.md). Per-utterance labeling
+# only, not full diarization — see speaker_id/speechbrain_engine.py's module
+# docstring for why.
+SPEAKER_ID_ENABLED = True
+SPEAKER_ID_MODEL = "speechbrain/spkrec-ecapa-voxceleb"
+# Cosine similarity between L2-normalized ECAPA embeddings. Unlike
+# HALLUCINATION_GATE_SIM_THRESHOLD above, this has NOT been tuned against
+# real labeled multi-speaker data yet — it's a starting guess pending
+# evidence, same as HALLUCINATION_GATE_SIM_THRESHOLD's very first value was.
+SPEAKER_ID_SIM_THRESHOLD = 0.75
+# Below this, an utterance is too short for a reliable speaker embedding —
+# left unlabeled (UI shows no speaker tag) rather than guessed.
+SPEAKER_ID_MIN_AUDIO_S = 0.75
+
 # Short-term context memory (EVAL_REPORT_2026-08-18.md §5-E-1, cheapest first
 # step before any summarization layer): how many previous *final* (JA, KO)
 # sentence pairs to carry into the next final translation call, oldest

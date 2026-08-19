@@ -24,6 +24,7 @@ from backend import config
 from backend.glossary import Glossary
 from backend.music_gate import MusicGate
 from backend.sentence_completion import has_strong_sentence_boundary, looks_complete
+from backend.speaker_id.base import SpeakerIdentifier
 from backend.stt.base import STTEngine
 from backend.translation.base import TranslationEngine, TranslationResult
 from backend.vad import SileroVAD
@@ -65,6 +66,7 @@ class AudioSession:
         on_event: EventSink,
         vad: SileroVAD,
         glossary: Glossary | None = None,
+        speaker_identifier: SpeakerIdentifier | None = None,
     ) -> None:
         self._stt = stt_engine
         self._translate = translation_engine
@@ -77,6 +79,12 @@ class AudioSession:
         # guarantees a single capture at a time.
         self._vad = vad
         vad.reset()
+        # Same sharing pattern as vad above (the ECAPA model itself is heavy
+        # to load — see speaker_id/speechbrain_engine.py), but the *known
+        # speakers* it has clustered are per-session, so reset() here too.
+        self._speaker_identifier = speaker_identifier
+        if self._speaker_identifier is not None:
+            self._speaker_identifier.reset()
         # Pure signal processing, no model weights — cheap enough to build
         # fresh per session rather than share/reset like the VAD model.
         self._music_gate = MusicGate()
@@ -427,6 +435,13 @@ class AudioSession:
             )
             return
 
+        speaker = None
+        if self._speaker_identifier is not None:
+            try:
+                speaker = self._speaker_identifier.identify(audio, config.SAMPLE_RATE)
+            except Exception:
+                logger.exception("speaker identification failed — leaving utterance unlabeled")
+
         glossary_hint = self._glossary.translation_hint(final_text)
         context, context_translation = self._format_history()
         llm_start = time.monotonic()
@@ -462,5 +477,6 @@ class AudioSession:
                 "audio_rms": audio_rms,
                 "no_speech_prob": no_speech_prob,
                 "avg_logprob": avg_logprob,
+                "speaker": speaker,
             }
         )

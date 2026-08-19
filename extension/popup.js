@@ -130,6 +130,18 @@ function renderConfidenceBars(confLine, data) {
   }
 }
 
+// 2차 목표 (다중 화자, backend/speaker_id/): stable-ish color per speaker
+// label so the same "화자 N" reads consistently down the log without a
+// fixed palette running out — hash the label string into a hue.
+function speakerColor(label) {
+  let hash = 0;
+  for (let i = 0; i < label.length; i++) {
+    hash = (hash * 31 + label.charCodeAt(i)) | 0;
+  }
+  const hue = Math.abs(hash) % 360;
+  return `hsl(${hue}, 65%, 40%)`;
+}
+
 function renderEvent(data) {
   const { type, text, translation, segment_id: segmentId } = data ?? {};
   if (!segmentId) return;
@@ -137,16 +149,19 @@ function renderEvent(data) {
   let entry = segmentEls.get(segmentId);
   if (!entry) {
     const container = document.createElement("div");
+    const speakerTag = document.createElement("span");
     const jaLine = document.createElement("div");
     const koLine = document.createElement("div");
     const confLine = document.createElement("div");
+    speakerTag.className = "speaker-tag";
     jaLine.className = "ja-line";
     koLine.className = "ko-line";
     confLine.className = "conf-line";
+    container.appendChild(speakerTag);
     container.appendChild(jaLine);
     container.appendChild(koLine);
     container.appendChild(confLine);
-    entry = { container, jaLine, koLine, confLine, flagged: false, confidence: null };
+    entry = { container, speakerTag, jaLine, koLine, confLine, flagged: false, confidence: null };
     segmentEls.set(segmentId, entry);
     logEl.appendChild(container);
 
@@ -192,6 +207,18 @@ function renderEvent(data) {
       no_speech_prob: data.no_speech_prob,
       avg_logprob: data.avg_logprob,
     };
+    // speaker is only ever set on "final" events (audio_session.py runs
+    // identification once per finalized utterance, not per partial poll —
+    // see backend/speaker_id/speechbrain_engine.py). null/undefined means
+    // either speaker ID is disabled or the utterance was too short to
+    // embed reliably — show nothing rather than a misleading label.
+    if (data.speaker) {
+      entry.speakerTag.textContent = data.speaker;
+      entry.speakerTag.style.color = speakerColor(data.speaker);
+      entry.speakerTag.style.display = "inline-block";
+    } else {
+      entry.speakerTag.style.display = "none";
+    }
   } else {
     entry.confLine.textContent = "";
   }

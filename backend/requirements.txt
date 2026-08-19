@@ -12,3 +12,7 @@ httpx
 # gate (2026-08-19). Pulls in transformers/torch (torch already required
 # above for vad.py).
 sentence-transformers
+# backend/speaker_id/speechbrain_engine.py — 2차 목표 (다중 화자), started
+# 2026-08-19. ECAPA-TDNN speaker embeddings, openly downloadable (no gated HF
+# repo like pyannote's own models require).
+speechbrain

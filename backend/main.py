@@ -21,8 +21,10 @@ from pathlib import Path
 
 from fastapi import FastAPI, WebSocket
 
+from backend import config
 from backend.audio_session import AudioSession
 from backend.glossary import Glossary
+from backend.speaker_id.base import SpeakerIdentifier
 from backend.stt.faster_whisper_engine import FasterWhisperEngine
 from backend.translation.llama_server_engine import LlamaServerEngine
 from backend.vad import SileroVAD
@@ -57,11 +59,12 @@ _stt_engine: FasterWhisperEngine | None = None
 _translation_engine: LlamaServerEngine | None = None
 _glossary: Glossary | None = None
 _vad: SileroVAD | None = None
+_speaker_identifier: SpeakerIdentifier | None = None
 
 
 @app.on_event("startup")
 async def startup() -> None:
-    global _stt_engine, _translation_engine, _glossary, _vad
+    global _stt_engine, _translation_engine, _glossary, _vad, _speaker_identifier
     _glossary = Glossary.load()
     logger.info("Glossary loaded (%d entries) from backend/glossary.json", len(_glossary))
 
@@ -89,6 +92,23 @@ async def startup() -> None:
     await _translation_engine.verify_contract()
     logger.info("Translation engine ready (assumes llama-server is already running).")
 
+    # 2차 목표 (다중 화자) — optional: a backend without speechbrain installed,
+    # or with SPEAKER_ID_ENABLED off, still runs 1차 목표 (single-speaker)
+    # capture exactly as before, just without speaker tags in the UI.
+    if config.SPEAKER_ID_ENABLED:
+        try:
+            logger.info("Loading speaker-identification model (%s)...", config.SPEAKER_ID_MODEL)
+            from backend.speaker_id.speechbrain_engine import SpeechbrainSpeakerIdentifier
+
+            _speaker_identifier = SpeechbrainSpeakerIdentifier()
+            logger.info("Speaker-identification model ready.")
+        except Exception:
+            logger.exception(
+                "Speaker-identification model failed to load — continuing without speaker "
+                "labels (pip install speechbrain? or set config.SPEAKER_ID_ENABLED = False)"
+            )
+            _speaker_identifier = None
+
 
 @app.on_event("shutdown")
 async def shutdown() -> None:
@@ -113,6 +133,7 @@ async def ws_audio(websocket: WebSocket) -> None:
         on_event=send_event,
         vad=_vad,
         glossary=_glossary,
+        speaker_identifier=_speaker_identifier,
     )
 
     try:

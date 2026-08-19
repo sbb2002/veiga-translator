@@ -279,8 +279,25 @@ class AudioSession:
                 self._finalize_queue.task_done()
 
     async def close(self) -> None:
-        """Stop the background finalize worker — call when the owning
-        websocket connection ends, otherwise the task leaks."""
+        """Drain queued finalize work, then stop the background worker —
+        call when the owning websocket connection ends, otherwise the task
+        leaks. Without the drain, everything still in the queue (including
+        the in-flight utterance enqueued here) would silently lose its
+        "final" on stop. Bounded by CLOSE_DRAIN_TIMEOUT_S so a hung
+        translation server can't stall shutdown; events emitted during the
+        drain go through _emit_safe, which tolerates an already-gone
+        client."""
+        if self._utterance is not None:
+            self._enqueue_finalize()
+        try:
+            await asyncio.wait_for(
+                self._finalize_queue.join(), timeout=config.CLOSE_DRAIN_TIMEOUT_S
+            )
+        except asyncio.TimeoutError:
+            logger.warning(
+                "finalize drain timed out — dropping %d queued utterances",
+                self._finalize_queue.qsize(),
+            )
         self._finalize_worker_task.cancel()
 
     async def _do_finalize(self, utterance: _UtteranceState) -> None:

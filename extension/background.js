@@ -49,6 +49,11 @@ async function startCapture(tabId) {
     return current;
   }
 
+  // Clear the log at session START rather than at stop: finals drained by
+  // the backend after a stop still land in the log, and the user can review
+  // the transcript after stopping until the next session begins.
+  await chrome.storage.session.remove("transcriptLog");
+
   await ensureOffscreenDocument();
   const streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tabId });
   await chrome.runtime.sendMessage({ type: "INIT_CAPTURE", streamId });
@@ -62,7 +67,6 @@ async function stopCapture() {
   await chrome.runtime.sendMessage({ type: "STOP_CAPTURE" }).catch(() => {});
   const next = { active: false, tabId: null };
   await setCaptureState(next);
-  await chrome.storage.session.remove("transcriptLog");
   return next;
 }
 

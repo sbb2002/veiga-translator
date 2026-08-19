@@ -8,7 +8,8 @@
 
 - 브랜치: `batch1-instrumentation` (main에서 분기)
 - 구현 범위: **배치 1 = Q1(단계별 latency 계측) + R4(번역 런타임 계약 자가진단)**,
-  **배치 2 = R1(엔진 호출 예외 격리) + Q3(fast 전용 3s 타임아웃)**
+  **배치 2 = R1(엔진 호출 예외 격리) + Q3(fast 전용 3s 타임아웃)**,
+  **배치 3 = R2(WS 자동 재연결) + R3(stop 시 finalize 드레인)**
 - 검수 수준: 코드 리뷰 + `py_compile` 문법 확인만. **런타임 검증 미실시** (이 환경에 GPU 없음
   — faster-whisper CUDA 로드 불가, gemma 모델/서버도 이 머신에 없음)
 
@@ -19,8 +20,10 @@
 | `backend/audio_session.py` | Q1: `enqueued_at`, partial/final 타이밍 INFO 로그, finalize 트리거 사유 로그. R1: STT/번역/이벤트 전송 예외 격리(`_emit_safe`), `last_partial_translation` 폴백, `_finalize_worker` 생존 보장 |
 | `backend/translation/llama_server_engine.py` | R4: `verify_contract()` 프로브. Q1: 응답 `timings` DEBUG 로그. Q3: fast/final per-request 타임아웃 분리 |
 | `backend/main.py` | startup에서 `verify_contract()` 호출 |
-| `backend/config.py` | `LLAMA_FAST_TIMEOUT_S = 3.0` 추가 |
+| `backend/config.py` | `LLAMA_FAST_TIMEOUT_S = 3.0`, `CLOSE_DRAIN_TIMEOUT_S = 10.0` 추가 |
 | `docs/PIPELINE.md` | partial "논블로킹" 서술 정정, R1 폴백 예외 경로 1줄 추가 |
+| `extension/offscreen.js` | R2: `captureActive` + 백오프 재연결(1s→10s cap). R3: stop 시 소켓을 열어둔 채 서버 드레인 종료 대기(12s 강제종료 타이머, 낡은 소켓이 새 세션을 건드리지 않게 인스턴스 기준 처리) |
+| `extension/background.js` | R3: transcriptLog 클리어를 stop→start 시점으로 이동 |
 
 ## GPU 머신에서의 검증 체크리스트 (저녁)
 
@@ -50,7 +53,16 @@
    문장 번역의 [PREVIOUS TRANSLATION]에 폴백 문장이 안 보이는 것으로 간접 확인).
 5. **Q3 — fast 타임아웃 확인**: 번역 서버가 느려진 상황(대형 요청을 병행 투입 등)에서
    partial의 일본어 갱신 공백이 3s(LLAMA_FAST_TIMEOUT_S)를 크게 넘지 않는지.
-6. 이상 없으면 main에 머지. 실측 요약은 이 문서에 "실측 결과" 절로 추가해둘 것.
+6. **R2 — 재연결 확인**: 캡처 중 uvicorn 재시작(파일 저장으로 --reload 트리거도 가능) →
+   수 초 내 자막 재개. 백엔드를 끈 채 Start Capture → 백엔드를 나중에 켜도 붙는지.
+   Stop 후 재연결 시도가 없는지(offscreen 콘솔 — chrome://extensions에서 offscreen 문서
+   inspect).
+7. **R3 — 드레인 확인**: 말이 이어지는 도중 Stop Capture → 마지막 문장(들)의 final이
+   팝업에 도착해 확정되는지. stop 후 팝업을 닫았다 열어도 히스토리가 남아 있고, 다음
+   Start에서 비워지는지. **stop 직후 곧바로 Start를 다시 눌러도**(드레인 진행 중 재시작)
+   새 세션 자막이 정상 동작하는지 — 낡은 소켓 정리가 새 세션을 건드리는 엣지를 코드
+   수준에서 막아뒀는데 실동작 확인 필요.
+8. 이상 없으면 main에 머지. 실측 요약은 이 문서에 "실측 결과" 절로 추가해둘 것.
 
 ## 다음 배치 (명세의 구현 순서)
 

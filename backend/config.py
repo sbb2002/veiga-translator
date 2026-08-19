@@ -86,6 +86,13 @@ LLAMA_FAST_TIMEOUT_S = 3.0
 LLAMA_FAST_MAX_TOKENS = 64  # provisional translation: short, literal is fine
 LLAMA_FINAL_MAX_TOKENS = 200  # finalized translation: full natural sentence
 
+# On session close (stop_session / client disconnect), wait up to this long
+# for queued finalize work to drain before cancelling the worker — otherwise
+# the last spoken sentences never get their "final". Bounded so a hung
+# translation server can't stall shutdown (its own per-request timeouts are
+# shorter, so a healthy-but-slow drain fits comfortably).
+CLOSE_DRAIN_TIMEOUT_S = 10.0
+
 # Short-term context memory (EVAL_REPORT_2026-08-18.md §5-E-1, cheapest first
 # step before any summarization layer): how many previous *final* (JA, KO)
 # sentence pairs to carry into the next final translation call, oldest

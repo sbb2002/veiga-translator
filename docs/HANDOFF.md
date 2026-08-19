@@ -9,7 +9,8 @@
 - 브랜치: `batch1-instrumentation` (main에서 분기)
 - 구현 범위: **배치 1 = Q1(단계별 latency 계측) + R4(번역 런타임 계약 자가진단)**,
   **배치 2 = R1(엔진 호출 예외 격리) + Q3(fast 전용 3s 타임아웃)**,
-  **배치 3 = R2(WS 자동 재연결) + R3(stop 시 finalize 드레인)**
+  **배치 3 = R2(WS 자동 재연결) + R3(stop 시 finalize 드레인)**,
+  **배치 4 = S1(16kHz AudioContext) + S4(glossary NFKC) + Q7(VAD 공유) + T1(hint 위치) + D1(문서 정리)**
 - 검수 수준: 코드 리뷰 + `py_compile` 문법 확인만. **런타임 검증 미실시** (이 환경에 GPU 없음
   — faster-whisper CUDA 로드 불가, gemma 모델/서버도 이 머신에 없음)
 
@@ -22,8 +23,13 @@
 | `backend/main.py` | startup에서 `verify_contract()` 호출 |
 | `backend/config.py` | `LLAMA_FAST_TIMEOUT_S = 3.0`, `CLOSE_DRAIN_TIMEOUT_S = 10.0` 추가 |
 | `docs/PIPELINE.md` | partial "논블로킹" 서술 정정, R1 폴백 예외 경로 1줄 추가 |
-| `extension/offscreen.js` | R2: `captureActive` + 백오프 재연결(1s→10s cap). R3: stop 시 소켓을 열어둔 채 서버 드레인 종료 대기(12s 강제종료 타이머, 낡은 소켓이 새 세션을 건드리지 않게 인스턴스 기준 처리) |
+| `extension/offscreen.js` | R2: `captureActive` + 백오프 재연결(1s→10s cap). R3: stop 시 소켓을 열어둔 채 서버 드레인 종료 대기(12s 강제종료 타이머, 낡은 소켓이 새 세션을 건드리지 않게 인스턴스 기준 처리). S1: `AudioContext({sampleRate: 16000})` — 수동 `resampleLinear`(앨리어싱 원인) 삭제 |
 | `extension/background.js` | R3: transcriptLog 클리어를 stop→start 시점으로 이동 |
+| `extension/audio-worklet-processor.js` | S1: 주석만 갱신 (코드 변경 없음 — 16kHz 컨텍스트를 자동으로 따라감) |
+| `backend/glossary.py` | S4: NFKC 정규화 매칭 + `python -m backend.glossary` 자가 체크. D1: STT 미배선 docstring 정정 |
+| `backend/vad.py` 사용 방식 | Q7: SileroVAD를 startup 1회 로드로 변경, `AudioSession(vad=...)` 주입 + 세션마다 `reset()` |
+| `backend/stt/base.py`, `backend/stt/faster_whisper_engine.py` | D1: 죽은 `words` 필드 제거 |
+| `backend/translation/llama_server_engine.py` (T1) | glossary_hint를 system prompt에서 user message `[GLOSSARY]` 섹션으로 이동 — system prompt가 요청 간 불변이 되어 KV prefix cache 유지 |
 
 ## GPU 머신에서의 검증 체크리스트 (저녁)
 
@@ -62,11 +68,24 @@
    Start에서 비워지는지. **stop 직후 곧바로 Start를 다시 눌러도**(드레인 진행 중 재시작)
    새 세션 자막이 정상 동작하는지 — 낡은 소켓 정리가 새 세션을 건드리는 엣지를 코드
    수준에서 막아뒀는데 실동작 확인 필요.
-8. 이상 없으면 main에 머지. 실측 요약은 이 문서에 "실측 결과" 절로 추가해둘 것.
+8. **S1 — 16kHz 캡처 확인**: 자막 파이프라인 정상 동작(백엔드가 0.3s = 9600바이트 PCM16
+   청크를 받는지), 체감 전사 품질 악화가 없는지. 확장은 `chrome://extensions`에서 **리로드
+   필수** (offscreen/worklet 코드 변경됨).
+9. **S4 — glossary 확인**: `python -m backend.glossary` (GPU 불필요, 이미 통과 확인됨).
+   실스트림에서 등록 용어(ティーワイ)가 반각/변형 표기로 전사돼도 hint가 나가는지.
+10. **Q7 — 시작 지연 확인**: 두 번째 이후 Start Capture의 연결 준비 시간이 짧아졌는지
+    (이전: 연결마다 torch.hub VAD 로드).
+11. **T1 — prefix cache 확인**: DEBUG 로깅 켜고 `llm timings`의 `prompt_ms`가 glossary
+    hint 유무와 무관하게 낮게 유지되는지 (변경 전에는 hint가 붙으면 system prompt가 달라져
+    풀 재처리). glossary 용어 포함 문장에서 "TY" 강제가 여전히 동작하는지 재현 확인.
+12. 이상 없으면 main에 머지. 실측 요약은 이 문서에 "실측 결과" 절로 추가해둘 것.
 
-## 다음 배치 (명세의 구현 순서)
+## 남은 작업 (명세의 구현 순서)
 
-- 배치 2: R1(예외 격리) + Q3(fast 타임아웃) — 같은 파일 묶음, GPU 없이도 구현/코드 검수 가능
-- 배치 3: R2(WS 재연결) + R3(stop 드레인)
-- 배치 4: S1(16kHz AudioContext), S4(NFKC), Q7(VAD 공유), T1(hint 위치), D1(문서)
-- 배치 5 이후는 위 3번의 실측 결과가 선행 조건.
+- **배치 1~4 구현 완료** (이 브랜치). 남은 것은 전부 실측/실험이 선행 조건:
+- 배치 5: Q2(partial 백그라운드 분리) — 위 3번 실측에서 partial `stt+llm`이 0.6s를 넘는
+  구간이 확인되면 착수. 이후 Q4/Q5/Q6/S3도 각자의 실측 조건 충족 시.
+- 배치 6: S2(STT previous_context 플래그), T3(repeat_penalty A/B), T4(fast 문맥, Q2 이후),
+  T2(노트 데이터 파일 분리, 노트가 더 늘어나면). 전부 GPU에서의 A/B 평가 필요.
+- glossary.json 채우기(백로그 추적표 B)는 코드 무관 데이터 작업 — 실사용 중 발견되는
+  고유명사를 수시로 추가할 것 (マッターホルン/白馬岳/千恵子 등 EVAL 시드 포함).

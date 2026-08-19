@@ -3,8 +3,13 @@
 Run from the repo root (so `backend.*` absolute imports resolve):
     uvicorn backend.main:app --reload --port 8000
 
-Requires llama-server running separately (translation engine):
-    llama-server/llama-server.exe -m backend/models/Qwen2.5-7B-Instruct-Q4_K_M.gguf --port 8080 -ngl 999 -c 4096
+Requires a llama.cpp server (CUDA build) serving gemma-3-12b-it separately, e.g.:
+    llama-server.exe -m <path-to>/google_gemma-3-12b-it-Q4_K_M.gguf --port 8080 -ngl 999 -c 4096
+Note: the repo-bundled llama-server/ is a CPU-only build and backend/models/
+only holds the old Qwen GGUF — the production binary/model live outside this
+repo (GPU machine); record their actual paths here once confirmed. Startup
+probes the server (verify_contract) and warns if it is unreachable or does
+not honor GBNF grammar.
 """
 
 from __future__ import annotations
@@ -18,6 +23,7 @@ from backend.audio_session import AudioSession
 from backend.glossary import Glossary
 from backend.stt.faster_whisper_engine import FasterWhisperEngine
 from backend.translation.llama_server_engine import LlamaServerEngine
+from backend.vad import SileroVAD
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("live-translator.backend")
@@ -27,13 +33,20 @@ app = FastAPI(title="live-translator backend")
 _stt_engine: FasterWhisperEngine | None = None
 _translation_engine: LlamaServerEngine | None = None
 _glossary: Glossary | None = None
+_vad: SileroVAD | None = None
 
 
 @app.on_event("startup")
 async def startup() -> None:
-    global _stt_engine, _translation_engine, _glossary
+    global _stt_engine, _translation_engine, _glossary, _vad
     _glossary = Glossary.load()
     logger.info("Glossary loaded (%d entries) from backend/glossary.json", len(_glossary))
+
+    # Loaded once and shared across sessions — AudioSession resets its RNN
+    # state per connection (see audio_session.py).
+    logger.info("Loading silero-VAD model...")
+    _vad = SileroVAD()
+    logger.info("VAD model ready.")
 
     logger.info("Loading STT model (this also verifies CUDA availability)...")
     # NOT wiring _glossary.whisper_hint here: `hotwords` measurably increases
@@ -70,10 +83,12 @@ async def ws_audio(websocket: WebSocket) -> None:
 
     assert _stt_engine is not None, "STT engine not initialized — startup event didn't run?"
     assert _translation_engine is not None, "Translation engine not initialized — startup event didn't run?"
+    assert _vad is not None, "VAD not initialized — startup event didn't run?"
     session = AudioSession(
         stt_engine=_stt_engine,
         translation_engine=_translation_engine,
         on_event=send_event,
+        vad=_vad,
         glossary=_glossary,
     )
 

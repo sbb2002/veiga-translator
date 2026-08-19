@@ -1,7 +1,7 @@
 // offscreen.js — the only extension context allowed to touch AudioContext/
 // getUserMedia under MV3. Turns a tabCapture streamId into a live audio
 // pipeline: MediaStream -> re-routed to <audio> for normal playback, and in
-// parallel -> AudioWorklet -> resample to 16kHz mono PCM16 -> WebSocket.
+// parallel -> 16kHz AudioContext + AudioWorklet -> mono PCM16 -> WebSocket.
 
 const BACKEND_WS_URL = "ws://localhost:8000/ws/audio";
 const TARGET_SAMPLE_RATE = 16000;
@@ -22,23 +22,6 @@ function floatTo16BitPCM(float32) {
   for (let i = 0; i < float32.length; i++) {
     const s = Math.max(-1, Math.min(1, float32[i]));
     out[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
-  }
-  return out;
-}
-
-// Simple linear-interpolation resampler. Called a few times a second on
-// ~0.3s chunks, so a naive implementation is plenty fast.
-function resampleLinear(float32, fromRate, toRate) {
-  if (fromRate === toRate) return float32;
-  const ratio = fromRate / toRate;
-  const outLength = Math.round(float32.length / ratio);
-  const out = new Float32Array(outLength);
-  for (let i = 0; i < outLength; i++) {
-    const srcPos = i * ratio;
-    const i0 = Math.floor(srcPos);
-    const i1 = Math.min(i0 + 1, float32.length - 1);
-    const frac = srcPos - i0;
-    out[i] = float32[i0] * (1 - frac) + float32[i1] * frac;
   }
   return out;
 }
@@ -109,7 +92,12 @@ async function startCapture(streamId) {
   const playbackEl = document.getElementById("playback");
   playbackEl.srcObject = mediaStream;
 
-  audioContext = new AudioContext();
+  // 16kHz context: Chrome resamples the captured stream down to the context
+  // rate with a proper anti-aliased resampler, so the worklet already emits
+  // backend-ready 16kHz samples. (The previous manual linear-interpolation
+  // resampler had no low-pass filter — content above 8kHz aliased into the
+  // audible band, i.e. avoidable noise in the STT input.)
+  audioContext = new AudioContext({ sampleRate: TARGET_SAMPLE_RATE });
   await audioContext.audioWorklet.addModule("audio-worklet-processor.js");
 
   const sourceNode = audioContext.createMediaStreamSource(mediaStream);
@@ -122,12 +110,9 @@ async function startCapture(streamId) {
   sourceNode.connect(workletNode).connect(silentGain).connect(audioContext.destination);
 
   workletNode.port.onmessage = (event) => {
-    const { sampleRate: nativeSampleRate, chunk } = event.data;
+    const { chunk } = event.data;
     if (!ws || ws.readyState !== WebSocket.OPEN) return;
-
-    const resampled = resampleLinear(chunk, nativeSampleRate, TARGET_SAMPLE_RATE);
-    const pcm16 = floatTo16BitPCM(resampled);
-    ws.send(pcm16.buffer);
+    ws.send(floatTo16BitPCM(chunk).buffer);
   };
 
   captureActive = true; // R2: enable reconnection attempts

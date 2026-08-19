@@ -56,13 +56,20 @@ class AudioSession:
         stt_engine: STTEngine,
         translation_engine: TranslationEngine,
         on_event: EventSink,
+        vad: SileroVAD,
         glossary: Glossary | None = None,
     ) -> None:
         self._stt = stt_engine
         self._translate = translation_engine
         self._on_event = on_event
         self._glossary = glossary or Glossary({})
-        self._vad = SileroVAD()
+        # Shared instance loaded once at startup (constructing SileroVAD here
+        # meant a torch.hub model load on every websocket connection). The
+        # model is a stateful RNN, so clear the previous session's state.
+        # Concurrent sessions would share that state, but offscreen.js
+        # guarantees a single capture at a time.
+        self._vad = vad
+        vad.reset()
         self._frame_buffer = np.zeros(0, dtype=np.float32)
         self._utterance: _UtteranceState | None = None
         # Rolling short-term context for translation continuity: the last

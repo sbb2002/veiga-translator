@@ -1,11 +1,11 @@
 // audio-worklet-processor.js — runs on the dedicated audio rendering thread.
 // Accumulates incoming 128-sample render quanta into fixed-size chunks
-// (CHUNK_SECONDS worth of samples, at whatever the AudioContext's native
-// sample rate is) and posts each finished chunk to the main thread.
+// (CHUNK_SECONDS worth of samples, at whatever the AudioContext's sample
+// rate is) and posts each finished chunk to the main thread.
 //
-// Resampling to the 16kHz the backend expects happens on the main thread
-// (offscreen.js) after receiving the chunk — cheap to do a few times a
-// second, and keeps this processor free of resampling-filter complexity.
+// offscreen.js creates the AudioContext at the backend's 16kHz, so Chrome
+// itself resamples the captured stream before it reaches this processor —
+// the chunks posted here are already backend-ready.
 
 const CHUNK_SECONDS = 0.3;
 

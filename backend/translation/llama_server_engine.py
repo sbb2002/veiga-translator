@@ -111,6 +111,16 @@ _NO_ENGLISH_NOTE = (
     "equivalent or a Hangul transliteration, never left in Latin script."
 )
 
+_GLOSSARY_SECTION_NOTE = (
+    "If the user message contains a '[GLOSSARY]' section, translate the "
+    "proper nouns listed there exactly as specified — those mappings "
+    "override any other rendering you would choose. Whenever bracketed "
+    "sections like '[GLOSSARY]' or '[TEXT TO TRANSLATE]' are present, the "
+    "text to translate is ONLY what follows '[TEXT TO TRANSLATE]' — never "
+    "translate, repeat, or mention the section labels or the glossary "
+    "lines themselves in your output."
+)
+
 _FAST_SYSTEM_PROMPT = (
     "Translate the following Japanese text fragment into Korean. The fragment "
     "may be an incomplete sentence that is still being spoken. Translate every "
@@ -125,7 +135,7 @@ _FAST_SYSTEM_PROMPT = (
     "sentence is actually finished. " + _SLANG_NOTE + " " + _FILLER_NOTE + " "
     + _HONORIFIC_NOTE + " " + _FALSE_FRIEND_NOTE + " " + _LAUGHTER_NOTE
     + " " + _CONNOTATION_NOTE
-    + " " + _NO_ENGLISH_NOTE + " Output ONLY the Korean translation, "
+    + " " + _NO_ENGLISH_NOTE + " " + _GLOSSARY_SECTION_NOTE + " Output ONLY the Korean translation, "
     "nothing else — no notes, no romanization, no quotes."
 )
 
@@ -157,7 +167,7 @@ _FINAL_SYSTEM_PROMPT = (
     + _CONTINUITY_NOTE + " " + _SLANG_NOTE + " " + _FILLER_NOTE + " "
     + _HONORIFIC_NOTE + " " + _FALSE_FRIEND_NOTE + " " + _LAUGHTER_NOTE
     + " " + _CONNOTATION_NOTE
-    + " " + _NO_ENGLISH_NOTE + " Output ONLY the Korean translation of "
+    + " " + _NO_ENGLISH_NOTE + " " + _GLOSSARY_SECTION_NOTE + " Output ONLY the Korean translation of "
     "that text, nothing else — no notes, no romanization, no quotes."
 )
 
@@ -292,16 +302,20 @@ class LlamaServerEngine:
             return TranslationResult(text="")
 
         system_prompt = _FAST_SYSTEM_PROMPT if fast else _FINAL_SYSTEM_PROMPT
+        # Everything request-specific goes into the user message, never the
+        # system prompt — llama.cpp server reuses the KV cache for the longest
+        # unchanged prompt prefix, and the (long) system prompt only stays
+        # cacheable if it is byte-identical across requests.
+        sections = []
         if glossary_hint:
-            system_prompt = f"{system_prompt}\n\n{glossary_hint}"
+            sections.append(f"[GLOSSARY]\n{glossary_hint}")
         if context:
-            prev_translation_section = (
-                f"\n\n[PREVIOUS TRANSLATION]\n{context_translation}" if context_translation else ""
-            )
-            user_content = (
-                f"[PREVIOUS SENTENCE]\n{context}{prev_translation_section}"
-                f"\n\n[TEXT TO TRANSLATE]\n{text}"
-            )
+            sections.append(f"[PREVIOUS SENTENCE]\n{context}")
+            if context_translation:
+                sections.append(f"[PREVIOUS TRANSLATION]\n{context_translation}")
+        if sections:
+            sections.append(f"[TEXT TO TRANSLATE]\n{text}")
+            user_content = "\n\n".join(sections)
         else:
             user_content = text
         max_tokens = config.LLAMA_FAST_MAX_TOKENS if fast else config.LLAMA_FINAL_MAX_TOKENS

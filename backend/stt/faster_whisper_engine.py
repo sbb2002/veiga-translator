@@ -108,7 +108,6 @@ class FasterWhisperEngine:
         # hallucination is handled separately (_HALLUCINATED_OUTRO_RE)
         # since Whisper reproduces it confidently (high avg_logprob) as a
         # memorized phrase, defeating a confidence-based filter on its own.
-        words: list[tuple[str, float, float]] = []
         text_parts: list[str] = []
         for segment in segments:
             stripped = segment.text.strip()
@@ -133,5 +132,4 @@ class FasterWhisperEngine:
         return TranscriptionResult(
             text="".join(text_parts).strip(),
             language=getattr(info, "language", self._language),
-            words=words or None,
         )

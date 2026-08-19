@@ -19,7 +19,6 @@ import numpy as np
 class TranscriptionResult:
     text: str
     language: str | None = None
-    words: list[tuple[str, float, float]] | None = None  # (word, start_s, end_s), if available
 
 
 class STTEngine(Protocol):

@@ -6,17 +6,18 @@
 
 전체 배경과 설계 근거는 `docs/PRD.md`, 아키텍처/빌드 순서는 `CLAUDE.md` 참고.
 
-현재 진행 단계: **Stage 2** (캡처 + STT + 번역, 아직 정식 UI는 없고 팝업에서 provisional/final
-텍스트를 단순 표시).
+현재 진행 단계: 파이프라인 배관(캡처 → STT → 번역)은 완료. 정식 UI는 아직 없고 팝업에서
+provisional/final 텍스트를 단순 표시하며, 지금은 전사/번역 **품질 개선 단계**입니다
+(로드맵: `CLAUDE.md` §"Current roadmap", 개선 목록: `docs/IMPROVEMENT_BACKLOG.md`).
 
 ## 사전 준비물
 
 - **Chrome 109+** (`chrome.offscreen` API 필요)
 - **NVIDIA GPU + CUDA** — STT/번역 모두 GPU 추론 사용
 - **Python 3.10+**
-- **llama-server** (llama.cpp) 실행 파일 — 번역용. GGUF 형식 LLM 모델 (예: Qwen2.5-7B-Instruct
-  Q4_K_M) 별도 다운로드 필요. 둘 다 `.gitignore`에 의해 저장소에는 포함되어 있지 않음
-  (`llama-server/`, `*.gguf`)
+- **llama.cpp server** (CUDA 빌드) 실행 파일 — 번역용. 채택 모델은 **gemma-3-12b-it Q4_K_M**
+  (GGUF, 선정 근거: `docs/EVAL_REPORT_gemma-3-12b-it_2026-08-18.md`). 둘 다 `.gitignore`에
+  의해 저장소에는 포함되어 있지 않음 (`llama-server/`, `*.gguf`)
 
 ## 설치
 
@@ -36,8 +37,8 @@ pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
 번역 엔진(`llama-server`)과 모델은 다음 경로에 배치:
 
 ```
-llama-server/llama-server.exe          # llama.cpp 릴리스에서 다운로드
-backend/models/Qwen2.5-7B-Instruct-Q4_K_M.gguf   # 사용할 GGUF 모델
+llama-server/llama-server.exe                      # llama.cpp 릴리스(CUDA 빌드)에서 다운로드
+backend/models/google_gemma-3-12b-it-Q4_K_M.gguf   # 사용할 GGUF 모델
 ```
 
 ## 실행
@@ -47,7 +48,7 @@ backend/models/Qwen2.5-7B-Instruct-Q4_K_M.gguf   # 사용할 GGUF 모델
 **1) 번역 서버 (llama-server)**
 
 ```bash
-llama-server/llama-server.exe -m backend/models/Qwen2.5-7B-Instruct-Q4_K_M.gguf --port 8080 -ngl 999 -c 4096
+llama-server/llama-server.exe -m backend/models/google_gemma-3-12b-it-Q4_K_M.gguf --port 8080 -ngl 999 -c 4096
 ```
 
 **2) 백엔드 (FastAPI, 반드시 저장소 루트에서 실행 — `backend.*` 절대 import 때문)**
@@ -56,7 +57,10 @@ llama-server/llama-server.exe -m backend/models/Qwen2.5-7B-Instruct-Q4_K_M.gguf 
 uvicorn backend.main:app --reload --port 8000
 ```
 
-시작 시 STT 모델(faster-whisper) 로딩 및 CUDA 확인, llama-server 연결까지 마치면 준비 완료.
+시작 시 glossary → VAD(silero) → STT 모델(faster-whisper, CUDA 확인 겸용)을 로드한 뒤,
+번역 서버에 프로브 요청을 보내 연결과 **GBNF grammar 지원 여부**를 확인합니다
+(`verify_contract` — grammar를 무시하는 서버라면 "한글 강제 비활성" 경고가 뜸). 번역
+서버는 백엔드보다 늦게 켜도 됩니다(경고만 남고 기동은 계속).
 
 **3) Chrome 확장**
 
@@ -71,9 +75,14 @@ uvicorn backend.main:app --reload --port 8000
 
 ## 설정
 
-`backend/config.py`에서 STT 모델 크기, VAD 침묵 임계값, 번역 서버 URL 등 튜닝 가능한
-상수들을 관리합니다 (환경변수/dotenv 레이어는 아직 없음 — 개인 로컬 머신 전용이라 불필요).
+`backend/config.py`에서 STT 모델 크기, VAD 침묵 임계값, 번역 서버 URL/타임아웃 등 튜닝
+가능한 상수들을 관리합니다 (환경변수/dotenv 레이어는 아직 없음 — 개인 로컬 머신 전용이라
+불필요).
+
+고유명사 번역은 `backend/glossary.json`에 `{"일본어 표기": "한국어 표기"}`로 등록합니다.
+매칭은 NFKC 정규화 후 이뤄지므로 전각/반각 표기 차이는 무시됩니다.
 
 ## 테스트 / 린트
 
-아직 구성되어 있지 않습니다.
+정식 테스트/린트 러너는 아직 없습니다. 유일한 자가 체크는
+`python -m backend.glossary` (glossary NFKC 매칭 검증, GPU 불필요).

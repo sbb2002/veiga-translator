@@ -51,7 +51,11 @@ anything from the parent directory applies here.
 - **`backend/`** — Local Python FastAPI + WebSocket server. Owns the STT and translation pipeline.
   Runs on the user's machine with an NVIDIA GPU (CUDA available) — prefer GPU-accelerated inference
   paths when choosing libraries.
-- **`docs/`** — `PRD.md` and any research/benchmark notes.
+- **`docs/`** — `PRD.md` (product), `PIPELINE.md` (data-flow/behavior reference), `EVAL.md` +
+  dated `EVAL_REPORT_*.md` (grading methodology and results), `MODEL_BENCHMARK_PLAN.md`
+  (translation-model selection), `IMPROVEMENT_BACKLOG.md`/`IMPROVEMENT_SPECS.md` (known issues
+  and how to implement the fixes), `HANDOFF.md` (session-to-session status + GPU verification
+  checklist).
 
 ### Streaming / sentence-finalization strategy (PRD §7 — important, drives most of the backend design)
 
@@ -72,14 +76,21 @@ chop sentences awkwardly when a speaker pauses mid-thought). Keep this as two de
 the backend, not a single hardcoded heuristic — the silence threshold and the context-correction
 logic are separate tunables that will need independent iteration.
 
-### STT / translation engine — deliberately not pinned yet
+### STT / translation engine — benchmarked and chosen (still swappable)
 
-No specific model is chosen. The user wants to benchmark speed/quality candidates before deciding
-(candidates mentioned: whisper.cpp / faster-whisper for STT, possibly something above Whisper-tier if
-it benchmarks better; Ollama for translation, possibly something faster-serving if it benchmarks
-better — e.g. a llama.cpp server or vLLM). **Design consequence**: keep the STT engine and the
-translation engine behind swappable interfaces in the backend rather than hardcoding a specific
-model/library, so a benchmark winner can be dropped in without a rewrite.
+Current production pair, selected by benchmark rather than assumption:
+
+- **STT**: faster-whisper `medium` (CTranslate2, CUDA, int8_float16) — `backend/stt/`.
+- **Translation**: **gemma-3-12b-it Q4_K_M** served by a llama.cpp server (chosen over Ollama for
+  lower single-stream overhead; the OpenAI-compatible endpoint must honor llama.cpp's `grammar`
+  field — backend startup probes this via `verify_contract` and warns if it doesn't). Benchmark
+  results and the decision trail: `docs/MODEL_BENCHMARK_PLAN.md`,
+  `docs/EVAL_REPORT_gemma-3-12b-it_2026-08-18.md`. Qwen3-14B scored higher but is on hold due to
+  incompatibility with the Korean-only GBNF grammar.
+
+**Design principle (unchanged)**: both engines stay behind swappable interfaces
+(`backend/stt/base.py`, `backend/translation/base.py`) — a new benchmark winner drops in as a new
+class plus config wiring, with no changes to `audio_session.py`.
 
 ## Build order (do not skip ahead)
 
@@ -119,9 +130,13 @@ STT path (`faster-whisper`/CTranslate2) doesn't need it. First VAD load requires
 to fetch the hub model (cached under `~/.cache/torch/hub` afterwards); this doesn't violate the
 "fully local at runtime" goal, it's a one-time model download like any other local model weight.
 
+The translation engine is a separate llama.cpp server process (gemma-3-12b-it GGUF, port 8080 —
+launch command in `README.md` §실행). Backend startup probes it (`verify_contract`) and only warns
+if it's unreachable or ignores GBNF grammar — starting it after the backend is fine.
+
 Extension: no build step. `chrome://extensions` → enable Developer Mode → "Load unpacked" →
 select `extension/`. Requires Chrome 109+ (`chrome.offscreen`). After editing extension files,
 reload the extension from that page.
 
-No lint/test tooling is set up yet — this is Stage 1 of a from-scratch build (see "Build order"
-below); add commands here once a linter/test runner is actually introduced.
+No lint/test runner is set up yet; add commands here once one is actually introduced. The only
+self-check so far: `python -m backend.glossary` (glossary NFKC matching, no GPU needed).

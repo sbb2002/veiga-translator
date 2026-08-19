@@ -12,31 +12,35 @@
 
 **구현 현황 (2026-08-19, `batch1-instrumentation` 브랜치, GPU 검증 대기)**:
 R1·R2·R3·R4·Q1·Q3·Q7·S1·S4·T1·D1 구현 완료. 미착수(실측/실험 선행 조건):
-Q2·Q4·Q5·Q6·S2·S3·T2·T3·T4. 검증 절차는 `docs/HANDOFF.md`.
+Q2·Q4·Q5·Q6·S2·S3·T2·T3·T4. 검증 절차는 `docs/HANDOFF.md`. **각 섹션의 증상/코드 서술은
+구현 전(`be319ef`) 코드 기준**이므로, 구현된 항목의 현재 동작은 코드와 `PIPELINE.md`가 기준.
 
 ## 요약
 
-| ID | 분류 | 항목 | 우선순위 |
-|---|---|---|---|
-| R1 | 안정성 | 엔진 호출 예외 격리 없음 — LLM 오류 1번에 세션/워커 사망 | P0 |
-| R2 | 안정성 | WebSocket 재연결 없음 (offscreen.js) | P0 |
-| R3 | 안정성 | stop 시 finalize 큐 미처리 — 마지막 문장 final 소실 | P1 |
-| Q1 | 큐/지연 | 단계별 latency 계측 부재 — 최적화 판단 근거 없음 | P0 |
-| Q2 | 큐/지연 | partial 트랙이 오디오 수신 경로를 블로킹 (문서와 불일치) | P1 |
-| Q3 | 큐/지연 | LLM 타임아웃 15s가 partial 인라인 경로에 그대로 적용 | P1 |
-| Q4 | 큐/지연 | 발화가 길어질수록 partial 재전사 비용 누적 (전체 버퍼 재전사) | P2 |
-| Q5 | 큐/지연 | GPU 자원 경쟁 — partial STT / final STT / LLM 동시 실행 | P2 |
-| Q6 | 큐/지연 | finalize 큐 무한 + 깊이 관측 없음 | P2 |
-| Q7 | 큐/지연 | 연결마다 silero-VAD 모델 재로드 | P2 |
-| S1 | 전사 품질 | 선형보간 리샘플러의 앨리어싱 — 네이티브 리샘플로 교체 | P1 |
-| S2 | 전사 품질 | STT `previous_context` 배선이 준비만 되고 미사용 | P2 |
-| S3 | 전사 품질 | hard cap 강제 절단이 단어 중간을 자름 | P2 |
-| S4 | 전사 품질 | glossary 매칭이 표면형 exact substring | P2 |
-| T1 | 번역 품질/속도 | glossary_hint가 system prompt에 붙어 KV prefix cache 무효화 | P1 |
-| T2 | 번역 품질 | 단어별 예외 노트 누적 구조의 확장성 한계 | P2 |
-| T3 | 번역 품질 | repeat_penalty 1.3 상시 적용의 부작용 가능성 | P2 |
-| T4 | 번역 품질 | fast(부분) 번역에 문맥 없음 | P2 |
-| D1 | 문서 | PIPELINE.md "논블로킹" 서술 등 코드-문서 불일치 | P2 |
+| ID | 분류 | 항목 | 우선순위 | 상태 (2026-08-19) |
+|---|---|---|---|---|
+| R1 | 안정성 | 엔진 호출 예외 격리 없음 — LLM 오류 1번에 세션/워커 사망 | P0 | 구현됨 |
+| R2 | 안정성 | WebSocket 재연결 없음 (offscreen.js) | P0 | 구현됨 |
+| R3 | 안정성 | stop 시 finalize 큐 미처리 — 마지막 문장 final 소실 | P1 | 구현됨 |
+| Q1 | 큐/지연 | 단계별 latency 계측 부재 — 최적화 판단 근거 없음 | P0 | 구현됨 |
+| Q2 | 큐/지연 | partial 트랙이 오디오 수신 경로를 블로킹 | P1 | 대기 (Q1 실측 후) |
+| Q3 | 큐/지연 | LLM 타임아웃 15s가 partial 인라인 경로에 그대로 적용 | P1 | 구현됨 |
+| Q4 | 큐/지연 | 발화가 길어질수록 partial 재전사 비용 누적 (전체 버퍼 재전사) | P2 | 대기 (Q1 실측 후) |
+| Q5 | 큐/지연 | GPU 자원 경쟁 — partial STT / final STT / LLM 동시 실행 | P2 | 대기 (Q1 실측 후) |
+| Q6 | 큐/지연 | finalize 큐 backlog 열화 모드 없음 (깊이 로그는 Q1로 확보) | P2 | 대기 (Q1 실측 후) |
+| Q7 | 큐/지연 | 연결마다 silero-VAD 모델 재로드 | P2 | 구현됨 |
+| S1 | 전사 품질 | 선형보간 리샘플러의 앨리어싱 — 네이티브 리샘플로 교체 | P1 | 구현됨 |
+| S2 | 전사 품질 | STT `previous_context` 배선이 준비만 되고 미사용 | P2 | 대기 (GPU A/B) |
+| S3 | 전사 품질 | hard cap 강제 절단이 단어 중간을 자름 | P2 | 대기 (Q1 실측 후) |
+| S4 | 전사 품질 | glossary 매칭이 표면형 exact substring | P2 | 구현됨 |
+| T1 | 번역 품질/속도 | glossary_hint가 system prompt에 붙어 KV prefix cache 무효화 | P1 | 구현됨 |
+| T2 | 번역 품질 | 단어별 예외 노트 누적 구조의 확장성 한계 | P2 | 대기 (노트 증가 시) |
+| T3 | 번역 품질 | repeat_penalty 1.3 상시 적용의 부작용 가능성 | P2 | 대기 (GPU A/B) |
+| T4 | 번역 품질 | fast(부분) 번역에 문맥 없음 | P2 | 대기 (Q2 이후) |
+| D1 | 문서 | 코드-문서 불일치 (PIPELINE.md 등) | P2 | 구현됨 |
+
+(R4 — 시작 시 런타임 계약 자가진단 — 는 명세 단계에서 추가된 항목으로 `IMPROVEMENT_SPECS.md`에만
+있음. 구현됨.)
 
 ---
 

@@ -36,6 +36,13 @@ flowchart TD
 - 예외 경로(다이어그램에는 없음): STT/번역/이벤트 전송이 실패해도 세션과 워커는 죽지 않는다
   — 해당 utterance의 마지막 partial 전사/번역으로 폴백한 final을 방출하고 계속 진행한다
   (`docs/IMPROVEMENT_SPECS.md` R1).
+- 캡처 오디오는 offscreen.js가 **16kHz `AudioContext`**로 받는다 — 크롬이 내장
+  안티앨리어싱 리샘플러로 변환해주므로 확장 쪽 수동 리샘플 없이 PCM16 변환만 해서 보낸다.
+- WebSocket 수명주기: 캡처 중 연결이 끊기면 offscreen.js가 백오프(1s→최대 10s)로 자동
+  재연결한다 — 새 연결마다 백엔드는 새 `AudioSession`을 만든다. Stop Capture 시에는
+  `stop_session`만 보내고 소켓을 열어둔 채, 백엔드가 finalize 큐를 드레인(`close()`, 최대
+  `CLOSE_DRAIN_TIMEOUT_S`)하고 소켓을 닫아주기를 기다린다(12s 강제종료 안전장치) —
+  마지막 문장들의 final이 이 드레인으로 도착한다.
 
 ## Sentence completion 상세
 
@@ -113,3 +120,5 @@ sequenceDiagram
     덮어쓰므로, 두 호출이 겹치면 나중에 set하는 쪽이 그 사이 다른 쪽이 커밋한 갱신을
     지워버린다. `logChain`은 이 한 사이클이 끝나야 다음 사이클이 시작되도록 강제해서
     겹침 자체를 막는다.
+- `transcriptLog`는 세션 **시작** 시점에 비워진다(stop이 아님) — stop 직후 백엔드 드레인으로
+  늦게 도착하는 final들이 로그에 남고, 다음 캡처를 시작할 때까지 히스토리를 다시 볼 수 있다.

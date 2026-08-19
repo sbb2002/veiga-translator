@@ -3,7 +3,7 @@ per docs/EVAL.md (final pass only — see note below).
 
 Scope (ponytail: cut for a first pass, see docs/EVAL.md for the full spec):
 - Only the FINAL pass is run (beam=5 STT, natural-translation prompt), not
-  provisional. Provisional scoring (EVAL.md §3.3) needs simulated partial
+  partial. Partial scoring (EVAL.md §3.3) needs simulated partial
   audio/text truncation to be meaningful; that's a separate follow-up.
 - Automated metrics only: CER (§2.2) and chrF++ (§3.1), plus the Latin-script
   auto-fail check (§3.2). The human rubric (meaning/naturalness/honorific

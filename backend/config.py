@@ -20,7 +20,7 @@ WHISPER_DEVICE = "cuda"
 WHISPER_COMPUTE_TYPE = "int8_float16"
 WHISPER_LANGUAGE = "ja"
 
-# Fast (provisional) vs quality (final) decoding settings — see stt/base.py's `fast` flag.
+# Fast (partial) vs quality (final) decoding settings — see stt/base.py's `fast` flag.
 WHISPER_FAST_BEAM_SIZE = 1
 WHISPER_FINAL_BEAM_SIZE = 5
 
@@ -77,14 +77,14 @@ MIN_PARTIAL_AUDIO_SECONDS = 0.8
 LLAMA_SERVER_URL = "http://127.0.0.1:8080"
 LLAMA_SERVER_MODEL = "gemma-3-12b-it"  # cosmetic — llama-server serves whatever -m it was launched with
 LLAMA_SERVER_TIMEOUT_S = 15.0
-# Fast/provisional translation calls run inline with the audio-processing
+# Fast/partial translation calls run inline with the audio-processing
 # path (until Q2 in docs/IMPROVEMENT_SPECS.md moves them off it), so a
 # stalled LLM call must give up quickly — the next partial cycle retries
 # with a fresher buffer anyway. Finals run on the background queue and can
 # afford the longer LLAMA_SERVER_TIMEOUT_S above.
 LLAMA_FAST_TIMEOUT_S = 3.0
-LLAMA_FAST_MAX_TOKENS = 64  # provisional translation: short, literal is fine
-LLAMA_FINAL_MAX_TOKENS = 200  # finalized translation: full natural sentence
+LLAMA_FAST_MAX_TOKENS = 64  # partial translation: short, literal is fine
+LLAMA_FINAL_MAX_TOKENS = 200  # final translation: full natural sentence
 
 # On session close (stop_session / client disconnect), wait up to this long
 # for queued finalize work to drain before cancelling the worker — otherwise

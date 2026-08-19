@@ -1,7 +1,7 @@
 // popup.js — Stage 1/2 have no real UI yet; this popup exists purely to
 // start/stop capture and visually verify that partial/final transcripts +
 // translations are arriving correctly (see PRD §7 for the
-// provisional/finalized distinction).
+// partial/final distinction).
 
 const toggleBtn = document.getElementById("toggle");
 const statusEl = document.getElementById("status");

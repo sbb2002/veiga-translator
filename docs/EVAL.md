@@ -42,7 +42,7 @@ CER = (S + D + I) / N
 도구: `jiwer.cer(ja_ref_normalized, hypothesis_normalized)`.
 
 **분리 집계**:
-- provisional 하이포시스와 final 하이포시스의 CER을 각각 따로 계산한다 (하나로 합치지 않는다).
+- partial 하이포시스와 final 하이포시스의 CER을 각각 따로 계산한다 (하나로 합치지 않는다).
 - `normal` / `hard` 그룹별로 각각 따로 계산한다.
 - glossary 등록 고유명사가 포함된 세그먼트만 모아 별도 CER("고유명사 CER")을 계산한다.
 
@@ -74,7 +74,7 @@ CER = (S + D + I) / N
 
 ### 3.1 자동 지표: chrF++
 
-`ko_ref`와 모델 출력(final 번역만 대상) 사이 chrF++를 계산한다. provisional 번역에는 적용하지
+`ko_ref`와 모델 출력(final 번역만 대상) 사이 chrF++를 계산한다. partial 번역에는 적용하지
 않는다 (§3.3 참조).
 
 도구: `sacrebleu.corpus_chrf(hypotheses, [references], word_order=2)` (`word_order=2` = chrF++).
@@ -100,7 +100,7 @@ CER = (S + D + I) / N
 - `ja_ref`에 없는 내용이 출력에 추가됨(창작)
 - `ja_ref`에 있는 내용이 출력에서 누락됨
 
-### 3.3 Provisional(진행 중) 번역 — 이진 채점
+### 3.3 Partial(진행 중) 번역 — 이진 채점
 
 - `ja_ref`(또는 해당 시점까지의 부분 발화)에 등장하는 단어가 빠짐없이 어떤 형태로든 한국어로
   나왔으면 **pass**, 하나라도 누락됐으면 **fail**.
@@ -120,7 +120,7 @@ Final 번역이 S1으로 판정된 세그먼트마다 다음을 확인해 `원�
 ## 4. 평가 절차
 
 1. §1 형식으로 참조 데이터셋 준비, 버전 파일명 부여.
-2. 현재 `backend/config.py` 설정으로 데이터셋 전체를 파이프라인에 통과시켜 provisional/final
+2. 현재 `backend/config.py` 설정으로 데이터셋 전체를 파이프라인에 통과시켜 partial/final
    STT·번역 결과를 각각 기록.
 3. §2, §3의 절차대로 채점.
 4. 결과를 §5 형식으로 리포트.
@@ -132,7 +132,7 @@ Final 번역이 S1으로 판정된 세그먼트마다 다음을 확인해 `원�
 
 **STT**
 
-| 그룹 | provisional CER | final CER | 고유명사 CER | S1 건수/100세그먼트 |
+| 그룹 | partial CER | final CER | 고유명사 CER | S1 건수/100세그먼트 |
 |---|---|---|---|---|
 | normal | | | | |
 | hard | | | | |
@@ -142,7 +142,7 @@ Final 번역이 S1으로 판정된 세그먼트마다 다음을 확인해 `원�
 
 **번역**
 
-| 그룹 | final chrF++ | 의미 충실도(평균) | 자연스러움(평균) | 존댓말 일치(평균) | 스크립트 순수성(평균) | S1 건수/100세그먼트 | provisional pass율 |
+| 그룹 | final chrF++ | 의미 충실도(평균) | 자연스러움(평균) | 존댓말 일치(평균) | 스크립트 순수성(평균) | S1 건수/100세그먼트 | partial pass율 |
 |---|---|---|---|---|---|---|---|
 | normal | | | | | | | |
 | hard | | | | | | | |

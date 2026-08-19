@@ -46,7 +46,7 @@ anything from the parent directory applies here.
   Streams audio in **0.3s chunks** to the local backend over WebSocket and renders results two ways:
   an overlay caption on top of the video, and a separate side panel with a scrolling text log. Both
   display modes must be supported, not just one. Both display modes must visually distinguish
-  **provisional** vs **finalized** text (e.g. dim/blurred vs bright/crisp) — see the streaming
+  **partial** vs **final** text (e.g. dim/blurred vs bright/crisp) — see the streaming
   strategy below.
 - **`backend/`** — Local Python FastAPI + WebSocket server. Owns the STT and translation pipeline.
   Runs on the user's machine with an NVIDIA GPU (CUDA available) — prefer GPU-accelerated inference
@@ -59,14 +59,23 @@ anything from the parent directory applies here.
 
 ### Streaming / sentence-finalization strategy (PRD §7 — important, drives most of the backend design)
 
+**Terminology (use these two terms everywhere — code, docs, comments — nothing else):**
+- **partial**: in-progress text for a sentence still being spoken. Never "provisional".
+- **final**: text for a sentence judged complete. Never "finalized" as a noun/adjective for the text
+  itself (it's fine as a verb, e.g. "the utterance finalizes").
+
+This matches the WebSocket wire contract (`{"type": "partial"|"final", ...}`) and the existing code
+(`config.PARTIAL_UPDATE_INTERVAL_S`, `config.LLAMA_FINAL_MAX_TOKENS`, `_final_history`, etc.) — don't
+introduce a second vocabulary for the same two states.
+
 The pipeline emits two kinds of text per in-flight sentence, not one:
 
-- **Provisional (in-progress) text**: while a sentence is still being spoken, transcribe
-  word-by-word from the streaming partial STT hypothesis and translate it live. Prefer
-  context-aware translation, but if that's not tractable in real time, fall back to a simple/literal
-  word-for-word translation — showing *something* quickly matters more than polish here.
-- **Finalized text**: once a sentence is judged complete, re-render both the transcript and the
-  translation as clean, natural, context-aware Korean, and **replace** the provisional text in
+- **partial text**: while a sentence is still being spoken, transcribe word-by-word from the
+  streaming partial STT hypothesis and translate it live. Prefer context-aware translation, but if
+  that's not tractable in real time, fall back to a simple/literal word-for-word translation —
+  showing *something* quickly matters more than polish here.
+- **final text**: once a sentence is judged complete, re-render both the transcript and the
+  translation as clean, natural, context-aware Korean, and **replace** the partial text in
   place (not append).
 
 Sentence-completion is judged by combining two signals: silence detection as the primary trigger
@@ -100,10 +109,10 @@ and manually verify each stage before starting the next.
 **Pipeline plumbing (technical stages, both done):**
 
 1. **DONE.** Tab-audio capture (extension, 0.3s chunks) → backend receives audio → Japanese
-   transcript printed/visible somewhere simple, already distinguishing provisional vs finalized
+   transcript printed/visible somewhere simple, already distinguishing partial vs final
    text (no translation, no real UI yet). Verified manually against a real Japanese YouTube live
    stream via the unpacked extension + `uvicorn backend.main:app`.
-2. **DONE.** Translation added: provisional text gets simple/literal translation, finalized text
+2. **DONE.** Translation added: partial text gets simple/literal translation, final text
    gets natural translation — still shown somewhere simple (extension popup log, not a real UI).
 
 **Current roadmap (quality/scope phases, in order):**
@@ -116,7 +125,7 @@ and manually verify each stage before starting the next.
    question). Deferred; current behavior (VAD/no-speech filtering incidentally skips most music) is
    left as-is for now.
 4. UI 설계 및 구현 — overlay captions on the video + the side panel, both streaming live with the
-   provisional/finalized visual distinction (both display modes required, not just one).
+   partial/final visual distinction (both display modes required, not just one).
 
 ## Commands
 

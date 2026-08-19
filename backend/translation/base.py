@@ -23,7 +23,7 @@ class TranslationEngine(Protocol):
         self,
         text: str,
         *,
-        fast: bool = False,  # True => provisional pass: literal/quick is fine
+        fast: bool = False,  # True => partial pass: literal/quick is fine
         context: str | None = None,
         glossary_hint: str | None = None,
     ) -> TranslationResult: ...

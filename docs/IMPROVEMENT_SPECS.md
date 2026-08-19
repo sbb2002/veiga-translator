@@ -347,7 +347,7 @@ fast STT 소요)뿐이며, `MAX_UTTERANCE_SECONDS = 10` 캡이 상한을 만든�
   수를 기록. 이후 partial STT는 `audio()[frozen_samples:]`(tail)만 전사해
   `frozen_text + tail_text`로 표시.
 - 동결 경계의 단어 깨짐은 허용 — final 패스가 전체 버퍼를 다시 전사하므로 확정 품질에는
-  영향 없다. provisional의 정의("일단 뭔가 뜬다", PRD §7)에 부합.
+  영향 없다. partial의 정의("일단 뭔가 뜬다", PRD §7)에 부합.
 
 **의존**: Q2, Q1.
 

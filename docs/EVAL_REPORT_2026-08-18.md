@@ -9,7 +9,7 @@
 이 평가는 **CPU**(faster-whisper `medium` int8, llama-server CPU 빌드로 Qwen2.5-7B-Instruct
 Q4_K_M)로 돌렸다. 실제 서비스는 `config.py` 기준 CUDA + int8_float16. STT/번역의 **디코딩
 파라미터(beam_size=5, 프롬프트, grammar)는 동일**하지만, VAD 기반 실시간 세그멘테이션·
-provisional 패스·문맥 연속성(`context`)·glossary hotwords는 이번 평가에 포함되지 않았다 —
+partial 패스·문맥 연속성(`context`)·glossary hotwords는 이번 평가에 포함되지 않았다 —
 사람이 이미 잘라둔 클립을 STT에 한 번에 통째로 넣고 final 패스만 측정했다. 정밀도(GPU
 int8_float16 vs CPU int8) 차이가 아래 수치를 크게 바꿀 것으로는 보이지 않는다.
 

@@ -73,7 +73,7 @@ class AudioSession:
         self._frame_buffer = np.zeros(0, dtype=np.float32)
         self._utterance: _UtteranceState | None = None
         # Rolling short-term context for translation continuity: the last
-        # few finalized (JA, KO) sentence pairs, oldest first (see
+        # few final (JA, KO) sentence pairs, oldest first (see
         # config.FINAL_CONTEXT_HISTORY_SIZE / EVAL_REPORT_2026-08-18.md §5-E-1).
         self._final_history: deque[tuple[str, str]] = deque(
             maxlen=config.FINAL_CONTEXT_HISTORY_SIZE

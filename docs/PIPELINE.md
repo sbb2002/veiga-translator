@@ -27,7 +27,7 @@ flowchart TD
     style F4 fill:#2a6,color:#fff
 ```
 
-- 회색(P4) = provisional 표시, 초록(F4) = finalized 표시.
+- 회색(P4) = partial 표시, 초록(F4) = final 표시.
 - partial 트랙은 메인 오디오 처리 루프(`_process_frame`) 안에서 `await`로 실행된다 —
   이벤트 루프는 막지 않지만 **오디오 드레인(`feed_audio`)은 partial의 STT+번역이 끝날
   때까지 대기**한다. 백그라운드 분리는 `docs/IMPROVEMENT_SPECS.md` Q2로 계획됨.

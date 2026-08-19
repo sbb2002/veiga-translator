@@ -26,7 +26,7 @@ class STTEngine(Protocol):
         self,
         audio: np.ndarray,  # float32 mono PCM, 16kHz, values in [-1, 1]
         *,
-        fast: bool = False,  # True => optimize for latency (provisional pass)
+        fast: bool = False,  # True => optimize for latency (partial pass)
         previous_context: str | None = None,
     ) -> TranscriptionResult: ...
 

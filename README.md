@@ -7,7 +7,7 @@
 전체 배경과 설계 근거는 `docs/PRD.md`, 아키텍처/빌드 순서는 `CLAUDE.md` 참고.
 
 현재 진행 단계: 파이프라인 배관(캡처 → STT → 번역)은 완료. 정식 UI는 아직 없고 팝업에서
-provisional/final 텍스트를 단순 표시하며, 지금은 전사/번역 **품질 개선 단계**입니다
+partial/final 텍스트를 단순 표시하며, 지금은 전사/번역 **품질 개선 단계**입니다
 (로드맵: `CLAUDE.md` §"Current roadmap", 개선 목록: `docs/IMPROVEMENT_BACKLOG.md`).
 
 ## 사전 준비물
@@ -68,7 +68,7 @@ uvicorn backend.main:app --reload --port 8000
 2. 우측 상단 "개발자 모드" 켜기
 3. "압축해제된 확장 프로그램을 로드합니다" → `extension/` 폴더 선택
 4. 일본어 유튜브 라이브 등 탭을 열고 확장 아이콘 클릭 → "Start Capture"
-5. 팝업 창에 provisional(흐린 글씨)과 final(선명한 글씨) 일본어 원문 + 한국어 번역이
+5. 팝업 창에 partial(흐린 글씨)과 final(선명한 글씨) 일본어 원문 + 한국어 번역이
    실시간으로 표시됨
 
 확장 코드를 수정한 뒤에는 `chrome://extensions`에서 해당 확장을 새로고침해야 합니다.

@@ -120,7 +120,7 @@ async function startCapture(streamId) {
 }
 
 function stopCapture() {
-  // R2/R3: suppress reconnect attempts and drain finalized text from backend
+  // R2/R3: suppress reconnect attempts and drain final text from backend
   captureActive = false;
   if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
 

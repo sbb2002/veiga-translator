@@ -22,6 +22,7 @@ import numpy as np
 
 from backend import config
 from backend.glossary import Glossary
+from backend.music_gate import MusicGate
 from backend.sentence_completion import has_strong_sentence_boundary, looks_complete
 from backend.stt.base import STTEngine
 from backend.translation.base import TranslationEngine, TranslationResult
@@ -30,6 +31,12 @@ from backend.vad import SileroVAD
 logger = logging.getLogger("live-translator.backend")
 
 EventSink = Callable[[dict], Awaitable[None]]
+
+
+def _rms(audio: np.ndarray) -> float:
+    if audio.size == 0:
+        return 0.0
+    return float(np.sqrt(np.mean(np.square(audio))))
 
 
 @dataclass
@@ -70,6 +77,9 @@ class AudioSession:
         # guarantees a single capture at a time.
         self._vad = vad
         vad.reset()
+        # Pure signal processing, no model weights — cheap enough to build
+        # fresh per session rather than share/reset like the VAD model.
+        self._music_gate = MusicGate()
         self._frame_buffer = np.zeros(0, dtype=np.float32)
         self._utterance: _UtteranceState | None = None
         # Rolling short-term context for translation continuity: the last
@@ -105,7 +115,14 @@ class AudioSession:
             await self._process_frame(frame)
 
     async def _process_frame(self, frame: np.ndarray) -> None:
-        is_speech = self._vad.is_speech(frame)
+        self._music_gate.push(frame)
+        # AND, not a replacement for VAD: music_gate only ever downgrades a
+        # VAD "speech" call to "not speech" when its own (much coarser,
+        # ~MUSIC_GATE_WINDOW_S-lagged) read is confidently musical — it can
+        # never manufacture speech VAD didn't already see. See
+        # music_gate.py for why this sits ahead of VAD in the pipeline
+        # rather than replacing it.
+        is_speech = self._vad.is_speech(frame) and not self._music_gate.is_music_dominant()
         frame_ms = len(frame) / config.SAMPLE_RATE * 1000
 
         if is_speech:
@@ -184,9 +201,15 @@ class AudioSession:
         utterance = self._utterance
         if utterance is None:
             return ""
+        audio = utterance.audio()
+        if _rms(audio) < config.AUDIO_RMS_SILENCE_FLOOR:
+            # Near-silent buffer (VAD false-positive on background noise/
+            # music) — skip STT entirely rather than risk a confidently
+            # hallucinated partial. See config.AUDIO_RMS_SILENCE_FLOOR.
+            return utterance.last_partial_text
         stt_start = time.monotonic()
         try:
-            stt_result = await asyncio.to_thread(self._stt.transcribe, utterance.audio(), fast=True)
+            stt_result = await asyncio.to_thread(self._stt.transcribe, audio, fast=True)
         except Exception:
             logger.exception("partial STT failed — skipping this cycle")
             return utterance.last_partial_text
@@ -194,32 +217,44 @@ class AudioSession:
         if not stt_result.text:
             return ""
         utterance.last_partial_text = stt_result.text
-        glossary_hint = self._glossary.translation_hint(stt_result.text)
-        llm_start = time.monotonic()
-        try:
-            translation = await self._translate.translate(
-                stt_result.text,
-                fast=True,
-                glossary_hint=glossary_hint,
-                allowed_literals=self._glossary.latin_targets(stt_result.text),
-            )
-            utterance.last_partial_translation = translation.text
-        except Exception:
-            logger.exception("partial translation failed — reusing last translation")
-            translation = TranslationResult(text=utterance.last_partial_translation)
-        llm_s = time.monotonic() - llm_start
+        # DEPRECATED 2026-08-19: partial (live, word-by-word) translation is
+        # disabled — user call, after live capture showed the run-on
+        # segmentation problem (see sentence_completion.py's
+        # _TERMINAL_PUNCTUATION_RE fix) compounding with fast/beam=1 partial
+        # translations of an oversized, badly-bounded buffer to produce
+        # confidently wrong Korean before the sentence had even finished.
+        # Per current direction: only fully "final" sentences get
+        # translated; partials now surface transcription (Japanese) only.
+        # This contradicts PRD §7 / CLAUDE.md's original "translate partials
+        # live, literal is fine" strategy — that doc needs updating to
+        # match. Left commented rather than deleted so the live-translation
+        # path can be restored if this turns out to be the wrong call.
+        #
+        # glossary_hint = self._glossary.translation_hint(stt_result.text)
+        # llm_start = time.monotonic()
+        # try:
+        #     translation = await self._translate.translate(
+        #         stt_result.text,
+        #         fast=True,
+        #         glossary_hint=glossary_hint,
+        #         allowed_literals=self._glossary.latin_targets(stt_result.text),
+        #     )
+        #     utterance.last_partial_translation = translation.text
+        # except Exception:
+        #     logger.exception("partial translation failed — reusing last translation")
+        #     translation = TranslationResult(text=utterance.last_partial_translation)
+        # llm_s = time.monotonic() - llm_start
         logger.info(
-            "partial seg=%s buf=%.1fs stt=%.2fs llm=%.2fs",
+            "partial seg=%s buf=%.1fs stt=%.2fs",
             utterance.segment_id,
             utterance.duration_s(),
             stt_s,
-            llm_s,
         )
         await self._emit_safe(
             {
                 "type": "partial",
                 "text": stt_result.text,
-                "translation": translation.text,
+                "translation": "",
                 "segment_id": utterance.segment_id,
             }
         )
@@ -315,18 +350,33 @@ class AudioSession:
         audio = utterance.audio()
         final_text = ""
         stt_s = 0.0
-        if audio.size > 0:
+        no_speech_prob: float | None = None
+        avg_logprob: float | None = None
+        dropped_low_confidence = False
+        audio_rms = _rms(audio)
+        # Same RMS gate as _emit_partial: don't trust a beam=5 re-transcribe
+        # of near-silent audio either, so a confidently hallucinated final
+        # (e.g. "最後までご視聴いただきありがとうございました" on background
+        # noise with no real speech) can't slip through just because the
+        # partial pass happened to skip it too. Falls through to the
+        # existing last_partial_text fallback below, which will also be
+        # empty in this case, settling the UI on an empty final instead of
+        # showing hallucinated text.
+        if audio.size > 0 and audio_rms >= config.AUDIO_RMS_SILENCE_FLOOR:
             stt_start = time.monotonic()
             try:
                 stt_result = await asyncio.to_thread(self._stt.transcribe, audio, fast=False)
                 stt_s = time.monotonic() - stt_start
                 final_text = stt_result.text
+                no_speech_prob = stt_result.no_speech_prob
+                avg_logprob = stt_result.avg_logprob
+                dropped_low_confidence = stt_result.dropped_low_confidence
             except Exception:
                 logger.exception("final STT failed — falling back to last partial text")
                 stt_s = time.monotonic() - stt_start
                 final_text = ""
 
-        if not final_text:
+        if not final_text and not dropped_low_confidence:
             # The final (beam=5) pass can come back empty even though the
             # fast partial pass found speech (e.g. no_speech_prob crossing
             # the drop threshold differently at a different beam size, more
@@ -342,6 +392,17 @@ class AudioSession:
             # never a partial either do we emit a genuinely empty final —
             # but always emit *something* so the UI settles out of
             # "partial" state instead of hanging on it forever.
+            #
+            # BUT skip this fallback entirely when the final pass didn't
+            # just find nothing — it found something and explicitly
+            # rejected it (low confidence or a known-hallucination match,
+            # see faster_whisper_engine.py). Falling back to last_partial_text
+            # in that case would resurrect exactly the hallucination the
+            # final pass (beam=5, more reliable than the fast/beam=1 partial
+            # pass that produced last_partial_text) correctly threw out —
+            # observed live 2026-08-19: a "ご視聴ありがとうございました"
+            # final pass got dropped by the hallucination gate, then came
+            # right back via this fallback anyway.
             final_text = utterance.last_partial_text
 
         if not final_text:
@@ -354,7 +415,15 @@ class AudioSession:
                 0.0,
             )
             await self._emit_safe(
-                {"type": "final", "text": "", "translation": "", "segment_id": utterance.segment_id}
+                {
+                    "type": "final",
+                    "text": "",
+                    "translation": "",
+                    "segment_id": utterance.segment_id,
+                    "audio_rms": audio_rms,
+                    "no_speech_prob": no_speech_prob,
+                    "avg_logprob": avg_logprob,
+                }
             )
             return
 
@@ -390,5 +459,8 @@ class AudioSession:
                 "text": final_text,
                 "translation": translation.text,
                 "segment_id": utterance.segment_id,
+                "audio_rms": audio_rms,
+                "no_speech_prob": no_speech_prob,
+                "avg_logprob": avg_logprob,
             }
         )

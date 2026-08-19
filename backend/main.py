@@ -16,6 +16,8 @@ from __future__ import annotations
 
 import json
 import logging
+import time
+from pathlib import Path
 
 from fastapi import FastAPI, WebSocket
 
@@ -29,6 +31,27 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("live-translator.backend")
 
 app = FastAPI(title="live-translator backend")
+
+# Manual mislabel tagging from the popup (see extension/popup.js — click a
+# finalized sentence to flag it wrong, click again to undo). Appended as-is,
+# one JSON object per line, so a live-capture review pass can grep/jq this
+# alongside the eval-set jsonl files under data/.
+FLAGGED_SEGMENTS_LOG = Path("data/flagged_segments.jsonl")
+
+
+def _append_flag(control: dict) -> None:
+    entry = {
+        "timestamp": time.time(),
+        "segment_id": control.get("segment_id"),
+        "flagged": control.get("flagged"),
+        "text": control.get("text"),
+        "translation": control.get("translation"),
+        "audio_rms": control.get("audio_rms"),
+        "no_speech_prob": control.get("no_speech_prob"),
+        "avg_logprob": control.get("avg_logprob"),
+    }
+    with FLAGGED_SEGMENTS_LOG.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
 _stt_engine: FasterWhisperEngine | None = None
 _translation_engine: LlamaServerEngine | None = None
@@ -110,5 +133,13 @@ async def ws_audio(websocket: WebSocket) -> None:
                 if control.get("type") == "stop_session":
                     logger.info("Client requested stop_session")
                     break
+                if control.get("type") == "flag_segment":
+                    logger.info(
+                        "segment flagged=%s seg=%s: %r",
+                        control.get("flagged"),
+                        control.get("segment_id"),
+                        control.get("text"),
+                    )
+                    _append_flag(control)
     finally:
         await session.close()

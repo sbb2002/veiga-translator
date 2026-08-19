@@ -1,0 +1,12 @@
+{
+  "_comment": "Curated 'Bag of Hallucinations' (Baranski et al. 2025) — actual outro-phrase hallucinations observed via extension/popup.js click-to-flag labeling, deduped from data/flagged_segments.jsonl on 2026-08-19. Matched by embedding similarity (backend/hallucination_gate.py), not exact string, so morphological variants of the same phrase don't need their own entry. Add a new entry here (not a new regex) when a genuinely new hallucinated phrase family is confirmed via labeling.",
+  "phrases": [
+    "ご視聴ありがとうございました",
+    "ご視聴ありがとうございました!",
+    "ご視聴ありがとうございました。",
+    "最後まで視聴してくださって ありがとうございました。",
+    "最後まで視聴してくださって ありがとうございます",
+    "最後まで視聴してくださって 本当にありがとうございます",
+    "最後まで視聴してくださって 本当にありがとうございます。"
+  ]
+}

@@ -18,6 +18,24 @@
 const OFFSCREEN_URL = "offscreen.html";
 const MAX_LOG_ENTRIES = 200;
 
+// A chrome.sidePanel-based persistent UI was tried and reverted 2026-08-19:
+// starting capture from a click *inside* a side panel reliably failed with
+// "Extension has not been invoked for the current page (see activeTab
+// permission)" — activeTab granted by the toolbar-icon click that opens the
+// panel does not carry over to a later, separate gesture on a button inside
+// it, and (once the manifest declares "side_panel") Chrome opens the panel
+// natively on icon click without ever firing chrome.action.onClicked, so
+// there's no reliable hook to grab that gesture another way either.
+//
+// A classic default_popup was tried next (start capture via a button click
+// *inside* the popup, which Chrome does accept for activeTab/tabCapture),
+// but the user wanted the toolbar icon itself to start capture immediately
+// with no intermediate popup step. So: manifest has no "default_popup" at
+// all now, which makes chrome.action.onClicked fire directly on the icon
+// click — that click IS the activeTab-granting gesture, so startCapture(tab.id)
+// below can use it straightaway. A separate chrome.windows.create popup-type
+// window is opened right after, and stays open no matter what else the user
+// clicks (unlike an action popup, which Chrome always closes on blur).
 async function getCaptureState() {
   const { captureState } = await chrome.storage.session.get("captureState");
   return captureState ?? { active: false, tabId: null };
@@ -41,11 +59,14 @@ async function ensureOffscreenDocument() {
 }
 
 async function startCapture(tabId) {
+  console.log("[background] startCapture: begin, tabId=", tabId);
   const current = await getCaptureState();
+  console.log("[background] startCapture: current state=", current);
   if (current.active) {
     // Already capturing (possibly a stale popup that lost track of this
     // after the service worker was recycled) — never silently layer a
     // second capture on top. Only a real STOP_CAPTURE should tear it down.
+    console.log("[background] startCapture: already active, returning early");
     return current;
   }
 
@@ -54,9 +75,13 @@ async function startCapture(tabId) {
   // the transcript after stopping until the next session begins.
   await chrome.storage.session.remove("transcriptLog");
 
+  console.log("[background] startCapture: ensuring offscreen document...");
   await ensureOffscreenDocument();
+  console.log("[background] startCapture: offscreen document ready, requesting streamId...");
   const streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tabId });
+  console.log("[background] startCapture: got streamId, sending INIT_CAPTURE...");
   await chrome.runtime.sendMessage({ type: "INIT_CAPTURE", streamId });
+  console.log("[background] startCapture: INIT_CAPTURE sent, done");
 
   const next = { active: true, tabId };
   await setCaptureState(next);
@@ -93,11 +118,60 @@ async function appendToLog(event) {
   await chrome.storage.session.set({ transcriptLog: trimmed });
 }
 
+const VIEWER_URL = "popup.html?detached=1";
+
+async function getViewerWindowId() {
+  const { viewerWindowId } = await chrome.storage.session.get("viewerWindowId");
+  return viewerWindowId ?? null;
+}
+
+async function openOrFocusViewerWindow() {
+  const existingId = await getViewerWindowId();
+  if (existingId != null) {
+    try {
+      await chrome.windows.update(existingId, { focused: true });
+      return; // still open — just bring it forward, don't spawn a second one
+    } catch {
+      // User closed it since last time; fall through and create a fresh one.
+    }
+  }
+  const win = await chrome.windows.create({
+    url: chrome.runtime.getURL(VIEWER_URL),
+    type: "popup",
+    width: 420,
+    height: 620,
+    focused: true,
+  });
+  await chrome.storage.session.set({ viewerWindowId: win.id });
+}
+
+// The toolbar icon click itself both starts capture (if idle) and opens/
+// focuses the persistent viewer window — no popup step in between, per the
+// user's explicit request.
+chrome.action.onClicked.addListener(async (tab) => {
+  console.log("[background] action clicked, tab=", tab.id);
+  try {
+    const state = await getCaptureState();
+    if (!state.active) {
+      await startCapture(tab.id);
+    }
+  } catch (err) {
+    console.error("[background] action.onClicked startCapture failed:", err);
+  }
+  await openOrFocusViewerWindow();
+});
+
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message?.type === "START_CAPTURE") {
+    // popup.js sends this from a click inside the action popup — the
+    // gesture Chrome accepts for activeTab/tabCapture (see the comment
+    // above getCaptureState).
     startCapture(message.tabId)
       .then((state) => sendResponse({ ok: true, state }))
-      .catch((err) => sendResponse({ ok: false, error: String(err) }));
+      .catch((err) => {
+        console.error("[background] startCapture failed:", err);
+        sendResponse({ ok: false, error: String(err) });
+      });
     return true; // keep the message channel open for the async response
   }
 

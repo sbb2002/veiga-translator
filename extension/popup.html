@@ -32,13 +32,23 @@
       margin-bottom: 8px;
       padding-bottom: 6px;
       border-bottom: 1px solid #eee;
+      cursor: pointer;
     }
+    #log > div:hover { background: #f5f5f5; }
+    #log > div.flagged, #log > div.flagged:hover { background: #ffd6e7; }
     .ja-line { font-size: 11px; }
     .ko-line { font-size: 14px; margin-top: 2px; }
     .partial { color: #999; filter: blur(0.2px); }
     .final { color: #111; font-weight: 600; }
     .ko-line.partial { color: #aaa; }
     .ko-line.final { color: #0a3; }
+    .conf-line { margin-top: 3px; }
+    .metric-row { display: flex; align-items: center; gap: 4px; font-size: 9px; color: #777; font-family: monospace; }
+    .metric-label { width: 78px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .metric-bar { flex: 1; height: 5px; background: #eee; border-radius: 2px; overflow: hidden; }
+    .metric-fill { display: block; height: 100%; }
+    .metric-fill.metric-ok { background: #4caf50; }
+    .metric-fill.metric-risk { background: #e53935; }
   </style>
 </head>
 <body>

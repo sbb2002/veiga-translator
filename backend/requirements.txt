@@ -8,3 +8,7 @@ uvicorn[standard]
 faster-whisper
 numpy
 httpx
+# backend/hallucination_gate.py — embedding-similarity "Bag of Hallucinations"
+# gate (2026-08-19). Pulls in transformers/torch (torch already required
+# above for vad.py).
+sentence-transformers

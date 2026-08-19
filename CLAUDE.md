@@ -71,12 +71,19 @@ introduce a second vocabulary for the same two states.
 The pipeline emits two kinds of text per in-flight sentence, not one:
 
 - **partial text**: while a sentence is still being spoken, transcribe word-by-word from the
-  streaming partial STT hypothesis and translate it live. Prefer context-aware translation, but if
-  that's not tractable in real time, fall back to a simple/literal word-for-word translation —
-  showing *something* quickly matters more than polish here.
+  streaming partial STT hypothesis. **Live partial translation is currently DEPRECATED** (disabled
+  2026-08-19, `backend/audio_session.py::_emit_partial` — the call is commented out, not deleted):
+  live capture showed the run-on segmentation problem below compounding with fast/beam=1 partial
+  translation of an oversized, badly-bounded buffer to produce confidently wrong Korean before the
+  sentence had even finished. Partial events currently carry Japanese transcript only
+  (`"translation": ""`). This is a deliberate, possibly temporary reversal of this section's
+  original design (which called for translating partials live, literal-is-fine) — restore it by
+  uncommenting if a future fix (e.g. finer-grained segmentation, a cheaper/more stable partial
+  translation path) makes it trustworthy again.
 - **final text**: once a sentence is judged complete, re-render both the transcript and the
   translation as clean, natural, context-aware Korean, and **replace** the partial text in
-  place (not append).
+  place (not append). With partial translation deprecated, this is currently the *only* path that
+  produces Korean output at all.
 
 Sentence-completion is judged by combining two signals: silence detection as the primary trigger
 (a pause of sufficient length signals a candidate sentence boundary), corrected/confirmed by
@@ -85,11 +92,23 @@ chop sentences awkwardly when a speaker pauses mid-thought). Keep this as two de
 the backend, not a single hardcoded heuristic — the silence threshold and the context-correction
 logic are separate tunables that will need independent iteration.
 
+For a run-on speaker who never pauses long enough to trigger silence-based finalization,
+`backend/sentence_completion.py::has_strong_sentence_boundary` proactively checkpoints the buffer
+mid-speech. As of 2026-08-19 this scans the **whole accumulated buffer** for terminal punctuation
+(。！？), not just the tail — a tail-only check missed sentence boundaries that got pushed out of
+tail position by more speech arriving within the same `PARTIAL_UPDATE_INTERVAL_S` cycle, so
+run-on utterances grew unsplit until `MAX_UTTERANCE_SECONDS` forced a cut at an arbitrary word
+boundary instead of the sentence break the speaker actually made.
+
 ### STT / translation engine — benchmarked and chosen (still swappable)
 
 Current production pair, selected by benchmark rather than assumption:
 
-- **STT**: faster-whisper `medium` (CTranslate2, CUDA, int8_float16) — `backend/stt/`.
+- **STT**: faster-whisper `large-v3` (CTranslate2, CUDA, int8_float16) — `backend/stt/`. Moved off
+  `medium` on 2026-08-19 after live capture showed enough hallucination/garbling (stock-phrase
+  hallucinations, mangled repeated-word passages) that the user lost confidence in it — see
+  `data/flagged_segments.jsonl` for the labeled examples. Not yet re-run through the formal
+  `docs/EVAL.md` benchmark; treat as a working hypothesis pending that comparison.
 - **Translation**: **gemma-3-12b-it Q4_K_M** served by a llama.cpp server (chosen over Ollama for
   lower single-stream overhead; the OpenAI-compatible endpoint must honor llama.cpp's `grammar`
   field — backend startup probes this via `verify_contract` and warns if it doesn't). Benchmark

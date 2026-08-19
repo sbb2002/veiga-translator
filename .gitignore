@@ -30,3 +30,6 @@ data/wav/
 
 # Run logs (transient, not reproducible artifacts)
 *.log
+
+# Local screen recordings used for manual debugging review (large binaries)
+ref/

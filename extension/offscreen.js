@@ -83,6 +83,16 @@ async function startCapture(streamId) {
         chromeMediaSource: "tab",
         chromeMediaSourceId: streamId,
       },
+      // 2026-08-19: tried disabling these (echoCancellation/autoGainControl/
+      // noiseSuppression) to fix a perceived slight volume drop on capture
+      // start, but this backfired badly — autoGainControl off left real
+      // captured audio too quiet, so faster-whisper's no_speech_prob spiked
+      // and nearly every segment got classified as the "ご視聴..." outro
+      // hallucination and dropped (see backend_run.log). Reverted; the
+      // playback element and the STT pipeline share the same MediaStream
+      // track, so processing constraints here affect both at once — the
+      // volume complaint needs a different fix (e.g. a gain node on the
+      // playback path only, not touching the STT-facing track).
     },
     video: false,
   });
@@ -167,5 +177,20 @@ chrome.runtime.onMessage.addListener((message) => {
     });
   } else if (message?.type === "STOP_CAPTURE") {
     stopCapture();
+  } else if (message?.type === "FLAG_SEGMENT") {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          type: "flag_segment",
+          segment_id: message.segmentId,
+          flagged: message.flagged,
+          text: message.text,
+          translation: message.translation,
+          audio_rms: message.audio_rms,
+          no_speech_prob: message.no_speech_prob,
+          avg_logprob: message.avg_logprob,
+        })
+      );
+    }
   }
 });

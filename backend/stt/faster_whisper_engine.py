@@ -10,34 +10,15 @@ config.py.
 from __future__ import annotations
 
 import logging
-import re
 
 import numpy as np
 from faster_whisper import WhisperModel
 
 from backend import config
+from backend.hallucination_gate import HallucinationGate
 from backend.stt.base import TranscriptionResult
 
 logger = logging.getLogger("live-translator.backend")
-
-# A second, pattern-based safety net for hallucinated stock phrases that slip
-# past no_speech_prob filtering (observed: "【字幕視聴者の皆さん】" — a
-# bracketed meta-commentary/shoutout the model was fairly "confident" about,
-# so its no_speech_prob wasn't high enough to get caught, even though nothing
-# in the audio said this). 【...】-wrapped text is a very characteristic shape
-# for this specific hallucination family in Japanese auto-caption training
-# data, distinct enough from real spoken dialogue to filter unconditionally.
-_BRACKETED_HALLUCINATION_RE = re.compile(r"^【[^】]*】$")
-
-# Direct blocklist for the other recurring hallucination family: YouTube
-# auto-caption stock outro/thank-you phrases (from training data), which
-# Whisper reproduces confidently enough (high avg_logprob) that the
-# no_speech_prob+avg_logprob joint check below can't reliably catch them —
-# the model is "sure" of the hallucinated text even when it's sure the
-# audio itself probably isn't speech. Matched independent of confidence.
-_HALLUCINATED_OUTRO_RE = re.compile(
-    r"^(ご視聴|字幕視聴)?(いただき)?ありがとうございました[!!。]*$"
-)
 
 
 class FasterWhisperEngine:
@@ -52,6 +33,10 @@ class FasterWhisperEngine:
         self._language = language
         self._vocabulary_hint = vocabulary_hint
         self._model = WhisperModel(model_size, device=device, compute_type=compute_type)
+        # Loads its own (much smaller) embedding model once — see
+        # hallucination_gate.py for why this exists alongside the
+        # no_speech_prob/avg_logprob check below rather than instead of it.
+        self._hallucination_gate = HallucinationGate()
 
     def warmup(self) -> None:
         # A ~1s silent clip is enough to pay model-load/CUDA kernel-compile
@@ -88,48 +73,80 @@ class FasterWhisperEngine:
         )
 
         # Whisper models are well known to hallucinate stock outro phrases
-        # (e.g. "ご視聴ありがとうございました" / "字幕視聴ありがとうございました")
-        # on silent/low-energy audio — an artifact of training on YouTube data
+        # (e.g. "ご視聴ありがとうございました" / "最後まで視聴してくださって
+        # ありがとうございます") and other training-data boilerplate on
+        # silent/low-energy audio — an artifact of training on YouTube data
         # where auto-captioned videos commonly end with exactly that text. Our
         # own VAD gates most silence out, but not perfectly (background
         # music/noise, or trailing silence deliberately kept in the buffer —
         # see audio_session.py).
         #
-        # `no_speech_prob` ALONE turned out too aggressive: real logs showed
-        # it dropping genuine short/energetic speech ("めっちゃ嬉しい！",
-        # "僕って世界一幸せ" — no_speech_prob 0.6-0.87) right alongside actual
-        # silence, because a short excited utterance can score similarly to
-        # silence on that one signal. Per OpenAI Whisper's own reference
-        # decoding heuristic, require BOTH no_speech_prob high AND
-        # avg_logprob (the model's confidence in the tokens it actually
-        # produced) low before treating a segment as silence — genuine
-        # speech should still decode with reasonable confidence even if
-        # no_speech_prob alone is elevated. The specific outro-phrase
-        # hallucination is handled separately (_HALLUCINATED_OUTRO_RE)
-        # since Whisper reproduces it confidently (high avg_logprob) as a
-        # memorized phrase, defeating a confidence-based filter on its own.
+        # Filtering this by matching the specific hallucinated wording (tried
+        # first) doesn't scale: live-capture labeling on 2026-08-19
+        # (data/flagged_segments.jsonl) turned up the outro phrase alone in
+        # enough morphological variants that a hand-written regex for it
+        # never covered the next one, and every other hallucinated phrase
+        # would need its own bespoke pattern. Whisper's own no_speech_prob is
+        # the general signal instead: that same labeling showed it running
+        # high on essentially all of the flagged hallucinations, regardless
+        # of exact wording. A single no_speech_prob threshold alone was
+        # already ruled out once, though — real logs showed a MODERATE
+        # no_speech_prob (0.6-0.87) alongside genuine short/energetic speech
+        # ("めっちゃ嬉しい！", "僕って世界一幸せ"), so cutting there too would
+        # drop real speech. Two tiers instead: a HARD threshold high enough
+        # that no genuine speech has been observed to cross it, dropped
+        # unconditionally; below that, fall back to the original softer
+        # threshold gated by a low avg_logprob too (per OpenAI Whisper's own
+        # reference decoding heuristic) so a merely-elevated no_speech_prob
+        # only drops the segment when the model's own token confidence also
+        # agrees it's unreliable.
+        # Confidence-based filtering above catches most hallucinations but
+        # provably can't separate this one recurring family (outro thank-
+        # yous) from real short speech — their no_speech_prob/avg_logprob
+        # ranges overlap in labeled data. The embedding-similarity gate
+        # below is a second, independent check against known examples of
+        # that specific family — see hallucination_gate.py.
         text_parts: list[str] = []
+        kept_no_speech_probs: list[float] = []
+        kept_avg_logprobs: list[float] = []
+        dropped_low_confidence = False
         for segment in segments:
             stripped = segment.text.strip()
-            if _HALLUCINATED_OUTRO_RE.match(stripped) or _BRACKETED_HALLUCINATION_RE.match(
-                stripped
-            ):
-                continue
-            if (
+            should_drop = segment.no_speech_prob >= config.WHISPER_NO_SPEECH_HARD_THRESHOLD or (
                 segment.no_speech_prob >= config.WHISPER_NO_SPEECH_THRESHOLD
                 and segment.avg_logprob <= config.WHISPER_AVG_LOGPROB_THRESHOLD
-            ):
+            )
+            matched_hallucination = None
+            if not should_drop:
+                matched_hallucination = self._hallucination_gate.is_known_hallucination(stripped)
+                should_drop = matched_hallucination is not None
+            if should_drop:
+                dropped_low_confidence = True
                 if stripped:
                     logger.info(
-                        "STT dropped segment (no_speech_prob=%.3f, avg_logprob=%.3f): %r",
+                        "STT dropped segment (no_speech_prob=%.3f, avg_logprob=%.3f%s): %r",
                         segment.no_speech_prob,
                         segment.avg_logprob,
+                        f", matched known hallucination {matched_hallucination!r}"
+                        if matched_hallucination
+                        else "",
                         segment.text,
                     )
                 continue
             text_parts.append(segment.text)
+            kept_no_speech_probs.append(segment.no_speech_prob)
+            kept_avg_logprobs.append(segment.avg_logprob)
 
         return TranscriptionResult(
             text="".join(text_parts).strip(),
             language=getattr(info, "language", self._language),
+            no_speech_prob=(
+                sum(kept_no_speech_probs) / len(kept_no_speech_probs)
+                if kept_no_speech_probs
+                else None
+            ),
+            avg_logprob=(
+                sum(kept_avg_logprobs) / len(kept_avg_logprobs) if kept_avg_logprobs else None
+            ),
+            dropped_low_confidence=dropped_low_confidence,
         )

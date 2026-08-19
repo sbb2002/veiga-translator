@@ -341,7 +341,11 @@ class LlamaServerEngine:
             request_json["repeat_penalty"] = 1.3
             request_json["repeat_last_n"] = 64
 
-        response = await self._client.post("/v1/chat/completions", json=request_json)
+        response = await self._client.post(
+            "/v1/chat/completions",
+            json=request_json,
+            timeout=config.LLAMA_FAST_TIMEOUT_S if fast else config.LLAMA_SERVER_TIMEOUT_S,
+        )
         response.raise_for_status()
         data = response.json()
         timings = data.get("timings")

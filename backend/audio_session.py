@@ -24,7 +24,7 @@ from backend import config
 from backend.glossary import Glossary
 from backend.sentence_completion import has_strong_sentence_boundary, looks_complete
 from backend.stt.base import STTEngine
-from backend.translation.base import TranslationEngine
+from backend.translation.base import TranslationEngine, TranslationResult
 from backend.vad import SileroVAD
 
 logger = logging.getLogger("live-translator.backend")
@@ -40,6 +40,7 @@ class _UtteranceState:
     last_partial_at: float = 0.0
     silence_ms: float = 0.0
     last_partial_text: str = ""
+    last_partial_translation: str = ""
     enqueued_at: float = 0.0
 
     def audio(self) -> np.ndarray:
@@ -177,19 +178,28 @@ class AudioSession:
         if utterance is None:
             return ""
         stt_start = time.monotonic()
-        stt_result = await asyncio.to_thread(self._stt.transcribe, utterance.audio(), fast=True)
+        try:
+            stt_result = await asyncio.to_thread(self._stt.transcribe, utterance.audio(), fast=True)
+        except Exception:
+            logger.exception("partial STT failed — skipping this cycle")
+            return utterance.last_partial_text
         stt_s = time.monotonic() - stt_start
         if not stt_result.text:
             return ""
         utterance.last_partial_text = stt_result.text
         glossary_hint = self._glossary.translation_hint(stt_result.text)
         llm_start = time.monotonic()
-        translation = await self._translate.translate(
-            stt_result.text,
-            fast=True,
-            glossary_hint=glossary_hint,
-            allowed_literals=self._glossary.latin_targets(stt_result.text),
-        )
+        try:
+            translation = await self._translate.translate(
+                stt_result.text,
+                fast=True,
+                glossary_hint=glossary_hint,
+                allowed_literals=self._glossary.latin_targets(stt_result.text),
+            )
+            utterance.last_partial_translation = translation.text
+        except Exception:
+            logger.exception("partial translation failed — reusing last translation")
+            translation = TranslationResult(text=utterance.last_partial_translation)
         llm_s = time.monotonic() - llm_start
         logger.info(
             "partial seg=%s buf=%.1fs stt=%.2fs llm=%.2fs",
@@ -198,7 +208,7 @@ class AudioSession:
             stt_s,
             llm_s,
         )
-        await self._on_event(
+        await self._emit_safe(
             {
                 "type": "partial",
                 "text": stt_result.text,
@@ -222,6 +232,20 @@ class AudioSession:
         ko_lines = [f"{i}. {ko}" for i, (_ja, ko) in enumerate(self._final_history, start=1)]
         return "\n".join(ja_lines), "\n".join(ko_lines)
 
+    async def _emit_safe(self, event: dict) -> None:
+        """Send an event to the client, swallowing transport errors — the
+        websocket may already be gone (client closed mid-session, or events
+        drained after disconnect); losing one UI update must never kill the
+        pipeline or the finalize worker."""
+        try:
+            await self._on_event(event)
+        except Exception:
+            logger.warning(
+                "event emit failed (client gone?) — dropped %s for seg=%s",
+                event.get("type"),
+                event.get("segment_id"),
+            )
+
     def _enqueue_finalize(self) -> None:
         """Hand the current utterance off to the background finalize
         worker and immediately clear it — synchronous and cheap, so the
@@ -239,6 +263,18 @@ class AudioSession:
             utterance = await self._finalize_queue.get()
             try:
                 await self._do_finalize(utterance)
+            except asyncio.CancelledError:
+                raise
+            except Exception:
+                logger.exception("finalize failed for segment %s", utterance.segment_id)
+                await self._emit_safe(
+                    {
+                        "type": "final",
+                        "text": utterance.last_partial_text,
+                        "translation": utterance.last_partial_translation,
+                        "segment_id": utterance.segment_id,
+                    }
+                )
             finally:
                 self._finalize_queue.task_done()
 
@@ -257,9 +293,14 @@ class AudioSession:
         stt_s = 0.0
         if audio.size > 0:
             stt_start = time.monotonic()
-            stt_result = await asyncio.to_thread(self._stt.transcribe, audio, fast=False)
-            stt_s = time.monotonic() - stt_start
-            final_text = stt_result.text
+            try:
+                stt_result = await asyncio.to_thread(self._stt.transcribe, audio, fast=False)
+                stt_s = time.monotonic() - stt_start
+                final_text = stt_result.text
+            except Exception:
+                logger.exception("final STT failed — falling back to last partial text")
+                stt_s = time.monotonic() - stt_start
+                final_text = ""
 
         if not final_text:
             # The final (beam=5) pass can come back empty even though the
@@ -288,7 +329,7 @@ class AudioSession:
                 stt_s,
                 0.0,
             )
-            await self._on_event(
+            await self._emit_safe(
                 {"type": "final", "text": "", "translation": "", "segment_id": utterance.segment_id}
             )
             return
@@ -296,16 +337,21 @@ class AudioSession:
         glossary_hint = self._glossary.translation_hint(final_text)
         context, context_translation = self._format_history()
         llm_start = time.monotonic()
-        translation = await self._translate.translate(
-            final_text,
-            fast=False,
-            context=context,
-            context_translation=context_translation,
-            glossary_hint=glossary_hint,
-            allowed_literals=self._glossary.latin_targets(final_text),
-        )
-        llm_s = time.monotonic() - llm_start
-        self._final_history.append((final_text, translation.text))
+        try:
+            translation = await self._translate.translate(
+                final_text,
+                fast=False,
+                context=context,
+                context_translation=context_translation,
+                glossary_hint=glossary_hint,
+                allowed_literals=self._glossary.latin_targets(final_text),
+            )
+            llm_s = time.monotonic() - llm_start
+            self._final_history.append((final_text, translation.text))
+        except Exception:
+            logger.exception("final translation failed — falling back to last partial translation")
+            llm_s = time.monotonic() - llm_start
+            translation = TranslationResult(text=utterance.last_partial_translation)
         logger.info(
             "final seg=%s queue_wait=%.2fs depth=%d stt=%.2fs llm=%.2fs",
             utterance.segment_id,
@@ -314,7 +360,7 @@ class AudioSession:
             stt_s,
             llm_s,
         )
-        await self._on_event(
+        await self._emit_safe(
             {
                 "type": "final",
                 "text": final_text,

@@ -28,9 +28,14 @@ flowchart TD
 ```
 
 - 회색(P4) = provisional 표시, 초록(F4) = finalized 표시.
-- partial 트랙은 메인 오디오 처리 루프(`_process_frame`) 안에서 논블로킹으로 실행된다.
+- partial 트랙은 메인 오디오 처리 루프(`_process_frame`) 안에서 `await`로 실행된다 —
+  이벤트 루프는 막지 않지만 **오디오 드레인(`feed_audio`)은 partial의 STT+번역이 끝날
+  때까지 대기**한다. 백그라운드 분리는 `docs/IMPROVEMENT_SPECS.md` Q2로 계획됨.
 - final 트랙은 별도 `asyncio.Queue` + 백그라운드 워커 태스크(`_finalize_worker`)로 분리되어,
   느린 beam=5 STT + LLM 호출이 오디오 수신 경로를 막지 않는다. 발화 순서는 큐 순서로 보장된다.
+- 예외 경로(다이어그램에는 없음): STT/번역/이벤트 전송이 실패해도 세션과 워커는 죽지 않는다
+  — 해당 utterance의 마지막 partial 전사/번역으로 폴백한 final을 방출하고 계속 진행한다
+  (`docs/IMPROVEMENT_SPECS.md` R1).
 
 ## Sentence completion 상세
 

@@ -27,3 +27,17 @@ class TranslationEngine(Protocol):
         context: str | None = None,
         glossary_hint: str | None = None,
     ) -> TranslationResult: ...
+
+    async def translate_ko_to_ja(
+        self,
+        text: str,
+        *,
+        context: str | None = None,
+    ) -> TranslationResult:
+        """Reverse direction (draft, 2026-08-20): a viewer's own Korean chat
+        message -> natural Japanese, for pasting into the stream's chat.
+        `context` is the same recent-broadcast Japanese speech history used
+        by the forward direction (just the JA side — the viewer doesn't need
+        their own translated captions echoed back), so the outgoing message
+        can be phrased to fit what's currently happening on stream."""
+        ...

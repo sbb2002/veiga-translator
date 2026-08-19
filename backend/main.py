@@ -141,5 +141,22 @@ async def ws_audio(websocket: WebSocket) -> None:
                         control.get("text"),
                     )
                     _append_flag(control)
+                if control.get("type") == "translate_chat":
+                    # Draft (2026-08-20): one-shot KO->JA translation for the
+                    # viewer's own outgoing chat message — see
+                    # audio_session.py::translate_chat. Not on the streaming
+                    # partial/final path, so handled inline here rather than
+                    # via feed_audio().
+                    request_id = control.get("request_id")
+                    text = control.get("text", "")
+                    translation = await session.translate_chat(text)
+                    await send_event(
+                        {
+                            "type": "chat_translation",
+                            "request_id": request_id,
+                            "text": text,
+                            "translation": translation,
+                        }
+                    )
     finally:
         await session.close()

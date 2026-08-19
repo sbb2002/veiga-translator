@@ -228,3 +228,66 @@ async function restoreHistory() {
 
 restoreHistory();
 refreshState();
+
+// --- Chat reply (draft, 2026-08-20): translate the viewer's own Korean ---
+// --- chat message into Japanese, using the live broadcast as context. ---
+const chatInputEl = document.getElementById("chatInput");
+const chatTranslateBtn = document.getElementById("chatTranslateBtn");
+const chatOutputEl = document.getElementById("chatOutput");
+const chatStatusEl = document.getElementById("chatStatus");
+
+let pendingChatRequestId = null;
+
+async function sendChatTranslateRequest() {
+  const text = chatInputEl.value.trim();
+  if (!text) return;
+  // One in flight at a time — a second click before the first reply lands
+  // just supersedes it (pendingChatRequestId check below drops the stale
+  // reply rather than showing an out-of-order result).
+  const requestId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  pendingChatRequestId = requestId;
+  chatTranslateBtn.disabled = true;
+  chatStatusEl.textContent = "번역 중...";
+  chatOutputEl.textContent = "";
+  chatOutputEl.classList.remove("copied");
+  try {
+    await chrome.runtime.sendMessage({ type: "TRANSLATE_CHAT", text, requestId });
+  } catch (err) {
+    console.error("[popup] TRANSLATE_CHAT send failed:", err);
+    chatStatusEl.textContent = `error: ${err?.message ?? err}`;
+    chatTranslateBtn.disabled = false;
+  }
+}
+
+chatTranslateBtn.addEventListener("click", sendChatTranslateRequest);
+chatInputEl.addEventListener("keydown", (e) => {
+  // Enter sends, Shift+Enter for a newline (matches common chat-box convention).
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendChatTranslateRequest();
+  }
+});
+
+// Click the translated output to copy it — the whole point is pasting into
+// the stream's own chat box, which this extension has no reliable way to
+// reach directly (see popup.html's UI-scoping discussion, 2026-08-20).
+chatOutputEl.addEventListener("click", async () => {
+  if (!chatOutputEl.textContent) return;
+  try {
+    await navigator.clipboard.writeText(chatOutputEl.textContent);
+    chatOutputEl.classList.add("copied");
+    chatStatusEl.textContent = "복사됨";
+  } catch (err) {
+    console.error("[popup] clipboard write failed:", err);
+    chatStatusEl.textContent = "복사 실패 — 직접 선택해서 복사하세요";
+  }
+});
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message?.type !== "CHAT_TRANSLATION") return;
+  const { request_id: requestId, translation } = message.data ?? {};
+  chatTranslateBtn.disabled = false;
+  if (requestId !== pendingChatRequestId) return; // superseded by a newer request
+  chatOutputEl.textContent = translation || "(번역 결과 없음)";
+  chatStatusEl.textContent = translation ? "클릭해서 복사" : "";
+});

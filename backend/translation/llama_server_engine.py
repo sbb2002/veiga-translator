@@ -239,6 +239,49 @@ def _build_korean_only_grammar(extra_literals: tuple[str, ...] = ()) -> str:
 
 _KOREAN_ONLY_GRAMMAR = _build_korean_only_grammar()
 
+# --- Reverse direction (draft, 2026-08-20): viewer's own Korean chat -> ---
+# --- natural Japanese, for pasting into the stream's chat.              ---
+_KO_JA_SYSTEM_PROMPT = (
+    "You are helping a Korean-speaking viewer chat with a Japanese live "
+    "streamer. Translate the viewer's Korean chat message under "
+    "'[TEXT TO TRANSLATE]' into natural, casual-but-polite Japanese chat "
+    "text, the way a real Japanese viewer would type it in a stream's live "
+    "chat (typically です/ます base politeness, not stiff formal keigo, "
+    "and not blunt casual da/dearu either). The message may be short, use "
+    "internet slang, or contain a reaction/exclamation — translate the "
+    "intent naturally rather than word-for-word. If '[BROADCAST CONTEXT]' "
+    "is present (recent Japanese speech from the stream, oldest first), use "
+    "it only to pick natural wording/topic references that fit what's "
+    "currently happening on stream — never translate or repeat any "
+    "'[BROADCAST CONTEXT]' line in your output. Output ONLY the Japanese "
+    "chat message, nothing else — no notes, no romanization, no quotes."
+)
+
+# Japanese script allow-list, same rationale as _ALLOWED_SCRIPT_RANGES above
+# (a whitelist closes every script we didn't explicitly allow, instead of
+# chasing individual leaked scripts one at a time).
+_JAPANESE_SCRIPT_RANGES = [
+    (0x0030, 0x0039),  # digits
+    (0x3040, 0x309F),  # Hiragana
+    (0x30A0, 0x30FF),  # Katakana
+    (0x4E00, 0x9FFF),  # CJK Unified Ideographs (kanji)
+    (0x3000, 0x303F),  # CJK punctuation (。、「」etc.)
+    (0xFF01, 0xFF60),  # Fullwidth punctuation/forms
+]
+_JAPANESE_SINGLE_CHARS = " .,!?~'\"()-ー"
+
+
+def _build_japanese_only_grammar() -> str:
+    ranges = "".join(f"{chr(lo)}-{chr(hi)}" for lo, hi in _JAPANESE_SCRIPT_RANGES)
+    return (
+        "root ::= segment+\n"
+        "segment ::= safe-char+\n"
+        f"safe-char ::= [{ranges}{_JAPANESE_SINGLE_CHARS}]"
+    )
+
+
+_JAPANESE_ONLY_GRAMMAR = _build_japanese_only_grammar()
+
 
 class LlamaServerEngine:
     def __init__(
@@ -370,6 +413,50 @@ class LlamaServerEngine:
                 timings.get("prompt_ms", -1),
                 timings.get("predicted_ms", -1),
             )
+        translated = data["choices"][0]["message"]["content"].strip()
+        return TranslationResult(text=translated)
+
+    async def translate_ko_to_ja(
+        self,
+        text: str,
+        *,
+        context: str | None = None,
+    ) -> TranslationResult:
+        """Draft (2026-08-20), see base.py's docstring. Deliberately a
+        separate method rather than a `direction` flag on translate() — the
+        forward (JA->KO) path above is heavily tuned (glossary, false-friend
+        notes, laughter markers, KV-cache-friendly prompt structure) and
+        this reverse direction hasn't been through any of that yet; keeping
+        them apart avoids accidentally coupling future JA->KO tuning to
+        this still-unvalidated direction, or vice versa."""
+        if not text.strip():
+            return TranslationResult(text="")
+
+        sections = []
+        if context:
+            sections.append(f"[BROADCAST CONTEXT]\n{context}")
+        sections.append(f"[TEXT TO TRANSLATE]\n{text}")
+        user_content = "\n\n".join(sections)
+
+        request_json = {
+            "model": config.LLAMA_SERVER_MODEL,
+            "messages": [
+                {"role": "system", "content": _KO_JA_SYSTEM_PROMPT},
+                {"role": "user", "content": user_content},
+            ],
+            "max_tokens": config.LLAMA_FINAL_MAX_TOKENS,
+            "temperature": 0.0,
+            "grammar": _JAPANESE_ONLY_GRAMMAR,
+            "repeat_penalty": 1.3,
+            "repeat_last_n": 64,
+        }
+        response = await self._client.post(
+            "/v1/chat/completions",
+            json=request_json,
+            timeout=config.LLAMA_SERVER_TIMEOUT_S,
+        )
+        response.raise_for_status()
+        data = response.json()
         translated = data["choices"][0]["message"]["content"].strip()
         return TranslationResult(text=translated)
 

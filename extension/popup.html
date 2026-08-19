@@ -49,12 +49,59 @@
     .metric-fill { display: block; height: 100%; }
     .metric-fill.metric-ok { background: #4caf50; }
     .metric-fill.metric-risk { background: #e53935; }
+    #chatReply {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #ddd;
+    }
+    #chatReply h2 {
+      font-size: 11px;
+      font-weight: 700;
+      color: #666;
+      margin: 0 0 6px;
+    }
+    #chatInput {
+      width: 100%;
+      box-sizing: border-box;
+      resize: vertical;
+      font-family: inherit;
+      font-size: 13px;
+      padding: 6px;
+      min-height: 44px;
+    }
+    #chatTranslateBtn {
+      margin-top: 6px;
+    }
+    #chatOutput {
+      margin-top: 6px;
+      min-height: 20px;
+      padding: 6px;
+      font-size: 13px;
+      background: #f5f5f5;
+      border-radius: 3px;
+      cursor: pointer;
+      white-space: pre-wrap;
+    }
+    #chatOutput:empty { display: none; }
+    #chatOutput.copied { background: #d6f5df; }
+    #chatStatus {
+      margin-top: 4px;
+      font-size: 11px;
+      color: #999;
+    }
   </style>
 </head>
 <body>
   <button id="toggle">Start Capture</button>
   <div id="status">idle</div>
   <div id="log"></div>
+  <div id="chatReply">
+    <h2>내 채팅 번역 (한국어 → 일본어, 초안)</h2>
+    <textarea id="chatInput" placeholder="방송에 보낼 한국어 채팅을 입력하세요"></textarea>
+    <button id="chatTranslateBtn">번역</button>
+    <div id="chatOutput"></div>
+    <div id="chatStatus"></div>
+  </div>
   <script src="popup.js"></script>
 </body>
 </html>

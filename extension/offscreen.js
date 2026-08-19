@@ -51,12 +51,20 @@ function connectWebSocket() {
   };
 
   ws.onmessage = (event) => {
-    // Backend sends JSON text frames: {"type": "partial"|"final", "text": ...}
-    // Relay as-is to any listening extension page (popup, later the side
-    // panel / content script).
+    // Backend sends JSON text frames. Two families: "partial"/"final" are
+    // the streaming caption pipeline (relayed as TRANSCRIPT_EVENT, and
+    // persisted into the transcript log by background.js); "chat_translation"
+    // is the one-shot reverse-direction (draft, 2026-08-20) reply to a
+    // TRANSLATE_CHAT request below — relayed separately so it never lands in
+    // the persisted transcript log (it has no segment_id and isn't part of
+    // the caption stream).
     try {
       const data = JSON.parse(event.data);
-      chrome.runtime.sendMessage({ type: "TRANSCRIPT_EVENT", data }).catch(() => {});
+      if (data.type === "chat_translation") {
+        chrome.runtime.sendMessage({ type: "CHAT_TRANSLATION", data }).catch(() => {});
+      } else {
+        chrome.runtime.sendMessage({ type: "TRANSCRIPT_EVENT", data }).catch(() => {});
+      }
     } catch {
       // Non-JSON message — ignore for Stage 1.
     }
@@ -189,6 +197,20 @@ chrome.runtime.onMessage.addListener((message) => {
           audio_rms: message.audio_rms,
           no_speech_prob: message.no_speech_prob,
           avg_logprob: message.avg_logprob,
+        })
+      );
+    }
+  } else if (message?.type === "TRANSLATE_CHAT") {
+    // Draft (2026-08-20): outgoing KO->JA chat-reply translation — see
+    // popup.js and backend/audio_session.py::translate_chat. Only makes
+    // sense while a capture session's WS is open (translation needs the
+    // live broadcast context), same precondition as FLAG_SEGMENT above.
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(
+        JSON.stringify({
+          type: "translate_chat",
+          request_id: message.requestId,
+          text: message.text,
         })
       );
     }

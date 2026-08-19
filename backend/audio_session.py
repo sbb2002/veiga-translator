@@ -274,6 +274,21 @@ class AudioSession:
         ko_lines = [f"{i}. {ko}" for i, (_ja, ko) in enumerate(self._final_history, start=1)]
         return "\n".join(ja_lines), "\n".join(ko_lines)
 
+    async def translate_chat(self, text: str) -> str:
+        """Draft (2026-08-20): one-shot, button-triggered reverse translation
+        for the viewer's own outgoing chat message — not part of the
+        streaming partial/final pipeline above, but reuses the same recent
+        broadcast context (self._final_history) so the phrasing fits what's
+        currently happening on stream. See translation/base.py's
+        translate_ko_to_ja docstring."""
+        context, _context_translation = self._format_history()
+        try:
+            result = await self._translate.translate_ko_to_ja(text, context=context)
+        except Exception:
+            logger.exception("chat translation (KO->JA) failed")
+            return ""
+        return result.text
+
     async def _emit_safe(self, event: dict) -> None:
         """Send an event to the client, swallowing transport errors — the
         websocket may already be gone (client closed mid-session, or events

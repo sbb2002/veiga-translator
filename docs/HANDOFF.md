@@ -1,91 +1,87 @@
-# 작업 핸드오프 — batch1-instrumentation (2026-08-19)
+# 작업 핸드오프 (2026-08-20 기준)
 
-세션 간 인수인계 문서. 구현은 GPU 없는 환경에서 코드 수준 검수까지만 진행했고, **실사용
-검증은 GPU 머신에서 이 문서의 체크리스트대로 수행**한다. 명세는 `docs/IMPROVEMENT_SPECS.md`,
-항목 배경은 `docs/IMPROVEMENT_BACKLOG.md`.
+세션 간 인수인계 문서. 다른 로컬 세션(또는 다른 머신)에서 이어 작업할 때 여기서부터 시작할 것.
+배치 1(Q1/R4 등) 계측 작업 자체는 완료·검증됐고, 이후 그 위에서 실사용 튜닝과 새 기능이
+쌓였다 — 아래 "브랜치 지도"가 지금 상태를 가장 정확히 반영한다.
 
-## 현재 상태
+## 브랜치 지도
 
-- 브랜치: `batch1-instrumentation` (main에서 분기)
-- 구현 범위: **배치 1 = Q1(단계별 latency 계측) + R4(번역 런타임 계약 자가진단)**,
-  **배치 2 = R1(엔진 호출 예외 격리) + Q3(fast 전용 3s 타임아웃)**,
-  **배치 3 = R2(WS 자동 재연결) + R3(stop 시 finalize 드레인)**,
-  **배치 4 = S1(16kHz AudioContext) + S4(glossary NFKC) + Q7(VAD 공유) + T1(hint 위치) + D1(문서 정리)**
-- 검수 수준: 코드 리뷰 + `py_compile` 문법 확인만. **런타임 검증 미실시** (이 환경에 GPU 없음
-  — faster-whisper CUDA 로드 불가, gemma 모델/서버도 이 머신에 없음)
+```
+main                     — 오래됨, 최근 작업 미반영 (병합 안 함, 그대로 둘 것)
+  └─ batch1-instrumentation  — 백엔드 트렁크. 1차 목표(단일 화자) 품질 마일스톤 달성, 여기서 백엔드 작업 일단 마무리.
+       ├─ multi-speaker      — 2차 목표(다중 화자) 1차 구현. 겹치는 발화 문제로 보류, 로드맵 최후순위.
+       └─ ui-chat-reply      — UI 단계 착수. 발신(KO→JA) 채팅 번역 초안 구현·푸시됨.
+```
 
-## 변경 내용 (검수 후 확정)
+세 브랜치 다 원격에 푸시되어 있음. `multi-speaker`와 `ui-chat-reply`는 `batch1-instrumentation`
+에서 각각 분기했고 서로 독립적 — 아직 서로 합쳐지지 않았다.
 
-| 파일 | 변경 |
-|---|---|
-| `backend/audio_session.py` | Q1: `enqueued_at`, partial/final 타이밍 INFO 로그, finalize 트리거 사유 로그. R1: STT/번역/이벤트 전송 예외 격리(`_emit_safe`), `last_partial_translation` 폴백, `_finalize_worker` 생존 보장 |
-| `backend/translation/llama_server_engine.py` | R4: `verify_contract()` 프로브. Q1: 응답 `timings` DEBUG 로그. Q3: fast/final per-request 타임아웃 분리 |
-| `backend/main.py` | startup에서 `verify_contract()` 호출 |
-| `backend/config.py` | `LLAMA_FAST_TIMEOUT_S = 3.0`, `CLOSE_DRAIN_TIMEOUT_S = 10.0` 추가 |
-| `docs/PIPELINE.md` | partial "논블로킹" 서술 정정, R1 폴백 예외 경로 1줄 추가 |
-| `extension/offscreen.js` | R2: `captureActive` + 백오프 재연결(1s→10s cap). R3: stop 시 소켓을 열어둔 채 서버 드레인 종료 대기(12s 강제종료 타이머, 낡은 소켓이 새 세션을 건드리지 않게 인스턴스 기준 처리). S1: `AudioContext({sampleRate: 16000})` — 수동 `resampleLinear`(앨리어싱 원인) 삭제 |
-| `extension/background.js` | R3: transcriptLog 클리어를 stop→start 시점으로 이동 |
-| `extension/audio-worklet-processor.js` | S1: 주석만 갱신 (코드 변경 없음 — 16kHz 컨텍스트를 자동으로 따라감) |
-| `backend/glossary.py` | S4: NFKC 정규화 매칭 + `python -m backend.glossary` 자가 체크. D1: STT 미배선 docstring 정정 |
-| `backend/vad.py` 사용 방식 | Q7: SileroVAD를 startup 1회 로드로 변경, `AudioSession(vad=...)` 주입 + 세션마다 `reset()` |
-| `backend/stt/base.py`, `backend/stt/faster_whisper_engine.py` | D1: 죽은 `words` 필드 제거 |
-| `backend/translation/llama_server_engine.py` (T1) | glossary_hint를 system prompt에서 user message `[GLOSSARY]` 섹션으로 이동 — system prompt가 요청 간 불변이 되어 KV prefix cache 유지 |
+## batch1-instrumentation — 현재 상태 (1차 목표: 검증 완료)
 
-## GPU 머신에서의 검증 체크리스트 (저녁)
+**결론부터: 이 브랜치 기준 백엔드는 실사용 검증까지 끝났고, 사용자 확정 코멘트는
+"여태까지 본 것 중 최고의 품질"(2026-08-19, ~50분 연속 실캡처 시청 후).**
 
-준비: llama.cpp server(gemma-3-12b-it) 기동 → `uvicorn backend.main:app --port 8000` →
-확장으로 실제 일본어 라이브 캡처 10분 이상.
+핵심 구성 (전부 실캡처로 검증됨, 자세한 시행착오는 `docs/SESSION_LOG_2026-08-19.md`):
 
-1. **R4 — 기동 로그 확인**:
-   - 번역 서버가 켜진 상태로 백엔드 기동 → `translation server contract verified` INFO가 떠야 함.
-   - 번역 서버를 끈 채 기동 → `translation server unreachable at startup` WARNING 1줄, 기동은 계속.
-   - (가능하면) grammar를 무시하는 서버(Ollama 등)를 8080에 붙여 `does NOT honor GBNF grammar`
-     경고가 뜨는지 교차 확인 — 안 되면 생략 가능.
-2. **Q1 — 로그 수집**: 캡처 세션 로그를 파일로 남길 것 (예:
-   `uvicorn ... 2>&1 | Tee-Object backend_run.log`).
-3. **Q1 — 실측 분석** (이 결과가 배치 5의 착수 여부를 정한다 — 명세 Q1 §검증):
-   - `partial seg=` 라인: `buf`가 커질수록 `stt`가 얼마나 증가하는가?
-     `stt+llm`이 0.6s(PARTIAL_UPDATE_INTERVAL_S)를 넘는 구간이 있는가? → **Q4/Q2 착수 판단**
-   - `final seg=` 라인: `queue_wait`/`depth` 분포. `depth >= 2`가 반복되는가? → **Q6 착수 판단**
-   - final 처리 구간과 겹치는 시점의 partial `stt` 스파이크가 있는가? → **Q5 착수 판단**
-   - `finalize trigger=` 라인: `hard_cap` 빈도가 유의미한가? → **S3 착수 판단**
-   - LLM `timings` DEBUG 로그를 보려면 로깅 레벨 DEBUG 필요:
-     `logging.basicConfig(level=...)`는 `backend/main.py`에 있음 — 임시로 DEBUG로 바꾸거나
-     해당 로거만 레벨 조정. (T1 착수 전 `prompt_ms` 기준선 확보 목적)
-4. **R1 — 예외 격리 확인**: 캡처 진행 중 번역 서버(llama.cpp server)를 강제 종료 →
-   (a) 세션이 안 죽고 일본어 partial이 계속 갱신되는지, (b) final이 마지막 partial 내용으로
-   폴백 확정되는지(`finalize failed`/`translation failed` 스택이 로그에 남는지), (c) 서버
-   재기동 후 번역이 자동 복귀하는지. 폴백 final은 `_final_history`에 안 들어가야 함(다음
-   문장 번역의 [PREVIOUS TRANSLATION]에 폴백 문장이 안 보이는 것으로 간접 확인).
-5. **Q3 — fast 타임아웃 확인**: 번역 서버가 느려진 상황(대형 요청을 병행 투입 등)에서
-   partial의 일본어 갱신 공백이 3s(LLAMA_FAST_TIMEOUT_S)를 크게 넘지 않는지.
-6. **R2 — 재연결 확인**: 캡처 중 uvicorn 재시작(파일 저장으로 --reload 트리거도 가능) →
-   수 초 내 자막 재개. 백엔드를 끈 채 Start Capture → 백엔드를 나중에 켜도 붙는지.
-   Stop 후 재연결 시도가 없는지(offscreen 콘솔 — chrome://extensions에서 offscreen 문서
-   inspect).
-7. **R3 — 드레인 확인**: 말이 이어지는 도중 Stop Capture → 마지막 문장(들)의 final이
-   팝업에 도착해 확정되는지. stop 후 팝업을 닫았다 열어도 히스토리가 남아 있고, 다음
-   Start에서 비워지는지. **stop 직후 곧바로 Start를 다시 눌러도**(드레인 진행 중 재시작)
-   새 세션 자막이 정상 동작하는지 — 낡은 소켓 정리가 새 세션을 건드리는 엣지를 코드
-   수준에서 막아뒀는데 실동작 확인 필요.
-8. **S1 — 16kHz 캡처 확인**: 자막 파이프라인 정상 동작(백엔드가 0.3s = 9600바이트 PCM16
-   청크를 받는지), 체감 전사 품질 악화가 없는지. 확장은 `chrome://extensions`에서 **리로드
-   필수** (offscreen/worklet 코드 변경됨).
-9. **S4 — glossary 확인**: `python -m backend.glossary` (GPU 불필요, 이미 통과 확인됨).
-   실스트림에서 등록 용어(ティーワイ)가 반각/변형 표기로 전사돼도 hint가 나가는지.
-10. **Q7 — 시작 지연 확인**: 두 번째 이후 Start Capture의 연결 준비 시간이 짧아졌는지
-    (이전: 연결마다 torch.hub VAD 로드).
-11. **T1 — prefix cache 확인**: DEBUG 로깅 켜고 `llm timings`의 `prompt_ms`가 glossary
-    hint 유무와 무관하게 낮게 유지되는지 (변경 전에는 hint가 붙으면 system prompt가 달라져
-    풀 재처리). glossary 용어 포함 문장에서 "TY" 강제가 여전히 동작하는지 재현 확인.
-12. 이상 없으면 main에 머지. 실측 요약은 이 문서에 "실측 결과" 절로 추가해둘 것.
+- STT: faster-whisper **large-v3**, int8_float16 (`backend/config.py`)
+- 환각 필터링: 정규식 전부 제거. `no_speech_prob`/`avg_logprob` 확률 임계값
+  (`WHISPER_NO_SPEECH_HARD_THRESHOLD = 0.6`) + 임베딩 유사도 "Bag of Hallucinations" 게이트
+  (`backend/hallucination_gate.py`, sentence-transformers) 이중 필터
+- 문장 경계: `sentence_completion.py`가 버퍼 전체를 스캔해서 종결부호 탐지 (꼬리만 보던 버그 수정)
+- 부분(partial) 번역은 deprecated — 최종(final) 문장만 번역, partial은 일본어 전사만 표시
+- `FINALIZE_GRACE_MS = 200` (침묵 후 문장 미완성 시 추가 대기시간, 400→200으로 단축)
+- 뮤직 게이트(`backend/music_gate.py`)는 코드만 남아있고 **비활성화 상태** — 실발화를 놓치는
+  회귀가 있었음, 재활성화하려면 실캡처 오디오로 재보정 먼저 필요
 
-## 남은 작업 (명세의 구현 순서)
+**아직 안 한 것**:
+- `docs/EVAL.md` 정식 벤치마크로 large-v3를 아직 안 돌렸음 — 지금까지는 전부 라이브 정성 평가
+- ㅋㅋㅋ 임의 첨가(LLM이 근거 없이 웃음 표시 추가) — 경미한 이슈로 후순위 확정, 미해결
+- 탭 캡처 시 볼륨이 살짝 작아지는 문제 — 원인 미해결 (한 번 `autoGainControl` 끄는 걸로
+  "고쳤다"가 번역이 완전히 끊기는 회귀를 냄, 되돌림 — `docs/SESSION_LOG_2026-08-19.md` 11번 참고)
 
-- **배치 1~4 구현 완료** (이 브랜치). 남은 것은 전부 실측/실험이 선행 조건:
-- 배치 5: Q2(partial 백그라운드 분리) — 위 3번 실측에서 partial `stt+llm`이 0.6s를 넘는
-  구간이 확인되면 착수. 이후 Q4/Q5/Q6/S3도 각자의 실측 조건 충족 시.
-- 배치 6: S2(STT previous_context 플래그), T3(repeat_penalty A/B), T4(fast 문맥, Q2 이후),
-  T2(노트 데이터 파일 분리, 노트가 더 늘어나면). 전부 GPU에서의 A/B 평가 필요.
-- glossary.json 채우기(백로그 추적표 B)는 코드 무관 데이터 작업 — 실사용 중 발견되는
-  고유명사를 수시로 추가할 것 (マッターホルン/白馬岳/千恵子 등 EVAL 시드 포함).
+## multi-speaker — 2차 목표, 보류 상태
+
+턴 교대(turn-taking) 화자만 라벨링하는 1차 구현 완료 (`backend/speaker_id/`, ECAPA-TDNN +
+온라인 코사인 클러스터링, 문장 확정 시 1회만 실행). 겹치는 발화는 이 방식으로 아예 못 다룬다.
+
+문헌 조사 결과(2026-08-19): 진짜 겹침 분리(source separation)는 우리 제약(모노 1채널, 개인용
+GPU 1장)에서 검증된 해법이 없음 — SOT류는 일본어 사전학습 모델이 없고, CSS는 다채널 전제,
+SepFormer류는 실환경 일반화가 문서화된 약점. 상용 제품(Otter.ai 등)도 겹침 구간은 그냥
+뭉개서 처리하는 게 현실. **사용자 판단: 지금 모델 수준에서는 챌린저블 → 로드맵 최후순위로
+보류.** 재개 시 참고: 분리 시도보다 겹침 "감지 + 명시적 저신뢰 표시"가 현실적 다음 스텝.
+
+## ui-chat-reply — UI 단계, 착수
+
+`CLAUDE.md` 로드맵 4단계(UI). 확정된 방향:
+
+- 영상 위 오버레이 자막 **안 함** — 시청 방해된다고 판단
+- `chrome.sidePanel` **재시도 안 함** — 2026-08-19에 원인불명 activeTab 문제로 포기, 아직도 원인 모름
+- 지금의 `chrome.windows.create` 분리 팝업 창(자유 이동 가능) 형태를 그대로 UI 베이스로 유지
+
+이번에 추가한 것: **발신 방향(한국어→일본어) 채팅 번역** — 사용자가 직접 쓴 한국어 채팅을
+현재 방송 맥락(`_final_history`)에 맞춰 일본어로 번역, 복사해서 스트리머에게 보내기 위한 용도.
+같은 분리 창 하단에 섹션 추가 (입력창 + 번역 버튼 + 클릭-복사 출력), 버튼/엔터 트리거 방식
+(실시간 타이핑 번역 아님). `backend/translation/llama_server_engine.py`에
+`translate_ko_to_ja()` 새로 추가 — 기존 JA→KO 경로(글로서리/false-friend 노트 등 많이 튜닝됨)와
+완전히 분리된 별도 프롬프트/그래머, 아직 실데이터 튜닝 전이라 초안 단계.
+샘플 문장 2개로 스모크 테스트만 마침, 실제 방송에서 아직 안 써봄.
+
+**다음으로 예정된 작업**: 창 자체의 **비주얼 디자인**. 지금은 순수 기능 위주(`system-ui` 기본
+폰트, 최소한의 CSS)이고 외관을 다듬은 적이 없음. 다음 세션에서 시작할 때 스타일 방향(다크
+모드 여부, 여백감, 유튜브 채팅창 톤에 맞출지 등)을 먼저 확인하고 진행할 것 — 임의로 추측해서
+디자인하지 말 것.
+
+## 실행 방법 (공통)
+
+```
+# 저장소 루트에서
+uvicorn backend.main:app --port 8000
+```
+`SSL_CERT_FILE`이 빈 문자열로 설정돼 있으면 httpx/huggingface_hub SSL 컨텍스트 생성이 깨짐 —
+매 백엔드 기동 전 `unset SSL_CERT_FILE`. VAD/임베딩 모델 첫 로드는 네트워크 필요(이후 캐시).
+`llama-server`(gemma-3-12b-it, 포트 8080)는 별도 프로세스로 먼저/나중에 띄워도 됨 — 백엔드
+startup이 `verify_contract()`로 probe만 하고 경고만 남김.
+
+확장은 `chrome://extensions` → 개발자 모드 → "압축해제된 확장 프로그램 로드" → `extension/`.
+코드 수정 후 반드시 리로드. 캡처 시작은 **툴바 아이콘 클릭 한 번**으로 바로 시작 + 분리 창이
+뜬다 (팝업 단계 없음 — `extension/background.js`의 `action.onClicked`).

@@ -66,6 +66,17 @@ async function stopCapture() {
   return next;
 }
 
+// TRANSCRIPT_EVENT arrives in bursts (partial/final for several segments
+// close together); appendToLog does read-modify-write on
+// chrome.storage.session, so concurrent unserialized calls race and the
+// loser silently overwrites the winner's update (e.g. a "final" flip gets
+// clobbered back to "partial"). Chain calls through one promise to force
+// them to run one at a time, in arrival order.
+let logChain = Promise.resolve();
+function queueAppendToLog(event) {
+  logChain = logChain.then(() => appendToLog(event)).catch(() => {});
+}
+
 async function appendToLog(event) {
   const { transcriptLog = [] } = await chrome.storage.session.get("transcriptLog");
   const idx = transcriptLog.findIndex((e) => e.segment_id === event.segment_id);
@@ -109,7 +120,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     // Persist so a reopened popup can restore history that arrived while it
     // was closed — see the service-worker-lifetime note above; popup.js's
     // own in-memory log is wiped every time the popup closes regardless.
-    appendToLog(message.data);
+    queueAppendToLog(message.data);
     return false; // popup.js's own listener also receives this event live
   }
 

@@ -41,10 +41,13 @@ WHISPER_NO_SPEECH_THRESHOLD = 0.6
 # short/energetic speech in the same data topped out around 0.55; the
 # historically-cited high end for real speech (0.87, see
 # WHISPER_NO_SPEECH_THRESHOLD above) and this hallucination family's range
-# do overlap, so this can't be a perfectly clean cut — 0.75 sits at the
-# actual observed gap in this session's data. Revisit against a larger
-# flagged_segments.jsonl sample as more accumulates.
-WHISPER_NO_SPEECH_HARD_THRESHOLD = 0.75
+# do overlap, so this can't be a perfectly clean cut. Briefly lowered to
+# 0.66 the same day, then reverted back to 0.6 (matches
+# WHISPER_NO_SPEECH_THRESHOLD, so the soft/AND-avg_logprob check above never
+# actually gets a chance to run) per user call while live-watching —
+# revisit again against a larger flagged_segments.jsonl sample as more
+# accumulates.
+WHISPER_NO_SPEECH_HARD_THRESHOLD = 0.6
 
 # Embedding-similarity "Bag of Hallucinations" gate (backend/hallucination_gate.py)
 # — added 2026-08-19 after labeling proved WHISPER_NO_SPEECH_HARD_THRESHOLD
@@ -119,7 +122,7 @@ MUSIC_GATE_MODULATION_RATIO_THRESHOLD = 3.0
 # the added latency instead of waiting indefinitely for a "complete" signal
 # that may never come (hesitation-heavy live-stream speech routinely trails
 # off without a clean sentence-final form).
-FINALIZE_GRACE_MS = 400
+FINALIZE_GRACE_MS = 200
 
 # Partial re-transcription cadence: re-run STT on the in-progress buffer at most this often,
 # to avoid re-transcribing on every single 0.3s chunk.

@@ -11,8 +11,29 @@ const liveDot = document.getElementById("liveDot");
 const statusState = document.getElementById("statusState");
 const statusDetail = document.getElementById("statusDetail");
 const logEl = document.getElementById("log");
+const scrollToBottomBtn = document.getElementById("scrollToBottomBtn");
 
 const segmentEls = new Map(); // segment_id -> <div> element, so a "final" can replace its "partial"
+
+// Scroll-to-bottom affordance (2026-08-20): visible only while scrolled up
+// from the very bottom, hidden once back at the bottom. Also drives whether
+// new events auto-stick to the bottom (a chat-log convention: keep
+// following live text unless the user has deliberately scrolled up to read
+// something older, in which case new arrivals must NOT yank them back down).
+const SCROLL_BOTTOM_THRESHOLD_PX = 16;
+
+function isScrolledToBottom() {
+  return logEl.scrollHeight - logEl.scrollTop - logEl.clientHeight <= SCROLL_BOTTOM_THRESHOLD_PX;
+}
+
+function updateScrollToBottomButton() {
+  scrollToBottomBtn.classList.toggle("visible", !isScrolledToBottom());
+}
+
+logEl.addEventListener("scroll", updateScrollToBottomButton);
+scrollToBottomBtn.addEventListener("click", () => {
+  logEl.scrollTo({ top: logEl.scrollHeight, behavior: "smooth" });
+});
 
 // restoreHistory() below awaits an async round-trip to fetch the persisted
 // log, but the onMessage listener is already live the moment this script
@@ -263,8 +284,16 @@ chrome.runtime.onMessage.addListener((message) => {
     pendingEvents.push(message.data);
     return;
   }
+  const wasAtBottom = isScrolledToBottom();
   renderEvent(message.data);
-  logEl.scrollTop = logEl.scrollHeight;
+  // Only auto-follow if the user was already at the bottom — otherwise a
+  // live arrival would yank them away from history they scrolled up to
+  // read. updateScrollToBottomButton() surfaces the button instead so they
+  // can jump down manually when ready.
+  if (wasAtBottom) {
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+  updateScrollToBottomButton();
 });
 
 // Context summary (2026-08-20): one-line "what's being talked about right
@@ -307,6 +336,7 @@ async function restoreHistory() {
   }
   pendingEvents.length = 0;
   logEl.scrollTop = logEl.scrollHeight;
+  updateScrollToBottomButton();
 }
 
 restoreHistory();

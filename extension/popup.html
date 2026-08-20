@@ -207,6 +207,7 @@
     .theme-toggle-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
     .log-card {
+      position: relative;
       flex: 1;
       min-height: 0;
       display: flex;
@@ -214,6 +215,28 @@
       padding: 12px 14px 4px;
       overflow: hidden;
     }
+
+    .scroll-to-bottom-btn {
+      position: absolute;
+      left: 50%;
+      bottom: 12px;
+      transform: translateX(-50%);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--text-muted);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      z-index: 1;
+    }
+    .scroll-to-bottom-btn.visible { display: flex; }
+    .scroll-to-bottom-btn:hover { color: var(--text); background: var(--surface-2); }
+    .scroll-to-bottom-btn svg { width: 14px; height: 14px; display: block; }
 
     .eyebrow {
       font-size: 10px;
@@ -427,6 +450,11 @@
   <div class="log-card">
     <p class="eyebrow">실시간 전사 · 번역</p>
     <div id="log"></div>
+    <button id="scrollToBottomBtn" class="scroll-to-bottom-btn" type="button" aria-label="맨 아래로 스크롤">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 6l5 5 5-5" />
+      </svg>
+    </button>
   </div>
 
   <div class="chat-card">

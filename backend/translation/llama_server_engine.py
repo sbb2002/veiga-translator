@@ -16,177 +16,10 @@ import re
 import httpx
 
 from backend import config
+from backend.translation import prompts
 from backend.translation.base import TranslationResult
 
 logger = logging.getLogger("live-translator.backend")
-
-_SLANG_NOTE = (
-    "The Japanese input may contain casual internet/streamer slang, clipped "
-    "abbreviations (e.g. ホラゲー = ホラー"
-    "ゲーム = 'horror game'), and effort/exertion interjections or "
-    "onomatopoeia (e.g. よいしょ, どっこいしょ — filler grunts said while "
-    "doing something, natural in Korean as things like '영차' or '하나둘'). "
-    "It may also contain descriptive mimetic words (擬音語/擬態語) that "
-    "characterize a sound or quality rather than naming a real object — "
-    "e.g. キンキン describing a shrill/piercing high voice. Never "
-    "transliterate these phonetically into Korean syllables that happen to "
-    "sound similar (e.g. キンキン is NOT '금금거리다', which is not a real "
-    "Korean word/expression) — instead render the *quality being "
-    "described* with a natural Korean descriptive phrase (e.g. '귀를 "
-    "찌르는', '쨍쨍한', '새된' for a piercing high voice). Infer the "
-    "intended real meaning from context and translate it naturally into "
-    "the closest natural Korean word or interjection — do not "
-    "transliterate literally, and never invent a nonsense word. Also, "
-    "common slang/filler words are sometimes stretched or emphasized for "
-    "effect (extra long vowels via ー, repeated mora, e.g. ガーッチ for "
-    "ガチ) — recognize these as the same base word and translate its "
-    "actual meaning (e.g. ガーッチ = ガチ = '진짜로'/'제대로', an emphasis "
-    "intensifier), never invent a new nonsense word just because of the "
-    "stretched spelling (e.g. ガーッチ is NOT '가르치', which means 'teach' "
-    "and is unrelated)."
-)
-
-_SCAT_SINGING_NOTE = (
-    "The speaker may be singing rather than talking. Repeated syllables "
-    "with no dictionary meaning (e.g. なななな, なーなー, らららー — plain "
-    "scat/humming, not a real word) are song filler, NOT the mimetic/"
-    "descriptive words covered above — do not search for a 'meaning' to "
-    "translate and do not substitute an unrelated Korean word or connector "
-    "(e.g. translating なななな as '그리고' is wrong — 'and' has nothing to "
-    "do with what was actually sung). Instead, transliterate the sound "
-    "phonetically into the matching Korean syllables, reproducing the "
-    "repetition/length as heard (e.g. なななな -> 나나나나, なーなー -> "
-    "나~나~, using ~ for the long-vowel mark ー since ー itself isn't "
-    "Hangul). A plain phonetic echo is the correct translation for song "
-    "filler, not a search for meaning."
-)
-
-_LAUGHTER_NOTE = (
-    "IF AND ONLY IF the Japanese input text literally contains a trailing "
-    "'w', 'ww', 'www' (from 笑う, 'to laugh') or 笑/(笑), carry it over as "
-    "Korean 'ㅋㅋㅋ' (scale the number of ㅋ roughly with the w's) instead "
-    "of silently dropping it as disfluency noise when polishing the "
-    "sentence. This is the ONLY situation where 'ㅋㅋㅋ' belongs in the "
-    "output. Never add 'ㅋㅋㅋ' (or any laughter marker) to a translation "
-    "when the source text has no such marker, no matter how funny, "
-    "casual, or joke-like the sentence's content itself sounds — inventing "
-    "one is fabricating content the speaker didn't produce, which is just "
-    "as wrong as dropping one that was actually there."
-)
-
-_CONNOTATION_NOTE = (
-    "ずるい literally means 'unfair/cheating' but is very often used as a "
-    "lighthearted admiring exclamation about someone else's ability or "
-    "charm — closer to '(그렇게 잘하면) 반칙이지'/'부럽다'/'얄밉다' in Korean — "
-    "especially when the surrounding context is clearly praise/envy rather "
-    "than an actual accusation of unfairness. In that admiring context, "
-    "translate it as '부럽다'/'얄밉다' or similar, NOT as a harsh negative "
-    "judgment like '야비하다'(despicable) or '억지'(unreasonable) — those "
-    "carry moral condemnation that isn't there in the affectionate usage, "
-    "and keep the rendering consistent across repeated occurrences of the "
-    "same word in the same conversation rather than drifting more negative "
-    "each time."
-)
-
-_FILLER_NOTE = (
-    "Hesitation fillers like えっと, あの, あのー, その, まあ have no fixed "
-    "meaning of their own — render them as a short natural Korean filler "
-    "(음..., 어..., 그... ) or simply drop them if the sentence reads better "
-    "without one. Never invent an unrelated Korean word to fill an "
-    "untranslatable filler."
-)
-
-_HONORIFIC_NOTE = (
-    "Japanese name suffixes -ちゃん/-くん are affectionate nicknames between "
-    "friends/fans, not formal address — render them as the Korean equivalent "
-    "diminutive suffix '-짱'/'-군' attached to the (transliterated) name "
-    "itself (e.g. リッちゃん -> 릿짱), never as formal '씨', and never "
-    "substitute an unrelated Western name that happens to sound similar."
-)
-
-_FALSE_FRIEND_NOTE = (
-    "Watch for Japanese words that happen to sound like an unrelated real "
-    "Korean word — do not substitute the Korean look-alike just because it "
-    "exists. In particular: やばい is a versatile interjection meaning "
-    "roughly 'crazy/insane/awesome/terrible/dangerous' depending on context "
-    "(never translate it as '야바위', the Korean word for a scam/con game — "
-    "that is an unrelated false friend); render it as a natural Korean "
-    "interjection fitting the context (e.g. '헐', '미쳤다', '큰일났다', "
-    "'대박'). Also, a trailing 嘘 (uso) right after a statement is usually "
-    "the speaker tagging their own previous sentence as a joke/retraction "
-    "('just kidding'), not a literal claim that something 'is a lie' — "
-    "translate it as a natural Korean self-correcting tag like '농담이야'/"
-    "'아니 뭐'/'거짓말이고' used the same way, based on what reads naturally, "
-    "rather than a flat statement like '~라는 게 거짓말이다'."
-)
-
-_NO_ENGLISH_NOTE = (
-    "The output must be written entirely in Hangul (plus digits and basic "
-    "punctuation) — never fall back to an English word or phrase, even for "
-    "a fragment you find hard to translate or an interjection like a laugh. "
-    "Every English/foreign word must be rendered as its closest Korean "
-    "equivalent or a Hangul transliteration, never left in Latin script."
-)
-
-_GLOSSARY_SECTION_NOTE = (
-    "If the user message contains a '[GLOSSARY]' section, translate the "
-    "proper nouns listed there exactly as specified — those mappings "
-    "override any other rendering you would choose. Whenever bracketed "
-    "sections like '[GLOSSARY]' or '[TEXT TO TRANSLATE]' are present, the "
-    "text to translate is ONLY what follows '[TEXT TO TRANSLATE]' — never "
-    "translate, repeat, or mention the section labels or the glossary "
-    "lines themselves in your output."
-)
-
-_FAST_SYSTEM_PROMPT = (
-    "Translate the following Japanese text fragment into Korean. The fragment "
-    "may be an incomplete sentence that is still being spoken. Translate every "
-    "word into Korean, even if the fragment is ambiguous — use your best-guess "
-    "Korean rendering (a Korean loanword approximation is fine) rather than "
-    "leaving anything untranslated. Do NOT pad, rephrase, or restructure the "
-    "fragment into a grammatically complete-sounding Korean sentence — just "
-    "translate as far as the Japanese transcript actually goes and stop "
-    "there, even if the Korean output itself trails off incomplete. Speed "
-    "and covering every transcribed word matter far more here than making "
-    "it read as a polished, complete sentence — that happens later once the "
-    "sentence is actually finished. " + _SLANG_NOTE + " " + _FILLER_NOTE + " "
-    + _HONORIFIC_NOTE + " " + _FALSE_FRIEND_NOTE + " " + _LAUGHTER_NOTE
-    + " " + _CONNOTATION_NOTE
-    + " " + _NO_ENGLISH_NOTE + " " + _GLOSSARY_SECTION_NOTE + " Output ONLY the Korean translation, "
-    "nothing else — no notes, no romanization, no quotes."
-)
-
-_CONTINUITY_NOTE = (
-    "The user message may also include '[PREVIOUS SENTENCE]' (the most "
-    "recent Japanese sentences spoken before this one) and '[PREVIOUS "
-    "TRANSLATION]' (how you rendered each in Korean) — when there is more "
-    "than one, they are numbered oldest-first, ending right where the "
-    "current fragment picks up. These are VAD-based utterance splits, not "
-    "necessarily complete sentences — live/casual speech is routinely cut "
-    "mid-thought (a speaker trailing off, dropping a subject/pronoun that "
-    "was already established a couple of sentences back, or correcting/"
-    "reversing themselves across a split, e.g. 'X ... actually not X'). "
-    "Read them only to resolve that kind of ambiguity in the current "
-    "fragment — a missing subject, an unclear referent, or a correction/"
-    "reversal in progress — and translate this fragment so it reads as a "
-    "natural continuation of the most recent [PREVIOUS TRANSLATION] line, "
-    "matching its tone and honorific level (letting a correction/reversal "
-    "actually land as one, not flatly contradicting a walk-back the speaker "
-    "is clearly making). Never translate or repeat any [PREVIOUS SENTENCE]/"
-    "[PREVIOUS TRANSLATION] line in your output — output ONLY the "
-    "translation of the text under '[TEXT TO TRANSLATE]'."
-)
-
-_FINAL_SYSTEM_PROMPT = (
-    "You are a professional Japanese-to-Korean translator. Translate the "
-    "complete Japanese sentence under the '[TEXT TO TRANSLATE]' heading into "
-    "natural, fluent, idiomatic Korean, as it would be spoken or subtitled. "
-    + _CONTINUITY_NOTE + " " + _SLANG_NOTE + " " + _FILLER_NOTE + " "
-    + _HONORIFIC_NOTE + " " + _FALSE_FRIEND_NOTE + " " + _LAUGHTER_NOTE
-    + " " + _CONNOTATION_NOTE
-    + " " + _NO_ENGLISH_NOTE + " " + _GLOSSARY_SECTION_NOTE + " Output ONLY the Korean translation of "
-    "that text, nothing else — no notes, no romanization, no quotes."
-)
 
 # Grammar-constrained decoding: restrict the output alphabet to an explicit
 # ALLOW-list (Hangul + digits + general punctuation) rather than a blacklist
@@ -255,91 +88,6 @@ def _build_korean_only_grammar(extra_literals: tuple[str, ...] = ()) -> str:
 
 
 _KOREAN_ONLY_GRAMMAR = _build_korean_only_grammar()
-
-# --- Context summary (2026-08-20): one-line "what's being talked about ---
-# --- right now" for the extension header, from recent final JA speech. ---
-_CONTEXT_SUMMARY_SYSTEM_PROMPT = (
-    "Below is recent Japanese speech transcribed live from a stream, "
-    "oldest first. In ONE short, natural Korean sentence, summarize what "
-    "is currently being talked about — for a Korean-speaking viewer "
-    "glancing at a status line who wants the gist at a glance, not a "
-    "translation of any specific line. Describe the current topic/"
-    "situation, not individual sentences. Output ONLY that one Korean "
-    "sentence, nothing else — no notes, no quotes, no line breaks."
-)
-
-# --- Reverse direction (draft, 2026-08-20): viewer's own Korean chat -> ---
-# --- natural Japanese, for pasting into the stream's chat.              ---
-_KO_JA_SYSTEM_PROMPT = (
-    "You are helping a Korean-speaking viewer chat with a Japanese live "
-    "streamer. Translate the viewer's Korean chat message under "
-    "'[TEXT TO TRANSLATE]' into natural, casual-but-polite Japanese chat "
-    "text, the way a real Japanese viewer would type it in a stream's live "
-    "chat (typically です/ます base politeness, not stiff formal keigo, "
-    "and not blunt casual da/dearu either). The message may be short, use "
-    "internet slang, or contain a reaction/exclamation — translate the "
-    "intent naturally rather than word-for-word. If '[BROADCAST CONTEXT]' "
-    "is present (recent Japanese speech from the stream, oldest first), use "
-    "it only to pick natural wording/topic references that fit what's "
-    "currently happening on stream — never translate or repeat any "
-    "'[BROADCAST CONTEXT]' line in your output.\n\n"
-    "The 'translate the intent naturally' instruction above applies only "
-    "when '[TEXT TO TRANSLATE]' actually reads like a spoken chat message "
-    "(has a verb/predicate, forms a full thought). If it is instead just a "
-    "single word, a short label, or a bare noun phrase with no sentence "
-    "structure — not something meant to be said aloud as-is — do NOT "
-    "invent a reaction or turn it into a sentence. Output a direct, "
-    "dictionary-style Japanese translation of that word/phrase only, "
-    "nothing added.\n\n"
-    "Match the punctuation the user actually typed — never add a ！ or ？ "
-    "that has no corresponding ! or ? in '[TEXT TO TRANSLATE]', and don't "
-    "drop one that is there either. Plain statements stay plain; only add "
-    "emphasis punctuation where the Korean input already signals it.\n\n"
-    "If '[TEXT TO TRANSLATE]' contains an English word or phrase (a band/"
-    "artist/game/song name, a loanword left untranslated, etc.), treat it "
-    "as a proper noun and keep it exactly as written, in Latin script, "
-    "unchanged — the same way a real Japanese viewer's chat commonly keeps "
-    "an English name as-is rather than converting it to katakana. Do not "
-    "romanize/katakana-ize it and do not translate it; just carry that word "
-    "over verbatim into its natural position in the Japanese sentence "
-    "you're building around it.\n\n"
-    "Never silently drop a content word from '[TEXT TO TRANSLATE]' just "
-    "because it's ambiguous (e.g. a Korean word with more than one "
-    "possible meaning). Pick your single best-guess reading — using "
-    "'[BROADCAST CONTEXT]' to disambiguate when it's present, your best "
-    "judgment otherwise — and translate that word using it, the same way "
-    "you would if it had only one possible meaning. A guessed-but-present "
-    "translation is always better than a vaguer sentence that quietly "
-    "avoids the word altogether.\n\n"
-    "Never invent, on your own initiative, a name/nickname/honorific to "
-    "address the streamer that the user did not supply. A name is "
-    "'supplied' only two ways: (a) it's written directly in "
-    "'[TEXT TO TRANSLATE]' itself (including a 【 】-marked pre-"
-    "transliterated span — see below, that content came from the user's "
-    "own message and must still be used, dropping only the 【 】 marks), or "
-    "(b) it appears verbatim, character-for-character, in "
-    "'[BROADCAST CONTEXT]'. If neither is true, do not address the "
-    "streamer by any name/nickname of your own choosing; phrase the "
-    "message so it needs none (e.g. plain です/ます, no vocative).\n\n"
-    "Some words in the Korean input have already been pre-transliterated "
-    "into Japanese kana for you and are marked by wrapping them in 【 】 "
-    "(a pair of Japanese corner-bracket-like marks placed directly around "
-    "the already-correct kana text, nothing else). For each such marked "
-    "span, copy the kana text between the 【 】 into your translation "
-    "exactly as written, character-for-character, positioned naturally for "
-    "that word in the sentence, then remove the 【 】 marks themselves so "
-    "they never appear in your final output. Do not convert that text to "
-    "kanji, do not switch it to the other kana script, do not add any "
-    "other brackets or quote marks around it, and do not substitute a "
-    "different word of your own — use only the exact kana given. There may "
-    "be more than one 【 】-marked span in the same message — treat every "
-    "one of them completely independently: your output must include every "
-    "single one, each still separate and unmodified; never merge two "
-    "marked spans into a single word, and never drop one because you "
-    "already used another.\n\n"
-    "Output ONLY the Japanese chat message, nothing else — no notes, no "
-    "romanization, no quotes, no brackets you added yourself."
-)
 
 # Script-forcing markup (2026-08-20): the viewer can wrap a Korean word in
 # '단일따옴표' to force hiragana or "겹따옴표" to force katakana in the
@@ -487,7 +235,7 @@ class LlamaServerEngine:
         if not text.strip():
             return TranslationResult(text="")
 
-        system_prompt = _FAST_SYSTEM_PROMPT if fast else _FINAL_SYSTEM_PROMPT
+        system_prompt = prompts.FAST_SYSTEM_PROMPT if fast else prompts.FINAL_SYSTEM_PROMPT
         # Everything request-specific goes into the user message, never the
         # system prompt — llama.cpp server reuses the KV cache for the longest
         # unchanged prompt prefix, and the (long) system prompt only stays
@@ -609,7 +357,7 @@ class LlamaServerEngine:
             request_json = {
                 "model": config.LLAMA_SERVER_MODEL,
                 "messages": [
-                    {"role": "system", "content": _KO_JA_SYSTEM_PROMPT},
+                    {"role": "system", "content": prompts.KO_JA_SYSTEM_PROMPT},
                     {"role": "user", "content": user_content},
                 ],
                 "max_tokens": config.LLAMA_FINAL_MAX_TOKENS,
@@ -718,7 +466,7 @@ class LlamaServerEngine:
         request_json = {
             "model": config.LLAMA_SERVER_MODEL,
             "messages": [
-                {"role": "system", "content": _CONTEXT_SUMMARY_SYSTEM_PROMPT},
+                {"role": "system", "content": prompts.CONTEXT_SUMMARY_SYSTEM_PROMPT},
                 {"role": "user", "content": ja_history},
             ],
             "max_tokens": 48,

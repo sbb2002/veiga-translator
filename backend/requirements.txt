@@ -12,3 +12,7 @@ httpx
 # gate (2026-08-19). Pulls in transformers/torch (torch already required
 # above for vad.py).
 sentence-transformers
+# backend/translation/prompts.py loads prompts.yaml — was already pulled in
+# transitively (huggingface_hub etc.) but declared explicitly since it's now
+# a direct dependency.
+pyyaml

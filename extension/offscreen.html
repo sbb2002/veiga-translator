@@ -5,9 +5,10 @@
   <title>Live Translator — offscreen</title>
 </head>
 <body>
-  <!-- Captured tab audio is re-routed here so the user keeps hearing the
-       page normally; tabCapture would otherwise mute the source tab. -->
-  <audio id="playback" autoplay></audio>
+  <!-- Captured tab audio is re-routed back out so the user keeps hearing
+       each page normally; tabCapture would otherwise mute the source tab.
+       One <audio> element is created per captured tab (multi-tab capture,
+       2026-08-20) — see offscreen.js's playback element handling. -->
   <script src="offscreen.js"></script>
 </body>
 </html>

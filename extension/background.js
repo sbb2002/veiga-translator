@@ -14,6 +14,10 @@
 // shows "idle" even though offscreen.js is still actively capturing, and
 // clicking Start Capture again stacks a second capture on top instead of
 // recognizing one is already running.
+//
+// Multi-tab (2026-08-20): every piece of state below is keyed by tabId — one
+// tab capturing does not stop or interfere with another. See docs/planning/UI.md
+// "실제 활용 예시" and the multi-tab-capture branch plan.
 
 const OFFSCREEN_URL = "offscreen.html";
 const MAX_LOG_ENTRIES = 200;
@@ -35,14 +39,24 @@ const MAX_LOG_ENTRIES = 200;
 // click — that click IS the activeTab-granting gesture, so startCapture(tab.id)
 // below can use it straightaway. A separate chrome.windows.create popup-type
 // window is opened right after, and stays open no matter what else the user
-// clicks (unlike an action popup, which Chrome always closes on blur).
-async function getCaptureState() {
-  const { captureState } = await chrome.storage.session.get("captureState");
-  return captureState ?? { active: false, tabId: null };
+// clicks (unlike an action popup, which Chrome always closes on blur). This
+// also means each tab's activeTab grant only ever covers that tab, which is
+// exactly what multi-tab capture needs — no extra permission required.
+async function getCaptureState(tabId) {
+  const { captureSessions = {} } = await chrome.storage.session.get("captureSessions");
+  return captureSessions[tabId] ?? { active: false, tabId };
 }
 
-async function setCaptureState(state) {
-  await chrome.storage.session.set({ captureState: state });
+async function setCaptureState(tabId, state) {
+  const { captureSessions = {} } = await chrome.storage.session.get("captureSessions");
+  captureSessions[tabId] = state;
+  await chrome.storage.session.set({ captureSessions });
+}
+
+async function clearCaptureState(tabId) {
+  const { captureSessions = {} } = await chrome.storage.session.get("captureSessions");
+  delete captureSessions[tabId];
+  await chrome.storage.session.set({ captureSessions });
 }
 
 async function ensureOffscreenDocument() {
@@ -58,40 +72,52 @@ async function ensureOffscreenDocument() {
   });
 }
 
-async function startCapture(tabId) {
+async function startCapture(tabId, tab) {
   console.log("[background] startCapture: begin, tabId=", tabId);
-  const current = await getCaptureState();
+  const current = await getCaptureState(tabId);
   console.log("[background] startCapture: current state=", current);
   if (current.active) {
-    // Already capturing (possibly a stale popup that lost track of this
-    // after the service worker was recycled) — never silently layer a
+    // Already capturing this tab (possibly a stale window that lost track of
+    // this after the service worker was recycled) — never silently layer a
     // second capture on top. Only a real STOP_CAPTURE should tear it down.
+    // Other tabs' sessions are untouched either way (state is per-tabId).
     console.log("[background] startCapture: already active, returning early");
     return current;
   }
 
-  // Clear the log at session START rather than at stop: finals drained by
-  // the backend after a stop still land in the log, and the user can review
-  // the transcript after stopping until the next session begins.
-  await chrome.storage.session.remove("transcriptLog");
+  // Clear this tab's log at session START rather than at stop: finals
+  // drained by the backend after a stop still land in the log, and the user
+  // can review the transcript after stopping until the next session begins.
+  const { transcriptLogs = {} } = await chrome.storage.session.get("transcriptLogs");
+  delete transcriptLogs[tabId];
+  await chrome.storage.session.set({ transcriptLogs });
 
   console.log("[background] startCapture: ensuring offscreen document...");
   await ensureOffscreenDocument();
   console.log("[background] startCapture: offscreen document ready, requesting streamId...");
   const streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tabId });
   console.log("[background] startCapture: got streamId, sending INIT_CAPTURE...");
-  await chrome.runtime.sendMessage({ type: "INIT_CAPTURE", streamId });
+  await chrome.runtime.sendMessage({ type: "INIT_CAPTURE", tabId, streamId });
   console.log("[background] startCapture: INIT_CAPTURE sent, done");
 
-  const next = { active: true, tabId };
-  await setCaptureState(next);
+  // Snapshot title/favicon now, while we have the Tab object from the
+  // activeTab-granting gesture — avoids needing the broader "tabs"
+  // permission just to label the viewer window later.
+  const next = {
+    active: true,
+    tabId,
+    title: tab?.title ?? `탭 #${tabId}`,
+    favIconUrl: tab?.favIconUrl ?? null,
+    startedAt: Date.now(),
+  };
+  await setCaptureState(tabId, next);
   return next;
 }
 
-async function stopCapture() {
-  await chrome.runtime.sendMessage({ type: "STOP_CAPTURE" }).catch(() => {});
-  const next = { active: false, tabId: null };
-  await setCaptureState(next);
+async function stopCapture(tabId) {
+  await chrome.runtime.sendMessage({ type: "STOP_CAPTURE", tabId }).catch(() => {});
+  const next = { active: false, tabId };
+  await setCaptureState(tabId, next);
   return next;
 }
 
@@ -100,33 +126,46 @@ async function stopCapture() {
 // chrome.storage.session, so concurrent unserialized calls race and the
 // loser silently overwrites the winner's update (e.g. a "final" flip gets
 // clobbered back to "partial"). Chain calls through one promise to force
-// them to run one at a time, in arrival order.
+// them to run one at a time, in arrival order — one shared chain is enough
+// even with multiple tabs (each write still only touches its own tabId
+// bucket; the point is ordering per bucket, not parallelism across tabs).
 let logChain = Promise.resolve();
-function queueAppendToLog(event) {
-  logChain = logChain.then(() => appendToLog(event)).catch(() => {});
+function queueAppendToLog(tabId, event) {
+  logChain = logChain.then(() => appendToLog(tabId, event)).catch(() => {});
 }
 
-async function appendToLog(event) {
-  const { transcriptLog = [] } = await chrome.storage.session.get("transcriptLog");
-  const idx = transcriptLog.findIndex((e) => e.segment_id === event.segment_id);
+async function appendToLog(tabId, event) {
+  const { transcriptLogs = {} } = await chrome.storage.session.get("transcriptLogs");
+  const log = transcriptLogs[tabId] ?? [];
+  const idx = log.findIndex((e) => e.segment_id === event.segment_id);
   if (idx >= 0) {
-    transcriptLog[idx] = event;
+    log[idx] = event;
   } else {
-    transcriptLog.push(event);
+    log.push(event);
   }
-  const trimmed = transcriptLog.slice(-MAX_LOG_ENTRIES);
-  await chrome.storage.session.set({ transcriptLog: trimmed });
+  transcriptLogs[tabId] = log.slice(-MAX_LOG_ENTRIES);
+  await chrome.storage.session.set({ transcriptLogs });
 }
 
-const VIEWER_URL = "popup.html?detached=1";
+const VIEWER_URL = "popup.html";
 
-async function getViewerWindowId() {
-  const { viewerWindowId } = await chrome.storage.session.get("viewerWindowId");
-  return viewerWindowId ?? null;
+async function getViewerWindowId(tabId) {
+  const { viewerWindows = {} } = await chrome.storage.session.get("viewerWindows");
+  return viewerWindows[tabId] ?? null;
 }
 
-async function openOrFocusViewerWindow() {
-  const existingId = await getViewerWindowId();
+async function setViewerWindowId(tabId, windowId) {
+  const { viewerWindows = {} } = await chrome.storage.session.get("viewerWindows");
+  if (windowId == null) {
+    delete viewerWindows[tabId];
+  } else {
+    viewerWindows[tabId] = windowId;
+  }
+  await chrome.storage.session.set({ viewerWindows });
+}
+
+async function openOrFocusViewerWindow(tabId) {
+  const existingId = await getViewerWindowId(tabId);
   if (existingId != null) {
     try {
       await chrome.windows.update(existingId, { focused: true });
@@ -136,29 +175,59 @@ async function openOrFocusViewerWindow() {
     }
   }
   const win = await chrome.windows.create({
-    url: chrome.runtime.getURL(VIEWER_URL),
+    url: chrome.runtime.getURL(`${VIEWER_URL}?tabId=${tabId}`),
     type: "popup",
     width: 420,
-    height: 620,
+    height: 660,
     focused: true,
   });
-  await chrome.storage.session.set({ viewerWindowId: win.id });
+  await setViewerWindowId(tabId, win.id);
 }
 
-// The toolbar icon click itself both starts capture (if idle) and opens/
-// focuses the persistent viewer window — no popup step in between, per the
-// user's explicit request.
+// The toolbar icon click itself both starts capture (if this tab isn't
+// already being captured) and opens/focuses that tab's own viewer window —
+// no popup step in between, per the user's explicit request. Clicking the
+// icon on a different tab while another tab is already capturing starts a
+// second, fully independent session instead of being ignored.
 chrome.action.onClicked.addListener(async (tab) => {
   console.log("[background] action clicked, tab=", tab.id);
   try {
-    const state = await getCaptureState();
+    const state = await getCaptureState(tab.id);
     if (!state.active) {
-      await startCapture(tab.id);
+      await startCapture(tab.id, tab);
     }
   } catch (err) {
     console.error("[background] action.onClicked startCapture failed:", err);
   }
-  await openOrFocusViewerWindow();
+  await openOrFocusViewerWindow(tab.id);
+});
+
+// A tab that's being captured can simply be closed by the user — there's no
+// audio left to capture, so tear down its session and its viewer window
+// rather than leaving an orphaned capture running in offscreen.js forever.
+chrome.tabs.onRemoved.addListener(async (tabId) => {
+  const state = await getCaptureState(tabId);
+  if (state.active) {
+    await stopCapture(tabId);
+  }
+  await clearCaptureState(tabId);
+  const windowId = await getViewerWindowId(tabId);
+  if (windowId != null) {
+    await chrome.windows.remove(windowId).catch(() => {});
+  }
+  await setViewerWindowId(tabId, null);
+});
+
+// Closing just the viewer window (capture keeps running in the background,
+// same as today's single-session behavior) — forget the window id so the
+// next icon click opens a fresh window instead of trying to focus a
+// nonexistent one.
+chrome.windows.onRemoved.addListener(async (windowId) => {
+  const { viewerWindows = {} } = await chrome.storage.session.get("viewerWindows");
+  const tabId = Object.keys(viewerWindows).find((id) => viewerWindows[id] === windowId);
+  if (tabId != null) {
+    await setViewerWindowId(Number(tabId), null);
+  }
 });
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
@@ -166,7 +235,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     // popup.js sends this from a click inside the action popup — the
     // gesture Chrome accepts for activeTab/tabCapture (see the comment
     // above getCaptureState).
-    startCapture(message.tabId)
+    startCapture(message.tabId, message.tab)
       .then((state) => sendResponse({ ok: true, state }))
       .catch((err) => {
         console.error("[background] startCapture failed:", err);
@@ -176,30 +245,32 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   }
 
   if (message?.type === "STOP_CAPTURE") {
-    stopCapture()
+    stopCapture(message.tabId)
       .then(() => sendResponse({ ok: true }))
       .catch((err) => sendResponse({ ok: false, error: String(err) }));
     return true;
   }
 
   if (message?.type === "GET_CAPTURE_STATE") {
-    getCaptureState().then(sendResponse);
+    getCaptureState(message.tabId).then(sendResponse);
     return true;
   }
 
   if (message?.type === "GET_TRANSCRIPT_LOG") {
-    chrome.storage.session.get("transcriptLog").then(({ transcriptLog = [] }) => {
-      sendResponse(transcriptLog);
+    chrome.storage.session.get("transcriptLogs").then(({ transcriptLogs = {} }) => {
+      sendResponse(transcriptLogs[message.tabId] ?? []);
     });
     return true;
   }
 
   if (message?.type === "TRANSCRIPT_EVENT") {
-    // Persist so a reopened popup can restore history that arrived while it
-    // was closed — see the service-worker-lifetime note above; popup.js's
-    // own in-memory log is wiped every time the popup closes regardless.
-    queueAppendToLog(message.data);
-    return false; // popup.js's own listener also receives this event live
+    // Persist so a reopened viewer window can restore history that arrived
+    // while it was closed — see the service-worker-lifetime note above;
+    // popup.js's own in-memory log is wiped every time its window closes
+    // regardless. Tagged with tabId by offscreen.js so it lands in the
+    // right tab's bucket.
+    queueAppendToLog(message.tabId, message.data);
+    return false; // every popup.js instance's own listener also receives this live
   }
 
   return false;

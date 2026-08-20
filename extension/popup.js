@@ -3,8 +3,13 @@
 // translations are arriving correctly (see PRD §7 for the
 // partial/final distinction).
 
+const tabId = Number(new URLSearchParams(location.search).get("tabId"));
+
 const toggleBtn = document.getElementById("toggle");
-const statusEl = document.getElementById("status");
+const captureLabel = document.getElementById("captureLabel");
+const liveDot = document.getElementById("liveDot");
+const statusState = document.getElementById("statusState");
+const statusDetail = document.getElementById("statusDetail");
 const logEl = document.getElementById("log");
 
 const segmentEls = new Map(); // segment_id -> <div> element, so a "final" can replace its "partial"
@@ -20,10 +25,30 @@ const segmentEls = new Map(); // segment_id -> <div> element, so a "final" can r
 let restoring = true;
 const pendingEvents = [];
 
+let lastCaptureTitle = null; // Remember the tab title across state changes
+
 async function refreshState() {
-  const state = await chrome.runtime.sendMessage({ type: "GET_CAPTURE_STATE" });
-  toggleBtn.textContent = state?.active ? "Stop Capture" : "Start Capture";
-  statusEl.textContent = state?.active ? `capturing tab ${state.tabId}` : "idle";
+  const state = await chrome.runtime.sendMessage({ type: "GET_CAPTURE_STATE", tabId });
+  const isActive = state?.active ?? false;
+
+  // Update toggle button: toggle "recording" class and set label text via captureLabel
+  toggleBtn.classList.toggle("recording", isActive);
+  captureLabel.textContent = isActive ? "캡처 중지" : "캡처 시작";
+
+  // Update status state label
+  statusState.textContent = isActive ? "캡처 중" : "일시정지";
+
+  // Update status detail line
+  if (isActive) {
+    lastCaptureTitle = state?.title ?? `탭 #${tabId}`;
+    statusDetail.textContent = lastCaptureTitle;
+  } else {
+    // While idle, show the tab title if we have one from a prior active session
+    statusDetail.textContent = lastCaptureTitle ? lastCaptureTitle : "";
+  }
+
+  // Update live dot
+  liveDot.classList.toggle("off", !isActive);
 }
 
 // Diagnostic aid (2026-08-19): a hung background service worker previously
@@ -51,19 +76,19 @@ toggleBtn.addEventListener("click", async () => {
   console.log("[popup] toggle clicked");
   try {
     const state = await withTimeout(
-      chrome.runtime.sendMessage({ type: "GET_CAPTURE_STATE" }),
+      chrome.runtime.sendMessage({ type: "GET_CAPTURE_STATE", tabId }),
       "GET_CAPTURE_STATE"
     );
     console.log("[popup] current state:", state);
     if (state?.active) {
-      await withTimeout(chrome.runtime.sendMessage({ type: "STOP_CAPTURE" }), "STOP_CAPTURE");
+      await withTimeout(chrome.runtime.sendMessage({ type: "STOP_CAPTURE", tabId }), "STOP_CAPTURE");
       await refreshState();
       return;
     }
-    statusEl.textContent = "확장 아이콘을 클릭해서 다시 시작하세요";
+    statusDetail.textContent = "확장 아이콘을 클릭해서 다시 시작하세요";
   } catch (err) {
     console.error("[popup] toggle failed:", err);
-    statusEl.textContent = `error: ${err?.message ?? err}`;
+    statusDetail.textContent = `error: ${err?.message ?? err}`;
   }
 });
 
@@ -162,6 +187,7 @@ function renderEvent(data) {
       chrome.runtime
         .sendMessage({
           type: "FLAG_SEGMENT",
+          tabId,
           segmentId,
           flagged: entry.flagged,
           text: entry.jaLine.textContent,
@@ -179,6 +205,8 @@ function renderEvent(data) {
   const stateClass = type === "final" ? "final" : "partial";
   entry.jaLine.className = `ja-line ${stateClass}`;
   entry.koLine.className = `ko-line ${stateClass}`;
+  entry.container.classList.toggle("is-final", stateClass === "final");
+  entry.container.classList.toggle("is-partial", stateClass === "partial");
   entry.jaLine.textContent = text ?? "";
   entry.koLine.textContent = translation ?? "";
   // Debugging aid (see CLAUDE.md hallucination-filtering discussion): only
@@ -199,6 +227,7 @@ function renderEvent(data) {
 
 chrome.runtime.onMessage.addListener((message) => {
   if (message?.type !== "TRANSCRIPT_EVENT") return;
+  if (message.tabId !== tabId) return; // Ignore messages from other tabs
   if (restoring) {
     pendingEvents.push(message.data);
     return;
@@ -214,7 +243,7 @@ chrome.runtime.onMessage.addListener((message) => {
 // didn't exist, from the persisted log in background.js, before subscribing
 // to new live events above.
 async function restoreHistory() {
-  const log = await chrome.runtime.sendMessage({ type: "GET_TRANSCRIPT_LOG" });
+  const log = await chrome.runtime.sendMessage({ type: "GET_TRANSCRIPT_LOG", tabId });
   for (const event of log ?? []) {
     renderEvent(event);
   }
@@ -251,7 +280,7 @@ async function sendChatTranslateRequest() {
   chatOutputEl.textContent = "";
   chatOutputEl.classList.remove("copied");
   try {
-    await chrome.runtime.sendMessage({ type: "TRANSLATE_CHAT", text, requestId });
+    await chrome.runtime.sendMessage({ type: "TRANSLATE_CHAT", tabId, text, requestId });
   } catch (err) {
     console.error("[popup] TRANSLATE_CHAT send failed:", err);
     chatStatusEl.textContent = `error: ${err?.message ?? err}`;
@@ -285,9 +314,15 @@ chatOutputEl.addEventListener("click", async () => {
 
 chrome.runtime.onMessage.addListener((message) => {
   if (message?.type !== "CHAT_TRANSLATION") return;
+  if (message.tabId !== tabId) return; // Ignore messages from other tabs
   const { request_id: requestId, translation } = message.data ?? {};
   chatTranslateBtn.disabled = false;
   if (requestId !== pendingChatRequestId) return; // superseded by a newer request
   chatOutputEl.textContent = translation || "(번역 결과 없음)";
   chatStatusEl.textContent = translation ? "클릭해서 복사" : "";
+});
+
+// Debug toggle
+document.getElementById("debugToggle").addEventListener("change", (e) => {
+  document.body.classList.toggle("show-debug", e.target.checked);
 });

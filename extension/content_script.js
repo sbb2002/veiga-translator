@@ -39,10 +39,15 @@
 
     const root = document.createElement("div");
     root.id = "live-translator-overlay-root";
+    // left/top from the start (never "right") — resize below grows/shrinks
+    // by adjusting width/height while left+top stay fixed, which only
+    // tracks the mouse correctly if left is already the real anchor. Also
+    // clamped so a narrow window doesn't place the panel off-screen.
+    const initialLeft = Math.max(16, window.innerWidth - PANEL_WIDTH - 16);
     Object.assign(root.style, {
       position: "fixed",
       top: "72px",
-      right: "16px",
+      left: `${initialLeft}px`,
       width: `${PANEL_WIDTH}px`,
       height: `${PANEL_HEIGHT}px`,
       zIndex: "2147483647",
@@ -73,9 +78,28 @@
     });
     const title = document.createElement("span");
     title.textContent = "Live Translator";
+
+    const headerButtons = document.createElement("span");
+    Object.assign(headerButtons.style, { display: "flex", alignItems: "center", gap: "2px" });
+
+    const minimizeBtn = document.createElement("button");
+    minimizeBtn.textContent = "─";
+    minimizeBtn.title = "패널 최소화 (캡처는 계속됨)";
+    Object.assign(minimizeBtn.style, {
+      border: "0",
+      background: "transparent",
+      color: "#8b93a3",
+      fontSize: "13px",
+      cursor: "pointer",
+      padding: "4px 6px",
+      lineHeight: "1",
+    });
+    minimizeBtn.addEventListener("mouseenter", () => (minimizeBtn.style.color = "#eef0f3"));
+    minimizeBtn.addEventListener("mouseleave", () => (minimizeBtn.style.color = "#8b93a3"));
+
     const closeBtn = document.createElement("button");
     closeBtn.textContent = "✕";
-    closeBtn.title = "패널 닫기 (캡처는 계속됨)";
+    closeBtn.title = "캡처 완전 종료 후 패널 닫기";
     Object.assign(closeBtn.style, {
       border: "0",
       background: "transparent",
@@ -87,9 +111,21 @@
     });
     closeBtn.addEventListener("mouseenter", () => (closeBtn.style.color = "#eef0f3"));
     closeBtn.addEventListener("mouseleave", () => (closeBtn.style.color = "#8b93a3"));
-    closeBtn.addEventListener("click", removePanel);
+    // ✕ now fully ends the session (2026-08-20) rather than just hiding the
+    // panel — the toggle button inside popup.js already covers "keep the
+    // session alive but stop listening" (pause), so ✕'s job is specifically
+    // the other case: actually tear down the tabCapture stream/websocket.
+    // STOP_CAPTURE needs no privileged gesture (it's a teardown, not an
+    // acquire), so this is safe to fire from the overlay itself — same
+    // reasoning as pause/resume in background.js.
+    closeBtn.addEventListener("click", () => {
+      chrome.runtime.sendMessage({ type: "STOP_CAPTURE", tabId }).catch(() => {});
+      removePanel();
+    });
     header.appendChild(title);
-    header.appendChild(closeBtn);
+    headerButtons.appendChild(minimizeBtn);
+    headerButtons.appendChild(closeBtn);
+    header.appendChild(headerButtons);
 
     const iframe = document.createElement("iframe");
     iframe.src = chrome.runtime.getURL(`popup.html?tabId=${tabId}`);
@@ -107,29 +143,70 @@
       display: "block",
     });
 
-    const resizeGrip = document.createElement("div");
-    Object.assign(resizeGrip.style, {
-      position: "absolute",
-      right: "0",
-      bottom: "0",
-      width: "16px",
-      height: "16px",
-      cursor: "nwse-resize",
-      zIndex: "1",
-    });
-
-    root.style.position = "fixed"; // (kept explicit; resize handle needs root to stay the positioned ancestor)
+    root.style.position = "fixed"; // (kept explicit; resize handles need root to stay the positioned ancestor)
     root.appendChild(header);
     root.appendChild(iframe);
-    root.appendChild(resizeGrip);
+    // Five handles: right/left edges (width only), bottom/top edges (height
+    // only), and the bottom-right corner (both) — plain horizontal/vertical
+    // resize from either side, plus one diagonal corner.
+    const edgeRight = makeResizeHandle({ right: "0", top: "0", bottom: "0", width: "6px", cursor: "ew-resize" });
+    const edgeLeft = makeResizeHandle({ left: "0", top: "0", bottom: "0", width: "6px", cursor: "ew-resize" });
+    const edgeBottom = makeResizeHandle({ left: "0", right: "0", bottom: "0", height: "6px", cursor: "ns-resize" });
+    const edgeTop = makeResizeHandle({ left: "0", right: "0", top: "0", height: "6px", cursor: "ns-resize" });
+    const corner = makeResizeHandle({ right: "0", bottom: "0", width: "16px", height: "16px", cursor: "nwse-resize" });
+    root.appendChild(edgeRight);
+    root.appendChild(edgeLeft);
+    root.appendChild(edgeBottom);
+    root.appendChild(edgeTop);
+    root.appendChild(corner);
     document.documentElement.appendChild(root);
 
     rootEl = root;
     iframeEl = iframe;
 
-    makeDraggable(header, root, iframe);
-    makeResizable(resizeGrip, root, iframe);
+    makeDraggable(header, root);
+    // x/y: which fixed edge each handle grows away from — 'right'/'bottom'
+    // keep left/top fixed (matches the panel's left/top anchor from
+    // creation); 'left'/'top' keep the opposite edge fixed instead, moving
+    // left/top themselves as the handle side is dragged — see makeResizable.
+    makeResizable(edgeRight, root, { x: "right", y: null });
+    makeResizable(edgeLeft, root, { x: "left", y: null });
+    makeResizable(edgeBottom, root, { x: null, y: "bottom" });
+    makeResizable(edgeTop, root, { x: null, y: "top" });
+    makeResizable(corner, root, { x: "right", y: "bottom" });
     followFullscreen(root);
+
+    // Minimize (2026-08-20): collapses the panel down to just the header
+    // bar — capture keeps running untouched (unlike ✕, this sends no
+    // message to background.js at all; it's purely a local display change).
+    // Distinct from ✕: this is for "get it out of the way for a moment",
+    // ✕ is for "I'm done, stop capturing".
+    const resizeHandles = [edgeRight, edgeLeft, edgeBottom, edgeTop, corner];
+    let minimized = false;
+    let expandedHeight = root.style.height;
+    minimizeBtn.addEventListener("click", () => {
+      minimized = !minimized;
+      if (minimized) {
+        expandedHeight = root.style.height;
+        root.style.height = `${HEADER_HEIGHT}px`;
+        iframe.style.display = "none";
+        resizeHandles.forEach((h) => (h.style.display = "none"));
+        minimizeBtn.textContent = "▢";
+        minimizeBtn.title = "패널 펼치기";
+      } else {
+        root.style.height = expandedHeight;
+        iframe.style.display = "block";
+        resizeHandles.forEach((h) => (h.style.display = ""));
+        minimizeBtn.textContent = "─";
+        minimizeBtn.title = "패널 최소화 (캡처는 계속됨)";
+      }
+    });
+  }
+
+  function makeResizeHandle(edgeStyle) {
+    const handle = document.createElement("div");
+    Object.assign(handle.style, { position: "absolute", zIndex: "1", ...edgeStyle });
+    return handle;
   }
 
   function removePanel() {
@@ -139,21 +216,34 @@
     iframeEl = null;
   }
 
-  // Dragging moves the root by absolute left/top — switch off the initial
-  // right-anchored position on first drag so the panel doesn't jump.
-  function makeDraggable(handle, root, iframe) {
-    handle.addEventListener("mousedown", (downEvent) => {
+  // Dragging moves the root by absolute left/top (already the anchor set at
+  // creation — see buildPanel). Uses Pointer Events + setPointerCapture
+  // rather than mousemove/mouseup on `document` with a manual
+  // iframe.style.pointerEvents toggle: the toggle approach was unreliable
+  // live (drag felt inert, then the panel would suddenly jump on the next
+  // plain mouse-over once the button was already released, and only a fresh
+  // click would "unstick" it) — a race between the style write landing and
+  // the pointer already being over the iframe, and no captured target meant
+  // events could get eaten by page/iframe handlers before ever reaching our
+  // document-level listener. setPointerCapture on the handle itself routes
+  // every subsequent pointermove/pointerup straight to that handle
+  // regardless of what's visually underneath the cursor, so the iframe
+  // never gets a chance to intercept anything and no toggle is needed.
+  function makeDraggable(handle, root) {
+    handle.addEventListener("pointerdown", (downEvent) => {
+      // The close button lives inside this header — without this guard,
+      // its pointerdown bubbles up here first, and setPointerCapture below
+      // then claims the pointer for dragging before the button ever gets a
+      // "click", making it look completely unresponsive.
+      if (downEvent.target.closest("button")) return;
       downEvent.preventDefault();
+      handle.setPointerCapture(downEvent.pointerId);
       const rect = root.getBoundingClientRect();
-      root.style.right = "";
-      root.style.left = `${rect.left}px`;
-      root.style.top = `${rect.top}px`;
 
       const startX = downEvent.clientX;
       const startY = downEvent.clientY;
       const startLeft = rect.left;
       const startTop = rect.top;
-      iframe.style.pointerEvents = "none"; // let mousemove keep tracking over the iframe
 
       function onMove(moveEvent) {
         const dx = moveEvent.clientX - startX;
@@ -161,40 +251,63 @@
         root.style.left = `${Math.max(0, startLeft + dx)}px`;
         root.style.top = `${Math.max(0, startTop + dy)}px`;
       }
-      function onUp() {
-        iframe.style.pointerEvents = "";
-        document.removeEventListener("mousemove", onMove);
-        document.removeEventListener("mouseup", onUp);
+      function onUp(upEvent) {
+        handle.releasePointerCapture(upEvent.pointerId);
+        handle.removeEventListener("pointermove", onMove);
+        handle.removeEventListener("pointerup", onUp);
       }
-      document.addEventListener("mousemove", onMove);
-      document.addEventListener("mouseup", onUp);
+      handle.addEventListener("pointermove", onMove);
+      handle.addEventListener("pointerup", onUp);
     });
   }
 
-  function makeResizable(grip, root, iframe) {
-    grip.addEventListener("mousedown", (downEvent) => {
+  // `anchor.x`/`anchor.y` say which side is fixed while this handle resizes
+  // that axis: 'right'/'bottom' keep left/top fixed and grow the
+  // width/height directly with the mouse delta (matches the panel's
+  // left/top-anchored position from creation — see buildPanel); 'left'/'top'
+  // instead keep the *opposite* edge fixed and compute width/height from
+  // the distance to the mouse, moving left/top to match so the fixed edge
+  // really does stay put. null means this handle doesn't touch that axis.
+  // See makeDraggable's comment above for why this uses pointer capture
+  // instead of document-level mousemove/mouseup.
+  function makeResizable(grip, root, anchor) {
+    grip.addEventListener("pointerdown", (downEvent) => {
       downEvent.preventDefault();
       downEvent.stopPropagation();
+      grip.setPointerCapture(downEvent.pointerId);
       const rect = root.getBoundingClientRect();
       const startX = downEvent.clientX;
       const startY = downEvent.clientY;
       const startWidth = rect.width;
       const startHeight = rect.height;
-      iframe.style.pointerEvents = "none";
+      const fixedRight = rect.left + rect.width; // anchor for 'left'-edge resize
+      const fixedBottom = rect.top + rect.height; // anchor for 'top'-edge resize
 
       function onMove(moveEvent) {
-        const dx = moveEvent.clientX - startX;
-        const dy = moveEvent.clientY - startY;
-        root.style.width = `${Math.max(MIN_WIDTH, startWidth + dx)}px`;
-        root.style.height = `${Math.max(MIN_HEIGHT, startHeight + dy)}px`;
+        if (anchor.x === "right") {
+          const dx = moveEvent.clientX - startX;
+          root.style.width = `${Math.max(MIN_WIDTH, startWidth + dx)}px`;
+        } else if (anchor.x === "left") {
+          const newWidth = Math.max(MIN_WIDTH, fixedRight - moveEvent.clientX);
+          root.style.width = `${newWidth}px`;
+          root.style.left = `${fixedRight - newWidth}px`;
+        }
+        if (anchor.y === "bottom") {
+          const dy = moveEvent.clientY - startY;
+          root.style.height = `${Math.max(MIN_HEIGHT, startHeight + dy)}px`;
+        } else if (anchor.y === "top") {
+          const newHeight = Math.max(MIN_HEIGHT, fixedBottom - moveEvent.clientY);
+          root.style.height = `${newHeight}px`;
+          root.style.top = `${fixedBottom - newHeight}px`;
+        }
       }
-      function onUp() {
-        iframe.style.pointerEvents = "";
-        document.removeEventListener("mousemove", onMove);
-        document.removeEventListener("mouseup", onUp);
+      function onUp(upEvent) {
+        grip.releasePointerCapture(upEvent.pointerId);
+        grip.removeEventListener("pointermove", onMove);
+        grip.removeEventListener("pointerup", onUp);
       }
-      document.addEventListener("mousemove", onMove);
-      document.addEventListener("mouseup", onUp);
+      grip.addEventListener("pointermove", onMove);
+      grip.addEventListener("pointerup", onUp);
     });
   }
 

@@ -20,6 +20,7 @@ const TARGET_SAMPLE_RATE = 16000;
  *   playbackEl: HTMLAudioElement | null,
  *   ws: WebSocket | null,
  *   captureActive: boolean,
+ *   paused: boolean,
  *   reconnectDelayMs: number,
  *   reconnectTimer: number | null,
  *   wsForceCloseTimer: number | null,
@@ -36,6 +37,20 @@ function newSessionState() {
     playbackEl: null,
     ws: null,
     captureActive: false,
+    // Pause (2026-08-20): distinct from stopCapture()'s full teardown below.
+    // A button inside the overlay panel can never re-acquire tabCapture's
+    // streamId (that call requires the toolbar-icon gesture specifically —
+    // confirmed live 2026-08-19), so a "stop then start again" model made
+    // resuming from the overlay permanently impossible. Pausing instead
+    // just gates whether captured audio actually gets sent — the
+    // MediaStream/AudioContext/WebSocket all stay alive and require no
+    // privileged API to resume, so the overlay's own button can fully
+    // control it. Known trade-off: the backend's in-progress utterance
+    // buffer (if speech was mid-sentence at pause time) doesn't get any
+    // "silence" signal during the pause, so a very short pause mid-sentence
+    // can read as a seamless continuation rather than a real gap — accepted
+    // as a minor edge case rather than adding cross-pause flush logic.
+    paused: false,
     reconnectDelayMs: 1000,
     reconnectTimer: null,
     wsForceCloseTimer: null,
@@ -80,19 +95,24 @@ function connectWebSocket(tabId, session) {
   };
 
   ws.onmessage = (event) => {
-    // Backend sends JSON text frames. Two families: "partial"/"final" are
+    // Backend sends JSON text frames. Three families: "partial"/"final" are
     // the streaming caption pipeline (relayed as TRANSCRIPT_EVENT, and
     // persisted into that tab's transcript log by background.js);
     // "chat_translation" is the one-shot reverse-direction (draft,
     // 2026-08-20) reply to a TRANSLATE_CHAT request below — relayed
     // separately so it never lands in the persisted transcript log (it has
-    // no segment_id and isn't part of the caption stream). Both are tagged
-    // with tabId so background.js and the right viewer window can route
-    // them to the correct tab's session.
+    // no segment_id and isn't part of the caption stream); "context_summary"
+    // (2026-08-20) is the periodic one-line "what's being talked about"
+    // update — also relayed separately and persisted as a single latest
+    // value (not a log) by background.js. All are tagged with tabId so
+    // background.js and the right overlay panel can route them to the
+    // correct tab's session.
     try {
       const data = JSON.parse(event.data);
       if (data.type === "chat_translation") {
         chrome.runtime.sendMessage({ type: "CHAT_TRANSLATION", tabId, data }).catch(() => {});
+      } else if (data.type === "context_summary") {
+        chrome.runtime.sendMessage({ type: "CONTEXT_SUMMARY", tabId, data }).catch(() => {});
       } else {
         chrome.runtime.sendMessage({ type: "TRANSCRIPT_EVENT", tabId, data }).catch(() => {});
       }
@@ -168,6 +188,7 @@ async function startCapture(tabId, streamId) {
 
   session.workletNode.port.onmessage = (event) => {
     const { chunk } = event.data;
+    if (session.paused) return;
     if (!session.ws || session.ws.readyState !== WebSocket.OPEN) return;
     session.ws.send(floatTo16BitPCM(chunk).buffer);
   };
@@ -234,6 +255,12 @@ chrome.runtime.onMessage.addListener((message) => {
     });
   } else if (message?.type === "STOP_CAPTURE") {
     stopCapture(message.tabId);
+  } else if (message?.type === "PAUSE_CAPTURE") {
+    const session = sessions.get(message.tabId);
+    if (session) session.paused = true;
+  } else if (message?.type === "RESUME_CAPTURE") {
+    const session = sessions.get(message.tabId);
+    if (session) session.paused = false;
   } else if (message?.type === "FLAG_SEGMENT") {
     const session = sessions.get(message.tabId);
     if (session?.ws && session.ws.readyState === WebSocket.OPEN) {

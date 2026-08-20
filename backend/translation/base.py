@@ -41,3 +41,10 @@ class TranslationEngine(Protocol):
         their own translated captions echoed back), so the outgoing message
         can be phrased to fit what's currently happening on stream."""
         ...
+
+    async def summarize_context(self, ja_history: str) -> str:
+        """One-line Korean summary of what's currently being talked about on
+        stream, from recent final JA speech (same text as translate()'s
+        `context` argument) — shown in the extension UI so a viewer glancing
+        at the panel gets the gist without reading the whole scrolling log."""
+        ...

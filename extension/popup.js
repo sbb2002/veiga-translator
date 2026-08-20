@@ -30,13 +30,29 @@ let lastCaptureTitle = null; // Remember the tab title across state changes
 async function refreshState() {
   const state = await chrome.runtime.sendMessage({ type: "GET_CAPTURE_STATE", tabId });
   const isActive = state?.active ?? false;
+  const isPaused = state?.paused ?? false;
+  const isRecording = isActive && !isPaused; // has a live session AND is actively sending audio
 
-  // Update toggle button: toggle "recording" class and set label text via captureLabel
-  toggleBtn.classList.toggle("recording", isActive);
-  captureLabel.textContent = isActive ? "캡처 중지" : "캡처 시작";
+  // Update toggle button: toggle "recording" class (record vs pause icon —
+  // see popup.html) and set label text via captureLabel. Three real states:
+  // no session at all / actively capturing / paused-with-session-alive.
+  toggleBtn.classList.toggle("recording", isRecording);
+  if (isRecording) {
+    captureLabel.textContent = "일시정지";
+  } else if (isActive) {
+    captureLabel.textContent = "재개";
+  } else {
+    captureLabel.textContent = "캡처 시작";
+  }
 
   // Update status state label
-  statusState.textContent = isActive ? "캡처 중" : "일시정지";
+  if (isRecording) {
+    statusState.textContent = "캡처 중";
+  } else if (isActive) {
+    statusState.textContent = "일시정지됨";
+  } else {
+    statusState.textContent = "대기 중";
+  }
 
   // Update status detail line
   if (isActive) {
@@ -48,7 +64,7 @@ async function refreshState() {
   }
 
   // Update live dot
-  liveDot.classList.toggle("off", !isActive);
+  liveDot.classList.toggle("off", !isRecording);
 }
 
 // Diagnostic aid (2026-08-19): a hung background service worker previously
@@ -67,11 +83,14 @@ function withTimeout(promise, label, ms = 5000) {
 
 // This file only ever runs inside the in-page overlay panel's iframe now
 // (content_script.js builds it, background.js's action.onClicked triggers it
-// — see there). Starting capture requires activeTab, which is only granted
-// by the toolbar-icon click itself, not by a later gesture inside this
-// already-open iframe (confirmed live 2026-08-19: chrome.sidePanel had the
-// exact same problem) — so this iframe can only stop an active capture;
-// starting one again means clicking the toolbar icon.
+// — see there). Starting a session from nothing requires activeTab, which
+// is only granted by the toolbar-icon click itself, not by a gesture inside
+// this already-open iframe (confirmed live 2026-08-19: chrome.sidePanel had
+// the exact same problem) — so a session with NO capture running yet can
+// only be started via the toolbar icon. But pause/resume of an *existing*
+// session (background.js's pauseCapture/resumeCapture) needs no such
+// gesture — the tabCapture stream stays alive the whole time — so this
+// button fully controls that part once a session exists.
 toggleBtn.addEventListener("click", async () => {
   console.log("[popup] toggle clicked");
   try {
@@ -80,12 +99,24 @@ toggleBtn.addEventListener("click", async () => {
       "GET_CAPTURE_STATE"
     );
     console.log("[popup] current state:", state);
-    if (state?.active) {
-      await withTimeout(chrome.runtime.sendMessage({ type: "STOP_CAPTURE", tabId }), "STOP_CAPTURE");
+    if (state?.active && !state?.paused) {
+      await withTimeout(chrome.runtime.sendMessage({ type: "PAUSE_CAPTURE", tabId }), "PAUSE_CAPTURE");
       await refreshState();
       return;
     }
-    statusDetail.textContent = "확장 아이콘을 클릭해서 다시 시작하세요";
+    if (state?.active && state?.paused) {
+      await withTimeout(chrome.runtime.sendMessage({ type: "RESUME_CAPTURE", tabId }), "RESUME_CAPTURE");
+      await refreshState();
+      return;
+    }
+    // No session exists at all (never started, or the tab was closed and
+    // reopened) — starting one from scratch needs the toolbar-icon gesture
+    // (see comment above). A quiet text change here was easy to miss and
+    // read as "the button doesn't work" — the pulsing accent-colored hint
+    // makes the actual required action obvious.
+    statusDetail.textContent = "↑ 브라우저 툴바의 확장 아이콘을 클릭하세요";
+    statusDetail.classList.add("hint");
+    setTimeout(() => statusDetail.classList.remove("hint"), 4000);
   } catch (err) {
     console.error("[popup] toggle failed:", err);
     statusDetail.textContent = `error: ${err?.message ?? err}`;
@@ -236,6 +267,29 @@ chrome.runtime.onMessage.addListener((message) => {
   logEl.scrollTop = logEl.scrollHeight;
 });
 
+// Context summary (2026-08-20): one-line "what's being talked about right
+// now", regenerated periodically by the backend (config.py's
+// CONTEXT_SUMMARY_EVERY_N_FINALS) from recent final JA speech. title=
+// mirrors the text so hovering shows the full line even when the header's
+// fixed width ellipsis-truncates it.
+const contextSummaryEl = document.getElementById("contextSummary");
+
+function renderContextSummary(text) {
+  contextSummaryEl.textContent = text ?? "";
+  contextSummaryEl.title = text ?? "";
+}
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message?.type !== "CONTEXT_SUMMARY") return;
+  if (message.tabId !== tabId) return; // Ignore messages from other tabs
+  renderContextSummary(message.data.text);
+});
+
+async function restoreContextSummary() {
+  const text = await chrome.runtime.sendMessage({ type: "GET_CONTEXT_SUMMARY", tabId });
+  renderContextSummary(text);
+}
+
 // This iframe's own DOM/state is destroyed every time the overlay panel is
 // closed (the ✕ button in content_script.js removes the whole panel,
 // iframe included), but capture keeps running independently in the
@@ -257,6 +311,7 @@ async function restoreHistory() {
 
 restoreHistory();
 refreshState();
+restoreContextSummary();
 
 // --- Chat reply (draft, 2026-08-20): translate the viewer's own Korean ---
 // --- chat message into Japanese, using the live broadcast as context. ---

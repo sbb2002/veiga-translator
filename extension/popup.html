@@ -138,6 +138,18 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    .status-detail.hint {
+      color: var(--accent);
+      font-weight: 700;
+      animation: hint-pulse 1s ease-in-out 2;
+    }
+    @keyframes hint-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .status-detail.hint { animation: none; }
+    }
 
     .live-dot {
       width: 6px;
@@ -368,6 +380,20 @@
       font-size: 10.5px;
       color: var(--text-faint);
     }
+
+    .context-summary {
+      flex: none;
+      padding: 7px 14px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text-muted);
+      font-size: 11.5px;
+      line-height: 1.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .context-summary:empty { display: none; }
   </style>
 </head>
 <body>
@@ -395,6 +421,8 @@
     </label>
     <button id="themeToggle" class="theme-toggle-btn" type="button" aria-label="테마 전환">☀️</button>
   </header>
+
+  <div id="contextSummary" class="context-summary" title=""></div>
 
   <div class="log-card">
     <p class="eyebrow">실시간 전사 · 번역</p>

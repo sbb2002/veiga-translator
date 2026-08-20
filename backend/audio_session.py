@@ -101,6 +101,13 @@ class AudioSession:
         # in the same order the utterances were spoken.
         self._finalize_queue: asyncio.Queue[_UtteranceState] = asyncio.Queue()
         self._finalize_worker_task = asyncio.create_task(self._finalize_worker())
+        # One-line "what's being talked about right now" for the extension
+        # header (see config.CONTEXT_SUMMARY_EVERY_N_FINALS for the
+        # throttling rationale). _context_summary_task doubles as the
+        # in-flight guard: a new summary is only kicked off once the
+        # previous one has actually finished.
+        self._finals_since_summary = 0
+        self._context_summary_task: asyncio.Task | None = None
 
     async def feed_audio(self, pcm16_bytes: bytes) -> None:
         chunk = np.frombuffer(pcm16_bytes, dtype=np.int16).astype(np.float32) / 32768.0
@@ -289,6 +296,32 @@ class AudioSession:
             return ""
         return result.text
 
+    def _maybe_update_context_summary(self) -> None:
+        """Fire-and-forget: regenerate the one-line context summary every
+        config.CONTEXT_SUMMARY_EVERY_N_FINALS finals, skipping the trigger
+        entirely while a previous call is still in flight (rather than
+        queuing another) so a slow GPU can't pile up overlapping summary
+        requests behind the actual transcription/translation work."""
+        self._finals_since_summary += 1
+        if self._finals_since_summary < config.CONTEXT_SUMMARY_EVERY_N_FINALS:
+            return
+        if self._context_summary_task is not None and not self._context_summary_task.done():
+            return
+        self._finals_since_summary = 0
+        self._context_summary_task = asyncio.create_task(self._update_context_summary())
+
+    async def _update_context_summary(self) -> None:
+        ja_context, _ko_context = self._format_history()
+        if not ja_context:
+            return
+        try:
+            summary = await self._translate.summarize_context(ja_context)
+        except Exception:
+            logger.exception("context summary generation failed")
+            return
+        if summary:
+            await self._emit_safe({"type": "context_summary", "text": summary})
+
     async def _emit_safe(self, event: dict) -> None:
         """Send an event to the client, swallowing transport errors — the
         websocket may already be gone (client closed mid-session, or events
@@ -456,6 +489,7 @@ class AudioSession:
             )
             llm_s = time.monotonic() - llm_start
             self._final_history.append((final_text, translation.text))
+            self._maybe_update_context_summary()
         except Exception:
             logger.exception("final translation failed — falling back to last partial translation")
             llm_s = time.monotonic() - llm_start

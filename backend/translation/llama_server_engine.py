@@ -46,6 +46,21 @@ _SLANG_NOTE = (
     "and is unrelated)."
 )
 
+_SCAT_SINGING_NOTE = (
+    "The speaker may be singing rather than talking. Repeated syllables "
+    "with no dictionary meaning (e.g. なななな, なーなー, らららー — plain "
+    "scat/humming, not a real word) are song filler, NOT the mimetic/"
+    "descriptive words covered above — do not search for a 'meaning' to "
+    "translate and do not substitute an unrelated Korean word or connector "
+    "(e.g. translating なななな as '그리고' is wrong — 'and' has nothing to "
+    "do with what was actually sung). Instead, transliterate the sound "
+    "phonetically into the matching Korean syllables, reproducing the "
+    "repetition/length as heard (e.g. なななな -> 나나나나, なーなー -> "
+    "나~나~, using ~ for the long-vowel mark ー since ー itself isn't "
+    "Hangul). A plain phonetic echo is the correct translation for song "
+    "filler, not a search for meaning."
+)
+
 _LAUGHTER_NOTE = (
     "IF AND ONLY IF the Japanese input text literally contains a trailing "
     "'w', 'ww', 'www' (from 笑う, 'to laugh') or 笑/(笑), carry it over as "
@@ -241,6 +256,18 @@ def _build_korean_only_grammar(extra_literals: tuple[str, ...] = ()) -> str:
 
 _KOREAN_ONLY_GRAMMAR = _build_korean_only_grammar()
 
+# --- Context summary (2026-08-20): one-line "what's being talked about ---
+# --- right now" for the extension header, from recent final JA speech. ---
+_CONTEXT_SUMMARY_SYSTEM_PROMPT = (
+    "Below is recent Japanese speech transcribed live from a stream, "
+    "oldest first. In ONE short, natural Korean sentence, summarize what "
+    "is currently being talked about — for a Korean-speaking viewer "
+    "glancing at a status line who wants the gist at a glance, not a "
+    "translation of any specific line. Describe the current topic/"
+    "situation, not individual sentences. Output ONLY that one Korean "
+    "sentence, nothing else — no notes, no quotes, no line breaks."
+)
+
 # --- Reverse direction (draft, 2026-08-20): viewer's own Korean chat -> ---
 # --- natural Japanese, for pasting into the stream's chat.              ---
 _KO_JA_SYSTEM_PROMPT = (
@@ -256,6 +283,34 @@ _KO_JA_SYSTEM_PROMPT = (
     "it only to pick natural wording/topic references that fit what's "
     "currently happening on stream — never translate or repeat any "
     "'[BROADCAST CONTEXT]' line in your output.\n\n"
+    "The 'translate the intent naturally' instruction above applies only "
+    "when '[TEXT TO TRANSLATE]' actually reads like a spoken chat message "
+    "(has a verb/predicate, forms a full thought). If it is instead just a "
+    "single word, a short label, or a bare noun phrase with no sentence "
+    "structure — not something meant to be said aloud as-is — do NOT "
+    "invent a reaction or turn it into a sentence. Output a direct, "
+    "dictionary-style Japanese translation of that word/phrase only, "
+    "nothing added.\n\n"
+    "Match the punctuation the user actually typed — never add a ！ or ？ "
+    "that has no corresponding ! or ? in '[TEXT TO TRANSLATE]', and don't "
+    "drop one that is there either. Plain statements stay plain; only add "
+    "emphasis punctuation where the Korean input already signals it.\n\n"
+    "If '[TEXT TO TRANSLATE]' contains an English word or phrase (a band/"
+    "artist/game/song name, a loanword left untranslated, etc.), treat it "
+    "as a proper noun and keep it exactly as written, in Latin script, "
+    "unchanged — the same way a real Japanese viewer's chat commonly keeps "
+    "an English name as-is rather than converting it to katakana. Do not "
+    "romanize/katakana-ize it and do not translate it; just carry that word "
+    "over verbatim into its natural position in the Japanese sentence "
+    "you're building around it.\n\n"
+    "Never silently drop a content word from '[TEXT TO TRANSLATE]' just "
+    "because it's ambiguous (e.g. a Korean word with more than one "
+    "possible meaning). Pick your single best-guess reading — using "
+    "'[BROADCAST CONTEXT]' to disambiguate when it's present, your best "
+    "judgment otherwise — and translate that word using it, the same way "
+    "you would if it had only one possible meaning. A guessed-but-present "
+    "translation is always better than a vaguer sentence that quietly "
+    "avoids the word altogether.\n\n"
     "Never invent, on your own initiative, a name/nickname/honorific to "
     "address the streamer that the user did not supply. A name is "
     "'supplied' only two ways: (a) it's written directly in "
@@ -302,6 +357,13 @@ _KO_JA_SYSTEM_PROMPT = (
 # verbatim, which is a far easier instruction to follow than "pick hiragana
 # here, katakana there, mid-sentence."
 _QUOTE_SPAN_RE = re.compile(r"'([^']+)'|\"([^\"]+)\"")
+
+# English proper nouns (band/artist/game names etc.) typed directly in the
+# Korean input are common in real streamer chat and are normally left in
+# Latin script as-is rather than katakana-ized — matches real Japanese chat
+# convention. Single contiguous Latin-letter token (optionally trailing
+# digits), not a general "any English" matcher.
+_LATIN_WORD_RE = re.compile(r"[A-Za-z][A-Za-z0-9]*")
 _KANA_SINGLE_CHARS = "ー "  # long-vowel mark + space; script-neutral, allowed either way
 
 
@@ -323,19 +385,45 @@ _JAPANESE_SCRIPT_RANGES = [
     (0x3000, 0x303F),  # CJK punctuation (。、「」etc.)
     (0xFF01, 0xFF60),  # Fullwidth punctuation/forms
 ]
-_JAPANESE_SINGLE_CHARS = " .,!?~'\"()-ー"
+# '-' MUST stay last in the character class (same rule as
+# _ALLOWED_SINGLE_CHARS above) — it was previously placed before 'ー',
+# which GBNF read as a range operator spanning ')' (U+0029) through 'ー'
+# (U+30FC), silently admitting nearly the entire Latin/ASCII block despite
+# the whole point of this grammar being to exclude it. Reproduced live: a
+# Korean chat message containing an English word ("SUPERCELL") came back
+# with that word romanized verbatim in the "translation" instead of being
+# rendered as a Japanese-script loanword.
+_JAPANESE_SINGLE_CHARS = " .,!?~'\"()ー-"
 
 
-def _build_japanese_only_grammar() -> str:
+def _build_japanese_only_grammar(extra_literals: tuple[str, ...] = ()) -> str:
+    """`extra_literals` are exact-match Latin-script exceptions (e.g. a band
+    name typed in English in the Korean input — see _LATIN_WORD_RE) that
+    stay in Latin script verbatim rather than being forced into katakana,
+    same mechanism as _build_korean_only_grammar's extra_literals above."""
     ranges = "".join(f"{chr(lo)}-{chr(hi)}" for lo, hi in _JAPANESE_SCRIPT_RANGES)
+    literal_alts = "".join(f" | {_gbnf_literal(lit)}" for lit in extra_literals if lit)
     return (
         "root ::= segment+\n"
-        "segment ::= safe-char+\n"
+        f"segment ::= safe-char+{literal_alts}\n"
         f"safe-char ::= [{ranges}{_JAPANESE_SINGLE_CHARS}]"
     )
 
 
 _JAPANESE_ONLY_GRAMMAR = _build_japanese_only_grammar()
+
+
+def _match_source_punctuation(source: str, translated: str) -> str:
+    """Strip ！/! or ？/? from `translated` when `source` (the user's raw
+    Korean input) has no corresponding !/? at all — the prompt instruction
+    to only add emphasis punctuation the user actually typed proved
+    unreliable in live testing (the model kept adding a ！ to plain
+    single-word input regardless), so enforce it here instead."""
+    if "!" not in source and "！" not in source:
+        translated = translated.replace("！", "").replace("!", "")
+    if "?" not in source and "？" not in source:
+        translated = translated.replace("？", "").replace("?", "")
+    return translated
 
 
 class LlamaServerEngine:
@@ -504,6 +592,12 @@ class LlamaServerEngine:
             return TranslationResult(text=await self._transliterate_forced(katakana_span, "katakana"))
 
         resolved_text, required_kana = await self._resolve_forced_kana_spans(text)
+        # Dedup preserving order — an English word repeated in the input
+        # only needs one grammar alternative for it.
+        english_literals = tuple(dict.fromkeys(_LATIN_WORD_RE.findall(text)))
+        grammar = (
+            _build_japanese_only_grammar(english_literals) if english_literals else _JAPANESE_ONLY_GRAMMAR
+        )
 
         sections = []
         if context:
@@ -520,7 +614,7 @@ class LlamaServerEngine:
                 ],
                 "max_tokens": config.LLAMA_FINAL_MAX_TOKENS,
                 "temperature": 0.0,
-                "grammar": _JAPANESE_ONLY_GRAMMAR,
+                "grammar": grammar,
                 "repeat_penalty": 1.3,
                 "repeat_last_n": 64,
             }
@@ -560,7 +654,7 @@ class LlamaServerEngine:
                     required_kana,
                     translated,
                 )
-        return TranslationResult(text=translated)
+        return TranslationResult(text=_match_source_punctuation(text, translated))
 
     async def _resolve_forced_kana_spans(self, text: str) -> tuple[str, list[str]]:
         """Replace each '...'/"..." span in `text` with its already-resolved
@@ -608,6 +702,30 @@ class LlamaServerEngine:
             "max_tokens": 24,
             "temperature": 0.0,
             "grammar": grammar,
+        }
+        response = await self._client.post(
+            "/v1/chat/completions",
+            json=request_json,
+            timeout=config.LLAMA_SERVER_TIMEOUT_S,
+        )
+        response.raise_for_status()
+        data = response.json()
+        return data["choices"][0]["message"]["content"].strip()
+
+    async def summarize_context(self, ja_history: str) -> str:
+        if not ja_history.strip():
+            return ""
+        request_json = {
+            "model": config.LLAMA_SERVER_MODEL,
+            "messages": [
+                {"role": "system", "content": _CONTEXT_SUMMARY_SYSTEM_PROMPT},
+                {"role": "user", "content": ja_history},
+            ],
+            "max_tokens": 48,
+            "temperature": 0.0,
+            "grammar": _KOREAN_ONLY_GRAMMAR,
+            "repeat_penalty": 1.3,
+            "repeat_last_n": 64,
         }
         response = await self._client.post(
             "/v1/chat/completions",

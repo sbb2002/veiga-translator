@@ -171,3 +171,12 @@ CLOSE_DRAIN_TIMEOUT_S = 10.0
 # speaker's self-correction/reversal across a VAD split, instead of only
 # ever seeing the single immediately-prior sentence.
 FINAL_CONTEXT_HISTORY_SIZE = 3
+
+# UI context-summary line (2026-08-20): how many finalized segments to wait
+# between regenerating the one-line "what's being talked about right now"
+# summary shown in the extension header. Every final would call the LLM an
+# extra time per segment for a line that barely changes sentence-to-sentence
+# — this amortizes that cost. Generation is also skipped outright while a
+# previous summary call is still in flight (see audio_session.py), so a slow
+# GPU can't pile up overlapping requests regardless of this value.
+CONTEXT_SUMMARY_EVERY_N_FINALS = 3

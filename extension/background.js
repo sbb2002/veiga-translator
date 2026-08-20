@@ -46,7 +46,7 @@ const MAX_LOG_ENTRIES = 200;
 // needs — no extra permission required.
 async function getCaptureState(tabId) {
   const { captureSessions = {} } = await chrome.storage.session.get("captureSessions");
-  return captureSessions[tabId] ?? { active: false, tabId };
+  return captureSessions[tabId] ?? { active: false, paused: false, tabId };
 }
 
 async function setCaptureState(tabId, state) {
@@ -87,12 +87,16 @@ async function startCapture(tabId, tab) {
     return current;
   }
 
-  // Clear this tab's log at session START rather than at stop: finals
-  // drained by the backend after a stop still land in the log, and the user
-  // can review the transcript after stopping until the next session begins.
+  // Clear this tab's log (and stale context summary) at session START
+  // rather than at stop: finals drained by the backend after a stop still
+  // land in the log, and the user can review the transcript after stopping
+  // until the next session begins.
   const { transcriptLogs = {} } = await chrome.storage.session.get("transcriptLogs");
   delete transcriptLogs[tabId];
   await chrome.storage.session.set({ transcriptLogs });
+  const { contextSummaries = {} } = await chrome.storage.session.get("contextSummaries");
+  delete contextSummaries[tabId];
+  await chrome.storage.session.set({ contextSummaries });
 
   console.log("[background] startCapture: ensuring offscreen document...");
   await ensureOffscreenDocument();
@@ -107,6 +111,7 @@ async function startCapture(tabId, tab) {
   // permission just to label the overlay panel later.
   const next = {
     active: true,
+    paused: false,
     tabId,
     title: tab?.title ?? `탭 #${tabId}`,
     favIconUrl: tab?.favIconUrl ?? null,
@@ -116,9 +121,38 @@ async function startCapture(tabId, tab) {
   return next;
 }
 
+// True end-of-session teardown (tabCapture stream released, websocket
+// closed) — only reachable via the tab actually closing (see
+// chrome.tabs.onRemoved below). The overlay panel's own button never calls
+// this: see pauseCapture/resumeCapture for why a real stop+start cycle from
+// inside the overlay can't work at all (no privileged gesture available
+// there), which is the whole reason pause exists as a separate, resumable
+// state instead of reusing stop for it.
 async function stopCapture(tabId) {
   await chrome.runtime.sendMessage({ type: "STOP_CAPTURE", tabId }).catch(() => {});
-  const next = { active: false, tabId };
+  const next = { active: false, paused: false, tabId };
+  await setCaptureState(tabId, next);
+  return next;
+}
+
+// Pause/resume (2026-08-20): keeps the tabCapture MediaStream/WebSocket
+// alive in offscreen.js and just gates whether audio actually gets sent —
+// see offscreen.js's SessionState.paused comment for the full rationale.
+// Unlike start/stop, both directions are safe to trigger from a plain
+// message with no user-gesture requirement, so the overlay panel's own
+// button (popup.js) can fully control this.
+async function pauseCapture(tabId) {
+  await chrome.runtime.sendMessage({ type: "PAUSE_CAPTURE", tabId }).catch(() => {});
+  const current = await getCaptureState(tabId);
+  const next = { ...current, paused: true };
+  await setCaptureState(tabId, next);
+  return next;
+}
+
+async function resumeCapture(tabId) {
+  await chrome.runtime.sendMessage({ type: "RESUME_CAPTURE", tabId }).catch(() => {});
+  const current = await getCaptureState(tabId);
+  const next = { ...current, paused: false };
   await setCaptureState(tabId, next);
   return next;
 }
@@ -220,6 +254,20 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     return true;
   }
 
+  if (message?.type === "PAUSE_CAPTURE") {
+    pauseCapture(message.tabId)
+      .then((state) => sendResponse({ ok: true, state }))
+      .catch((err) => sendResponse({ ok: false, error: String(err) }));
+    return true;
+  }
+
+  if (message?.type === "RESUME_CAPTURE") {
+    resumeCapture(message.tabId)
+      .then((state) => sendResponse({ ok: true, state }))
+      .catch((err) => sendResponse({ ok: false, error: String(err) }));
+    return true;
+  }
+
   if (message?.type === "GET_CAPTURE_STATE") {
     getCaptureState(message.tabId).then(sendResponse);
     return true;
@@ -239,6 +287,25 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     // down regardless. Tagged with tabId by offscreen.js so it lands in the
     // right tab's bucket.
     queueAppendToLog(message.tabId, message.data);
+    return false; // every popup.js instance's own listener also receives this live
+  }
+
+  if (message?.type === "GET_CONTEXT_SUMMARY") {
+    chrome.storage.session.get("contextSummaries").then(({ contextSummaries = {} }) => {
+      sendResponse(contextSummaries[message.tabId] ?? "");
+    });
+    return true;
+  }
+
+  if (message?.type === "CONTEXT_SUMMARY") {
+    // Only ever one current value per tab (not a log), so no ordering
+    // concerns like queueAppendToLog above — plain read-modify-write is
+    // fine since context_summary events are already throttled server-side
+    // (config.CONTEXT_SUMMARY_EVERY_N_FINALS) to arrive minutes apart.
+    chrome.storage.session.get("contextSummaries").then(async ({ contextSummaries = {} }) => {
+      contextSummaries[message.tabId] = message.data.text;
+      await chrome.storage.session.set({ contextSummaries });
+    });
     return false; // every popup.js instance's own listener also receives this live
   }
 

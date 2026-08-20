@@ -1,0 +1,841 @@
+<title>멀티탭 파이프라인 대기열</title>
+<style>
+  /* ---- design plan ----
+     Color: reuse the popup UI's own dark-first token system (ink-slate bg,
+       amber accent = "지금 처리 중") for brand continuity with the extension
+       this diagram documents. 4 categorical tab hues pulled from the real
+       eval-dataset categories (게임/여행/음식/패션, docs/eval/EVAL_REPORT_*.md)
+       instead of generic red/green/blue/yellow.
+     Type: same system-sans + monospace pairing as popup.html (Malgun Gothic/
+       Hiragino/Yu Gothic fallbacks for the sans; ui-monospace/Cascadia Code
+       for the latency numbers, tabular-nums).
+     Layout: 4-column pipeline (탭 소스 → STT → 번역 → 결과). STT/번역 columns
+       are each a queue strip + single server slot with a fill-progress bar —
+       the mechanism the whole diagram exists to show (single shared GPU
+       server serializing 4 tabs' requests). Chunks are small colored chips
+       that travel across columns via DOM reparenting + a slide/fade entrance,
+       landing in a per-tab result log with a measured latency number so the
+       O(n) degradation is legible as numbers, not just motion. */
+  :root {
+    --bg: #eef1f4;
+    --surface: #ffffff;
+    --surface-2: #f5f7f9;
+    --border: #dbe0e6;
+    --text: #1b1f27;
+    --text-muted: #667085;
+    --text-faint: #9aa2b1;
+    --accent: #b9750f;
+    --accent-soft: #f2e3cd;
+    --ok: #2f8f5f;
+    --risk: #c23f30;
+    --tab-a: #2c8f96;
+    --tab-b: #7c5cc4;
+    --tab-c: #c14f74;
+    --tab-d: #5c8f2e;
+    --shadow: 0 1px 2px rgba(20, 23, 28, 0.06), 0 8px 24px rgba(20, 23, 28, 0.08);
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic",
+      "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+    --mono: ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14171c;
+      --surface: #1c2029;
+      --surface-2: #20242e;
+      --border: #2a2f3a;
+      --text: #eef0f3;
+      --text-muted: #8b93a3;
+      --text-faint: #5b6270;
+      --accent: #e8a33d;
+      --accent-soft: #3a2f1c;
+      --ok: #4caf7d;
+      --risk: #e2685a;
+      --tab-a: #4fc4cc;
+      --tab-b: #a996e8;
+      --tab-c: #ea7fa0;
+      --tab-d: #93cf5f;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14171c;
+    --surface: #1c2029;
+    --surface-2: #20242e;
+    --border: #2a2f3a;
+    --text: #eef0f3;
+    --text-muted: #8b93a3;
+    --text-faint: #5b6270;
+    --accent: #e8a33d;
+    --accent-soft: #3a2f1c;
+    --ok: #4caf7d;
+    --risk: #e2685a;
+    --tab-a: #4fc4cc;
+    --tab-b: #a996e8;
+    --tab-c: #ea7fa0;
+    --tab-d: #93cf5f;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    padding: 28px 20px 40px;
+  }
+  .page { max-width: 1180px; margin: 0 auto; }
+
+  header h1 {
+    font-size: 20px;
+    margin: 0 0 6px;
+    text-wrap: balance;
+  }
+  header p.lede {
+    margin: 0 0 18px;
+    color: var(--text-muted);
+    font-size: 13.5px;
+    max-width: 68ch;
+    line-height: 1.55;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .controls button {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 7px 13px;
+    border-radius: 7px;
+    cursor: pointer;
+  }
+  .controls button.primary {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .controls button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .controls label {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .controls select {
+    font: inherit;
+    font-size: 12.5px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    border-radius: 6px;
+    padding: 4px 6px;
+  }
+  .cap-control { gap: 8px; }
+  .cap-control input[type="range"] {
+    width: 130px;
+    accent-color: var(--accent);
+  }
+  .cap-value {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--text);
+    font-weight: 600;
+    min-width: 74px;
+  }
+  .cap-note {
+    margin: -6px 0 18px;
+    font-size: 11.5px;
+    line-height: 1.55;
+    color: var(--text-faint);
+    max-width: 80ch;
+  }
+
+  .stage-scroll { overflow-x: auto; padding-bottom: 4px; }
+  .stage {
+    display: grid;
+    grid-template-columns: 200px 1fr 1fr 220px;
+    gap: 14px;
+    min-width: 900px;
+    align-items: stretch;
+  }
+  .col-title {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin: 0 0 8px;
+  }
+
+  /* --- tab source column --- */
+  .tabs-col { display: flex; flex-direction: column; gap: 10px; }
+  .tab-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--tab-color);
+    border-radius: 8px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 92px;
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 150ms ease, filter 150ms ease;
+  }
+  .tab-row:hover { background: var(--surface-2); }
+  .tab-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .tab-row.off {
+    opacity: 0.5;
+    filter: grayscale(0.6);
+  }
+  .tab-row .tab-name {
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tab-row .tab-name .tab-name-text { flex: 1; }
+  .tab-row .tab-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--tab-color);
+  }
+  .tab-row.off .tab-dot { background: var(--text-faint); }
+  .tab-row .tab-sub { font-size: 10.5px; color: var(--text-faint); }
+  .tab-row .power-state {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: var(--ok);
+    flex: none;
+  }
+  .tab-row.off .power-state { color: var(--text-faint); }
+  .tab-row .spawn-zone {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-height: 26px;
+  }
+
+  /* --- server (STT / translation) columns --- */
+  .server-col {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .server-col .queue {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    min-height: 108px;
+    padding: 6px;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    background: var(--surface-2);
+  }
+  .server-col .queue:empty::after {
+    content: "대기열 비어있음";
+    font-size: 11px;
+    color: var(--text-faint);
+  }
+  .server-box {
+    border: 1px solid var(--accent);
+    background: var(--accent-soft);
+    border-radius: 8px;
+    padding: 8px;
+    min-height: 54px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .server-box .server-label {
+    position: absolute;
+    top: 5px; left: 8px;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    text-transform: uppercase;
+    z-index: 2;
+  }
+  .server-box .fill {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--accent) 22%, transparent);
+    width: 0%;
+    transition: width 90ms linear;
+  }
+  .server-box:empty::after,
+  .server-box .idle-text {
+    font-size: 11px;
+    color: var(--accent);
+    opacity: 0.65;
+    z-index: 2;
+  }
+
+  /* --- output column --- */
+  .outputs-col { display: flex; flex-direction: column; gap: 10px; }
+  .out-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--tab-color);
+    border-radius: 8px;
+    padding: 8px 10px;
+    min-height: 92px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow: hidden;
+  }
+  .out-row .out-log {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-size: 10.5px;
+  }
+  .out-row .out-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+    color: var(--text-muted);
+    animation: fadeIn 0.35s ease both;
+  }
+  .out-row .out-line .lat {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    flex: none;
+  }
+  .out-row .out-line .lat.slow { color: var(--risk); font-weight: 700; }
+  .out-row .out-line .lat.fast { color: var(--ok); }
+  .out-row .avg {
+    margin-top: auto;
+    font-size: 10px;
+    color: var(--text-faint);
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* --- chips --- */
+  .chip {
+    flex: none;
+    width: 30px;
+    height: 22px;
+    border-radius: 5px;
+    background: var(--tab-color);
+    opacity: 0.92;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    animation: pop 220ms ease both;
+  }
+  .chip.in-server {
+    width: 36px;
+    height: 26px;
+    z-index: 3;
+    position: relative;
+  }
+  @keyframes pop {
+    from { transform: scale(0.4); opacity: 0; }
+    to { transform: scale(1); opacity: 0.92; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-3px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .chip, .out-line { animation: none !important; }
+    .server-box .fill { transition: none !important; }
+  }
+
+  .arrow-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-faint);
+    font-size: 16px;
+  }
+
+  .legend {
+    margin-top: 22px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 22px;
+    font-size: 11.5px;
+    color: var(--text-muted);
+  }
+  .legend .item { display: flex; align-items: center; gap: 6px; }
+  .legend .swatch { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+
+  .footnote {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--text-faint);
+    max-width: 82ch;
+  }
+  .footnote a { color: var(--text-muted); }
+  .footnote a:hover { color: var(--accent); }
+  .footnote code {
+    font-family: var(--mono);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 4px;
+    font-size: 10.5px;
+  }
+
+  .stat-bar {
+    margin-top: 18px;
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    min-width: 150px;
+  }
+  .stat .stat-label {
+    font-size: 10px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .stat .stat-value {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+</style>
+
+<div class="page">
+  <header>
+    <h1>4탭 동시 캡처 — 지금 구조의 처리 순서</h1>
+    <p class="lede">
+      STT(faster-whisper large-v3)와 번역(llama-server, gemma-3-12b-it Q4_K_M) 둘 다 배치 없이
+      GPU 하나를 순서대로 나눠 씁니다. 이 저장소 실측값은 아직 없어서, 비슷한 사양(RTX
+      4060/3060급) 공개 벤치마크로 처리 시간을 가늠했습니다(하단 각주) — 정확한 배수보다
+      "무엇이 병목인지"의 감을 잡는 용도입니다. <strong>왼쪽 탭을 클릭하면 캡처를 껐다 켰다 할
+      수 있습니다</strong> — 실제로 보다가 탭을 열고 닫는 상황을 흉내 낸 것.
+    </p>
+    <div class="controls">
+      <button class="primary" id="playBtn">일시정지</button>
+      <button id="resetBtn">처음부터</button>
+      <label>속도
+        <select id="speedSel">
+          <option value="1">1×</option>
+          <option value="1.6" selected>1.6×</option>
+          <option value="2.5">2.5×</option>
+        </select>
+      </label>
+      <label>테마 미리보기
+        <select id="themeSel">
+          <option value="">시스템</option>
+          <option value="light">라이트</option>
+          <option value="dark">다크</option>
+        </select>
+      </label>
+      <label class="cap-control">문장 길이 상한
+        <input type="range" id="capSlider" min="10" max="75" step="5" value="75" />
+        <span id="capValue" class="cap-value">제한 없음</span>
+      </label>
+    </div>
+    <p class="cap-note">
+      상한을 넘는 문장은 상한 크기로 잘라서 나머지를 새 조각으로 큐에 다시 넣습니다(오디오
+      버퍼 단위 분할이라 STT부터 다시 거침) — 잘린 조각마다 고정 오버헤드(STT 500ms + 번역
+      300ms)가 다시 붙으니, 상한을 너무 낮추면 분할 호출이 늘어나 오히려 손해일 수 있습니다.
+      아래 통계의 "분할로 늘어난 호출"로 그 비용을 같이 보면서 최적점을 찾아보세요.
+    </p>
+  </header>
+
+  <div class="stage-scroll">
+    <div class="stage">
+      <div>
+        <p class="col-title">탭 (소스)</p>
+        <div class="tabs-col" id="tabsCol"></div>
+      </div>
+      <div>
+        <p class="col-title">STT · faster-whisper (슬롯 1개)</p>
+        <div class="server-col">
+          <div class="queue" id="sttQueue"></div>
+          <div class="server-box" id="sttServer">
+            <span class="server-label">처리 중</span>
+            <div class="fill" id="sttFill"></div>
+            <span class="idle-text" id="sttIdle">대기</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="col-title">번역 · llama-server (슬롯 1개)</p>
+        <div class="server-col">
+          <div class="queue" id="mtQueue"></div>
+          <div class="server-box" id="mtServer">
+            <span class="server-label">처리 중</span>
+            <div class="fill" id="mtFill"></div>
+            <span class="idle-text" id="mtIdle">대기</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="col-title">결과 (탭별 창)</p>
+        <div class="outputs-col" id="outputsCol"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stat-bar" id="statBar"></div>
+
+  <div class="legend">
+    <span class="item"><span class="swatch" style="background:var(--accent)"></span>진한 칩 = 지금 GPU가 처리 중인 조각(진행바 = 처리 진행률)</span>
+    <span class="item"><span class="swatch" style="background:var(--text-faint)"></span>점선 상자 안 칩 = 대기열에서 순서를 기다리는 중</span>
+    <span class="item"><span class="swatch" style="background:var(--risk)"></span>지연 숫자(빨강) = 대기가 길어져 오래 걸린 조각</span>
+    <span class="item">칩 너비 = 그 문장의 길이(토큰 수) — 넓을수록 STT/번역 둘 다 오래 걸림</span>
+  </div>
+
+  <p class="footnote">
+    처리 시간 공식의 근거 — 이 저장소 실측치가 아니라 비슷한 사양 GPU의 공개 벤치마크:
+    faster-whisper large-v3 int8은 RTX 4060에서 약 7배속(real-time factor,
+    <a href="https://gigagpu.com/whisper-vs-faster-whisper-speed/" target="_blank" rel="noopener">GIGAGPU</a>);
+    12B급 Q4_K_M 모델은 RTX 4060/3060에서 초당 약 20~29토큰
+    (<a href="https://mustafa.net/llm-tokens-per-second-benchmarks/" target="_blank" rel="noopener">Mustafa.net</a>,
+    <a href="https://singhajit.com/llm-inference-speed-comparison/" target="_blank" rel="noopener">Ajit Singh</a>).
+    STT는 <code>고정 오버헤드 500ms + 토큰당 35ms</code>(오디오 로드/beam=5 디코딩 길이),
+    번역은 <code>고정 오버헤드 300ms + 토큰당 50ms</code>(≈초당 20토큰 디코딩, 시스템 프롬프트는
+    KV 캐시 재사용이라 프리필은 짧은 새 턴만) — 탭마다 문장 길이 분포를 다르게 둬서(예: 먹방
+    탭은 35~70토큰, 여행 탭은 8~18토큰) 말 빠르고 문장 긴 스트리머가 실제로 더 오래 걸리는
+    걸 반영했습니다. 실측 전까지는 배수가 아니라 "어느 쪽이 무거운가"의 감을 잡는 용도로만
+    사용할 것.
+  </p>
+</div>
+
+<script>
+(() => {
+  // tokens: per-tab range for a completed sentence's Korean output length —
+  // a fast/talkative streamer produces longer sentences per "final" event,
+  // not just more frequent ones. Chosen to give each tab a distinct,
+  // consistent talking style rather than uniform random noise.
+  const TABS = [
+    { id: "a", name: "탭 A", sub: "게임 · 보통", color: "var(--tab-a)", tokens: [15, 35] },
+    { id: "b", name: "탭 B", sub: "여행 · 차분하게 설명", color: "var(--tab-b)", tokens: [8, 18] },
+    { id: "c", name: "탭 C", sub: "먹방 · 빠르고 문장 김", color: "var(--tab-c)", tokens: [35, 70] },
+    { id: "d", name: "탭 D", sub: "패션 · 보통", color: "var(--tab-d)", tokens: [15, 32] },
+  ];
+  // Sim time in ms, now a function of each chunk's token count (not a flat
+  // constant) — this repo has no real measurements yet, so the per-token
+  // rates are derived from public benchmarks on similar-spec (RTX
+  // 4060/3060-class) GPUs, not this project's actual hardware — see the
+  // footnote in the page.
+  //   STT: faster-whisper large-v3 int8 ~7x real-time on RTX 4060. Fixed
+  //     overhead (audio load/feature extraction) + a per-token term for
+  //     beam=5 decode length scaling with transcript length.
+  //   MT: 12B Q4_K_M ~20 tok/s on RTX 4060/3060 -> ~50ms/token decode, plus
+  //     a small fixed prefill overhead (system prompt is KV-cached across
+  //     calls per llama_server_engine.py, so only the short new turn needs
+  //     prefill).
+  const STT_BASE_MS = 500, STT_PER_TOKEN_MS = 35;
+  const MT_BASE_MS = 300, MT_PER_TOKEN_MS = 50;
+  function sttDurationFor(tokens) { return STT_BASE_MS + tokens * STT_PER_TOKEN_MS; }
+  function mtDurationFor(tokens) { return MT_BASE_MS + tokens * MT_PER_TOKEN_MS; }
+  // Reference point (25 tokens, a "medium" sentence) just for the slow/fast
+  // color thresholds on completed output lines below.
+  const REF_TOTAL_MS = sttDurationFor(25) + mtDurationFor(25);
+  // Per-tab arrival: one *finalized* sentence roughly every 3-7s of active
+  // talking (VAD_SILENCE_MS=600ms only gates the pause-detection trigger,
+  // not how often a full sentence actually completes) — not the unrealistic
+  // near-continuous chatter the first draft of this sim used.
+  const SPAWN_MIN = 3000, SPAWN_MAX = 7000;
+
+  function randInt(min, max) { return Math.round(min + Math.random() * (max - min)); }
+
+  const tabsCol = document.getElementById("tabsCol");
+  const outputsCol = document.getElementById("outputsCol");
+  const sttQueueEl = document.getElementById("sttQueue");
+  const mtQueueEl = document.getElementById("mtQueue");
+  const sttServerEl = document.getElementById("sttServer");
+  const mtServerEl = document.getElementById("mtServer");
+  const sttFillEl = document.getElementById("sttFill");
+  const mtFillEl = document.getElementById("mtFill");
+  const sttIdleEl = document.getElementById("sttIdle");
+  const mtIdleEl = document.getElementById("mtIdle");
+  const statBar = document.getElementById("statBar");
+
+  const spawnZones = {};
+  const outLogs = {};
+  const avgEls = {};
+  const latencies = {}; // tabId -> array of completed latencies (ms)
+  const tabActive = {}; // tabId -> bool, toggled by clicking the tab row
+  const tabRows = {};
+
+  for (const t of TABS) {
+    tabActive[t.id] = true;
+    const row = document.createElement("div");
+    row.className = "tab-row";
+    row.tabIndex = 0;
+    row.setAttribute("role", "switch");
+    row.setAttribute("aria-checked", "true");
+    row.setAttribute("aria-label", `${t.name} 캡처 켜짐/꺼짐 전환`);
+    row.style.setProperty("--tab-color", t.color);
+    row.innerHTML = `
+      <div class="tab-name"><span class="tab-dot"></span><span class="tab-name-text">${t.name}</span><span class="power-state">켜짐</span></div>
+      <div class="tab-sub">${t.sub}</div>
+      <div class="spawn-zone"></div>
+    `;
+    tabsCol.appendChild(row);
+    tabRows[t.id] = row;
+    spawnZones[t.id] = row.querySelector(".spawn-zone");
+
+    function toggleTab() {
+      tabActive[t.id] = !tabActive[t.id];
+      row.classList.toggle("off", !tabActive[t.id]);
+      row.setAttribute("aria-checked", String(tabActive[t.id]));
+      row.querySelector(".power-state").textContent = tabActive[t.id] ? "켜짐" : "꺼짐";
+      if (tabActive[t.id]) {
+        // Give a short "user just clicked the toolbar icon" delay before the
+        // next sentence, rather than reusing a stale far-future timestamp.
+        nextSpawn[t.id] = simNow + 800 + Math.random() * 1200;
+      }
+    }
+    row.addEventListener("click", toggleTab);
+    row.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggleTab();
+      }
+    });
+
+    const out = document.createElement("div");
+    out.className = "out-row";
+    out.style.setProperty("--tab-color", t.color);
+    out.innerHTML = `
+      <div class="tab-name" style="font-size:11px"><span class="tab-dot"></span>${t.name} 결과</div>
+      <div class="out-log"></div>
+      <div class="avg">평균 지연 —</div>
+    `;
+    outputsCol.appendChild(out);
+    outLogs[t.id] = out.querySelector(".out-log");
+    avgEls[t.id] = out.querySelector(".avg");
+    latencies[t.id] = [];
+
+    const stat = document.createElement("div");
+    stat.className = "stat";
+    stat.innerHTML = `<div class="stat-label">${t.name} 평균 지연</div><div class="stat-value" id="stat-${t.id}">—</div>`;
+    statBar.appendChild(stat);
+  }
+
+  // Overall stats, not per-tab: how many extra pipeline calls the current
+  // cap is injecting, and how many finished pieces total (so the split
+  // count reads as a rate, not just a raw number that only ever grows).
+  const splitStat = document.createElement("div");
+  splitStat.className = "stat";
+  splitStat.innerHTML = `<div class="stat-label">분할로 늘어난 호출</div><div class="stat-value" id="stat-splits">0</div>`;
+  statBar.appendChild(splitStat);
+  const doneStat = document.createElement("div");
+  doneStat.className = "stat";
+  doneStat.innerHTML = `<div class="stat-label">완료된 조각 수</div><div class="stat-value" id="stat-done">0</div>`;
+  statBar.appendChild(doneStat);
+
+  let playing = true;
+  let speed = 1.6;
+  let simNow = 0; // ms, advances with real time * speed while playing
+  let lastFrame = performance.now();
+
+  const sttQueue = []; // {tabId, chunkEl, createdAt}
+  const mtQueue = [];
+  let sttBusy = null; // {tabId, chunkEl, createdAt, startedAt}
+  let mtBusy = null;
+  let nextSpawn = {};
+  for (const t of TABS) nextSpawn[t.id] = SPAWN_MIN + Math.random() * SPAWN_MAX;
+
+  function fmtMs(ms) {
+    return (ms / 1000).toFixed(1) + "s";
+  }
+
+  function makeChip(tabId, tokens) {
+    const t = TABS.find((x) => x.id === tabId);
+    const chip = document.createElement("div");
+    chip.className = "chip";
+    chip.style.setProperty("--tab-color", t.color);
+    // Wider chip = longer sentence — same visual cue travels through every
+    // stage, so it's clear at a glance *why* a given chip takes longer.
+    const w = Math.round(22 + Math.min(tokens, 70) * 0.7);
+    chip.style.width = w + "px";
+    chip.title = `${t.name} · 약 ${tokens}토큰짜리 문장`;
+    return chip;
+  }
+
+  let sentenceCap = 75; // 75 = above the max possible token count (70) => no-op cap
+  let splitCount = 0; // extra pipeline calls injected by splitting so far
+  let doneCount = 0; // total pieces that finished translation
+
+  // Recursively cut a sentence's token length down to `cap`-sized pieces —
+  // mirrors the planned real design: find a sentence-final punctuation mark
+  // to cut at when there is one, otherwise cut at a reasonable point and
+  // fold the remainder into the next segment. Modeled here purely by token
+  // count since this sim has no real text, but the cost shape is the same:
+  // every extra piece pays STT's/MT's fixed per-call overhead again.
+  function splitTokens(tokens, cap) {
+    const parts = [];
+    let remaining = tokens;
+    while (remaining > cap) {
+      parts.push(cap);
+      remaining -= cap;
+    }
+    parts.push(remaining);
+    return parts;
+  }
+
+  function spawnChunk(tabId) {
+    const t = TABS.find((x) => x.id === tabId);
+    const tokens = randInt(t.tokens[0], t.tokens[1]);
+    const parts = splitTokens(tokens, sentenceCap);
+    if (parts.length > 1) {
+      splitCount += parts.length - 1;
+      document.getElementById("stat-splits").textContent = String(splitCount);
+    }
+    const createdAt = simNow;
+    for (const partTokens of parts) {
+      const chip = makeChip(tabId, partTokens);
+      spawnZones[tabId].appendChild(chip);
+      setTimeout(() => {
+        chip.remove();
+        const entry = { tabId, tokens: partTokens, chunkEl: makeChip(tabId, partTokens), createdAt };
+        sttQueueEl.appendChild(entry.chunkEl);
+        sttQueue.push(entry);
+      }, 260);
+    }
+  }
+
+  function tickServer(queue, queueEl, busyRef, serverEl, fillEl, idleEl, durationFn, onDone) {
+    const busy = busyRef.get();
+    if (!busy) {
+      if (queue.length > 0) {
+        const entry = queue.shift();
+        entry.chunkEl.remove();
+        entry.chunkEl.classList.add("in-server");
+        serverEl.appendChild(entry.chunkEl);
+        idleEl.style.display = "none";
+        busyRef.set({ ...entry, startedAt: simNow, duration: durationFn(entry.tokens) });
+      } else {
+        fillEl.style.width = "0%";
+        idleEl.style.display = "";
+      }
+      return;
+    }
+    const elapsed = simNow - busy.startedAt;
+    const pct = Math.min(100, (elapsed / busy.duration) * 100);
+    fillEl.style.width = pct + "%";
+    if (elapsed >= busy.duration) {
+      busy.chunkEl.remove();
+      fillEl.style.width = "0%";
+      onDone(busy);
+      busyRef.set(null);
+    }
+  }
+
+  const sttBusyRef = {
+    get: () => sttBusy,
+    set: (v) => (sttBusy = v),
+  };
+  const mtBusyRef = {
+    get: () => mtBusy,
+    set: (v) => (mtBusy = v),
+  };
+
+  function onSttDone(busy) {
+    const entry = {
+      tabId: busy.tabId,
+      tokens: busy.tokens,
+      chunkEl: makeChip(busy.tabId, busy.tokens),
+      createdAt: busy.createdAt,
+    };
+    mtQueueEl.appendChild(entry.chunkEl);
+    mtQueue.push(entry);
+  }
+
+  function onMtDone(busy) {
+    const totalMs = simNow - busy.createdAt;
+    const t = TABS.find((x) => x.id === busy.tabId);
+    const line = document.createElement("div");
+    line.className = "out-line";
+    const speedClass = totalMs > REF_TOTAL_MS * 1.6 ? "slow" : totalMs < REF_TOTAL_MS * 0.7 ? "fast" : "";
+    line.innerHTML = `<span>번역 완료 (~${busy.tokens}토큰)</span><span class="lat ${speedClass}">${fmtMs(totalMs)}</span>`;
+    const log = outLogs[busy.tabId];
+    log.insertBefore(line, log.firstChild);
+    while (log.children.length > 4) log.removeChild(log.lastChild);
+
+    latencies[busy.tabId].push(totalMs);
+    if (latencies[busy.tabId].length > 8) latencies[busy.tabId].shift();
+    const avg = latencies[busy.tabId].reduce((a, b) => a + b, 0) / latencies[busy.tabId].length;
+    avgEls[busy.tabId].textContent = "평균 지연 " + fmtMs(avg);
+    document.getElementById("stat-" + busy.tabId).textContent = fmtMs(avg);
+
+    doneCount += 1;
+    document.getElementById("stat-done").textContent = String(doneCount);
+  }
+
+  function frame(now) {
+    const dt = now - lastFrame;
+    lastFrame = now;
+    if (playing) {
+      simNow += dt * speed;
+      for (const t of TABS) {
+        if (tabActive[t.id] && simNow >= nextSpawn[t.id]) {
+          spawnChunk(t.id);
+          nextSpawn[t.id] = simNow + SPAWN_MIN + Math.random() * SPAWN_MAX;
+        }
+      }
+      tickServer(sttQueue, sttQueueEl, sttBusyRef, sttServerEl, sttFillEl, sttIdleEl, sttDurationFor, onSttDone);
+      tickServer(mtQueue, mtQueueEl, mtBusyRef, mtServerEl, mtFillEl, mtIdleEl, mtDurationFor, onMtDone);
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  document.getElementById("playBtn").addEventListener("click", (e) => {
+    playing = !playing;
+    e.target.textContent = playing ? "일시정지" : "재생";
+    lastFrame = performance.now();
+  });
+  document.getElementById("speedSel").addEventListener("change", (e) => {
+    speed = parseFloat(e.target.value);
+  });
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    location.reload();
+  });
+  document.getElementById("themeSel").addEventListener("change", (e) => {
+    const v = e.target.value;
+    if (v) document.documentElement.setAttribute("data-theme", v);
+    else document.documentElement.removeAttribute("data-theme");
+  });
+  const capSlider = document.getElementById("capSlider");
+  const capValue = document.getElementById("capValue");
+  capSlider.addEventListener("input", (e) => {
+    sentenceCap = parseInt(e.target.value, 10);
+    capValue.textContent = sentenceCap >= 75 ? "제한 없음" : sentenceCap + "토큰";
+  });
+})();
+</script>

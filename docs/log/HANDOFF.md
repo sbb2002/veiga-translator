@@ -79,7 +79,8 @@ SepFormer류는 실환경 일반화가 문서화된 약점. 상용 제품(Otter.
 `ui-chat-reply`에서 분기. 두 가지를 한 브랜치에 묶었음 — 멀티탭 지원이 어차피 `popup.js`를
 다시 손대야 해서, 싱글턴 버전을 거치지 않고 재디자인을 곧바로 탭별 버전으로 이식했다.
 
-**1) UI 재디자인 (확정, Artifact 목업으로 사용자 승인받음)**
+**1) UI 재디자인 (확정, Artifact 목업으로 사용자 승인받음 — 목업 소스
+`docs/planning/popup-ui-mockup.html`)**
 - 다크/라이트는 `prefers-color-scheme` 자동 전환(수동 토글 없음). 색상은 전부 CSS 커스텀
   프로퍼티 토큰 — 하드코딩 리터럴 없음.
 - 헤더(캡처 버튼: 녹화●/일시정지❚❚ SVG 아이콘 + 상태 2줄 "캡처 중"/"일시정지" + 탭 제목 +
@@ -181,10 +182,10 @@ continuous batching으로 처리량을 거의 공짜로 늘릴 수 있음. 다�
 
 ### 대기열 시뮬레이션 아티팩트 (실측 전 감 잡기용, 2026-08-20)
 
-Claude Artifact로 4탭 파이프라인 큐잉을 애니메이션 시뮬레이션함 —
-<https://claude.ai/code/artifact/a2ffe48b-4953-40ab-98de-8676573aa56e> (이 계정에 비공개,
-브라우저로 어느 머신에서든 열림). **소스 파일은 이 저장소 밖 임시 스크래치패드에만 있어서
-git으로는 안 딸려옴** — 필요하면 다음 세션에서 저장소 안(`docs/eval/` 등)으로 복사해 커밋할 것.
+Claude Artifact로 4탭 파이프라인 큐잉을 애니메이션 시뮬레이션함. 소스는
+`docs/eval/multitab-pipeline-simulation.html`(더블클릭 또는 브라우저로 직접 열어서 재생) —
+Claude Artifact로 다시 게시하려면 이 파일 내용으로 republish. 게시된 버전(이 계정 비공개):
+<https://claude.ai/code/artifact/a2ffe48b-4953-40ab-98de-8676573aa56e>.
 
 - 처리 시간을 이 저장소 실측치 대신 비슷한 사양(RTX 4060/3060급) 공개 벤치마크로 역산:
   STT ≈ 고정 500ms + 토큰당 35ms(beam=5 디코딩 길이 반영), 번역 ≈ 고정 300ms + 토큰당

@@ -1,0 +1,583 @@
+<title>실시간 번역 팝업</title>
+<style>
+  /* ---- design plan ----
+     Color (dark-first, viewer watches a night stream):
+       --bg #14171c (ink-slate, not pure black) / --surface #1c2029 / --border #2a2f3a
+       --text #eef0f3 / --text-muted #8b93a3
+       --accent #e8a33d (broadcast-caption amber, used sparingly: rec dot, focus, send)
+       --ok #4caf7d / --risk #e2685a (semantic, independent of accent)
+     Light mirror: --bg #eef1f4 (cool paper, not warm cream) / --surface #ffffff /
+       --border #dbe0e6 / --text #1b1f27 / --text-muted #667085 /
+       --accent #b9750f / --ok #2f8f5f / --risk #c23f30
+     Type: UI chrome + KO final text on a system sans stack (incl. Malgun Gothic for
+       correct Hangul metrics on Windows, Hiragino/Yu Gothic for JA); metrics/timestamps
+       on a monospace utility stack with tabular-nums. No web fonts — the real popup ships
+       with no font host permission, so the mockup uses exactly what will actually render.
+     Layout: fixed 420-wide device frame (matches background.js's chrome.windows.create
+       size) — sticky header, flexible scrolling transcript card, pinned compose card. */
+  :root {
+    --bg: #eef1f4;
+    --surface: #ffffff;
+    --surface-2: #f5f7f9;
+    --border: #dbe0e6;
+    --text: #1b1f27;
+    --text-muted: #667085;
+    --text-faint: #9aa2b1;
+    --accent: #b9750f;
+    --accent-soft: #f2e3cd;
+    --ok: #2f8f5f;
+    --risk: #c23f30;
+    --shadow: 0 1px 2px rgba(20, 23, 28, 0.06), 0 8px 24px rgba(20, 23, 28, 0.08);
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic",
+      "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+    --mono: ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14171c;
+      --surface: #1c2029;
+      --surface-2: #20242e;
+      --border: #2a2f3a;
+      --text: #eef0f3;
+      --text-muted: #8b93a3;
+      --text-faint: #5b6270;
+      --accent: #e8a33d;
+      --accent-soft: #3a2f1c;
+      --ok: #4caf7d;
+      --risk: #e2685a;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14171c;
+    --surface: #1c2029;
+    --surface-2: #20242e;
+    --border: #2a2f3a;
+    --text: #eef0f3;
+    --text-muted: #8b93a3;
+    --text-faint: #5b6270;
+    --accent: #e8a33d;
+    --accent-soft: #3a2f1c;
+    --ok: #4caf7d;
+    --risk: #e2685a;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    padding: 40px 16px 60px;
+  }
+
+  .stage-caption {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+  .stage-caption strong { color: var(--text); font-weight: 600; }
+  .theme-switch {
+    display: inline-flex;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .theme-switch button {
+    border: 0;
+    background: var(--surface);
+    color: var(--text-muted);
+    font: inherit;
+    font-size: 12px;
+    padding: 5px 12px;
+    cursor: pointer;
+  }
+  .theme-switch button[aria-pressed="true"] {
+    background: var(--accent);
+    color: #14171c;
+    font-weight: 600;
+  }
+
+  /* ---- popup frame: exactly the real window's footprint ---- */
+  .popup-frame {
+    width: 420px;
+    height: 660px;
+    min-width: 320px;
+    min-height: 380px;
+    max-width: 640px;
+    max-height: 900px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    resize: both;
+  }
+
+  header.bar {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .capture-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 1px solid var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .capture-btn svg {
+    width: 14px;
+    height: 14px;
+    flex: none;
+    display: block;
+  }
+  .capture-btn .icon-pause { display: none; }
+  .capture-btn.recording {
+    background: var(--risk);
+    border-color: var(--risk);
+    color: #fff;
+  }
+  .capture-btn.recording .icon-record { display: none; }
+  .capture-btn.recording .icon-pause { display: block; }
+  .status-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    overflow: hidden;
+  }
+  .status-lines {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.3;
+  }
+  .status-state {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .status-detail {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--risk);
+    flex: none;
+    margin-top: 5px;
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  .live-dot.off {
+    background: var(--text-faint);
+    animation: none;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .live-dot { animation: none; }
+  }
+  .debug-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--text-faint);
+    cursor: pointer;
+    user-select: none;
+    flex: none;
+  }
+  .debug-toggle input {
+    accent-color: var(--accent);
+    width: 13px;
+    height: 13px;
+  }
+
+  .log-card {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 12px 14px 4px;
+    overflow: hidden;
+  }
+  .eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin: 0 0 8px;
+    flex: none;
+  }
+  .segments {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 8px;
+    scrollbar-color: var(--text-faint) transparent; /* Firefox */
+    scrollbar-width: thin;
+  }
+  .segments::-webkit-scrollbar { width: 8px; } /* Chrome/the real extension host */
+  .segments::-webkit-scrollbar-track { background: transparent; }
+  .segments::-webkit-scrollbar-thumb {
+    background: var(--text-faint);
+    border-radius: 4px;
+    border: 2px solid var(--bg);
+    background-clip: padding-box;
+  }
+  .segments::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+  .segment {
+    border-radius: 8px;
+    padding: 8px 10px;
+    border-left: 2px solid transparent;
+    cursor: pointer;
+  }
+  .segment:hover { background: var(--surface-2); }
+  .segment.flagged { background: color-mix(in srgb, var(--risk) 14%, var(--surface)); }
+  .segment .ja-line {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+  }
+  .segment .ko-line {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .segment.is-partial {
+    border-left-color: var(--text-faint);
+  }
+  .segment.is-partial .ja-line { color: var(--text-faint); }
+  .segment.is-partial .ko-line {
+    color: var(--text-faint);
+    font-weight: 400;
+    filter: blur(0.25px);
+  }
+  .segment.is-final {
+    border-left-color: var(--accent);
+  }
+  .segment.is-final .ko-line { color: var(--text); }
+
+  .conf-line {
+    margin-top: 7px;
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+  }
+  body.show-debug .conf-line { display: flex; }
+  .metric-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-faint);
+  }
+  .metric-label {
+    width: 84px;
+    flex: none;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .metric-bar {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--surface-2);
+    overflow: hidden;
+  }
+  .metric-fill { display: block; height: 100%; }
+  .metric-fill.ok { background: var(--ok); }
+  .metric-fill.risk { background: var(--risk); }
+
+  .chat-card {
+    flex: none;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    padding: 12px 14px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .chat-input {
+    width: 100%;
+    resize: none;
+    font: inherit;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    min-height: 42px;
+  }
+  .chat-input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+  .chat-row { display: flex; gap: 8px; align-items: flex-start; }
+  .chat-row .chat-input { flex: 1; }
+  .chat-send {
+    flex: none;
+    border: 0;
+    background: var(--accent);
+    color: #14171c;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 0 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    align-self: stretch;
+  }
+  .chat-send:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .chat-output {
+    font-size: 13px;
+    color: var(--text);
+    background: var(--surface-2);
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    cursor: pointer;
+  }
+  .chat-hint {
+    font-size: 10.5px;
+    color: var(--text-faint);
+  }
+</style>
+
+<div class="stage-caption">
+  실제 <strong>chrome.windows.create</strong> 창과 동일한 420×660 크기의 목업입니다. 우측 하단
+  모서리를 드래그하면 창 크기가 바뀌는 걸(로그 영역이 늘어나고 스크롤되는 것) 확인할 수 있어요.
+  <span class="theme-switch">
+    <button type="button" data-theme-btn="light" aria-pressed="false">라이트</button>
+    <button type="button" data-theme-btn="dark" aria-pressed="false">다크</button>
+  </span>
+</div>
+
+<div class="popup-frame">
+  <header class="bar">
+    <button class="capture-btn recording" type="button" id="captureBtn">
+      <svg class="icon-record" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+        <circle cx="8" cy="8" r="6" />
+      </svg>
+      <svg class="icon-pause" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+        <rect x="3.5" y="2.5" width="3.2" height="11" rx="1" />
+        <rect x="9.3" y="2.5" width="3.2" height="11" rx="1" />
+      </svg>
+      <span id="captureLabel">캡처 중지</span>
+    </button>
+    <span class="status-text" id="statusText">
+      <span class="live-dot" id="liveDot"></span>
+      <span class="status-lines">
+        <span class="status-state" id="statusState">캡처 중</span>
+        <span class="status-detail" id="statusDetail">탭 #482 · 00:12:47</span>
+      </span>
+    </span>
+    <label class="debug-toggle">
+      <input type="checkbox" id="debugToggle" />
+      디버그 지표
+    </label>
+  </header>
+
+  <div class="log-card">
+    <p class="eyebrow">실시간 전사 · 번역</p>
+    <div class="segments">
+      <div class="segment is-final">
+        <div class="ja-line">今日はちょっと難しいステージに挑戦してみようと思います。</div>
+        <div class="ko-line">오늘은 조금 어려운 스테이지에 도전해보려고 해요.</div>
+        <div class="conf-line">
+          <div class="metric-row">
+            <span class="metric-label">rms 0.0312</span>
+            <span class="metric-bar"><span class="metric-fill ok" style="width: 62%"></span></span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">no_speech 0.04</span>
+            <span class="metric-bar"><span class="metric-fill ok" style="width: 4%"></span></span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">avg_logprob -0.21</span>
+            <span class="metric-bar"><span class="metric-fill ok" style="width: 89%"></span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="segment is-final flagged">
+        <div class="ja-line">えーっとえーっと、ここ多分右から行けば安全だと思う。</div>
+        <div class="ko-line">어, 어... 여기 아마 오른쪽으로 가면 안전할 것 같아요.</div>
+        <div class="conf-line">
+          <div class="metric-row">
+            <span class="metric-label">rms 0.0089</span>
+            <span class="metric-bar"><span class="metric-fill risk" style="width: 18%"></span></span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">no_speech 0.71</span>
+            <span class="metric-bar"><span class="metric-fill risk" style="width: 71%"></span></span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">avg_logprob -1.42</span>
+            <span class="metric-bar"><span class="metric-fill risk" style="width: 29%"></span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="segment is-final">
+        <div class="ja-line">よし、いけた!このアイテムはあとで使えそうですね。</div>
+        <div class="ko-line">좋아, 됐다! 이 아이템은 나중에 쓸 수 있을 것 같네요.</div>
+        <div class="conf-line">
+          <div class="metric-row">
+            <span class="metric-label">rms 0.0405</span>
+            <span class="metric-bar"><span class="metric-fill ok" style="width: 81%"></span></span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">no_speech 0.02</span>
+            <span class="metric-bar"><span class="metric-fill ok" style="width: 2%"></span></span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">avg_logprob -0.18</span>
+            <span class="metric-bar"><span class="metric-fill ok" style="width: 91%"></span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="segment is-final">
+        <div class="ja-line">あ、ポーションが切れてる。ちょっと待ってくださいね。</div>
+        <div class="ko-line">아, 포션이 다 떨어졌네요. 잠깐만 기다려주세요.</div>
+        <div class="conf-line">
+          <div class="metric-row">
+            <span class="metric-label">rms 0.0367</span>
+            <span class="metric-bar"><span class="metric-fill ok" style="width: 74%"></span></span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">no_speech 0.03</span>
+            <span class="metric-bar"><span class="metric-fill ok" style="width: 3%"></span></span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">avg_logprob -0.24</span>
+            <span class="metric-bar"><span class="metric-fill ok" style="width: 88%"></span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="segment is-final">
+        <div class="ja-line">よし補充完了。それじゃあ、次のボスに行きましょうか。</div>
+        <div class="ko-line">좋아, 보충 완료. 그럼 다음 보스한테 가볼까요.</div>
+        <div class="conf-line">
+          <div class="metric-row">
+            <span class="metric-label">rms 0.0298</span>
+            <span class="metric-bar"><span class="metric-fill ok" style="width: 60%"></span></span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">no_speech 0.05</span>
+            <span class="metric-bar"><span class="metric-fill ok" style="width: 5%"></span></span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">avg_logprob -0.31</span>
+            <span class="metric-bar"><span class="metric-fill ok" style="width: 85%"></span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="segment is-partial">
+        <div class="ja-line">次のエリアに進む前に、ちょっとだけ回復してから…</div>
+        <div class="ko-line">다음 구역으로 가기 전에, 조금만 회복하고 나서…</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-card">
+    <p class="eyebrow" style="margin-bottom: 0;">채팅 답장 초안 · 한국어 → 일본어</p>
+    <div class="chat-row">
+      <textarea class="chat-input" readonly>그 스테이지 저번에 저도 막혀서 못 깼어요 ㅠㅠ</textarea>
+      <button class="chat-send" type="button">번역</button>
+    </div>
+    <div class="chat-output">そのステージ、前に私も詰まってクリアできませんでした(泣)</div>
+    <p class="chat-hint">출력 박스를 클릭하면 복사됩니다</p>
+  </div>
+</div>
+
+<script>
+  document.getElementById("debugToggle").addEventListener("change", (e) => {
+    document.body.classList.toggle("show-debug", e.target.checked);
+  });
+  // The toggle only reflects an *explicit* choice (data-theme). Until the user
+  // clicks one, the page still follows the OS via prefers-color-scheme — so the
+  // pressed button must start out matching whichever theme is actually showing,
+  // not always "라이트", and must keep tracking the OS setting live.
+  const themeButtons = document.querySelectorAll("[data-theme-btn]");
+  const darkMql = window.matchMedia("(prefers-color-scheme: dark)");
+
+  function syncThemeButtons(explicitTheme) {
+    const effective = explicitTheme ?? (darkMql.matches ? "dark" : "light");
+    themeButtons.forEach((b) =>
+      b.setAttribute("aria-pressed", String(b.dataset.themeBtn === effective))
+    );
+  }
+
+  themeButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const theme = btn.dataset.themeBtn;
+      document.documentElement.setAttribute("data-theme", theme);
+      syncThemeButtons(theme);
+    });
+  });
+
+  darkMql.addEventListener("change", () => {
+    if (!document.documentElement.hasAttribute("data-theme")) syncThemeButtons();
+  });
+
+  syncThemeButtons();
+  document.querySelectorAll(".segment").forEach((seg) => {
+    seg.addEventListener("click", () => seg.classList.toggle("flagged"));
+  });
+
+  const captureBtn = document.getElementById("captureBtn");
+  const captureLabel = document.getElementById("captureLabel");
+  const liveDot = document.getElementById("liveDot");
+  const statusState = document.getElementById("statusState");
+  const statusDetail = document.getElementById("statusDetail");
+  captureBtn.addEventListener("click", () => {
+    const recording = captureBtn.classList.toggle("recording");
+    captureLabel.textContent = recording ? "캡처 중지" : "캡처 시작";
+    liveDot.classList.toggle("off", !recording);
+    statusState.textContent = recording ? "캡처 중" : "일시정지";
+    statusDetail.textContent = "탭 #482 · 00:12:47";
+  });
+</script>

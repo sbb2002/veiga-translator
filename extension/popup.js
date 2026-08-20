@@ -319,6 +319,42 @@ async function restoreContextSummary() {
   renderContextSummary(text);
 }
 
+// Volume meter (2026-08-20): "the pipeline is actually alive" feedback,
+// especially useful during silence where no partial/final event fires at
+// all. Sent directly from offscreen.js via chrome.runtime broadcast (~5Hz,
+// see VOLUME_SEND_INTERVAL_MS there) — no persistence needed, it's a
+// pure live signal like CHAT_TRANSLATION. Not restored on reopen (there's
+// nothing meaningful to restore; it just starts filling again on the next
+// broadcast). Same 0.05 "full bar" reference as the debug rms metric below,
+// for a consistent sense of scale across the two.
+//
+// Raw samples only arrive every ~200ms — snapping the bar's width directly
+// to each one looked like a stepped, laggy meter. Instead, every message
+// just updates a target, and a requestAnimationFrame loop eases the
+// displayed width toward that target on every frame (~60fps): fewer
+// messages, but motion reads as continuous/live rather than choppy. The
+// loop runs continuously (cheap — one multiply/compare/style-write per
+// frame, and rAF itself already pauses while the tab is hidden).
+const volumeBarFill = document.getElementById("volumeBarFill");
+let volumeTargetPct = 0;
+let volumeDisplayedPct = 0;
+
+function tickVolumeAnimation() {
+  volumeDisplayedPct += (volumeTargetPct - volumeDisplayedPct) * 0.2;
+  if (Math.abs(volumeTargetPct - volumeDisplayedPct) < 0.15) {
+    volumeDisplayedPct = volumeTargetPct;
+  }
+  volumeBarFill.style.width = `${volumeDisplayedPct}%`;
+  requestAnimationFrame(tickVolumeAnimation);
+}
+requestAnimationFrame(tickVolumeAnimation);
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message?.type !== "VOLUME_LEVEL") return;
+  if (message.tabId !== tabId) return; // Ignore messages from other tabs
+  volumeTargetPct = clampPct(message.level / 0.05);
+});
+
 // This iframe's own DOM/state is destroyed every time the overlay panel is
 // closed (the ✕ button in content_script.js removes the whole panel,
 // iframe included), but capture keeps running independently in the

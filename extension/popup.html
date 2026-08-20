@@ -417,6 +417,21 @@
       text-overflow: ellipsis;
     }
     .context-summary:empty { display: none; }
+
+    .volume-bar-track {
+      flex: none;
+      height: 3px;
+      background: var(--surface-2);
+      overflow: hidden;
+    }
+    .volume-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      /* No CSS transition — popup.js drives this every animation frame via
+         a requestAnimationFrame lerp, which reads smoother than a fixed-
+         duration CSS transition re-triggered on each ~200ms sample. */
+    }
   </style>
 </head>
 <body>
@@ -444,6 +459,10 @@
     </label>
     <button id="themeToggle" class="theme-toggle-btn" type="button" aria-label="테마 전환">☀️</button>
   </header>
+
+  <div class="volume-bar-track" role="presentation">
+    <div id="volumeBarFill" class="volume-bar-fill"></div>
+  </div>
 
   <div id="contextSummary" class="context-summary" title=""></div>
 

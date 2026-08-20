@@ -54,7 +54,22 @@ function newSessionState() {
     reconnectDelayMs: 1000,
     reconnectTimer: null,
     wsForceCloseTimer: null,
+    lastVolumeSentAt: 0,
   };
+}
+
+// 5Hz raw samples — popup.js animates smoothly between them every frame
+// (requestAnimationFrame lerp) rather than snapping on each message, so the
+// bar still reads as continuous/live despite the lower sample rate. Slower
+// than a naive "sample faster for smoother motion" approach: fewer
+// chrome.runtime broadcasts for the same (better, actually) visual result.
+const VOLUME_SEND_INTERVAL_MS = 200;
+
+function rms(float32) {
+  if (float32.length === 0) return 0;
+  let sum = 0;
+  for (let i = 0; i < float32.length; i++) sum += float32[i] * float32[i];
+  return Math.sqrt(sum / float32.length);
 }
 
 function floatTo16BitPCM(float32) {
@@ -188,6 +203,21 @@ async function startCapture(tabId, streamId) {
 
   session.workletNode.port.onmessage = (event) => {
     const { chunk } = event.data;
+
+    // Volume meter (2026-08-20): a lightweight "this is actually alive"
+    // signal for the overlay panel, especially useful during silence where
+    // no partial/final events fire at all. Zeroed while paused — the point
+    // is showing the *pipeline* is working, not just that the tab has
+    // sound. Broadcast directly via chrome.runtime (no background.js
+    // relay/persistence needed — same pattern popup.js already relies on
+    // for TRANSCRIPT_EVENT: every listening context gets it live).
+    const now = performance.now();
+    if (now - session.lastVolumeSentAt >= VOLUME_SEND_INTERVAL_MS) {
+      session.lastVolumeSentAt = now;
+      const level = session.paused ? 0 : rms(chunk);
+      chrome.runtime.sendMessage({ type: "VOLUME_LEVEL", tabId, level }).catch(() => {});
+    }
+
     if (session.paused) return;
     if (!session.ws || session.ws.readyState !== WebSocket.OPEN) return;
     session.ws.send(floatTo16BitPCM(chunk).buffer);
@@ -258,6 +288,9 @@ chrome.runtime.onMessage.addListener((message) => {
   } else if (message?.type === "PAUSE_CAPTURE") {
     const session = sessions.get(message.tabId);
     if (session) session.paused = true;
+    // Zero the volume meter immediately rather than waiting up to
+    // VOLUME_SEND_INTERVAL_MS for the next worklet tick to naturally do it.
+    chrome.runtime.sendMessage({ type: "VOLUME_LEVEL", tabId: message.tabId, level: 0 }).catch(() => {});
   } else if (message?.type === "RESUME_CAPTURE") {
     const session = sessions.get(message.tabId);
     if (session) session.paused = false;

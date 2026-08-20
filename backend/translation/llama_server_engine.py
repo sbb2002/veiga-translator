@@ -9,7 +9,9 @@ changes to audio_session.py.
 
 from __future__ import annotations
 
+import asyncio
 import logging
+import re
 
 import httpx
 
@@ -253,9 +255,62 @@ _KO_JA_SYSTEM_PROMPT = (
     "is present (recent Japanese speech from the stream, oldest first), use "
     "it only to pick natural wording/topic references that fit what's "
     "currently happening on stream — never translate or repeat any "
-    "'[BROADCAST CONTEXT]' line in your output. Output ONLY the Japanese "
-    "chat message, nothing else — no notes, no romanization, no quotes."
+    "'[BROADCAST CONTEXT]' line in your output.\n\n"
+    "Never invent, on your own initiative, a name/nickname/honorific to "
+    "address the streamer that the user did not supply. A name is "
+    "'supplied' only two ways: (a) it's written directly in "
+    "'[TEXT TO TRANSLATE]' itself (including a 【 】-marked pre-"
+    "transliterated span — see below, that content came from the user's "
+    "own message and must still be used, dropping only the 【 】 marks), or "
+    "(b) it appears verbatim, character-for-character, in "
+    "'[BROADCAST CONTEXT]'. If neither is true, do not address the "
+    "streamer by any name/nickname of your own choosing; phrase the "
+    "message so it needs none (e.g. plain です/ます, no vocative).\n\n"
+    "Some words in the Korean input have already been pre-transliterated "
+    "into Japanese kana for you and are marked by wrapping them in 【 】 "
+    "(a pair of Japanese corner-bracket-like marks placed directly around "
+    "the already-correct kana text, nothing else). For each such marked "
+    "span, copy the kana text between the 【 】 into your translation "
+    "exactly as written, character-for-character, positioned naturally for "
+    "that word in the sentence, then remove the 【 】 marks themselves so "
+    "they never appear in your final output. Do not convert that text to "
+    "kanji, do not switch it to the other kana script, do not add any "
+    "other brackets or quote marks around it, and do not substitute a "
+    "different word of your own — use only the exact kana given. There may "
+    "be more than one 【 】-marked span in the same message — treat every "
+    "one of them completely independently: your output must include every "
+    "single one, each still separate and unmodified; never merge two "
+    "marked spans into a single word, and never drop one because you "
+    "already used another.\n\n"
+    "Output ONLY the Japanese chat message, nothing else — no notes, no "
+    "romanization, no quotes, no brackets you added yourself."
 )
+
+# Script-forcing markup (2026-08-20): the viewer can wrap a Korean word in
+# '단일따옴표' to force hiragana or "겹따옴표" to force katakana in the
+# translated output (e.g. for a streamer's name/nickname where the "natural"
+# orthography choice a general translation model makes is a coin flip and
+# often wrong). Asking the main translate_ko_to_ja call to both pick the
+# right script AND weave it naturally into a full sentence under one prompt
+# proved unreliable in practice (it kept collapsing to hiragana regardless,
+# and sometimes added its own 「」 brackets around the span) — so the actual
+# script choice is resolved *first*, in its own tiny grammar-constrained
+# request per span (same technique as _build_korean_only_grammar below: a
+# GBNF character-class mask makes the wrong script physically unable to
+# decode, rather than hoping the model complies with a prompt instruction).
+# The main call then only has to copy a literal marked-off substring
+# verbatim, which is a far easier instruction to follow than "pick hiragana
+# here, katakana there, mid-sentence."
+_QUOTE_SPAN_RE = re.compile(r"'([^']+)'|\"([^\"]+)\"")
+_KANA_SINGLE_CHARS = "ー "  # long-vowel mark + space; script-neutral, allowed either way
+
+
+def _build_single_script_grammar(lo: int, hi: int) -> str:
+    return f"root ::= safe-char+\nsafe-char ::= [{chr(lo)}-{chr(hi)}{_KANA_SINGLE_CHARS}]"
+
+
+_HIRAGANA_ONLY_GRAMMAR = _build_single_script_grammar(0x3040, 0x309F)
+_KATAKANA_ONLY_GRAMMAR = _build_single_script_grammar(0x30A0, 0x30FF)
 
 # Japanese script allow-list, same rationale as _ALLOWED_SCRIPT_RANGES above
 # (a whitelist closes every script we didn't explicitly allow, instead of
@@ -432,23 +487,127 @@ class LlamaServerEngine:
         if not text.strip():
             return TranslationResult(text="")
 
+        # Bare-span fast path (2026-08-20): when the *entire* message is
+        # nothing but one forced-kana span (e.g. the user just typed "유노"
+        # to check how a name renders), the full generative call below
+        # reliably ignored the 【 】-marked content and improvised its own
+        # (wrong-script) nickname instead — reproduced consistently live.
+        # With no surrounding sentence to translate, there's nothing for the
+        # main call to usefully add anyway, so skip it and return the
+        # already-correct, grammar-verified kana straight from the per-span
+        # transliteration step.
+        bare_match = _QUOTE_SPAN_RE.fullmatch(text.strip())
+        if bare_match:
+            hiragana_span, katakana_span = bare_match.group(1), bare_match.group(2)
+            if hiragana_span is not None:
+                return TranslationResult(text=await self._transliterate_forced(hiragana_span, "hiragana"))
+            return TranslationResult(text=await self._transliterate_forced(katakana_span, "katakana"))
+
+        resolved_text, required_kana = await self._resolve_forced_kana_spans(text)
+
         sections = []
         if context:
             sections.append(f"[BROADCAST CONTEXT]\n{context}")
-        sections.append(f"[TEXT TO TRANSLATE]\n{text}")
+        sections.append(f"[TEXT TO TRANSLATE]\n{resolved_text}")
         user_content = "\n\n".join(sections)
 
+        async def run_once() -> str:
+            request_json = {
+                "model": config.LLAMA_SERVER_MODEL,
+                "messages": [
+                    {"role": "system", "content": _KO_JA_SYSTEM_PROMPT},
+                    {"role": "user", "content": user_content},
+                ],
+                "max_tokens": config.LLAMA_FINAL_MAX_TOKENS,
+                "temperature": 0.0,
+                "grammar": _JAPANESE_ONLY_GRAMMAR,
+                "repeat_penalty": 1.3,
+                "repeat_last_n": 64,
+            }
+            response = await self._client.post(
+                "/v1/chat/completions",
+                json=request_json,
+                timeout=config.LLAMA_SERVER_TIMEOUT_S,
+            )
+            response.raise_for_status()
+            data = response.json()
+            out = data["choices"][0]["message"]["content"].strip()
+            # Safety net for the (rare) case the model reproduces the marker
+            # brackets themselves despite the instruction to drop them —
+            # plain deletion rather than re-prompting, since a stray 【】 in
+            # casual stream chat is a cosmetic nit, not a script-purity
+            # violation the grammar mask would already have prevented.
+            return out.replace("【", "").replace("】", "")
+
+        translated = await run_once()
+        if required_kana and not all(kana in translated for kana in required_kana):
+            # llama.cpp's continuous batching makes even greedy
+            # (temperature=0) decoding non-deterministic across requests —
+            # observed live losing/merging a marked span. One retry is
+            # cheap and sometimes lands differently; if it still doesn't
+            # stick, log it rather than looping (this is still a draft
+            # direction with no dedicated eval harness — see the class
+            # docstring on translate_ko_to_ja).
+            logger.warning(
+                "ko->ja forced-kana span(s) missing from output, retrying once: required=%r got=%r",
+                required_kana,
+                translated,
+            )
+            translated = await run_once()
+            if not all(kana in translated for kana in required_kana):
+                logger.warning(
+                    "ko->ja forced-kana span(s) still missing after retry: required=%r got=%r",
+                    required_kana,
+                    translated,
+                )
+        return TranslationResult(text=translated)
+
+    async def _resolve_forced_kana_spans(self, text: str) -> tuple[str, list[str]]:
+        """Replace each '...'/"..." span in `text` with its already-resolved
+        hiragana/katakana rendering, marked with 【】 — see the comment above
+        _QUOTE_SPAN_RE for why this is a separate grammar-constrained request
+        per span rather than one prompt instruction on the main call. Also
+        returns the resolved kana strings so the caller can verify they
+        actually survived into the final translation."""
+        matches = list(_QUOTE_SPAN_RE.finditer(text))
+        if not matches:
+            return text, []
+
+        async def render(match: re.Match) -> str:
+            hiragana_span, katakana_span = match.group(1), match.group(2)
+            if hiragana_span is not None:
+                return await self._transliterate_forced(hiragana_span, "hiragana")
+            return await self._transliterate_forced(katakana_span, "katakana")
+
+        rendered = await asyncio.gather(*(render(m) for m in matches))
+
+        parts = []
+        cursor = 0
+        for match, kana in zip(matches, rendered):
+            parts.append(text[cursor : match.start()])
+            parts.append(f"【{kana}】")
+            cursor = match.end()
+        parts.append(text[cursor:])
+        return "".join(parts), list(rendered)
+
+    async def _transliterate_forced(self, korean_span: str, script: str) -> str:
+        grammar = _HIRAGANA_ONLY_GRAMMAR if script == "hiragana" else _KATAKANA_ONLY_GRAMMAR
         request_json = {
             "model": config.LLAMA_SERVER_MODEL,
             "messages": [
-                {"role": "system", "content": _KO_JA_SYSTEM_PROMPT},
-                {"role": "user", "content": user_content},
+                {
+                    "role": "user",
+                    "content": (
+                        f"Transliterate the Korean word or name '{korean_span}' into how "
+                        f"a Japanese speaker would phonetically read/write it, using ONLY "
+                        f"{script} characters. Output ONLY the {script} text, nothing "
+                        "else — no romanization, no notes, no punctuation."
+                    ),
+                }
             ],
-            "max_tokens": config.LLAMA_FINAL_MAX_TOKENS,
+            "max_tokens": 24,
             "temperature": 0.0,
-            "grammar": _JAPANESE_ONLY_GRAMMAR,
-            "repeat_penalty": 1.3,
-            "repeat_last_n": 64,
+            "grammar": grammar,
         }
         response = await self._client.post(
             "/v1/chat/completions",
@@ -457,8 +616,7 @@ class LlamaServerEngine:
         )
         response.raise_for_status()
         data = response.json()
-        translated = data["choices"][0]["message"]["content"].strip()
-        return TranslationResult(text=translated)
+        return data["choices"][0]["message"]["content"].strip()
 
     async def aclose(self) -> None:
         await self._client.aclose()

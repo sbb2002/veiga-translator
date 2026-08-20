@@ -65,13 +65,13 @@ function withTimeout(promise, label, ms = 5000) {
   ]);
 }
 
-// This file only ever runs in the detached chrome.windows.create viewer
-// window now (background.js's action.onClicked opens it directly — see
-// there). Starting capture requires activeTab, which is only granted by the
-// toolbar-icon click itself, not by a later gesture inside this already-open
-// window (confirmed live 2026-08-19: chrome.sidePanel had the exact same
-// problem) — so this window can only stop an active capture; starting one
-// again means clicking the toolbar icon.
+// This file only ever runs inside the in-page overlay panel's iframe now
+// (content_script.js builds it, background.js's action.onClicked triggers it
+// — see there). Starting capture requires activeTab, which is only granted
+// by the toolbar-icon click itself, not by a later gesture inside this
+// already-open iframe (confirmed live 2026-08-19: chrome.sidePanel had the
+// exact same problem) — so this iframe can only stop an active capture;
+// starting one again means clicking the toolbar icon.
 toggleBtn.addEventListener("click", async () => {
   console.log("[popup] toggle clicked");
   try {
@@ -236,12 +236,12 @@ chrome.runtime.onMessage.addListener((message) => {
   logEl.scrollTop = logEl.scrollHeight;
 });
 
-// The popup's own DOM/state is destroyed every time it closes (standard
-// Chrome popup behavior — e.g. clicking the page to pause the video closes
-// it), but capture keeps running independently in the background/offscreen
-// contexts. Restore whatever history accumulated while this popup instance
-// didn't exist, from the persisted log in background.js, before subscribing
-// to new live events above.
+// This iframe's own DOM/state is destroyed every time the overlay panel is
+// closed (the ✕ button in content_script.js removes the whole panel,
+// iframe included), but capture keeps running independently in the
+// background/offscreen contexts. Restore whatever history accumulated while
+// this iframe instance didn't exist, from the persisted log in
+// background.js, before subscribing to new live events above.
 async function restoreHistory() {
   const log = await chrome.runtime.sendMessage({ type: "GET_TRANSCRIPT_LOG", tabId });
   for (const event of log ?? []) {
@@ -307,8 +307,27 @@ chatOutputEl.addEventListener("click", async () => {
     chatOutputEl.classList.add("copied");
     chatStatusEl.textContent = "복사됨";
   } catch (err) {
-    console.error("[popup] clipboard write failed:", err);
-    chatStatusEl.textContent = "복사 실패 — 직접 선택해서 복사하세요";
+    console.error("[popup] clipboard write failed, falling back to execCommand:", err);
+    // navigator.clipboard needs the embedding page to delegate the
+    // clipboard-write Permissions-Policy to this iframe (content_script.js
+    // sets iframe allow="clipboard-write") — if that's ever missing or the
+    // browser rejects it anyway, select-and-execCommand still works since it
+    // doesn't go through the async Clipboard API's permission check.
+    try {
+      const range = document.createRange();
+      range.selectNodeContents(chatOutputEl);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      const ok = document.execCommand("copy");
+      selection.removeAllRanges();
+      if (!ok) throw new Error("execCommand returned false");
+      chatOutputEl.classList.add("copied");
+      chatStatusEl.textContent = "복사됨";
+    } catch (fallbackErr) {
+      console.error("[popup] execCommand copy fallback also failed:", fallbackErr);
+      chatStatusEl.textContent = "복사 실패 — 직접 선택해서 복사하세요";
+    }
   }
 });
 
@@ -325,4 +344,43 @@ chrome.runtime.onMessage.addListener((message) => {
 // Debug toggle
 document.getElementById("debugToggle").addEventListener("change", (e) => {
   document.body.classList.toggle("show-debug", e.target.checked);
+});
+
+// Theme toggle (manual override on top of the prefers-color-scheme default —
+// see popup.html's :root[data-theme] blocks). Stored in localStorage, which
+// is scoped to this extension's own origin (chrome-extension://<id>) rather
+// than to any one YouTube tab, so the choice is shared across every tab's
+// overlay panel automatically instead of needing per-tab bookkeeping.
+const THEME_STORAGE_KEY = "lt_theme";
+const themeToggleBtn = document.getElementById("themeToggle");
+const darkMql = window.matchMedia("(prefers-color-scheme: dark)");
+
+function effectiveTheme() {
+  return document.documentElement.getAttribute("data-theme") ?? (darkMql.matches ? "dark" : "light");
+}
+
+function syncThemeToggleIcon() {
+  const dark = effectiveTheme() === "dark";
+  themeToggleBtn.textContent = dark ? "🌙" : "☀️";
+  themeToggleBtn.setAttribute("aria-label", dark ? "라이트 모드로 전환" : "다크 모드로 전환");
+}
+
+const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+if (savedTheme === "light" || savedTheme === "dark") {
+  document.documentElement.setAttribute("data-theme", savedTheme);
+}
+syncThemeToggleIcon();
+
+themeToggleBtn.addEventListener("click", () => {
+  const next = effectiveTheme() === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  localStorage.setItem(THEME_STORAGE_KEY, next);
+  syncThemeToggleIcon();
+});
+
+// Once the user has made an explicit choice, stop tracking OS changes (that
+// choice is meant to stick). Only re-sync live with the OS while still on
+// the default "auto" behavior (no stored preference).
+darkMql.addEventListener("change", () => {
+  if (!localStorage.getItem(THEME_STORAGE_KEY)) syncThemeToggleIcon();
 });

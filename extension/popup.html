@@ -23,7 +23,10 @@
       --mono: ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas, monospace;
     }
     @media (prefers-color-scheme: dark) {
-      :root {
+      /* Guarded so an explicit manual "light" choice (data-theme) wins over
+         the OS setting; see the matching :root[data-theme="dark"] block
+         below for the manual "dark" direction. */
+      :root:not([data-theme="light"]) {
         --bg: #14171c;
         --surface: #1c2029;
         --surface-2: #20242e;
@@ -37,6 +40,20 @@
         --risk: #e2685a;
         --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
       }
+    }
+    :root[data-theme="dark"] {
+      --bg: #14171c;
+      --surface: #1c2029;
+      --surface-2: #20242e;
+      --border: #2a2f3a;
+      --text: #eef0f3;
+      --text-muted: #8b93a3;
+      --text-faint: #5b6270;
+      --accent: #e8a33d;
+      --accent-soft: #3a2f1c;
+      --ok: #4caf7d;
+      --risk: #e2685a;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
     }
 
     * { box-sizing: border-box; }
@@ -158,6 +175,24 @@
       width: 13px;
       height: 13px;
     }
+
+    .theme-toggle-btn {
+      flex: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface-2);
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .theme-toggle-btn:hover { background: var(--border); }
+    .theme-toggle-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
     .log-card {
       flex: 1;
@@ -358,6 +393,7 @@
       <input type="checkbox" id="debugToggle" />
       디버그 지표
     </label>
+    <button id="themeToggle" class="theme-toggle-btn" type="button" aria-label="테마 전환">☀️</button>
   </header>
 
   <div class="log-card">

@@ -37,11 +37,13 @@ const MAX_LOG_ENTRIES = 200;
 // with no intermediate popup step. So: manifest has no "default_popup" at
 // all now, which makes chrome.action.onClicked fire directly on the icon
 // click — that click IS the activeTab-granting gesture, so startCapture(tab.id)
-// below can use it straightaway. A separate chrome.windows.create popup-type
-// window is opened right after, and stays open no matter what else the user
-// clicks (unlike an action popup, which Chrome always closes on blur). This
-// also means each tab's activeTab grant only ever covers that tab, which is
-// exactly what multi-tab capture needs — no extra permission required.
+// below can use it straightaway. An in-page overlay panel is shown right after
+// (content_script.js), layered into that tab's own DOM so it can never lose
+// focus/drop behind the tab the way a detached OS window did (unlike an
+// action popup, which Chrome always closes on blur, the overlay stays put no
+// matter what else the user clicks). This also means each tab's activeTab
+// grant only ever covers that tab, which is exactly what multi-tab capture
+// needs — no extra permission required.
 async function getCaptureState(tabId) {
   const { captureSessions = {} } = await chrome.storage.session.get("captureSessions");
   return captureSessions[tabId] ?? { active: false, tabId };
@@ -102,7 +104,7 @@ async function startCapture(tabId, tab) {
 
   // Snapshot title/favicon now, while we have the Tab object from the
   // activeTab-granting gesture — avoids needing the broader "tabs"
-  // permission just to label the viewer window later.
+  // permission just to label the overlay panel later.
   const next = {
     active: true,
     tabId,
@@ -147,48 +149,30 @@ async function appendToLog(tabId, event) {
   await chrome.storage.session.set({ transcriptLogs });
 }
 
-const VIEWER_URL = "popup.html";
-
-async function getViewerWindowId(tabId) {
-  const { viewerWindows = {} } = await chrome.storage.session.get("viewerWindows");
-  return viewerWindows[tabId] ?? null;
-}
-
-async function setViewerWindowId(tabId, windowId) {
-  const { viewerWindows = {} } = await chrome.storage.session.get("viewerWindows");
-  if (windowId == null) {
-    delete viewerWindows[tabId];
-  } else {
-    viewerWindows[tabId] = windowId;
+// Overlay panel lives inside the captured page's own DOM (content_script.js)
+// instead of a separate chrome.windows.create window — a detached OS window
+// dropped behind the tab the instant the user clicked the video, which the
+// user flagged as the actual blocker to daily use. SHOW_OVERLAY is idempotent
+// on the content-script side (a no-op if the panel is already built), so
+// there's no window-id bookkeeping to maintain here anymore.
+async function showOverlay(tabId) {
+  try {
+    await chrome.tabs.sendMessage(tabId, { type: "SHOW_OVERLAY", tabId });
+  } catch {
+    // No content script listening yet — typical right after the extension
+    // itself was (re)loaded while the tab was already open, since the
+    // manifest's static content_scripts only auto-inject on navigation.
+    // activeTab is already granted by this same click, so inject on demand.
+    await chrome.scripting.executeScript({ target: { tabId }, files: ["content_script.js"] });
+    await chrome.tabs.sendMessage(tabId, { type: "SHOW_OVERLAY", tabId });
   }
-  await chrome.storage.session.set({ viewerWindows });
-}
-
-async function openOrFocusViewerWindow(tabId) {
-  const existingId = await getViewerWindowId(tabId);
-  if (existingId != null) {
-    try {
-      await chrome.windows.update(existingId, { focused: true });
-      return; // still open — just bring it forward, don't spawn a second one
-    } catch {
-      // User closed it since last time; fall through and create a fresh one.
-    }
-  }
-  const win = await chrome.windows.create({
-    url: chrome.runtime.getURL(`${VIEWER_URL}?tabId=${tabId}`),
-    type: "popup",
-    width: 420,
-    height: 660,
-    focused: true,
-  });
-  await setViewerWindowId(tabId, win.id);
 }
 
 // The toolbar icon click itself both starts capture (if this tab isn't
-// already being captured) and opens/focuses that tab's own viewer window —
-// no popup step in between, per the user's explicit request. Clicking the
-// icon on a different tab while another tab is already capturing starts a
-// second, fully independent session instead of being ignored.
+// already being captured) and shows that tab's own overlay panel — no popup
+// step in between, per the user's explicit request. Clicking the icon on a
+// different tab while another tab is already capturing starts a second,
+// fully independent session instead of being ignored.
 chrome.action.onClicked.addListener(async (tab) => {
   console.log("[background] action clicked, tab=", tab.id);
   try {
@@ -199,35 +183,20 @@ chrome.action.onClicked.addListener(async (tab) => {
   } catch (err) {
     console.error("[background] action.onClicked startCapture failed:", err);
   }
-  await openOrFocusViewerWindow(tab.id);
+  await showOverlay(tab.id);
 });
 
 // A tab that's being captured can simply be closed by the user — there's no
-// audio left to capture, so tear down its session and its viewer window
-// rather than leaving an orphaned capture running in offscreen.js forever.
+// audio left to capture, so tear down its session rather than leaving an
+// orphaned capture running in offscreen.js forever. The overlay panel needs
+// no explicit cleanup here: it lives in that tab's own DOM, so it's gone the
+// instant the tab is.
 chrome.tabs.onRemoved.addListener(async (tabId) => {
   const state = await getCaptureState(tabId);
   if (state.active) {
     await stopCapture(tabId);
   }
   await clearCaptureState(tabId);
-  const windowId = await getViewerWindowId(tabId);
-  if (windowId != null) {
-    await chrome.windows.remove(windowId).catch(() => {});
-  }
-  await setViewerWindowId(tabId, null);
-});
-
-// Closing just the viewer window (capture keeps running in the background,
-// same as today's single-session behavior) — forget the window id so the
-// next icon click opens a fresh window instead of trying to focus a
-// nonexistent one.
-chrome.windows.onRemoved.addListener(async (windowId) => {
-  const { viewerWindows = {} } = await chrome.storage.session.get("viewerWindows");
-  const tabId = Object.keys(viewerWindows).find((id) => viewerWindows[id] === windowId);
-  if (tabId != null) {
-    await setViewerWindowId(Number(tabId), null);
-  }
 });
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
@@ -264,10 +233,10 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   }
 
   if (message?.type === "TRANSCRIPT_EVENT") {
-    // Persist so a reopened viewer window can restore history that arrived
+    // Persist so a reopened overlay panel can restore history that arrived
     // while it was closed — see the service-worker-lifetime note above;
-    // popup.js's own in-memory log is wiped every time its window closes
-    // regardless. Tagged with tabId by offscreen.js so it lands in the
+    // popup.js's own in-memory log is wiped every time its iframe is torn
+    // down regardless. Tagged with tabId by offscreen.js so it lands in the
     // right tab's bucket.
     queueAppendToLog(message.tabId, message.data);
     return false; // every popup.js instance's own listener also receives this live

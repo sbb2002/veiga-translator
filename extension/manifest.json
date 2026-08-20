@@ -3,7 +3,7 @@
   "name": "Live Translator",
   "version": "0.1.0",
   "description": "Captures a browser tab's audio and streams it to a local backend for Japanese-to-Korean live transcription/translation.",
-  "permissions": ["tabCapture", "offscreen", "activeTab", "storage"],
+  "permissions": ["tabCapture", "offscreen", "activeTab", "storage", "scripting"],
   "host_permissions": ["ws://localhost:8000/*", "http://localhost:8000/*"],
   "background": {
     "service_worker": "background.js"
@@ -16,6 +16,12 @@
       "matches": ["*://*.youtube.com/*"],
       "js": ["content_script.js"],
       "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["popup.html"],
+      "matches": ["*://*.youtube.com/*"]
     }
   ]
 }

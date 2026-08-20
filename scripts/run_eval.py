@@ -1,7 +1,7 @@
 """Run the STT+translation pipeline over data/eval_set_*.jsonl and score it
-per docs/EVAL.md (final pass only — see note below).
+per docs/eval/EVAL.md (final pass only — see note below).
 
-Scope (ponytail: cut for a first pass, see docs/EVAL.md for the full spec):
+Scope (ponytail: cut for a first pass, see docs/eval/EVAL.md for the full spec):
 - Only the FINAL pass is run (beam=5 STT, natural-translation prompt), not
   partial. Partial scoring (EVAL.md §3.3) needs simulated partial
   audio/text truncation to be meaningful; that's a separate follow-up.
@@ -115,7 +115,7 @@ def report(results: list[dict]) -> None:
 
     print(
         "\nNote: 의미 충실도/자연스러움/존댓말 일치, S1 원인 분리(§3.4)는 "
-        "*_results.jsonl을 사람이 채점해야 함 (docs/EVAL.md §3.2, §5)."
+        "*_results.jsonl을 사람이 채점해야 함 (docs/eval/EVAL.md §3.2, §5)."
     )
 
 

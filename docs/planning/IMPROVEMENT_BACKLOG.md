@@ -1,8 +1,8 @@
 # 개선 백로그 — 코드 리뷰 기반 (작성: 2026-08-19)
 
 전사/번역 품질 향상 작업 중 코드 전체를 리뷰하며 찾은 개선 후보 목록.
-**각 항목의 구체적 구현 방법은 `docs/IMPROVEMENT_SPECS.md` 참고** (항목 ID 동일).
-`docs/EVAL_REPORT_2026-08-18.md` §5의 기존 개선 계획(A~E)과 겹치는 항목은 여기 다시 쓰지 않고
+**각 항목의 구체적 구현 방법은 `docs/planning/IMPROVEMENT_SPECS.md` 참고** (항목 ID 동일).
+`docs/eval/EVAL_REPORT_2026-08-18.md` §5의 기존 개선 계획(A~E)과 겹치는 항목은 여기 다시 쓰지 않고
 맨 아래 "기존 계획 추적" 표에서 상태만 관리한다. 항목이 처리되면 이 문서에서 상태를 갱신할 것.
 
 우선순위 기준:
@@ -12,7 +12,7 @@
 
 **구현 현황 (2026-08-19, `batch1-instrumentation` 브랜치, GPU 검증 대기)**:
 R1·R2·R3·R4·Q1·Q3·Q7·S1·S4·T1·D1 구현 완료. 미착수(실측/실험 선행 조건):
-Q2·Q4·Q5·Q6·S2·S3·T2·T3·T4. 검증 절차는 `docs/HANDOFF.md`. **각 섹션의 증상/코드 서술은
+Q2·Q4·Q5·Q6·S2·S3·T2·T3·T4. 검증 절차는 `docs/log/HANDOFF.md`. **각 섹션의 증상/코드 서술은
 구현 전(`be319ef`) 코드 기준**이므로, 구현된 항목의 현재 동작은 코드와 `PIPELINE.md`가 기준.
 
 ## 요약
@@ -100,7 +100,7 @@ Q2~Q6 어느 것도 "실제로 문제인지" 판단할 수 없다.
 
 ### Q2. partial 트랙이 오디오 수신 경로를 블로킹 (P1)
 
-`docs/PIPELINE.md`는 "partial 트랙은 메인 오디오 처리 루프 안에서 논블로킹으로 실행된다"고
+`docs/planning/PIPELINE.md`는 "partial 트랙은 메인 오디오 처리 루프 안에서 논블로킹으로 실행된다"고
 서술하지만, 실제로는 `_process_frame`이 `await self._emit_partial()`로 **fast STT + fast LLM이
 끝날 때까지 다음 프레임 처리(= 웹소켓 오디오 드레인)를 멈춘다.** 이벤트 루프를 안 막는다는
 의미의 논블로킹일 뿐, finalize를 큐로 뺀 것과 정확히 같은 이유("feed_audio는 오디오를
@@ -260,7 +260,7 @@ fast 패스는 문맥 없이 조각만 번역한다. 직전 final 한국어 1문
 
 ## 문서/코드 불일치 (발견 시 정리)
 
-- `docs/PIPELINE.md`: "partial 트랙은 …논블로킹으로 실행된다" — 실제로는 오디오 드레인 경로를
+- `docs/planning/PIPELINE.md`: "partial 트랙은 …논블로킹으로 실행된다" — 실제로는 오디오 드레인 경로를
   블로킹한다(Q2). Q2 처리 여부와 무관하게 서술은 정정 필요.
 - `backend/main.py:7` docstring의 llama-server 실행 예시가 Qwen2.5 모델 파일 — `config.py`는
   gemma-3-12b-it 기준. 헤더 커맨드 갱신.
@@ -270,7 +270,7 @@ fast 패스는 문맥 없이 조각만 번역한다. 직전 final 한국어 1문
 - `backend/stt/base.py` `TranscriptionResult.words` — `word_timestamps=False`라 항상 빈 값.
   쓸 계획이 없으면 제거, 있으면 주석으로 명시.
 
-## 기존 계획 추적 (`EVAL_REPORT_2026-08-18.md` §5 / gemma 리포트 §5)
+## 기존 계획 추적 (`../eval/EVAL_REPORT_2026-08-18.md` §5 / gemma 리포트 §5)
 
 | 항목 | 상태 (2026-08-19) |
 |---|---|

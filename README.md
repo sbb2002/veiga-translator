@@ -4,11 +4,11 @@
 한국어로 번역해 보여주는 개인용 Chrome 확장 프로그램. 모든 처리는 로컬 GPU에서
 실행되며 클라우드 API를 사용하지 않습니다.
 
-전체 배경과 설계 근거는 `docs/PRD.md`, 아키텍처/빌드 순서는 `CLAUDE.md` 참고.
+전체 배경과 설계 근거는 `docs/planning/PRD.md`, 아키텍처/빌드 순서는 `CLAUDE.md` 참고.
 
 현재 진행 단계: 파이프라인 배관(캡처 → STT → 번역)은 완료. 정식 UI는 아직 없고 팝업에서
 partial/final 텍스트를 단순 표시하며, 지금은 전사/번역 **품질 개선 단계**입니다
-(로드맵: `CLAUDE.md` §"Current roadmap", 개선 목록: `docs/IMPROVEMENT_BACKLOG.md`).
+(로드맵: `CLAUDE.md` §"Current roadmap", 개선 목록: `docs/planning/IMPROVEMENT_BACKLOG.md`).
 
 ## 사전 준비물
 
@@ -16,7 +16,7 @@ partial/final 텍스트를 단순 표시하며, 지금은 전사/번역 **품질
 - **NVIDIA GPU + CUDA** — STT/번역 모두 GPU 추론 사용
 - **Python 3.10+**
 - **llama.cpp server** (CUDA 빌드) 실행 파일 — 번역용. 채택 모델은 **gemma-3-12b-it Q4_K_M**
-  (GGUF, 선정 근거: `docs/EVAL_REPORT_gemma-3-12b-it_2026-08-18.md`). 둘 다 `.gitignore`에
+  (GGUF, 선정 근거: `docs/eval/EVAL_REPORT_gemma-3-12b-it_2026-08-18.md`). 둘 다 `.gitignore`에
   의해 저장소에는 포함되어 있지 않음 (`llama-server/`, `*.gguf`)
 
 ## 설치

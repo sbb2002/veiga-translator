@@ -1,7 +1,7 @@
 """llama-server (OpenAI-compatible /v1/chat/completions) translation engine.
 
 Chosen over Ollama: llama-server is the same llama.cpp engine Ollama wraps,
-without Ollama's ~10-30% single-stream overhead (see docs/PRD.md
+without Ollama's ~10-30% single-stream overhead (see docs/planning/PRD.md
 benchmarking notes for sources). Swappable behind TranslationEngine —
 dropping in vLLM/ExLlamaV2/etc later means writing a new class here, no
 changes to audio_session.py.
@@ -393,7 +393,7 @@ class LlamaServerEngine:
             # tokens, which breaks that loop. NOTE: on Qwen3-14B this
             # backfires badly — combined with the grammar mask it collapses
             # into verbatim-echoing the system prompt instead of
-            # translating (see docs/MODEL_BENCHMARK_PLAN.md); keep it off
+            # translating (see docs/eval/MODEL_BENCHMARK_PLAN.md); keep it off
             # for that model family.
             request_json["repeat_penalty"] = 1.3
             request_json["repeat_last_n"] = 64

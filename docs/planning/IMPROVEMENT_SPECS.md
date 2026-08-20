@@ -1,6 +1,6 @@
 # 개선 구현 명세 (작성: 2026-08-19)
 
-`docs/IMPROVEMENT_BACKLOG.md`의 각 항목을 실제로 어떻게 구현할지 정의한다. 항목 ID는 백로그와
+`docs/planning/IMPROVEMENT_BACKLOG.md`의 각 항목을 실제로 어떻게 구현할지 정의한다. 항목 ID는 백로그와
 동일. 기준 코드는 커밋 `be319ef` 시점의 트리.
 
 ## 전제 — 번역 런타임 계약 (모든 T/Q 항목의 기반)
@@ -32,7 +32,7 @@ dll 구성이다. 즉 `config.py:70`의 실행 예시 커맨드는 이 폴더 �
 | 5 | Q2 (partial 분리) → 계측 결과에 따라 Q4/Q5/Q6, S3 | Q1 데이터 확보 후 | 대기 |
 | 6 | S2, T3, T4, T2 | 실험/A-B 트랙. T4는 Q2 이후 | 대기 |
 
-**as-built 편차** (배치 1~4는 구현 완료 — 코드 검수까지, 런타임 검증은 `docs/HANDOFF.md`.
+**as-built 편차** (배치 1~4는 구현 완료 — 코드 검수까지, 런타임 검증은 `docs/log/HANDOFF.md`.
 아래 4건 외에는 명세 그대로 구현됨):
 
 - **R1**: final 번역 실패 시 명세의 "방출 후 별도 return" 대신, 성공 경로와 같은 로그/방출
@@ -260,7 +260,7 @@ Capture → 백엔드를 나중에 켜도 붙는지. Stop Capture 후 재연결 
 
 ## Q2. partial 트랙을 오디오 경로에서 분리
 
-**변경**: `backend/audio_session.py`, `docs/PIPELINE.md`(서술 갱신 — D1과 함께)
+**변경**: `backend/audio_session.py`, `docs/planning/PIPELINE.md`(서술 갱신 — D1과 함께)
 
 **설계**
 
@@ -614,7 +614,7 @@ partial `stt` 소요가 평시 대비 뚜렷이 튀는 패턴이 보일 때만.
 
 ## D1. 문서/주석 정리
 
-**변경**: `docs/PIPELINE.md`, `backend/main.py`, `backend/glossary.py`, `backend/stt/base.py`,
+**변경**: `docs/planning/PIPELINE.md`, `backend/main.py`, `backend/glossary.py`, `backend/stt/base.py`,
 `README`(실행 커맨드)
 
 1. `PIPELINE.md`: partial 트랙 "논블로킹" 서술을 현실에 맞게 수정 — Q2 이전이라면 "이벤트

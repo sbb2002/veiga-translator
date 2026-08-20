@@ -85,7 +85,7 @@
 
 **현황 (2026-08-18 벤치마크 완료)**: STT는 faster-whisper `medium`(CUDA, int8_float16),
 번역은 llama.cpp server로 서빙하는 **gemma-3-12b-it Q4_K_M** 채택
-(`docs/MODEL_BENCHMARK_PLAN.md`, `docs/EVAL_REPORT_gemma-3-12b-it_2026-08-18.md`).
+(`docs/eval/MODEL_BENCHMARK_PLAN.md`, `docs/eval/EVAL_REPORT_gemma-3-12b-it_2026-08-18.md`).
 벤치 1위였던 Qwen3-14B는 한글 강제 grammar와의 비호환으로 보류. 아래의 후보군 서술은
 선정 당시 기준이며, 교체 가능 설계 원칙은 계속 유효하다.
 

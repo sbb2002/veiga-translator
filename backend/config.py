@@ -10,7 +10,7 @@ SAMPLE_RATE = 16000  # must match TARGET_SAMPLE_RATE in extension/offscreen.js
 
 # STT (faster-whisper)
 # "small" was too error-prone on fast/slangy live-stream Japanese (see
-# docs/PRD.md translation-quality notes — a Q4->Q8 translation-model upgrade
+# docs/planning/PRD.md translation-quality notes — a Q4->Q8 translation-model upgrade
 # made ~no difference on garbled sentences, confirming the errors originate
 # in the transcript, not the translation). "medium" then showed enough
 # hallucination/garbling on live capture (2026-08-19, data/flagged_segments.jsonl
@@ -136,20 +136,20 @@ MIN_PARTIAL_AUDIO_SECONDS = 0.8
 
 # Translation (llama-server — an OpenAI-compatible /v1/chat/completions server
 # running the same llama.cpp engine Ollama wraps, without Ollama's overhead
-# for our single-stream use case; see docs/PRD.md benchmarking notes).
+# for our single-stream use case; see docs/planning/PRD.md benchmarking notes).
 # Start it separately, e.g.:
 #   llama-server/llama-server.exe -m backend/models/google_gemma-3-12b-it-Q4_K_M.gguf --port 8080 -ngl 999 -c 4096
 #
 # Swapped from Qwen2.5-7B-Instruct to Gemma-3-12b-it per
-# docs/MODEL_BENCHMARK_PLAN.md — beats the baseline on every human-graded
+# docs/eval/MODEL_BENCHMARK_PLAN.md — beats the baseline on every human-graded
 # axis with grammar-constrained decoding on (chrF++ 24.64->28.69, S1 rate
 # 50.8%->43.3%) and zero Latin-script leakage in that config. See
-# docs/EVAL_REPORT_gemma-3-12b-it_2026-08-18.md for the full comparison.
+# docs/eval/EVAL_REPORT_gemma-3-12b-it_2026-08-18.md for the full comparison.
 LLAMA_SERVER_URL = "http://127.0.0.1:8080"
 LLAMA_SERVER_MODEL = "gemma-3-12b-it"  # cosmetic — llama-server serves whatever -m it was launched with
 LLAMA_SERVER_TIMEOUT_S = 15.0
 # Fast/partial translation calls run inline with the audio-processing
-# path (until Q2 in docs/IMPROVEMENT_SPECS.md moves them off it), so a
+# path (until Q2 in docs/planning/IMPROVEMENT_SPECS.md moves them off it), so a
 # stalled LLM call must give up quickly — the next partial cycle retries
 # with a fresher buffer anyway. Finals run on the background queue and can
 # afford the longer LLAMA_SERVER_TIMEOUT_S above.

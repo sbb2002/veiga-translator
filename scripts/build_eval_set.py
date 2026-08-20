@@ -1,4 +1,4 @@
-"""Build docs/EVAL.md's reference dataset (eval_set_<date>.jsonl) from data/json + data/wav.
+"""Build docs/eval/EVAL.md's reference dataset (eval_set_<date>.jsonl) from data/json + data/wav.
 
 Single-speaker only (li_total_speaker_num == "1") per CLAUDE.md's 1차 목표 — the 30
 "일상,소통" 2-speaker clips are skipped until phase 2 (다중화자) opens.

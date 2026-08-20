@@ -5,7 +5,7 @@
 16GB에 안 들어가 아래처럼 더 작은 사이즈로 대체해 실행함. `llama-server/`의 실행 파일은
 CUDA 빌드(`ggml-cuda.dll`)였으므로 별도 교체 불필요했음.
 
-배경/근거는 `docs/EVAL_REPORT_2026-08-18.md` §5 "C. 번역 엔진 자체 오역" 참고 — 현재 모델
+배경/근거는 `docs/eval/EVAL_REPORT_2026-08-18.md` §5 "C. 번역 엔진 자체 오역" 참고 — 현재 모델
 (Qwen2.5-7B-Instruct Q4_K_M)이 STT 오류를 완전히 제거해도(정답 전사 직접 입력) chrF++
 24.25에 그쳐, 모델 자체 교체가 다른 개선(A/B/D/E)보다 선행돼야 한다는 결론.
 
@@ -43,7 +43,7 @@ grammar를 끈 상태에서도 라틴 문자 유출은 0건이었지만, 240개 
 간체자/번체자 등 다른 비한글 문자가 소량 섞여 나온 것도 확인됨(`蠟`, `燭`, `ぶ` 등). **Qwen3-14B를
 실제로 채택하려면 이 스크립트 순수성 문제를 grammar 없이 해결하는 방법(예: 더 강한 프롬프트
 지침, 후처리 필터, 또는 Qwen3 호환 방식의 grammar 재설계)을 먼저 찾아야 함** — 지금 상태로
-프로덕션에 넣으면 `docs/EVAL.md` §3.2의 "스크립트 순수성" 자동 S1 조건에 정기적으로 걸림.
+프로덕션에 넣으면 `docs/eval/EVAL.md` §3.2의 "스크립트 순수성" 자동 S1 조건에 정기적으로 걸림.
 
 ## 원래 계획 (참고용 — 위 결과로 대체됨)
 
@@ -62,7 +62,7 @@ grammar를 끈 상태에서도 라틴 문자 유출은 0건이었지만, 240개 
 ## 사전 준비 (GPU 머신)
 
 1. 이 저장소를 GPU 머신에 pull. `data/`(eval_set jsonl + wav 120클립), `scripts/`,
-   `docs/EVAL_REPORT_2026-08-18.md`, `data/eval_set_2026-08-18_results.jsonl`(현재 모델
+   `docs/eval/EVAL_REPORT_2026-08-18.md`, `data/eval_set_2026-08-18_results.jsonl`(현재 모델
    STT/번역 결과, 대조군으로 재사용 가능)이 그대로 있어야 함.
 2. `pip install -r backend/requirements.txt jiwer sacrebleu` (+ CUDA용 torch/torchaudio —
    README 참고).
@@ -109,7 +109,7 @@ STT까지 다시 돌릴 필요는 없다. 각 모델의 `hyp_ko`만 새로 생�
 | EXAONE-4.0-32B | | | | | | | |
 | Gemma-3-27B-it | | | | | | | |
 
-의미충실도/자연스러움/존댓말일치/S1율은 `docs/EVAL.md` §3.2 기준 — 이번에도 Claude가 직접
+의미충실도/자연스러움/존댓말일치/S1율은 `docs/eval/EVAL.md` §3.2 기준 — 이번에도 Claude가 직접
 채점(이번 세션에서 한 것과 동일한 방식, `data/eval_set_2026-08-18_graded.jsonl` 참고).
 
 ## 선정 기준

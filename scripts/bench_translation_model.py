@@ -1,5 +1,5 @@
 """Translate-only benchmark for a candidate translation model, per
-docs/MODEL_BENCHMARK_PLAN.md. Reuses the existing STT hypotheses
+docs/eval/MODEL_BENCHMARK_PLAN.md. Reuses the existing STT hypotheses
 (hyp_ja) from a prior run_eval.py pass so only the translation step is
 re-run — start llama-server with the candidate model first.
 
@@ -13,7 +13,7 @@ Usage (llama-server must already be running with the candidate model):
 --vanilla disables both the Korean-only grammar mask and repeat_penalty
 (script-purity enforcement fully off) — for the vanilla-vs-grammar
 comparison per model requested after the Qwen3-14B grammar incompatibility
-was found (see docs/MODEL_BENCHMARK_PLAN.md). Output goes to
+was found (see docs/eval/MODEL_BENCHMARK_PLAN.md). Output goes to
 data/bench_<label>_vanilla.jsonl instead of data/bench_<label>.jsonl so it
 never collides with a grammar-on run of the same label.
 

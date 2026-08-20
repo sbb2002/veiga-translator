@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 A personal-use Chrome extension that captures the audio of a browser tab (e.g. a Japanese YouTube
 live stream), transcribes the Japanese speech, translates it into natural Korean, and displays the
 result in near-real-time (target: 1–2s latency). Everything runs locally — no cloud APIs, no
-multi-user concerns. Full product context and rationale live in `docs/PRD.md` — read it before
+multi-user concerns. Full product context and rationale live in `docs/planning/PRD.md` — read it before
 making architectural decisions.
 
 This is a **new, mostly-unwritten project**. There is no existing code to reverse-engineer yet;
@@ -51,11 +51,13 @@ anything from the parent directory applies here.
 - **`backend/`** — Local Python FastAPI + WebSocket server. Owns the STT and translation pipeline.
   Runs on the user's machine with an NVIDIA GPU (CUDA available) — prefer GPU-accelerated inference
   paths when choosing libraries.
-- **`docs/`** — `PRD.md` (product), `PIPELINE.md` (data-flow/behavior reference), `EVAL.md` +
-  dated `EVAL_REPORT_*.md` (grading methodology and results), `MODEL_BENCHMARK_PLAN.md`
-  (translation-model selection), `IMPROVEMENT_BACKLOG.md`/`IMPROVEMENT_SPECS.md` (known issues
-  and how to implement the fixes), `HANDOFF.md` (session-to-session status + GPU verification
-  checklist).
+- **`docs/`** — split into three subfolders by topic:
+  - `planning/` — `PRD.md` (product), `PIPELINE.md` (data-flow/behavior reference),
+    `IMPROVEMENT_BACKLOG.md`/`IMPROVEMENT_SPECS.md` (known issues and how to implement the fixes).
+  - `eval/` — `EVAL.md` + dated `EVAL_REPORT_*.md` (grading methodology and results),
+    `MODEL_BENCHMARK_PLAN.md` (translation-model selection).
+  - `log/` — `HANDOFF.md` (session-to-session status + GPU verification checklist),
+    dated `SESSION_LOG_*.md` (raw trial-and-error notes).
 
 ### Streaming / sentence-finalization strategy (PRD §7 — important, drives most of the backend design)
 
@@ -108,12 +110,12 @@ Current production pair, selected by benchmark rather than assumption:
   `medium` on 2026-08-19 after live capture showed enough hallucination/garbling (stock-phrase
   hallucinations, mangled repeated-word passages) that the user lost confidence in it — see
   `data/flagged_segments.jsonl` for the labeled examples. Not yet re-run through the formal
-  `docs/EVAL.md` benchmark; treat as a working hypothesis pending that comparison.
+  `docs/eval/EVAL.md` benchmark; treat as a working hypothesis pending that comparison.
 - **Translation**: **gemma-3-12b-it Q4_K_M** served by a llama.cpp server (chosen over Ollama for
   lower single-stream overhead; the OpenAI-compatible endpoint must honor llama.cpp's `grammar`
   field — backend startup probes this via `verify_contract` and warns if it doesn't). Benchmark
-  results and the decision trail: `docs/MODEL_BENCHMARK_PLAN.md`,
-  `docs/EVAL_REPORT_gemma-3-12b-it_2026-08-18.md`. Qwen3-14B scored higher but is on hold due to
+  results and the decision trail: `docs/eval/MODEL_BENCHMARK_PLAN.md`,
+  `docs/eval/EVAL_REPORT_gemma-3-12b-it_2026-08-18.md`. Qwen3-14B scored higher but is on hold due to
   incompatibility with the Korean-only GBNF grammar.
 
 **Design principle (unchanged)**: both engines stay behind swappable interfaces
@@ -122,7 +124,7 @@ class plus config wiring, with no changes to `audio_session.py`.
 
 ## Build order (do not skip ahead)
 
-Per `docs/PRD.md` §8, this is being built as a sequential, independently-verifiable pipeline. Land
+Per `docs/planning/PRD.md` §8, this is being built as a sequential, independently-verifiable pipeline. Land
 and manually verify each stage before starting the next.
 
 **Pipeline plumbing (technical stages, both done):**
@@ -137,7 +139,7 @@ and manually verify each stage before starting the next.
 **Current roadmap (quality/scope phases, in order):**
 
 1. 전사/번역 품질 평가 및 개선 — single-speaker audio (Goal priority §1차 목표). Use
-   `docs/EVAL.md`'s methodology once a reference dataset exists.
+   `docs/eval/EVAL.md`'s methodology once a reference dataset exists.
 2. 다중화자 전사/번역 품질 평가 및 개선 — multi-speaker audio, per-speaker separation (Goal
    priority §2차 목표). Not started; do not design for this while phase 1 is open.
 3. 노래가 나오는 환경에서의 전사/번역 품질 평가 및 개선 — song/music sections (PRD §11 open

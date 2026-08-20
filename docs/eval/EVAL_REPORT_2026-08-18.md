@@ -1,6 +1,6 @@
 # 평가 리포트 — 2026-08-18 (1차 목표: 단일 화자)
 
-방법론은 `docs/EVAL.md` 기준. 데이터셋은 `data/json`/`data/wav`의 게임/여행/음식,요리/일상,소통/패션,뷰티
+방법론은 `docs/eval/EVAL.md` 기준. 데이터셋은 `data/json`/`data/wav`의 게임/여행/음식,요리/일상,소통/패션,뷰티
 5개 카테고리 150클립 중 단일 화자(`li_total_speaker_num == "1"`) 120클립만 사용 —
 2차 목표(다중 화자)는 아직 범위 밖 (`CLAUDE.md` 참고).
 
@@ -41,7 +41,7 @@ int8_float16 vs CPU int8) 차이가 아래 수치를 크게 바꿀 것으로는 
 chrF++ 17은 낮은 편(잘 되는 MT는 보통 40~60+). 라틴 문자 유출 0건은 grammar 제약(코드 내
 `_KOREAN_ONLY_GRAMMAR`)이 의도대로 작동함을 확인.
 
-## 2. 사람(LLM) 채점 — `docs/EVAL.md` §3.2
+## 2. 사람(LLM) 채점 — `docs/eval/EVAL.md` §3.2
 
 전 세그먼트를 Claude가 직접 채점 (`data/eval_set_2026-08-18_graded.jsonl`).
 

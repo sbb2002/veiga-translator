@@ -11,7 +11,7 @@ backend/models/
 *.bin
 *.onnx
 
-# llama-server prebuilt binaries (downloaded, not vendored — see docs/PRD.md)
+# llama-server prebuilt binaries (downloaded, not vendored — see docs/planning/PRD.md)
 llama-server/
 
 # Chrome extension build output (if a bundler is introduced later)

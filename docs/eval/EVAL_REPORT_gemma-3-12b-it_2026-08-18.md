@@ -1,6 +1,6 @@
 # 평가 리포트 — Gemma-3-12b-it 번역 모델 (2026-08-18)
 
-방법론은 `docs/EVAL.md` §3.2/§3.4 기준. 데이터셋·STT 가설(`hyp_ja`)은 `docs/EVAL_REPORT_2026-08-18.md`
+방법론은 `docs/eval/EVAL.md` §3.2/§3.4 기준. 데이터셋·STT 가설(`hyp_ja`)은 `docs/eval/EVAL_REPORT_2026-08-18.md`
 (베이스라인, Qwen2.5-7B-Instruct)와 동일한 120클립(단일 화자, `data/wav` 5개 카테고리)을 재사용했다
 — `data/bench_gemma-3-12b-it.jsonl`의 `hyp_ja`는 "이전 CPU Whisper 평가에서 나온 STT 가설(모든 모델
 벤치마크에서 재사용된 동일 값)"이므로, STT 쪽 변수는 완전히 통제되고 번역 모델(Qwen2.5-7B-Instruct
@@ -24,7 +24,7 @@ Q4_K_M → Gemma-3-12b-it)만 바뀐 순수 A/B 비교다.
 Gemma-3-12b-it은 두 조건 모두에서 **약 4.4~5.6점 높다** — 자동 지표상 개선은 사람 채점 라운드
 이전에 이미 확인된 결과와 일치한다.
 
-## 2. 사람 채점 — `docs/EVAL.md` §3.2
+## 2. 사람 채점 — `docs/eval/EVAL.md` §3.2
 
 전 120세그먼트를 Claude가 직접 `hyp_ko` vs `ko_ref`로 채점 (`data/bench_gemma-3-12b-it_graded.jsonl`).
 
@@ -68,7 +68,7 @@ chrF++가 28.69에 그쳐 여전히 "잘 되는 MT" 기준(40~60+)에 못 미친
 동일 조건에서 번역 모델만 교체했으므로, 이 개선은 순수하게 Gemma-3-12b-it의 번역 품질 우위로
 귀속시킬 수 있다.
 
-### 베이스라인 반복 오류 패턴과의 대조 (`docs/EVAL_REPORT_2026-08-18.md` §4)
+### 베이스라인 반복 오류 패턴과의 대조 (`docs/eval/EVAL_REPORT_2026-08-18.md` §4)
 
 - **패턴 A(STT 무출력, `7112` 영상 저음량)** — STT가 동일하므로 그대로 재현(23건). 이건 번역
   모델 교체로 해결될 수 없는, STT/오디오 전처리 쪽 이슈로 원래 계획대로 남아있다.
@@ -138,4 +138,4 @@ chrF++가 28.69에 그쳐 여전히 "잘 되는 MT" 기준(40~60+)에 못 미친
   hyp_ja는 베이스라인과 동일한 STT 가설 재사용)
 - `data/bench_gemma-3-12b-it_graded.jsonl` — 사람(LLM) 채점 결과, `eval_set_2026-08-18_graded.jsonl`과
   동일 스키마
-- `docs/EVAL_REPORT_2026-08-18.md` — 베이스라인(Qwen2.5-7B-Instruct) 리포트
+- `docs/eval/EVAL_REPORT_2026-08-18.md` — 베이스라인(Qwen2.5-7B-Instruct) 리포트

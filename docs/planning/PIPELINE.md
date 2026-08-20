@@ -30,12 +30,12 @@ flowchart TD
 - 회색(P4) = partial 표시, 초록(F4) = final 표시.
 - partial 트랙은 메인 오디오 처리 루프(`_process_frame`) 안에서 `await`로 실행된다 —
   이벤트 루프는 막지 않지만 **오디오 드레인(`feed_audio`)은 partial의 STT+번역이 끝날
-  때까지 대기**한다. 백그라운드 분리는 `docs/IMPROVEMENT_SPECS.md` Q2로 계획됨.
+  때까지 대기**한다. 백그라운드 분리는 `docs/planning/IMPROVEMENT_SPECS.md` Q2로 계획됨.
 - final 트랙은 별도 `asyncio.Queue` + 백그라운드 워커 태스크(`_finalize_worker`)로 분리되어,
   느린 beam=5 STT + LLM 호출이 오디오 수신 경로를 막지 않는다. 발화 순서는 큐 순서로 보장된다.
 - 예외 경로(다이어그램에는 없음): STT/번역/이벤트 전송이 실패해도 세션과 워커는 죽지 않는다
   — 해당 utterance의 마지막 partial 전사/번역으로 폴백한 final을 방출하고 계속 진행한다
-  (`docs/IMPROVEMENT_SPECS.md` R1).
+  (`docs/planning/IMPROVEMENT_SPECS.md` R1).
 - 캡처 오디오는 offscreen.js가 **16kHz `AudioContext`**로 받는다 — 크롬이 내장
   안티앨리어싱 리샘플러로 변환해주므로 확장 쪽 수동 리샘플 없이 PCM16 변환만 해서 보낸다.
 - WebSocket 수명주기: 캡처 중 연결이 끊기면 offscreen.js가 백오프(1s→최대 10s)로 자동

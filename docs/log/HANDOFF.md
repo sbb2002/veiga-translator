@@ -1,8 +1,47 @@
-# 작업 핸드오프 (2026-08-20 기준, UI 단계 완료 후 갱신)
+# 작업 핸드오프 (2026-08-22 기준 갱신)
 
 세션 간 인수인계 문서. 다른 로컬 세션(또는 다른 머신)에서 이어 작업할 때 여기서부터 시작할 것.
-**이번 갱신에서 가장 중요한 사실: `CLAUDE.md` 로드맵 4번(UI 설계 및 구현)이 완료됐다.**
-아래 "브랜치 지도"와 "남은 작업"이 지금 상태를 가장 정확히 반영한다.
+**이번 갱신에서 가장 중요한 사실**: STT가 `large-v3`에서 `large-v3-turbo`로 바뀌었고(정식
+정량/정성 벤치마크 근거 있음), 번역 모델 벤치마크 기록도 `research/`로 이관됐고, 로컬 서버
+실행 방식이 콘솔 창 2개 → 트레이 아이콘 1개로 바뀌었다. `CLAUDE.md` 로드맵 4번(UI 설계 및
+구현)은 2026-08-20에 이미 완료됨. 아래 "2026-08-22 세션에서 바뀐 것", "브랜치 지도", "남은
+작업"이 지금 상태를 가장 정확히 반영한다.
+
+## 2026-08-22 세션에서 바뀐 것 — 요약
+
+**1) STT 모델을 `large-v3-turbo`로 교체 (정식 벤치마크 근거)**
+- `research/topic/20260822_stt_transcription_eval/`에 `large-v3` vs
+  `kotoba-tech/kotoba-whisper-v2.0-faster` vs `large-v3-turbo` 3-way 정량(CER/chrF++/
+  BLEU/ROUGE-L)+정성(LLM 채점) 비교를 처음으로 정식 실행(`data/wav`+`data/json` 150쌍,
+  앱 파이프라인 미경유, STT 모델 단독 호출). large-v3-turbo가 품질은 large-v3와 사실상
+  동급이면서 처리 시간은 1/11.4 — `backend/config.py`의 `WHISPER_MODEL_SIZE`에 반영,
+  `CLAUDE.md`/`README.md`도 갱신.
+- 같은 김에 `docs/eval/`에만 있던 기존 번역 모델 벤치마크(Qwen2.5-7B 베이스라인 vs
+  Qwen3-14B vs Gemma-3-12b-it vs EXAONE-3.5-7.8B, 2026-08-18 작업분)도 재실험 없이
+  `research/topic/20260818_translation_model_benchmark/`로 소급 이관해 같은 형식으로
+  정리. 결론: Qwen3-14B가 순수 품질 1위지만 GBNF grammar와 비호환이라 미채택 상태 유지,
+  32B급 후보(Qwen3-32B 등)는 여전히 미벤치마크. **사용자가 두 대안 모두 명시적으로
+  보류** — 다음은 모델 교체가 아니라 파라미터/프롬프트 튜닝(`docs/planning/
+  IMPROVEMENT_BACKLOG.md` T2/T3/T4) 차례.
+- `research/README.md`에 이 저장소의 research 폴더 컨벤션(주제별 폴더 + 5절 보고서 양식,
+  `bandori-playlist-maker`의 research 브랜치 기록법 벤치마크)이 새로 정의됨.
+
+**2) `start.cmd` — 콘솔 창 2개 → 트레이 아이콘 1개**
+- `tray_launcher.ps1`이 llama-server + uvicorn backend를 창 없이 띄우고 하나의
+  NotifyIcon(우클릭: 로그 열기/종료)으로 묶어서 관리.
+- `start.cmd`는 이제 `wscript.exe`로 `tray_launcher.vbs`를 거쳐 위 스크립트를 실행 —
+  cmd의 `start` + `powershell -WindowStyle Hidden` 조합이 이 머신에서 자식 프로세스를
+  몇 초~수십 초 안에 조용히 죽이는 문제가 있어서(원인 미확정, VBScript의
+  `WScript.Shell.Run`으로 우회) 이렇게 됨. cmd 배치파일에 non-ASCII 문자(예: em-dash)를
+  쓰면 명령어 파싱이 깨지는 것도 이번에 확인(`'M'은 인식할 수 없는 명령입니다` 류 에러) —
+  `.cmd` 파일은 항상 순수 ASCII로 유지할 것.
+- `tray_launcher.ps1`은 한글 텍스트(트레이 메뉴)를 포함하므로 **UTF-8 BOM 필수**
+  (Windows PowerShell 5.1이 BOM 없으면 시스템 코드페이지로 오독해 한글이 깨짐).
+
+**3) 오버레이 컨텍스트 요약에 marquee 효과**
+- `extension/popup.js`/`popup.html` — 요약 텍스트가 헤더 너비를 넘치면(기존엔 ellipsis로
+  잘림) 텍스트를 복제한 트랙을 만들어 왼쪽으로 무한 스크롤(seamless loop, `-50%`
+  transform). 안 넘칠 땐 기존과 동일.
 
 ## 브랜치 지도
 
@@ -108,8 +147,13 @@ main                     — 오래됨, 최근 작업 미반영 (병합 안 함,
 
 1. **README.md 보강** — 오늘 1차로 갱신했지만(파이프라인 다이어그램, 사양표, 사용법),
    사용자가 내용을 직접 더 보강할 예정 + 실제 동작하는 모습을 GIF로 추가할 계획.
-2. **정식 품질 평가** — 지금까지는 전부 라이브 정성 평가였음. 정량적 평가 예정
-   (`docs/eval/EVAL.md` 방법론, large-v3는 아직 정식 벤치마크 안 돌림).
+2. **정식 품질 평가** — STT는 2026-08-22에 처음으로 정량/정성 벤치마크 완료
+   (`research/topic/20260822_stt_transcription_eval/`, large-v3-turbo 채택). 번역은
+   2026-08-18 벤치마크(`research/topic/20260818_translation_model_benchmark/`)로 이미
+   gemma-3-12b-it 채택까지 완료된 상태 — 모델 교체 축은 사용자가 당분간 보류로 확정.
+   **다음은 파라미터/프롬프트 튜닝**(`docs/planning/IMPROVEMENT_BACKLOG.md` T2/T3/T4 —
+   예외 노트 데이터 파일화, `repeat_penalty` on/off A/B, partial 문맥 등), 기존
+   `data/eval_set_2026-08-18.jsonl`(120클립, normal/hard 태그)로 A/B 재사용.
 3. **안정성 검증** — 계속 실사용하면서 모니터링 필요. 정상 구동 상태로 1시간 넘게
    틀어봤을 때 안정성 이슈는 아직 발견 안 됨(2026-08-20 확인). 버그가 아니라 "장시간
    구동 안정성"이 관찰 대상.
@@ -127,6 +171,9 @@ main                     — 오래됨, 최근 작업 미반영 (병합 안 함,
    코드가 있음. 삭제는 보류 중, 다음에 다시 판단.
 
 ## 실행 방법 (공통)
+
+가장 간단한 방법: 저장소 루트의 `start.cmd`를 더블클릭 — llama-server + backend가 콘솔 창
+없이 트레이 아이콘 하나로 뜬다(우클릭: 로그 열기/종료). 수동으로 띄우려면:
 
 ```
 # 저장소 루트에서

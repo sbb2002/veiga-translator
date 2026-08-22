@@ -418,6 +418,30 @@
     }
     .context-summary:empty { display: none; }
 
+    /* Marquee mode (popup.js toggles this when the summary overflows the
+       header width): two identical text copies back-to-back, scrolled left
+       by exactly one copy's width (-50%) so the loop is seamless. */
+    .context-summary-track {
+      display: inline-flex;
+      width: max-content;
+    }
+    .context-summary-track span {
+      padding-right: 40px;
+      white-space: nowrap;
+    }
+    .context-summary.marquee {
+      text-overflow: clip;
+    }
+    .context-summary.marquee .context-summary-track {
+      animation-name: context-summary-scroll;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+    @keyframes context-summary-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
     .volume-bar-track {
       flex: none;
       height: 3px;

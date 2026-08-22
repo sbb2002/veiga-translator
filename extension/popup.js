@@ -303,9 +303,35 @@ chrome.runtime.onMessage.addListener((message) => {
 // fixed width ellipsis-truncates it.
 const contextSummaryEl = document.getElementById("contextSummary");
 
+const CONTEXT_SUMMARY_MARQUEE_PX_PER_SECOND = 40;
+
 function renderContextSummary(text) {
-  contextSummaryEl.textContent = text ?? "";
-  contextSummaryEl.title = text ?? "";
+  const value = text ?? "";
+  contextSummaryEl.title = value;
+  contextSummaryEl.classList.remove("marquee");
+  contextSummaryEl.textContent = value;
+  if (!value) return;
+
+  // Measure natural overflow with the plain (non-marquee) text first — only
+  // build the scrolling track if it's actually too long for the header.
+  requestAnimationFrame(() => {
+    const overflowPx = contextSummaryEl.scrollWidth - contextSummaryEl.clientWidth;
+    if (overflowPx <= 0) return;
+
+    const textWidth = contextSummaryEl.scrollWidth;
+    contextSummaryEl.textContent = "";
+    const track = document.createElement("div");
+    track.className = "context-summary-track";
+    const original = document.createElement("span");
+    original.textContent = value;
+    const loopCopy = document.createElement("span");
+    loopCopy.textContent = value;
+    loopCopy.setAttribute("aria-hidden", "true");
+    track.append(original, loopCopy);
+    contextSummaryEl.append(track);
+    contextSummaryEl.classList.add("marquee");
+    track.style.animationDuration = `${textWidth / CONTEXT_SUMMARY_MARQUEE_PX_PER_SECOND}s`;
+  });
 }
 
 chrome.runtime.onMessage.addListener((message) => {

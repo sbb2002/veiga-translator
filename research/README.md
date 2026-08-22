@@ -13,7 +13,7 @@
 | [`topic/20260818_translation_model_benchmark/`](topic/20260818_translation_model_benchmark/README.md) | 번역 모델 벤치마크(Qwen2.5-7B 베이스라인 vs Qwen3-14B vs Gemma-3-12b-it vs EXAONE-3.5-7.8B) — `docs/eval/`에서 소급 이관 | **완료** — Gemma-3-12b-it 채택 |
 | [`topic/20260822_stt_transcription_eval/`](topic/20260822_stt_transcription_eval/README.md) | 전사(STT) 품질 평가 — large-v3 vs kotoba-whisper vs large-v3-turbo 3-way 비교 | **완료** — large-v3-turbo 채택, 앱 반영 완료 |
 
-각 폴더의 배경·방법·결과는 폴더 안의 `README.md`를 참조.
+각 폴더의 배경·방법·결과는 폴더 안의 `README.md`를 참조. 새 주제를 시작하면 위 표에 행을 추가한다.
 
 ## 주제 폴더 표준 구조
 

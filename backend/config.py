@@ -15,10 +15,20 @@ SAMPLE_RATE = 16000  # must match TARGET_SAMPLE_RATE in extension/offscreen.js
 # in the transcript, not the translation). "medium" then showed enough
 # hallucination/garbling on live capture (2026-08-19, data/flagged_segments.jsonl
 # — stock-phrase hallucinations, mangled repeated-word passages, oversized
-# run-on segments) that the user lost confidence in it; moved to large-v3.
+# run-on segments) that the user lost confidence in it; moved to large-v3,
+# which stood as an untested working hypothesis until the first formal
+# quantitative benchmark (research/topic/20260822_stt_transcription_eval/
+# report/02-largev3-vs-kotoba-whisper.md, 150-segment CER/chrF++/BLEU/ROUGE-L
+# + LLM-judged qualitative pass, no app-level gating): large-v3-turbo scored
+# within noise of large-v3 on every metric (CER 0.292 vs 0.289) while running
+# ~11.4x faster (RTF 0.068 vs 0.753) — moved to large-v3-turbo 2026-08-22 to
+# ease GPU contention with concurrent GPU use (e.g. gaming) per the user's
+# real-world complaint. "turbo" is faster-whisper's built-in alias for the
+# mobiuslabsgmbh/faster-whisper-large-v3-turbo CTranslate2 conversion (same
+# encoder as large-v3, fewer decoder layers).
 # int8_float16 (quantized) instead of plain float16: keeps VRAM/compute down
 # per the "don't hog the GPU" constraint while accelerating inference.
-WHISPER_MODEL_SIZE = "large-v3"
+WHISPER_MODEL_SIZE = "large-v3-turbo"
 WHISPER_DEVICE = "cuda"
 WHISPER_COMPUTE_TYPE = "int8_float16"
 WHISPER_LANGUAGE = "ja"

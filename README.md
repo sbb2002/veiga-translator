@@ -30,7 +30,7 @@ graph LR
 | Python   | 3.10+                              | 3.10+                                |
 
 GPU VRAM이 16GB보다 많이 낮으면 지연이 늘어날 수 있습니다 — 그럴 땐 STT 모델을
-`large-v3`에서 `medium`으로 낮추는 것도 옵션입니다 (`backend/config.py`).
+`large-v3-turbo`에서 `medium`으로 낮추는 것도 옵션입니다 (`backend/config.py`).
 
 ## 설치
 

@@ -106,11 +106,17 @@ boundary instead of the sentence break the speaker actually made.
 
 Current production pair, selected by benchmark rather than assumption:
 
-- **STT**: faster-whisper `large-v3` (CTranslate2, CUDA, int8_float16) — `backend/stt/`. Moved off
-  `medium` on 2026-08-19 after live capture showed enough hallucination/garbling (stock-phrase
+- **STT**: faster-whisper `large-v3-turbo` (CTranslate2, CUDA, int8_float16) — `backend/stt/`. Moved
+  off `medium` on 2026-08-19 after live capture showed enough hallucination/garbling (stock-phrase
   hallucinations, mangled repeated-word passages) that the user lost confidence in it — see
-  `data/flagged_segments.jsonl` for the labeled examples. Not yet re-run through the formal
-  `docs/eval/EVAL.md` benchmark; treat as a working hypothesis pending that comparison.
+  `data/flagged_segments.jsonl` for the labeled examples — landing on `large-v3` as an untested
+  working hypothesis. First formal quantitative benchmark (2026-08-22,
+  `research/topic/20260822_stt_transcription_eval/report/02-largev3-vs-kotoba-whisper.md` — 150-segment
+  CER/chrF++/BLEU/ROUGE-L + LLM-judged qualitative pass, 3-way vs `large-v3` and
+  `kotoba-tech/kotoba-whisper-v2.0-faster`) found `large-v3-turbo` within noise of `large-v3` on every
+  quality metric (CER 0.292 vs 0.289) while running ~11.4x faster (RTF 0.068 vs 0.753) — moved to
+  `large-v3-turbo` to ease GPU contention with concurrent GPU use (e.g. gaming), per the user's
+  real-world complaint that motivated this benchmark.
 - **Translation**: **gemma-3-12b-it Q4_K_M** served by a llama.cpp server (chosen over Ollama for
   lower single-stream overhead; the OpenAI-compatible endpoint must honor llama.cpp's `grammar`
   field — backend startup probes this via `verify_contract` and warns if it doesn't). Benchmark

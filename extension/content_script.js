@@ -353,6 +353,7 @@
           data?.microformat?.playerMicroformatRenderer?.liveBroadcastDetails;
         return {
           channelName: vd.author,
+          url: location.href,
           videoTitle: vd.title ?? null,
           videoId: vd.videoId ?? null,
           isLive: vd.isLiveContent ?? null,
@@ -379,6 +380,7 @@
       if (text) {
         return {
           channelName: text,
+          url: location.href,
           videoTitle: document.title.replace(/\s*-\s*YouTube$/, ""),
           videoId: null,
           isLive: null,
@@ -399,11 +401,40 @@
     };
   }
 
+  // Re-scrape on in-page navigation (2026-08-25): YouTube is an SPA, so
+  // switching to the next video/live in the same tab never reloads this
+  // content script — the one-shot scrape at capture start would otherwise
+  // keep reporting the *previous* video's channel/title forever (deferred
+  // at the time metadata scraping was first built; now addressed). YouTube
+  // fires 'yt-navigate-finish' on `document` after its client-side route
+  // change completes (the player's own data, e.g. ytInitialPlayerResponse,
+  // is guaranteed updated by then — unlike a generic mutation observer
+  // racing the update). background.js relays this to offscreen.js and the
+  // backend only while a capture session is actually running for this tab;
+  // otherwise it's a harmless no-op message with nothing listening.
+  let lastMetadataVideoId = null;
+
+  function maybeReportMetadataChange() {
+    const metadata = scrapeVideoMetadata();
+    // Don't clobber a good known state with nulls — a transient navigation
+    // to a non-video page (channel page, homepage) or a same-page mutation
+    // that doesn't actually change video shouldn't overwrite what capture
+    // is actually hearing right now.
+    if (!metadata.channelName) return;
+    if (metadata.videoId && metadata.videoId === lastMetadataVideoId) return;
+    if (metadata.videoId) lastMetadataVideoId = metadata.videoId;
+    chrome.runtime.sendMessage({ type: "VIDEO_METADATA_UPDATED", metadata }).catch(() => {});
+  }
+
+  document.addEventListener("yt-navigate-finish", maybeReportMetadataChange);
+
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (message?.type === "SHOW_OVERLAY" && message.tabId != null) {
       buildPanel(message.tabId);
     } else if (message?.type === "SCRAPE_METADATA") {
-      sendResponse(scrapeVideoMetadata());
+      const metadata = scrapeVideoMetadata();
+      if (metadata.videoId) lastMetadataVideoId = metadata.videoId;
+      sendResponse(metadata);
     }
   });
 })();

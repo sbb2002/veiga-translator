@@ -209,6 +209,32 @@ async def ws_audio(websocket: WebSocket) -> None:
                 if control.get("type") == "start_session":
                     session_log.start(control)
                     session.set_broadcaster_hint(control.get("channel_name"))
+                if control.get("type") == "metadata_update":
+                    # Mid-session video switch (2026-08-25) — extension's
+                    # content_script.js detected a YouTube SPA navigation to
+                    # a new video/live within the same tab (see
+                    # offscreen.js). Log it as its own event (so a later
+                    # review sees exactly when/what changed, distinct from
+                    # the original session_start header) and refresh the
+                    # [BROADCASTER] hint for the new streamer.
+                    logger.info(
+                        "session metadata updated: channel=%r video_title=%r",
+                        control.get("channel_name"),
+                        control.get("video_title"),
+                    )
+                    session_log.log_event(
+                        {
+                            "type": "metadata_update",
+                            "title": control.get("title"),
+                            "url": control.get("url"),
+                            "channel_name": control.get("channel_name"),
+                            "video_title": control.get("video_title"),
+                            "video_id": control.get("video_id"),
+                            "is_live": control.get("is_live"),
+                            "stream_started_at": control.get("stream_started_at"),
+                        }
+                    )
+                    session.set_broadcaster_hint(control.get("channel_name"))
                 if control.get("type") == "stop_session":
                     logger.info("Client requested stop_session")
                     break

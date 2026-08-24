@@ -323,6 +323,39 @@ chrome.runtime.onMessage.addListener((message) => {
   } else if (message?.type === "RESUME_CAPTURE") {
     const session = sessions.get(message.tabId);
     if (session) session.paused = false;
+  } else if (message?.type === "METADATA_UPDATE") {
+    // Mid-session video switch (2026-08-25) — background.js relays this
+    // from content_script.js's 'yt-navigate-finish' listener. Update the
+    // live session.meta (so a *future* reconnect's start_session also
+    // carries the new video) and, if the websocket is already open, tell
+    // the backend right now rather than waiting for one.
+    const session = sessions.get(message.tabId);
+    if (session) {
+      session.meta = {
+        ...session.meta,
+        title: message.title ?? session.meta?.title,
+        url: message.url ?? session.meta?.url,
+        channelName: message.channelName ?? null,
+        videoTitle: message.videoTitle ?? null,
+        videoId: message.videoId ?? null,
+        isLive: message.isLive ?? null,
+        streamStartedAt: message.streamStartedAt ?? null,
+      };
+      if (session.ws && session.ws.readyState === WebSocket.OPEN) {
+        session.ws.send(
+          JSON.stringify({
+            type: "metadata_update",
+            title: session.meta.title ?? null,
+            url: session.meta.url ?? null,
+            channel_name: session.meta.channelName,
+            video_title: session.meta.videoTitle,
+            video_id: session.meta.videoId,
+            is_live: session.meta.isLive,
+            stream_started_at: session.meta.streamStartedAt,
+          })
+        );
+      }
+    }
   } else if (message?.type === "FLAG_SEGMENT") {
     const session = sessions.get(message.tabId);
     if (session?.ws && session.ws.readyState === WebSocket.OPEN) {

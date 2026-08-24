@@ -95,6 +95,55 @@ async function scrapeMetadata(tabId) {
   }
 }
 
+// Mid-session metadata refresh (2026-08-25): content_script.js's
+// 'yt-navigate-finish' listener reports here when the tab switches to a new
+// video/live within the same SPA session (e.g. the previous stream ended
+// and a new one started). Only meaningful while a capture is actually
+// running for this tab — sender.tab.id lets us key off that without the
+// content script needing to know or pass its own tabId.
+async function updateVideoMetadata(tabId, metadata) {
+  if (!metadata?.channelName) return;
+  const current = await getCaptureState(tabId);
+  if (!current.active) return; // no capture running here — nothing to update
+  const next = {
+    ...current,
+    title: metadata.videoTitle ?? current.title,
+    url: metadata.url ?? current.url,
+    channelName: metadata.channelName ?? null,
+    videoTitle: metadata.videoTitle ?? null,
+    streamStartedAt: metadata.streamStartedAt ?? null,
+  };
+  await setCaptureState(tabId, next);
+  // offscreen.js updates its live session.meta and forwards a
+  // "metadata_update" control message to the backend over the already-open
+  // websocket (see there) — new [BROADCASTER] hint, new session-log entry.
+  await chrome.runtime
+    .sendMessage({
+      type: "METADATA_UPDATE",
+      tabId,
+      channelName: metadata.channelName ?? null,
+      videoTitle: metadata.videoTitle ?? null,
+      videoId: metadata.videoId ?? null,
+      isLive: metadata.isLive ?? null,
+      streamStartedAt: metadata.streamStartedAt ?? null,
+      title: next.title,
+      url: next.url,
+    })
+    .catch(() => {});
+  // popup.js's overlay (may be a different iframe instance than the one
+  // that was open at capture start) picks this up live for the debug
+  // metadata line — same broadcast pattern as CONTEXT_SUMMARY/VOLUME_LEVEL.
+  await chrome.runtime
+    .sendMessage({
+      type: "VIDEO_META_UPDATED",
+      tabId,
+      channelName: metadata.channelName ?? null,
+      videoTitle: metadata.videoTitle ?? null,
+      streamStartedAt: metadata.streamStartedAt ?? null,
+    })
+    .catch(() => {});
+}
+
 async function startCapture(tabId, tab) {
   console.log("[background] startCapture: begin, tabId=", tabId);
   const current = await getCaptureState(tabId);
@@ -275,7 +324,15 @@ chrome.tabs.onRemoved.addListener(async (tabId) => {
   await clearCaptureState(tabId);
 });
 
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message?.type === "VIDEO_METADATA_UPDATED") {
+    // From content_script.js's 'yt-navigate-finish' listener — sender.tab.id
+    // is this tab's own id, so the content script never needs to embed one.
+    const tabId = sender?.tab?.id;
+    if (tabId != null) updateVideoMetadata(tabId, message.metadata).catch(() => {});
+    return false;
+  }
+
   if (message?.type === "START_CAPTURE") {
     // popup.js sends this from a click inside the action popup — the
     // gesture Chrome accepts for activeTab/tabCapture (see the comment

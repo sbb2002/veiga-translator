@@ -442,6 +442,20 @@ function renderContextSummary(text) {
   });
 }
 
+// Mid-session video switch (2026-08-25) — background.js's updateVideoMetadata
+// broadcasts this live so an already-open overlay reflects the new
+// channel/title immediately instead of waiting for the next refreshState().
+chrome.runtime.onMessage.addListener((message) => {
+  if (message?.type !== "VIDEO_META_UPDATED") return;
+  if (message.tabId !== tabId) return;
+  lastVideoMeta = {
+    channelName: message.channelName ?? null,
+    videoTitle: message.videoTitle ?? null,
+    streamStartedAt: message.streamStartedAt ?? null,
+  };
+  renderVideoMeta(lastVideoMeta);
+});
+
 chrome.runtime.onMessage.addListener((message) => {
   if (message?.type !== "CONTEXT_SUMMARY") return;
   if (message.tabId !== tabId) return; // Ignore messages from other tabs

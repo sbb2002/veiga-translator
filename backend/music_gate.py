@@ -63,12 +63,30 @@ class MusicGate:
         self._envelope.append(float(np.sqrt(np.mean(np.square(frame)))))
 
     def is_music_dominant(self) -> bool:
-        """True only when there's positive evidence this stretch is music,
-        not speech — defaults to False (trust VAD) whenever there isn't
-        enough context yet or the signal is too quiet to judge, matching
-        this codebase's general bias toward not dropping real speech on an
-        ambiguous read (see config.py's threshold comments)."""
-        if not config.MUSIC_GATE_ENABLED or len(self._envelope) < self._min_samples:
+        """VAD-gating entry point — respects config.MUSIC_GATE_ENABLED (off
+        by default, see its comment: this heuristic once dropped genuine
+        speech live). True only when there's positive evidence this stretch
+        is music, not speech — defaults to False (trust VAD) whenever there
+        isn't enough context yet or the signal is too quiet to judge,
+        matching this codebase's general bias toward not dropping real
+        speech on an ambiguous read (see config.py's threshold comments)."""
+        if not config.MUSIC_GATE_ENABLED:
+            return False
+        return self._compute_music_dominant()
+
+    def music_suspected(self) -> bool:
+        """Same modulation-spectrum read as is_music_dominant(), but ALWAYS
+        active regardless of config.MUSIC_GATE_ENABLED (2026-08-25) — for
+        display-only use (e.g. tagging a finalized segment so the UI can
+        show a "🎵 music" placeholder instead of a confidently-wrong
+        translation). Safe to bypass the flag here specifically because
+        nothing downstream of this call can suppress capture or drop real
+        speech — worst case is a wrong placeholder shown over genuine short
+        speech, not lost audio."""
+        return self._compute_music_dominant()
+
+    def _compute_music_dominant(self) -> bool:
+        if len(self._envelope) < self._min_samples:
             return False
         env = np.array(self._envelope, dtype=np.float32)
         if env.max() < config.AUDIO_RMS_SILENCE_FLOOR:
@@ -98,4 +116,10 @@ class MusicGate:
         peak = spectrum[band_mask].max()
         background = np.median(ac_spectrum)
         prominence = peak / (background + 1e-9)
-        return prominence < self._ratio_threshold
+        # bool(...): numpy comparisons return numpy.bool_, not a plain
+        # Python bool — json.dumps() rejects numpy.bool_ outright. That bug
+        # silently broke every "final" event's websocket send once this
+        # method actually reached this line (SessionLogger.log_event's
+        # json.dumps ran before send_text, so the whole event — not just
+        # the log write — was dropped; see main.py's send_event ordering).
+        return bool(prominence < self._ratio_threshold)

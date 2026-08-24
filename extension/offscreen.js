@@ -55,6 +55,7 @@ function newSessionState() {
     reconnectTimer: null,
     wsForceCloseTimer: null,
     lastVolumeSentAt: 0,
+    meta: null,
   };
 }
 
@@ -88,7 +89,25 @@ function connectWebSocket(tabId, session) {
 
   ws.onopen = () => {
     session.reconnectDelayMs = 1000; // R2: reset backoff on successful connection
-    ws.send(JSON.stringify({ type: "start_session", sample_rate: TARGET_SAMPLE_RATE }));
+    // meta (title/url/startedAt) rides along here so the backend can open a
+    // per-session log file with real metadata (see main.py's "start_session"
+    // handling) — a reconnect (backend restart mid-capture) resends the same
+    // meta, which just opens a fresh log file for the new leg of the session.
+    ws.send(
+      JSON.stringify({
+        type: "start_session",
+        sample_rate: TARGET_SAMPLE_RATE,
+        title: session.meta?.title ?? null,
+        url: session.meta?.url ?? null,
+        started_at: session.meta?.startedAt ?? null,
+        tab_id: tabId,
+        channel_name: session.meta?.channelName ?? null,
+        video_title: session.meta?.videoTitle ?? null,
+        video_id: session.meta?.videoId ?? null,
+        is_live: session.meta?.isLive ?? null,
+        stream_started_at: session.meta?.streamStartedAt ?? null,
+      })
+    );
   };
 
   ws.onclose = (event) => {
@@ -141,7 +160,7 @@ function connectWebSocket(tabId, session) {
   };
 }
 
-async function startCapture(tabId, streamId) {
+async function startCapture(tabId, streamId, meta) {
   if (sessions.has(tabId)) {
     // Already capturing this tab — background.js is supposed to guard
     // against this (see its captureSessions persistence note), but this
@@ -153,6 +172,7 @@ async function startCapture(tabId, streamId) {
   }
 
   const session = newSessionState();
+  session.meta = meta ?? null;
   sessions.set(tabId, session);
 
   session.mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -280,7 +300,16 @@ function stopCapture(tabId) {
 
 chrome.runtime.onMessage.addListener((message) => {
   if (message?.type === "INIT_CAPTURE") {
-    startCapture(message.tabId, message.streamId).catch((err) => {
+    startCapture(message.tabId, message.streamId, {
+      title: message.title,
+      url: message.url,
+      startedAt: message.startedAt,
+      channelName: message.channelName,
+      videoTitle: message.videoTitle,
+      videoId: message.videoId,
+      isLive: message.isLive,
+      streamStartedAt: message.streamStartedAt,
+    }).catch((err) => {
       console.error(`[offscreen] startCapture failed (tab ${message.tabId})`, err);
     });
   } else if (message?.type === "STOP_CAPTURE") {

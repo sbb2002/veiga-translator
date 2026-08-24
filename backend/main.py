@@ -17,6 +17,7 @@ from __future__ import annotations
 import json
 import logging
 import time
+import uuid
 from pathlib import Path
 
 from fastapi import FastAPI, WebSocket
@@ -37,6 +38,79 @@ app = FastAPI(title="live-translator backend")
 # one JSON object per line, so a live-capture review pass can grep/jq this
 # alongside the eval-set jsonl files under data/.
 FLAGGED_SEGMENTS_LOG = Path("data/flagged_segments.jsonl")
+
+# Per-session transcript/translation logs (2026-08-24): one jsonl file per
+# capture session, written alongside FLAGGED_SEGMENTS_LOG above but covering
+# the whole session rather than just user-flagged segments — nothing durable
+# survived a session before this (see chrome.storage.session's docstring in
+# extension/background.js: cleared on browser close, never exported).
+SESSION_LOGS_DIR = Path("data/sessions")
+
+
+class SessionLogger:
+    """Writes one jsonl file per capture session: a "session_start" header
+    line carrying the captured tab's metadata (title/url/tab_id, plus the
+    extension-side start timestamp), followed by one line per event sent to
+    the client (partial/final/context_summary/chat_translation), each
+    stamped with wall-clock time. Opened lazily on the "start_session"
+    control message (that's the first point metadata is available — see
+    offscreen.js's connectWebSocket) rather than at websocket-accept time."""
+
+    def __init__(self) -> None:
+        self._file = None  # type: ignore[assignment]
+
+    def start(self, control: dict) -> None:
+        SESSION_LOGS_DIR.mkdir(parents=True, exist_ok=True)
+        now = time.time()
+        stamp = time.strftime("%Y%m%d_%H%M%S", time.localtime(now))
+        tab_id = control.get("tab_id")
+        suffix = uuid.uuid4().hex[:6]
+        tab_part = f"tab{tab_id}" if tab_id is not None else "tab"
+        path = SESSION_LOGS_DIR / f"{stamp}_{tab_part}_{suffix}.jsonl"
+        self._file = path.open("a", encoding="utf-8")
+        self._write(
+            {
+                "type": "session_start",
+                "timestamp": now,
+                "title": control.get("title"),
+                "url": control.get("url"),
+                "tab_id": tab_id,
+                # Client-side Date.now() (ms) when capture started — distinct
+                # from `timestamp` above, which is when this log file/backend
+                # session actually opened (can lag slightly behind).
+                "client_started_at_ms": control.get("started_at"),
+                "sample_rate": control.get("sample_rate"),
+                # Scraped by extension/content_script.js from the YouTube
+                # page's own ytInitialPlayerResponse (2026-08-25) — richer
+                # than title/url alone, and channel_name doubles as the
+                # AudioSession broadcaster-hint (see main.py's start_session
+                # handling below).
+                "channel_name": control.get("channel_name"),
+                "video_title": control.get("video_title"),
+                "video_id": control.get("video_id"),
+                "is_live": control.get("is_live"),
+                "stream_started_at": control.get("stream_started_at"),
+            }
+        )
+        logger.info("session log started: %s", path)
+
+    def log_event(self, event: dict) -> None:
+        if self._file is None:
+            return
+        self._write({"timestamp": time.time(), **event})
+
+    def _write(self, entry: dict) -> None:
+        if self._file is None:
+            return
+        self._file.write(json.dumps(entry, ensure_ascii=False) + "\n")
+        self._file.flush()
+
+    def close(self) -> None:
+        if self._file is None:
+            return
+        self._write({"type": "session_end", "timestamp": time.time()})
+        self._file.close()
+        self._file = None
 
 
 def _append_flag(control: dict) -> None:
@@ -100,8 +174,10 @@ async def shutdown() -> None:
 async def ws_audio(websocket: WebSocket) -> None:
     await websocket.accept()
     logger.info("Client connected")
+    session_log = SessionLogger()
 
     async def send_event(event: dict) -> None:
+        session_log.log_event(event)
         await websocket.send_text(json.dumps(event, ensure_ascii=False))
 
     assert _stt_engine is not None, "STT engine not initialized — startup event didn't run?"
@@ -130,6 +206,9 @@ async def ws_audio(websocket: WebSocket) -> None:
                     control = json.loads(message["text"])
                 except json.JSONDecodeError:
                     continue
+                if control.get("type") == "start_session":
+                    session_log.start(control)
+                    session.set_broadcaster_hint(control.get("channel_name"))
                 if control.get("type") == "stop_session":
                     logger.info("Client requested stop_session")
                     break
@@ -160,3 +239,4 @@ async def ws_audio(websocket: WebSocket) -> None:
                     )
     finally:
         await session.close()
+        session_log.close()

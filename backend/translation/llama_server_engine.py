@@ -228,6 +228,7 @@ class LlamaServerEngine:
         context: str | None = None,
         context_translation: str | None = None,
         glossary_hint: str | None = None,
+        broadcaster_hint: str | None = None,
         use_grammar: bool = True,
         use_repeat_penalty: bool = True,
         allowed_literals: tuple[str, ...] = (),
@@ -243,6 +244,8 @@ class LlamaServerEngine:
         sections = []
         if glossary_hint:
             sections.append(f"[GLOSSARY]\n{glossary_hint}")
+        if broadcaster_hint:
+            sections.append(f"[BROADCASTER]\n{broadcaster_hint}")
         if context:
             sections.append(f"[PREVIOUS SENTENCE]\n{context}")
             if context_translation:

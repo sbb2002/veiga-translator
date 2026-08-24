@@ -42,6 +42,7 @@ _FORWARD_NOTE_KEYS = (
     "connotation",
     "no_english",
     "glossary_section",
+    "broadcaster",
 )
 
 FAST_SYSTEM_PROMPT = _assemble(

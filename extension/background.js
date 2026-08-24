@@ -74,6 +74,27 @@ async function ensureOffscreenDocument() {
   });
 }
 
+// Video/channel metadata scrape (2026-08-25): asks content_script.js to
+// read ytInitialPlayerResponse off the page — same "inject on demand if not
+// already there" pattern as showOverlay below, since a freshly (re)loaded
+// extension won't have content_script.js running yet on an already-open
+// tab. Only ever succeeds on youtube.com (manifest's content_scripts match
+// pattern) — anywhere else this just fails and startCapture proceeds with
+// null metadata, same as before this existed.
+async function scrapeMetadata(tabId) {
+  try {
+    return await chrome.tabs.sendMessage(tabId, { type: "SCRAPE_METADATA" });
+  } catch {
+    try {
+      await chrome.scripting.executeScript({ target: { tabId }, files: ["content_script.js"] });
+      return await chrome.tabs.sendMessage(tabId, { type: "SCRAPE_METADATA" });
+    } catch (err) {
+      console.warn("[background] scrapeMetadata failed:", err);
+      return null;
+    }
+  }
+}
+
 async function startCapture(tabId, tab) {
   console.log("[background] startCapture: begin, tabId=", tabId);
   const current = await getCaptureState(tabId);
@@ -103,19 +124,40 @@ async function startCapture(tabId, tab) {
   console.log("[background] startCapture: offscreen document ready, requesting streamId...");
   const streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tabId });
   console.log("[background] startCapture: got streamId, sending INIT_CAPTURE...");
-  await chrome.runtime.sendMessage({ type: "INIT_CAPTURE", tabId, streamId });
+  // Snapshot title/url/favicon now, while we have the Tab object from the
+  // activeTab-granting gesture — avoids needing the broader "tabs"
+  // permission just to label the overlay panel (and the backend's session
+  // log, see main.py's "start_session" handling) later.
+  const title = tab?.title ?? `탭 #${tabId}`;
+  const url = tab?.url ?? null;
+  const startedAt = Date.now();
+  const meta = (await scrapeMetadata(tabId).catch(() => null)) ?? {};
+  await chrome.runtime.sendMessage({
+    type: "INIT_CAPTURE",
+    tabId,
+    streamId,
+    title,
+    url,
+    startedAt,
+    channelName: meta.channelName ?? null,
+    videoTitle: meta.videoTitle ?? null,
+    videoId: meta.videoId ?? null,
+    isLive: meta.isLive ?? null,
+    streamStartedAt: meta.streamStartedAt ?? null,
+  });
   console.log("[background] startCapture: INIT_CAPTURE sent, done");
 
-  // Snapshot title/favicon now, while we have the Tab object from the
-  // activeTab-granting gesture — avoids needing the broader "tabs"
-  // permission just to label the overlay panel later.
   const next = {
     active: true,
     paused: false,
     tabId,
-    title: tab?.title ?? `탭 #${tabId}`,
+    title,
+    url,
     favIconUrl: tab?.favIconUrl ?? null,
-    startedAt: Date.now(),
+    startedAt,
+    channelName: meta.channelName ?? null,
+    videoTitle: meta.videoTitle ?? null,
+    streamStartedAt: meta.streamStartedAt ?? null,
   };
   await setCaptureState(tabId, next);
   return next;

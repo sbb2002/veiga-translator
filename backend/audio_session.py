@@ -108,6 +108,16 @@ class AudioSession:
         # previous one has actually finished.
         self._finals_since_summary = 0
         self._context_summary_task: asyncio.Task | None = None
+        # Channel name scraped from the video page (2026-08-25, see main.py's
+        # start_session handling) — passed to the final translation call as
+        # a [BROADCASTER] hint so the model can render the speaker's
+        # self-references consistently instead of guessing a different
+        # transliteration each time. None until start_session arrives (or on
+        # a non-YouTube tab where the scrape never succeeds).
+        self._broadcaster_hint: str | None = None
+
+    def set_broadcaster_hint(self, channel_name: str | None) -> None:
+        self._broadcaster_hint = channel_name or None
 
     async def feed_audio(self, pcm16_bytes: bytes) -> None:
         chunk = np.frombuffer(pcm16_bytes, dtype=np.int16).astype(np.float32) / 32768.0
@@ -400,6 +410,13 @@ class AudioSession:
         stt_s = 0.0
         no_speech_prob: float | None = None
         avg_logprob: float | None = None
+        # Display-only music/BGM hint (2026-08-25) — see MusicGate.music_suspected()'s
+        # docstring for why this bypasses config.MUSIC_GATE_ENABLED safely.
+        # Read once here (reflects the rolling window's most recent
+        # ~MUSIC_GATE_WINDOW_S, i.e. roughly this utterance's tail) and reused
+        # for every "final" event emitted below so the UI can swap in a
+        # placeholder instead of a confidently-wrong translation.
+        music_suspected = self._music_gate.music_suspected()
         dropped_low_confidence = False
         audio_rms = _rms(audio)
         # Same RMS gate as _emit_partial: don't trust a beam=5 re-transcribe
@@ -471,6 +488,7 @@ class AudioSession:
                     "audio_rms": audio_rms,
                     "no_speech_prob": no_speech_prob,
                     "avg_logprob": avg_logprob,
+                    "music_suspected": music_suspected,
                 }
             )
             return
@@ -485,6 +503,7 @@ class AudioSession:
                 context=context,
                 context_translation=context_translation,
                 glossary_hint=glossary_hint,
+                broadcaster_hint=self._broadcaster_hint,
                 allowed_literals=self._glossary.latin_targets(final_text),
             )
             llm_s = time.monotonic() - llm_start
@@ -511,5 +530,6 @@ class AudioSession:
                 "audio_rms": audio_rms,
                 "no_speech_prob": no_speech_prob,
                 "avg_logprob": avg_logprob,
+                "music_suspected": music_suspected,
             }
         )

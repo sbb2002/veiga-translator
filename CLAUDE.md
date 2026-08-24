@@ -150,7 +150,11 @@ and manually verify each stage before starting the next.
    priority §2차 목표). Not started; do not design for this while phase 1 is open.
 3. 노래가 나오는 환경에서의 전사/번역 품질 평가 및 개선 — song/music sections (PRD §11 open
    question). Deferred; current behavior (VAD/no-speech filtering incidentally skips most music) is
-   left as-is for now.
+   left as-is for now. Investigated 2026-08-25 against a real capture session
+   (`data/sessions/`) — see `docs/planning/IMPROVEMENT_BACKLOG.md`'s "노래/음악 구간 처리" section
+   (item M1: conditional Demucs vocal separation, only when a music/low-confidence trigger fires)
+   for the research findings and agreed design sketch. Not started; wait for phase 1 to close and
+   an explicit go-ahead before picking this up.
 4. UI 설계 및 구현 — overlay captions on the video + the side panel, both streaming live with the
    partial/final visual distinction (both display modes required, not just one).
 

@@ -324,9 +324,86 @@
     });
   }
 
-  chrome.runtime.onMessage.addListener((message) => {
+  // Video/channel metadata scrape (2026-08-25): who's actually streaming
+  // plus the video's own title/description/live-start time, so the backend
+  // can (a) log richer session metadata and (b) use the channel name as a
+  // translation hint for self-reference (see IMPROVEMENT_BACKLOG.md). One-
+  // shot at capture start, requested by background.js — no re-scrape on
+  // in-page navigation yet (deliberately deferred, see backlog note).
+  //
+  // Primary source: ytInitialPlayerResponse, a JSON blob YouTube's own
+  // player embeds in a <script> tag on every watch page. Preferred over any
+  // CSS selector because it's the page's own internal data contract (Google
+  // has much more reason to keep this shape stable than any particular
+  // rendered DOM structure, which changes with every UI redesign) — verified
+  // live 2026-08-25 against an actual stream; the DOM-selector fallback
+  // below, by contrast, did NOT match anything on that same page, so treat
+  // it as a last resort only.
+  function scrapeVideoMetadata() {
+    try {
+      for (const script of document.querySelectorAll("script")) {
+        const text = script.textContent;
+        if (!text || !text.includes("ytInitialPlayerResponse")) continue;
+        const match = text.match(/ytInitialPlayerResponse\s*=\s*(\{.*?\});/s);
+        if (!match) continue;
+        const data = JSON.parse(match[1]);
+        const vd = data?.videoDetails;
+        if (!vd?.author) continue;
+        const liveBroadcastDetails =
+          data?.microformat?.playerMicroformatRenderer?.liveBroadcastDetails;
+        return {
+          channelName: vd.author,
+          videoTitle: vd.title ?? null,
+          videoId: vd.videoId ?? null,
+          isLive: vd.isLiveContent ?? null,
+          // ISO 8601 absolute time — precise and locale-independent, unlike
+          // the rendered "streaming started Xm ago" badge text (whose DOM
+          // location we couldn't even find a stable selector for).
+          streamStartedAt: liveBroadcastDetails?.startTimestamp ?? null,
+          description: (vd.shortDescription || "").slice(0, 1000),
+          source: "ytInitialPlayerResponse",
+        };
+      }
+    } catch (err) {
+      console.warn("[content_script] ytInitialPlayerResponse parse failed", err);
+    }
+
+    // Fallback: DOM selectors — brittle to YouTube markup changes, last resort only.
+    const selectors = [
+      "ytd-watch-metadata #channel-name a",
+      "#owner #channel-name a",
+      "ytd-video-owner-renderer ytd-channel-name a",
+    ];
+    for (const sel of selectors) {
+      const text = document.querySelector(sel)?.textContent?.trim();
+      if (text) {
+        return {
+          channelName: text,
+          videoTitle: document.title.replace(/\s*-\s*YouTube$/, ""),
+          videoId: null,
+          isLive: null,
+          streamStartedAt: null,
+          description: null,
+          source: "dom",
+        };
+      }
+    }
+    return {
+      channelName: null,
+      videoTitle: null,
+      videoId: null,
+      isLive: null,
+      streamStartedAt: null,
+      description: null,
+      source: "none",
+    };
+  }
+
+  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (message?.type === "SHOW_OVERLAY" && message.tabId != null) {
       buildPanel(message.tabId);
+    } else if (message?.type === "SCRAPE_METADATA") {
+      sendResponse(scrapeVideoMetadata());
     }
   });
 })();

@@ -107,6 +107,21 @@ notes:
     Every English/foreign word must be rendered as its closest Korean
     equivalent or a Hangul transliteration, never left in Latin script.
 
+  broadcaster: >
+    If the user message contains a '[BROADCASTER]' section, it names the
+    channel/streamer who is actually speaking in the audio (scraped from the
+    video's own page metadata — not something the speaker said out loud).
+    Speakers sometimes refer to themselves by their own stream name/nickname
+    (third-person self-reference, or introducing themselves) — when the
+    Japanese text under '[TEXT TO TRANSLATE]' clearly contains a variant of
+    that name, render it as a natural, CONSISTENT Korean transliteration of
+    the given name every time it recurs, rather than guessing a different-
+    sounding rendering (or substituting an unrelated real Korean word that
+    happens to sound similar) each time. Only use this to resolve genuine
+    self-reference in the text — never insert the streamer's name into your
+    translation where '[TEXT TO TRANSLATE]' doesn't actually name them, and
+    never translate or repeat the '[BROADCASTER]' line itself in your output.
+
   glossary_section: >
     If the user message contains a '[GLOSSARY]' section, translate the
     proper nouns listed there exactly as specified — those mappings

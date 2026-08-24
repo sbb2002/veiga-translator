@@ -305,6 +305,19 @@
     }
     .segment.is-final .ko-line { color: var(--text); }
 
+    /* 노래/BGM 감지 세그먼트 (backend/music_gate.py::music_suspected) —
+       일반 뷰에서는 빈 줄만(요약 영역 아이콘이 이미 알려줌), 디버그 지표
+       체크 시에만 무슨 상태인지 문구로 표시. */
+    .segment.music-suspected {
+      border-left-color: var(--text-faint);
+    }
+    body.show-debug .segment.music-suspected .ko-line::before {
+      content: "🎵 노래·배경음악 감지됨";
+      color: var(--text-faint);
+      font-style: italic;
+      font-weight: 400;
+    }
+
     .conf-line {
       margin-top: 7px;
       display: none;
@@ -312,6 +325,12 @@
       gap: 4px;
     }
     body.show-debug .conf-line { display: flex; }
+
+    /* First HISTORY_WARMUP_FINALS sentences of a session (popup.js) — no
+       [PREVIOUS SENTENCE] context yet, so translation quality is rougher.
+       Hidden by default, visible when 디버그 지표 is checked (same gate as
+       .conf-line above). */
+    body:not(.show-debug) .segment.warmup { display: none; }
 
     .metric-row {
       display: flex;
@@ -404,11 +423,18 @@
       color: var(--text-faint);
     }
 
-    .context-summary {
+    .context-summary-bar {
       flex: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       padding: 7px 14px;
       border-bottom: 1px solid var(--border);
       background: var(--surface-2);
+    }
+    .context-summary {
+      flex: 1;
+      min-width: 0;
       color: var(--text-muted);
       font-size: 11.5px;
       line-height: 1.4;
@@ -416,7 +442,48 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .context-summary:empty { display: none; }
+
+    /* 노래/배경음악 감지 상태 표시 (2026-08-25) — 최신 final의
+       music_suspected를 그대로 반영. 꺼져있을 땐 흐리고 정적, 감지되면
+       또렷해지며 살짝 펄스 애니메이션 (live-dot과 같은 패턴). */
+    .music-indicator {
+      flex: none;
+      font-size: 13px;
+      line-height: 1;
+      opacity: 0.32;
+      filter: grayscale(1);
+      transition: opacity 0.3s ease, filter 0.3s ease;
+    }
+    .music-indicator.active {
+      opacity: 1;
+      filter: none;
+      animation: music-indicator-pulse 1.4s ease-in-out infinite;
+    }
+    @keyframes music-indicator-pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.18); opacity: 0.65; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .music-indicator.active { animation: none; }
+    }
+
+    /* 디버그 지표 체크 시에만 노출되는 영상 메타데이터 (채널명·라이브 시작
+       경과시간) — 세그먼트별 confidence bars(.conf-line)와 같은 게이팅. */
+    .video-meta {
+      display: none;
+      flex: none;
+      padding: 5px 14px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text-faint);
+      font-size: 10.5px;
+      font-family: var(--mono);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .video-meta:empty { display: none; }
+    body.show-debug .video-meta:not(:empty) { display: block; }
 
     /* Marquee mode (popup.js toggles this when the summary overflows the
        header width): two identical text copies back-to-back, scrolled left
@@ -488,7 +555,11 @@
     <div id="volumeBarFill" class="volume-bar-fill"></div>
   </div>
 
-  <div id="contextSummary" class="context-summary" title=""></div>
+  <div class="context-summary-bar">
+    <div id="contextSummary" class="context-summary" title=""></div>
+    <span id="musicIndicator" class="music-indicator" title="노래·배경음악 감지 안 됨">🎵</span>
+  </div>
+  <div id="videoMeta" class="video-meta" title=""></div>
 
   <div class="log-card">
     <p class="eyebrow">실시간 전사 · 번역</p>

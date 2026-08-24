@@ -33,6 +33,7 @@ Q2·Q4·Q5·Q6·S2·S3·T2·T3·T4. 검증 절차는 `docs/log/HANDOFF.md`. **�
 | S2 | 전사 품질 | STT `previous_context` 배선이 준비만 되고 미사용 | P2 | 대기 (GPU A/B) |
 | S3 | 전사 품질 | hard cap 강제 절단이 단어 중간을 자름 | P2 | 대기 (Q1 실측 후) |
 | S4 | 전사 품질 | glossary 매칭이 표면형 exact substring | P2 | 구현됨 |
+| S5 | 전사 품질/지연 | VAD_SILENCE_MS·FINALIZE_GRACE_MS 고정값 — 화자별 말 속도/간격 차이 미반영 | P2 | 제안됨 (2026-08-25, 설계만) |
 | T1 | 번역 품질/속도 | glossary_hint가 system prompt에 붙어 KV prefix cache 무효화 | P1 | 구현됨 |
 | T2 | 번역 품질 | 단어별 예외 노트 누적 구조의 확장성 한계 | P2 | 대기 (노트 증가 시) |
 | T3 | 번역 품질 | repeat_penalty 1.3 상시 적용의 부작용 가능성 | P2 | 대기 (GPU A/B) |
@@ -210,6 +211,41 @@ utterance의 선두로 이월, 또는 (b) 다음 utterance에 직전 꼬리 0.3~
 **개선안**: 양쪽 NFKC 정규화 후 매칭부터(한 줄). 가나 퍼지 매칭은 glossary가 실제로 커진
 뒤에(현재 1항목) — 지금은 과설계.
 
+### S5. VAD_SILENCE_MS·FINALIZE_GRACE_MS 고정값 — 화자별 말 속도/간격 차이 미반영 (P2, 2026-08-25 제안)
+
+**계기**: 실캡처 세션(`data/sessions/`)을 리뷰하며 나온 아이디어. 지금 `VAD_SILENCE_MS = 600`,
+`FINALIZE_GRACE_MS = 200`(`config.py`)은 모든 화자·모든 순간에 동일하게 적용되는 고정값이다.
+그런데 사람마다 문장 사이 자연스러운 침묵 길이와 말 속도가 다르고, 같은 화자도 상황(노래/게임
+집중/잡담)에 따라 리듬이 달라진다 — 고정 임계값은 말이 빠른 화자에겐 필요 이상으로 오래
+기다리고(체감 지연 증가), 침묵이 긴 화자에겐 문장을 성급하게 잘라버릴 수 있다.
+
+**주의 — 범위**: 이건 로드맵 2차 목표(화자 분리/다중 화자별로 다른 값 적용)가 아니다.
+화자 구분 없이 **"지금 이 세션에서 관찰되는 리듬"에 세션 단위로 적응**시키는 것으로,
+1차 목표(단일 화자) 범위 안에서 착수 가능. "화자 A는 600ms, 화자 B는 900ms"처럼 화자별로
+다른 값을 유지하려면 화자 분리가 먼저 필요하므로 그건 로드맵 2차 목표와 함께 재검토.
+
+**제안된 설계 방향 (사용자 승인, 2026-08-25 — 구현은 보류)**:
+1. `AudioSession`에 최근 N개 finalize된 발화의 (a) 문장 종결 직전 실제 침묵 길이,
+   (b) 말 속도(전사 글자수 ÷ 발화 지속시간) 롤링 통계를 추가.
+2. 이 통계를 바탕으로 `VAD_SILENCE_MS`/`FINALIZE_GRACE_MS`를 세션 시작 시 고정값이 아니라
+   EMA(지수이동평균)로 서서히 조정 — 매 발화마다 급격히 바뀌지 않게 변화 속도(EMA 계수)를
+   작게 유지.
+3. **안전장치(필수, 사용자 지적)**:
+   - 임계값에 상한/하한을 둬서 무한정 늘어나거나(반응 지연 폭주) 너무 짧아지지(문장 조기
+     절단 폭증) 않게 clamp.
+   - 노래/BGM 등 비정상적으로 긴 침묵 한두 번에 통계가 흔들리지 않도록, 이상치(outlier)
+     — 예: `MAX_UTTERANCE_SECONDS`에 근접한 극단값 — 는 롤링 통계 계산에서 제외하거나
+     가중치를 낮춤.
+   - 세션 초반(통계 샘플 부족 구간)은 현재 고정값을 그대로 사용하고, 표본이 충분히 쌓인
+     뒤부터 적응 시작.
+4. 효과 측정: 적응형 on/off 각각 실캡처로 (a) 체감 지연(특히 말 빠른 화자에서 finalize까지
+   걸리는 시간), (b) 문장 조기 절단 빈도(S3의 hard_cap 트리거 로그, 또는 `grace_expired` 사유
+   빈도)를 비교.
+
+**착수 조건**: 아직 미확정 — 사용자 지시로 착수 시점 결정. 착수한다면 Q1 계측(대기/트리거
+사유 로그)이 이미 있어 효과 측정 인프라는 추가 비용 없이 재사용 가능.
+**의존**: 없음(Q1 계측 인프라는 이미 구현됨).
+
 ---
 
 ## 번역 품질 / 속도
@@ -269,6 +305,68 @@ fast 패스는 문맥 없이 조각만 번역한다. 직전 final 한국어 1문
   현행과 다름. docstring 갱신.
 - `backend/stt/base.py` `TranscriptionResult.words` — `word_timestamps=False`라 항상 빈 값.
   쓸 계획이 없으면 제거, 있으면 주석으로 명시.
+
+## 노래/음악 구간 처리 (로드맵 3순위 — 2026-08-25 조사, 착수 보류)
+
+**주의**: 이 섹션은 로드맵 3번째 항목(노래/음악 환경 품질 개선)에 속한다. Goal priority(1차
+목표: 1인 화자 일반 발화)가 아직 완료 전이므로 **오늘은 착수하지 않고 조사/설계만 문서화**한다
+— 착수 시점은 1차 목표 완료 후로 사용자가 별도 판단.
+
+### M1. 조건부 Demucs 보컬 분리로 노래 구간 전사/번역 품질 개선
+
+**계기**: `data/sessions/20260824_232824_tab1206683466_02acbc.jsonl` 실캡처 세션(노노카 어쿠스틱
+기타 탄영 방송)을 리뷰한 결과, 노래+기타 구간에서 final 512건 중 23.4%가 빈 텍스트로
+드롭되고, 저신뢰(avg_logprob < -0.9) final이 31건 발생. 대표 사례:
+`"あうんうんうんうんうんうんを"` → `"아, 음~ 나나나가~!"`(logprob -1.54) 처럼 STT가 의미
+없는 음절을 뽑아내고 번역 모델이 그걸 자연스러운 감탄사로 그럴듯하게 포장하는 패턴 — 원문이
+이미 깨졌으므로 번역 개선만으론 못 잡는다. 순수 반주(보컬 없음) 구간은 VAD가 애초에
+"speech 아님"으로 판단해 이벤트 자체가 없음(로그에 40~90초 공백)도 확인.
+
+**조사 결과 (2026-08-25, WebSearch)**:
+- Demucs(htdemucs) 2-stem(`--two-stems=vocals`) 보컬 분리 후 Whisper에 넣으면 가사 전사
+  정확도가 **개선**된다는 최신 보고 있음 — 사용자가 기억하는 "Demucs 물리면 전사가 더
+  나빠진다"와 반대 결과. 단, 해당 보고는 오프라인/배치 가사전사 태스크 기준이라 실시간
+  파이프라인 적용 가능성을 그대로 보장하진 않음. 사용자의 과거 경험이 어떤 상황이었는지는
+  미확인 — 착수 시 먼저 재확인.
+  ([Exploiting Music Source Separation for Automatic Lyrics Transcription with Whisper](https://arxiv.org/pdf/2506.15514))
+- ASR 신뢰도 신호를 번역 프롬프트에 넘겨 "낮으면 직역/보수적으로" 유도하는 접근은 실무에서
+  이미 쓰이는 패턴(confidence-aware prompting). 단 Whisper 환각은 신뢰도 자체가 높게 나오는
+  경우도 흔해 신뢰도만으론 완전히 못 거른다는 한계가 여러 논문에서 공통 지적됨.
+  ([Towards interfacing LLMs with ASR systems using confidence measures and prompting](https://arxiv.org/html/2407.21414))
+- Whisper-UT(2025): 번역 모델이 불완전한 전사를 "조건부로 불신"하도록 학습(ASR 노이즈를 섞어
+  파인튜닝)하는 프레임워크 — 우리 아이디어(신뢰도 신호 → 보수적 번역 유도)의 더 정교한
+  버전이지만 파인튜닝이 필요해 현재 스택(프롬프트 only) 범위 밖.
+  ([Whisper-UT: A Unified Translation Framework for Speech and Text](https://arxiv.org/pdf/2509.16375))
+- Demucs GPU 처리 속도: RTX 3060 Ti 기준 오디오 1초당 약 0.04초(RTF~25배), 최적화 없는 일반
+  GPU 파이프라인은 오디오 1초당 약 0.14초(RTF~7배), RTX 3090+TensorRT 최적화는 오디오 1초당
+  약 0.015초(RTF~60배 이상). htdemucs는 내부적으로 ~7.8초 단위로 청크 처리하므로 어테런스
+  길이(1~10초)와 무관하게 청크 1개 처리 비용이 거의 고정으로 깔린다.
+  ([Demucs Apple Silicon 포팅기](https://medium.com/@andradeolivier/i-ported-demucs-to-apple-silicon-it-separates-a-7-minute-song-in-12-seconds-6c4e5cffb5c3),
+  [Stemuc Audio Forge 벤치마크](https://www.researchgate.net/publication/396205016_Stemuc_Audio_Forge_AI-based_Music_Source_Separation_Using_Demucs_and_CUDA_Acceleration),
+  [htdemucs vs BS-RoFormer vs Spleeter 2026 벤치마크](https://aistemsplitter.org/blog/htdemucs-vs-bs-roformer-vs-spleeter-2026-benchmark))
+
+**합의된 설계 방향 (사용자 승인, 2026-08-25 — 구현은 보류)**:
+1. 모든 final이 아니라 **음악/저신뢰도 의심 구간에서만 조건부 트리거**. 트리거 조건 후보:
+   `music_gate`(현재 `MUSIC_GATE_ENABLED = False`로 꺼져 있음 — 재보정 필요, `config.py` 참고)
+   신호, 또는 STT 1차 결과의 `avg_logprob`/`no_speech_prob`가 임계값을 넘을 때.
+2. 트리거되면 `_do_finalize`의 STT **이전**에 Demucs 2-stem으로 보컬만 분리한 오디오를
+   생성해 그걸로 beam=5 재전사 — Demucs가 STT보다 뒤에 오면 의미가 없다(분리 후 재전사해야
+   효과가 있음).
+3. 예상 지연: 청크당 대략 0.3~1.5초 추가(모델 상주 로드 가정, TensorRT 미적용 기준) —
+   `_finalize_worker` 백그라운드 큐에서 도는 경로라 오디오 수신 자체는 안 막히지만, 트리거된
+   세그먼트의 final 표시 지연은 그만큼 늘어난다. 조건부 트리거이므로 일반 발화의 지연에는
+   영향 없음.
+4. **1차 검증 후에만** TensorRT 최적화 착수(품질 개선 효과가 실측으로 확인된 뒤 — 엔지니어링
+   비용을 먼저 쓰지 않는다).
+5. UI: 이 트리거가 걸린 구간(=노래/저신뢰 구간 판정)에는 "🎵 노래 중" 같은 플레이스홀더
+   표시를 얹으면 사용자 경험이 낫다는 아이디어도 나왔음 — 로드맵 4(UI 설계)와 맞물리는
+   부분이라 M1과 별도 항목으로 UI 단계에서 재검토.
+
+**착수 조건**: 로드맵 1차 목표(단일 화자 일반 발화 품질) 완료 후, 사용자 지시로 시작.
+**의존**: `music_gate.py` 재보정(또는 `avg_logprob`/`no_speech_prob` 임계값 기반 트리거로
+대체), GPU에 Demucs 모델 로드 여유 확인(현재 large-v3-turbo + gemma-3-12b-it와 VRAM 공존).
+
+---
 
 ## 기존 계획 추적 (`../eval/EVAL_REPORT_2026-08-18.md` §5 / gemma 리포트 §5)
 

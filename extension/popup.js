@@ -12,8 +12,23 @@ const statusState = document.getElementById("statusState");
 const statusDetail = document.getElementById("statusDetail");
 const logEl = document.getElementById("log");
 const scrollToBottomBtn = document.getElementById("scrollToBottomBtn");
+const videoMetaEl = document.getElementById("videoMeta");
 
 const segmentEls = new Map(); // segment_id -> <div> element, so a "final" can replace its "partial"
+
+// Mirrors backend/config.py's FINAL_CONTEXT_HISTORY_SIZE (kept in sync
+// manually, same reason as AUDIO_RMS_SILENCE_FLOOR etc. below — the
+// extension can't import the Python config). AudioSession's _final_history
+// is empty for the first few final sentences of a session, so those
+// translations have no [PREVIOUS SENTENCE]/[PREVIOUS TRANSLATION] context to
+// resolve dropped subjects/tone continuity — they read noticeably rougher
+// than once the 3-sentence window fills (see IMPROVEMENT_BACKLOG.md/session
+// discussion, 2026-08-25). Segments finalized before the window is full are
+// tagged "warmup" and hidden unless the debug toggle is on, matching the
+// same gating as the confidence bars (.conf-line).
+const HISTORY_WARMUP_FINALS = 3;
+let finalsSeenCount = 0;
+const countedFinalSegments = new Set(); // guards against double-counting a re-sent final for the same segment
 
 // Scroll-to-bottom affordance (2026-08-20): visible only while scrolled up
 // from the very bottom, hidden once back at the bottom. Also drives whether
@@ -47,6 +62,37 @@ let restoring = true;
 const pendingEvents = [];
 
 let lastCaptureTitle = null; // Remember the tab title across state changes
+let lastVideoMeta = null; // { channelName, videoTitle, streamStartedAt } — same "keep showing while idle" behavior as lastCaptureTitle
+
+// 디버그 지표 라인용: ISO 8601 절대시각(streamStartedAt, content_script.js가
+// ytInitialPlayerResponse에서 긁음) -> "X분 전"/"X시간 Y분 전" 표시. 렌더링
+// 화면의 상대시간 배지를 다시 파싱하는 대신 절대시각 기준으로 매번 새로
+// 계산하므로 언어/포맷 변화에 안전하다.
+function formatElapsedSince(isoTimestamp) {
+  if (!isoTimestamp) return null;
+  const startMs = Date.parse(isoTimestamp);
+  if (Number.isNaN(startMs)) return null;
+  const elapsedMin = Math.max(0, Math.round((Date.now() - startMs) / 60000));
+  if (elapsedMin < 60) return `${elapsedMin}분 전`;
+  const hours = Math.floor(elapsedMin / 60);
+  const mins = elapsedMin % 60;
+  return `${hours}시간 ${mins}분 전`;
+}
+
+function renderVideoMeta(meta) {
+  if (!meta || (!meta.channelName && !meta.videoTitle)) {
+    videoMetaEl.textContent = "";
+    videoMetaEl.title = "";
+    return;
+  }
+  const parts = [];
+  if (meta.channelName) parts.push(`채널: ${meta.channelName}`);
+  const elapsed = formatElapsedSince(meta.streamStartedAt);
+  if (elapsed) parts.push(`방송 시작 ${elapsed}`);
+  const line = parts.join(" · ");
+  videoMetaEl.textContent = line;
+  videoMetaEl.title = meta.videoTitle ? `${meta.videoTitle}\n${line}` : line;
+}
 
 async function refreshState() {
   const state = await chrome.runtime.sendMessage({ type: "GET_CAPTURE_STATE", tabId });
@@ -79,10 +125,16 @@ async function refreshState() {
   if (isActive) {
     lastCaptureTitle = state?.title ?? `탭 #${tabId}`;
     statusDetail.textContent = lastCaptureTitle;
+    lastVideoMeta = {
+      channelName: state?.channelName ?? null,
+      videoTitle: state?.videoTitle ?? null,
+      streamStartedAt: state?.streamStartedAt ?? null,
+    };
   } else {
     // While idle, show the tab title if we have one from a prior active session
     statusDetail.textContent = lastCaptureTitle ? lastCaptureTitle : "";
   }
+  renderVideoMeta(lastVideoMeta);
 
   // Update live dot
   liveDot.classList.toggle("off", !isRecording);
@@ -214,6 +266,15 @@ function renderEvent(data) {
   let entry = segmentEls.get(segmentId);
   if (!entry) {
     const container = document.createElement("div");
+    // Pre-existing gap found while wiring the "warmup" gate below: this base
+    // class was never actually applied, so every `.segment...` CSS rule in
+    // popup.html (padding/rounding/hover, `.flagged` background, and
+    // crucially `.segment.is-partial`/`.segment.is-final`'s dim/blur-vs-
+    // crisp distinction — the CLAUDE.md-required partial/final visual cue)
+    // was silently dead. classList.toggle("is-final"/"flagged"/...) below
+    // was still setting those modifier classes correctly; they just never
+    // combined with a "segment" base for the compound selectors to match.
+    container.className = "segment";
     const jaLine = document.createElement("div");
     const koLine = document.createElement("div");
     const confLine = document.createElement("div");
@@ -223,7 +284,15 @@ function renderEvent(data) {
     container.appendChild(jaLine);
     container.appendChild(koLine);
     container.appendChild(confLine);
-    entry = { container, jaLine, koLine, confLine, flagged: false, confidence: null };
+    // Approximation: single-speaker VAD segmentation processes one
+    // utterance at a time, so by the time a new segment's first event
+    // arrives, every prior segment has already finalized — finalsSeenCount
+    // at creation time is therefore "how many sentences finalized before
+    // this one started", which is exactly the warm-up window this segment
+    // will see once it finalizes.
+    const warmup = finalsSeenCount < HISTORY_WARMUP_FINALS;
+    container.classList.toggle("warmup", warmup);
+    entry = { container, jaLine, koLine, confLine, flagged: false, confidence: null, warmup };
     segmentEls.set(segmentId, entry);
     logEl.appendChild(container);
 
@@ -242,8 +311,12 @@ function renderEvent(data) {
           tabId,
           segmentId,
           flagged: entry.flagged,
-          text: entry.jaLine.textContent,
-          translation: entry.koLine.textContent,
+          // The raw text/translation, not entry.jaLine/koLine's rendered
+          // textContent — when music_suspected swapped those for a "🎵"
+          // placeholder, flagging still needs the real (likely garbled)
+          // content for QA review, not the placeholder string.
+          text: entry.rawText ?? entry.jaLine.textContent,
+          translation: entry.rawTranslation ?? entry.koLine.textContent,
           // Whatever confidence numbers were last shown for this segment
           // (final events only — see below), so flagged_segments.jsonl
           // carries the evidence needed to tune the no_speech_prob
@@ -259,8 +332,27 @@ function renderEvent(data) {
   entry.koLine.className = `ko-line ${stateClass}`;
   entry.container.classList.toggle("is-final", stateClass === "final");
   entry.container.classList.toggle("is-partial", stateClass === "partial");
-  entry.jaLine.textContent = text ?? "";
-  entry.koLine.textContent = translation ?? "";
+  // Music/BGM placeholder (2026-08-25): final-only, backend/music_gate.py's
+  // MusicGate.music_suspected() flag — hide the (likely garbled/confidently
+  // wrong) transcript+translation rather than show it. The explanatory
+  // "🎵 노래·배경음악 감지됨" label itself only renders under the debug
+  // toggle (CSS ::before, popup.html) — a normal viewer instead sees the
+  // ambient icon in the summary bar (updateMusicIndicator below), not a
+  // per-segment text label. Note this heuristic was only validated on
+  // synthetic test tones as of 2026-08-25 (see music_gate.py's docstring),
+  // so false positives on real short/energetic speech are possible.
+  const musicSuspected = type === "final" && data?.music_suspected === true;
+  entry.container.classList.toggle("music-suspected", musicSuspected);
+  entry.rawText = text ?? "";
+  entry.rawTranslation = translation ?? "";
+  if (musicSuspected) {
+    entry.jaLine.textContent = "";
+    entry.koLine.textContent = "";
+  } else {
+    entry.jaLine.textContent = entry.rawText;
+    entry.koLine.textContent = entry.rawTranslation;
+  }
+  if (type === "final") updateMusicIndicator(musicSuspected);
   // Debugging aid (see CLAUDE.md hallucination-filtering discussion): only
   // "final" events carry Whisper's confidence signals today (audio_session.py
   // doesn't compute them on the fast/partial pass), so this stays blank
@@ -272,6 +364,10 @@ function renderEvent(data) {
       no_speech_prob: data.no_speech_prob,
       avg_logprob: data.avg_logprob,
     };
+    if (!countedFinalSegments.has(segmentId)) {
+      countedFinalSegments.add(segmentId);
+      finalsSeenCount++;
+    }
   } else {
     entry.confLine.textContent = "";
   }
@@ -302,6 +398,18 @@ chrome.runtime.onMessage.addListener((message) => {
 // mirrors the text so hovering shows the full line even when the header's
 // fixed width ellipsis-truncates it.
 const contextSummaryEl = document.getElementById("contextSummary");
+
+// Ambient "노래/배경음악 감지" indicator (2026-08-25) — right edge of the
+// summary bar, reflects the most recent final's music_suspected flag
+// regardless of debug mode (unlike the per-segment placeholder text, which
+// is debug-only — see popup.html's .segment.music-suspected rule). Idle/dim
+// by default, pulses while active.
+const musicIndicatorEl = document.getElementById("musicIndicator");
+
+function updateMusicIndicator(active) {
+  musicIndicatorEl.classList.toggle("active", active);
+  musicIndicatorEl.title = active ? "노래·배경음악 감지됨" : "노래·배경음악 감지 안 됨";
+}
 
 const CONTEXT_SUMMARY_MARQUEE_PX_PER_SECOND = 40;
 
@@ -404,6 +512,11 @@ async function restoreHistory() {
 restoreHistory();
 refreshState();
 restoreContextSummary();
+
+// "방송 시작 X분 전" is computed client-side from an absolute timestamp, so
+// it drifts stale without a periodic re-render — no new round-trip needed,
+// just recompute from the already-cached lastVideoMeta.
+setInterval(() => renderVideoMeta(lastVideoMeta), 30000);
 
 // --- Chat reply (draft, 2026-08-20): translate the viewer's own Korean ---
 // --- chat message into Japanese, using the live broadcast as context. ---

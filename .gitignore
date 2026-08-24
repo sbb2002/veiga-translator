@@ -28,6 +28,11 @@ Thumbs.db
 data/json/
 data/wav/
 
+# Per-session transcript/translation logs (backend/main.py::SessionLogger) —
+# personal live-capture content (video titles/URLs, JA/KO transcript), not a
+# reproducible eval artifact like the data/*.jsonl files above.
+data/sessions/
+
 # Run logs (transient, not reproducible artifacts)
 *.log
 

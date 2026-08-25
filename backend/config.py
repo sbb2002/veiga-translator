@@ -182,11 +182,23 @@ CLOSE_DRAIN_TIMEOUT_S = 10.0
 # ever seeing the single immediately-prior sentence.
 FINAL_CONTEXT_HISTORY_SIZE = 3
 
-# UI context-summary line (2026-08-20): how many finalized segments to wait
-# between regenerating the one-line "what's being talked about right now"
-# summary shown in the extension header. Every final would call the LLM an
-# extra time per segment for a line that barely changes sentence-to-sentence
-# — this amortizes that cost. Generation is also skipped outright while a
-# previous summary call is still in flight (see audio_session.py), so a slow
-# GPU can't pile up overlapping requests regardless of this value.
-CONTEXT_SUMMARY_EVERY_N_FINALS = 3
+# UI context-summary line (2026-08-20, change-detection redesign 2026-08-25):
+# how many finalized segments to wait between *checking* whether the topic
+# has moved on. A cheap SAME/CHANGED classification call runs at this cadence
+# instead of unconditionally regenerating the summary every time — a speaker
+# staying on the same subject for many sentences in a row shouldn't churn the
+# summary line just because N more finals arrived. The full summarize_context
+# call (more expensive: CONTEXT_SUMMARY_HISTORY_SIZE lines of context) only
+# fires when that check comes back CHANGED. Both calls are also skipped
+# outright while a previous check/summary is still in flight (see
+# audio_session.py), so a slow GPU can't pile up overlapping requests
+# regardless of this value. User-requested cadence was "every 3-5 finals";
+# 4 is the midpoint.
+CONTEXT_CHECK_EVERY_N_FINALS = 4
+
+# How many recent finalized (JA, KO) pairs feed the summary itself once a
+# change check triggers a regeneration — wider than FINAL_CONTEXT_HISTORY_SIZE
+# (which is tuned for per-sentence translation continuity, not topic gist)
+# so the summary reflects the actual current topic rather than just the last
+# couple of sentences.
+CONTEXT_SUMMARY_HISTORY_SIZE = 10

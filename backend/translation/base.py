@@ -48,3 +48,12 @@ class TranslationEngine(Protocol):
         `context` argument) — shown in the extension UI so a viewer glancing
         at the panel gets the gist without reading the whole scrolling log."""
         ...
+
+    async def context_changed(self, current_summary: str, recent_ja: str) -> bool:
+        """Cheap check (2026-08-25): has the topic moved on from
+        `current_summary` given `recent_ja` (newly finalized JA speech since
+        the last check)? Lets audio_session.py skip a full summarize_context
+        call while the speaker is still on the same subject. Returns True
+        (regenerate) on anything ambiguous — a stale summary is worse than
+        an extra LLM call."""
+        ...

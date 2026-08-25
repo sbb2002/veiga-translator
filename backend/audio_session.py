@@ -88,6 +88,13 @@ class AudioSession:
         self._final_history: deque[tuple[str, str]] = deque(
             maxlen=config.FINAL_CONTEXT_HISTORY_SIZE
         )
+        # Wider rolling window feeding the context-summary line specifically
+        # (see config.CONTEXT_SUMMARY_HISTORY_SIZE) — deliberately separate
+        # from _final_history above, which stays short because it's tuned
+        # for per-sentence translation continuity, not topic gist.
+        self._summary_history: deque[tuple[str, str]] = deque(
+            maxlen=config.CONTEXT_SUMMARY_HISTORY_SIZE
+        )
         # Finalization (beam=5 STT re-transcribe + LLM call) is too slow to
         # await inline in the frame-processing path — feed_audio() is on the
         # only path that drains incoming websocket audio, and blocking it
@@ -102,12 +109,17 @@ class AudioSession:
         self._finalize_queue: asyncio.Queue[_UtteranceState] = asyncio.Queue()
         self._finalize_worker_task = asyncio.create_task(self._finalize_worker())
         # One-line "what's being talked about right now" for the extension
-        # header (see config.CONTEXT_SUMMARY_EVERY_N_FINALS for the
-        # throttling rationale). _context_summary_task doubles as the
-        # in-flight guard: a new summary is only kicked off once the
-        # previous one has actually finished.
-        self._finals_since_summary = 0
+        # header (see config.CONTEXT_CHECK_EVERY_N_FINALS for the throttling
+        # rationale). _context_summary_task doubles as the in-flight guard: a
+        # new check/summary is only kicked off once the previous one has
+        # actually finished. _current_summary is the last text actually
+        # emitted, compared against on the next change-check; _pending_since_check
+        # accumulates the (JA, KO) pairs spoken since that check so the
+        # change-check call sees exactly what's new, not the whole window.
+        self._finals_since_check = 0
         self._context_summary_task: asyncio.Task | None = None
+        self._current_summary = ""
+        self._pending_since_check: list[tuple[str, str]] = []
         # Channel name scraped from the video page (2026-08-25, see main.py's
         # start_session handling) — passed to the final translation call as
         # a [BROADCASTER] hint so the model can render the speaker's
@@ -282,13 +294,23 @@ class AudioSession:
         self._final_history, or (None, None) when empty — matches how
         LlamaServerEngine.translate()'s `context` truthiness gates whether
         the [PREVIOUS SENTENCE] section is included at all."""
-        if not self._final_history:
+        return self._format_pairs(self._final_history)
+
+    def _format_summary_history(self) -> str | None:
+        """Numbered, oldest-first JA-only string from self._summary_history
+        (the wider window), or None when empty — feeds summarize_context."""
+        ja, _ko = self._format_pairs(self._summary_history)
+        return ja
+
+    @staticmethod
+    def _format_pairs(pairs: "deque[tuple[str, str]] | list[tuple[str, str]]") -> tuple[str | None, str | None]:
+        if not pairs:
             return None, None
-        if len(self._final_history) == 1:
-            ja, ko = self._final_history[0]
+        if len(pairs) == 1:
+            ja, ko = pairs[0]
             return ja, ko
-        ja_lines = [f"{i}. {ja}" for i, (ja, _ko) in enumerate(self._final_history, start=1)]
-        ko_lines = [f"{i}. {ko}" for i, (_ja, ko) in enumerate(self._final_history, start=1)]
+        ja_lines = [f"{i}. {ja}" for i, (ja, _ko) in enumerate(pairs, start=1)]
+        ko_lines = [f"{i}. {ko}" for i, (_ja, ko) in enumerate(pairs, start=1)]
         return "\n".join(ja_lines), "\n".join(ko_lines)
 
     async def translate_chat(self, text: str) -> str:
@@ -306,22 +328,38 @@ class AudioSession:
             return ""
         return result.text
 
-    def _maybe_update_context_summary(self) -> None:
-        """Fire-and-forget: regenerate the one-line context summary every
-        config.CONTEXT_SUMMARY_EVERY_N_FINALS finals, skipping the trigger
-        entirely while a previous call is still in flight (rather than
-        queuing another) so a slow GPU can't pile up overlapping summary
-        requests behind the actual transcription/translation work."""
-        self._finals_since_summary += 1
-        if self._finals_since_summary < config.CONTEXT_SUMMARY_EVERY_N_FINALS:
+    def _maybe_update_context_summary(self, final_text: str, translation_text: str) -> None:
+        """Fire-and-forget: every config.CONTEXT_CHECK_EVERY_N_FINALS finals,
+        check whether the topic actually changed (2026-08-25 redesign) before
+        paying for a full summary regeneration — a speaker staying on the
+        same subject for many sentences in a row shouldn't churn the summary
+        line just because more finals arrived. Skips the trigger entirely
+        while a previous check/summary is still in flight (rather than
+        queuing another) so a slow GPU can't pile up overlapping requests
+        behind the actual transcription/translation work."""
+        self._pending_since_check.append((final_text, translation_text))
+        self._finals_since_check += 1
+        if self._finals_since_check < config.CONTEXT_CHECK_EVERY_N_FINALS:
             return
         if self._context_summary_task is not None and not self._context_summary_task.done():
             return
-        self._finals_since_summary = 0
-        self._context_summary_task = asyncio.create_task(self._update_context_summary())
+        self._finals_since_check = 0
+        recent = self._pending_since_check
+        self._pending_since_check = []
+        self._context_summary_task = asyncio.create_task(self._check_and_update_context_summary(recent))
 
-    async def _update_context_summary(self) -> None:
-        ja_context, _ko_context = self._format_history()
+    async def _check_and_update_context_summary(self, recent: list[tuple[str, str]]) -> None:
+        recent_ja, _recent_ko = self._format_pairs(recent)
+        if not recent_ja:
+            return
+        try:
+            changed = await self._translate.context_changed(self._current_summary, recent_ja)
+        except Exception:
+            logger.exception("context-change check failed — regenerating summary to be safe")
+            changed = True
+        if not changed:
+            return
+        ja_context = self._format_summary_history()
         if not ja_context:
             return
         try:
@@ -330,6 +368,7 @@ class AudioSession:
             logger.exception("context summary generation failed")
             return
         if summary:
+            self._current_summary = summary
             await self._emit_safe({"type": "context_summary", "text": summary})
 
     async def _emit_safe(self, event: dict) -> None:
@@ -515,7 +554,8 @@ class AudioSession:
             # sentence's context and the running summary off-topic too.
             if not music_suspected:
                 self._final_history.append((final_text, translation.text))
-                self._maybe_update_context_summary()
+                self._summary_history.append((final_text, translation.text))
+                self._maybe_update_context_summary(final_text, translation.text)
         except Exception:
             logger.exception("final translation failed — falling back to last partial translation")
             llm_s = time.monotonic() - llm_start

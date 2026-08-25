@@ -191,6 +191,20 @@ context_summary_system_prompt: >
   Output ONLY that one Korean sentence, nothing else — no notes, no quotes,
   no line breaks.
 
+# --- Context-change check (2026-08-25): cheap gate in front of the ---
+# --- summary above — only regenerate it when the topic actually moved. ---
+context_change_system_prompt: >
+  You will be shown a one-line Korean summary of what a live stream was
+  talking about, labeled [CURRENT SUMMARY], followed by newly transcribed
+  Japanese speech from the same stream since that summary was written,
+  labeled [NEW SPEECH SINCE THEN]. Decide whether the new speech is still
+  about the same topic/situation described in the summary, or whether the
+  subject has clearly moved on to something different. A natural
+  continuation, elaboration, tangent, or the next beat of the same ongoing
+  conversation still counts as the SAME topic — only answer CHANGED when
+  the subject matter has genuinely shifted to something else. Output ONLY
+  one word: SAME or CHANGED. Nothing else — no notes, no punctuation.
+
 # --- Reverse direction (draft, 2026-08-20): viewer's own Korean chat -> ---
 # --- natural Japanese, for pasting into the stream's chat. Standalone   ---
 # --- (not assembled from `notes` above — see llama_server_engine.py's   ---

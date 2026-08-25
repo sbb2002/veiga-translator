@@ -160,6 +160,12 @@ def _build_japanese_only_grammar(extra_literals: tuple[str, ...] = ()) -> str:
 
 _JAPANESE_ONLY_GRAMMAR = _build_japanese_only_grammar()
 
+# Context-change check (2026-08-25): a plain two-way forced choice, not a
+# script/language whitelist like the grammars above — constrains the model
+# to exactly one of the two control tokens so the caller never has to parse
+# a free-form answer.
+_CONTEXT_CHANGE_GRAMMAR = 'root ::= "SAME" | "CHANGED"'
+
 
 def _match_source_punctuation(source: str, translated: str) -> str:
     """Strip ！/! or ？/? from `translated` when `source` (the user's raw
@@ -462,6 +468,36 @@ class LlamaServerEngine:
         response.raise_for_status()
         data = response.json()
         return data["choices"][0]["message"]["content"].strip()
+
+    async def context_changed(self, current_summary: str, recent_ja: str) -> bool:
+        if not current_summary.strip() or not recent_ja.strip():
+            # Nothing to compare against (first summary of the session, or
+            # no new speech since the last check) — treat as changed so the
+            # caller always gets a summary rather than none.
+            return True
+        user_content = (
+            f"[CURRENT SUMMARY]\n{current_summary}\n\n"
+            f"[NEW SPEECH SINCE THEN]\n{recent_ja}"
+        )
+        request_json = {
+            "model": config.LLAMA_SERVER_MODEL,
+            "messages": [
+                {"role": "system", "content": prompts.CONTEXT_CHANGE_SYSTEM_PROMPT},
+                {"role": "user", "content": user_content},
+            ],
+            "max_tokens": 4,
+            "temperature": 0.0,
+            "grammar": _CONTEXT_CHANGE_GRAMMAR,
+        }
+        response = await self._client.post(
+            "/v1/chat/completions",
+            json=request_json,
+            timeout=config.LLAMA_SERVER_TIMEOUT_S,
+        )
+        response.raise_for_status()
+        data = response.json()
+        answer = data["choices"][0]["message"]["content"].strip()
+        return answer != "SAME"
 
     async def summarize_context(self, ja_history: str) -> str:
         if not ja_history.strip():

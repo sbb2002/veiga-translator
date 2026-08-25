@@ -507,8 +507,15 @@ class AudioSession:
                 allowed_literals=self._glossary.latin_targets(final_text),
             )
             llm_s = time.monotonic() - llm_start
-            self._final_history.append((final_text, translation.text))
-            self._maybe_update_context_summary()
+            # Don't let a music/BGM-flagged final (likely a hallucinated or
+            # mistranscribed lyric — see music_gate.py) poison later
+            # translations' context or the context_summary: both are built
+            # straight from _final_history, so one bad entry here doesn't
+            # just mis-render this segment, it drags every subsequent
+            # sentence's context and the running summary off-topic too.
+            if not music_suspected:
+                self._final_history.append((final_text, translation.text))
+                self._maybe_update_context_summary()
         except Exception:
             logger.exception("final translation failed — falling back to last partial translation")
             llm_s = time.monotonic() - llm_start

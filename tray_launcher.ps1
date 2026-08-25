@@ -19,7 +19,7 @@ $llamaLog = Join-Path $root "llama_server.log"
 $llamaErrLog = Join-Path $root "llama_server.err.log"
 
 $llamaProc = Start-Process -FilePath $llamaExe `
-    -ArgumentList "-m", "`"$modelPath`"", "--port", "8080", "-ngl", "999", "-c", "4096" `
+    -ArgumentList "-m", "`"$modelPath`"", "--port", "8080", "-ngl", "999", "-c", "8192" `
     -WorkingDirectory $root -WindowStyle Hidden -PassThru `
     -RedirectStandardOutput $llamaLog -RedirectStandardError $llamaErrLog
 

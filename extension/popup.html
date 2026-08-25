@@ -17,6 +17,7 @@
       --accent-soft: #f2e3cd;
       --ok: #2f8f5f;
       --risk: #c23f30;
+      --music: #8452c9;
       --shadow: 0 1px 2px rgba(20, 23, 28, 0.06), 0 8px 24px rgba(20, 23, 28, 0.08);
       --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic",
         "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
@@ -38,6 +39,7 @@
         --accent-soft: #3a2f1c;
         --ok: #4caf7d;
         --risk: #e2685a;
+        --music: #a687e0;
         --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
       }
     }
@@ -53,6 +55,7 @@
       --accent-soft: #3a2f1c;
       --ok: #4caf7d;
       --risk: #e2685a;
+      --music: #a687e0;
       --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
     }
 
@@ -305,15 +308,21 @@
     }
     .segment.is-final .ko-line { color: var(--text); }
 
-    /* 노래/BGM 감지 세그먼트 (backend/music_gate.py::music_suspected) —
-       일반 뷰에서는 빈 줄만(요약 영역 아이콘이 이미 알려줌), 디버그 지표
-       체크 시에만 무슨 상태인지 문구로 표시. */
+    /* 노래/BGM 감지 세그먼트 (backend/music_gate.py::music_suspected) — 원문/
+       번역 텍스트는 항상 그대로 보여주되(2026-08-25 popup.js 수정: 예전엔
+       여기서 통째로 지워버리는 버그가 있었음), 노래 구간에서 나온 결과임을
+       한눈에 구분할 수 있도록 --music 색상으로 칠한다. 디버그 모드에서는
+       추가로 문구 라벨도 표시. */
     .segment.music-suspected {
-      border-left-color: var(--text-faint);
+      border-left-color: var(--music);
+    }
+    .segment.music-suspected .ja-line,
+    .segment.music-suspected .ko-line {
+      color: var(--music);
     }
     body.show-debug .segment.music-suspected .ko-line::before {
       content: "🎵 노래·배경음악 감지됨";
-      color: var(--text-faint);
+      color: var(--music);
       font-style: italic;
       font-weight: 400;
     }

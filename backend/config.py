@@ -94,33 +94,92 @@ VAD_FRAME_SAMPLES = 512  # silero-vad requires fixed frame sizes at 16kHz; 512 s
 VAD_SPEECH_THRESHOLD = 0.5  # speech-probability cutoff
 MAX_UTTERANCE_SECONDS = 10  # hard cap: force-finalize even without silence (run-on speech safety net)
 
-# Music/speech discriminator gating VAD (backend/music_gate.py) — un-deferred
-# 2026-08-19 after live capture with background music underneath speech kept
-# producing outro-phrase hallucinations even past the RMS/no_speech_prob
-# gates in audio_session.py, because BGM keeps the raw audio "loud" during
-# stretches where nobody's actually talking, and VAD itself can mistake
-# rhythmic music for speech. No calibration data yet (this is a first cut,
-# see music_gate.py's docstring for the signal-processing approach) — revisit
-# both knobs once flagged_segments.jsonl accumulates BGM-heavy examples.
-    # DISABLED 2026-08-19 (same day it was added): live capture showed it
-    # dropping genuine Japanese speech, not just background music — likely
-    # the 3-5.5Hz "syllable rate" band, calibrated against English
-    # (syllable-timed), doesn't transfer to Japanese's mora-timed rhythm,
-    # and/or the 2s rolling window blends a preceding music-only stretch
-    # into a freshly-started utterance's judgment, diluting its peak. Losing
-    # real speech is a worse regression than the residual BGM hallucination
-    # this was meant to fix (Goal priority §1차 목표), so off until this can
-    # be recalibrated against real captured audio instead of synthetic test
-    # signals — see music_gate.py's docstring for what was and wasn't
-    # validated.
-MUSIC_GATE_ENABLED = False
-MUSIC_GATE_WINDOW_S = 2.0  # how much rolling context before the gate starts judging
-# The tallest bin in the 3-5.5Hz (syllable-rate) band must be at least this
-# many times the median modulation-spectrum bin elsewhere to count as a real
-# speech-rate peak; below it, treat the window as music. Conservative (high)
-# on purpose per the "don't drop real speech on an ambiguous read" bias —
-# only a window with no credible syllable-rate peak at all gets suppressed.
-MUSIC_GATE_MODULATION_RATIO_THRESHOLD = 3.0
+# Per-utterance singing detector (backend/music_gate.py) — ON HOLD
+# 2026-08-26 (user call): still unreliable live (catches maybe half of real
+# singing, occasionally false-positives on normal speech right after a song
+# ends) and its pitch analysis was adding latency to EVERY utterance's
+# finalize, not just singing ones — contributing to the "transcript shows
+# but translation is slow/missing" complaints piling up alongside an
+# unrelated llama-server duplicate-process issue. Master switch: when False,
+# AudioSession skips calling MusicGate.pitch_stats() entirely (zero added
+# latency) and every final is emitted with music_suspected=False. Flip back
+# on to resume iterating once translation stability itself isn't in
+# question. See music_gate.py's module docstring for the detection
+# approach's own history.
+SINGING_DETECTION_ENABLED = False
+
+# 2026-08-25 (user direction): purpose changed from "catch background music
+# playing under speech" to "detect when the speaker themselves is singing",
+# via pitch (F0) tracking instead of the old syllable-rate-modulation
+# heuristic (which routinely missed sung lyrics — they carry their own
+# syllable-rate energy modulation similar to plain speech). See
+# music_gate.py's module docstring for the full history/rationale.
+#
+# Demucs vocal separation (2026-08-25) runs ahead of pitch tracking so a
+# loud background instrumental under normal talking doesn't corrupt the
+# pitch read — see music_gate.py's docstring for why raw-audio pitch
+# tracking alone wasn't enough. "htdemucs" is the standard 4-stem model
+# (drums/bass/other/vocals); ~100-200ms per utterance once warmed up
+# (MusicGate.warmup(), called once at startup — see main.py).
+DEMUCS_MODEL_NAME = "htdemucs"
+
+PITCH_FRAME_MS = 30.0
+PITCH_HOP_MS = 15.0
+PITCH_MIN_HZ = 70.0  # below typical adult male speaking/singing fundamental
+PITCH_MAX_HZ = 500.0  # above typical adult female singing fundamental (falsetto excluded)
+PITCH_VOICED_ENERGY_FLOOR = 0.01  # frame RMS below this treated as unvoiced/silent, skipped
+PITCH_VOICING_THRESHOLD = 0.35  # normalized autocorrelation peak below this treated as unvoiced/noisy
+PITCH_MIN_VOICED_FRAMES = 6  # need at least this many voiced frames in an utterance to judge at all
+# Median-filter window (frames) applied to the F0 track before computing
+# stats — kills isolated single-frame octave-jump errors (a well-known
+# autocorrelation pitch-tracking failure mode) that otherwise blow up the
+# range estimate for perfectly normal speech. See MusicGate.pitch_stats.
+PITCH_MEDIAN_FILTER_FRAMES = 5
+
+# Session-adaptive singing baseline: compares each utterance's pitch stats
+# against a rolling model of how THIS speaker normally talks, rather than a
+# fixed number — singing register/range varies a lot by voice, so a
+# one-size-fits-all threshold either misses quiet/narrow-range singing or
+# false-positives on speakers with naturally expressive, wide-ranging
+# speech intonation.
+ADAPTIVE_SINGING_ENABLED = True
+ADAPTIVE_SINGING_EMA_ALPHA = 0.15
+ADAPTIVE_SINGING_MIN_SAMPLES = 8
+# Only feed the "how does this speaker normally talk" baseline from
+# utterances whose OWN pitch range is already narrow enough to be
+# unambiguous plain talking — keeps early singing (before enough samples
+# exist to judge adaptively) from contaminating the baseline it would be
+# compared against.
+# Provisional (2026-08-25): a single real conversational clip
+# (data/wav/일상,소통) measured through this exact pipeline came back at
+# ~13-15 semitones of range for plain talking — this autocorrelation
+# pitch tracker is prone to octave jumps (a well-known failure mode of
+# simple autocorrelation pitch tracking), which inflates apparent range.
+# 5.0 (this constant's original value) would have rejected essentially all
+# real speech from ever bootstrapping the baseline. Needs live-session
+# tuning once more real data accumulates.
+#
+# Update (2026-08-26, live capture w/ median filter applied): a real
+# streamer's plain conversational Japanese consistently measured 13-18
+# semitones through this exact pipeline (6 samples) — well above 10, so the
+# baseline was never bootstrapping at all and every utterance fell back to
+# FIXED_SINGING_RANGE_SEMITONES, which was itself too low and false-
+# positived on normal talk about half the time. Raised both this and the
+# fixed fallback below to actually sit above the observed normal-talk
+# range for this pipeline.
+ADAPTIVE_SINGING_BOOTSTRAP_RANGE_MAX_SEMITONES = 18.0
+# Flag as singing when EITHER the utterance's pitch range exceeds the
+# learned baseline range by this multiple, OR its median pitch sits at
+# least this many semitones away from the learned baseline median — a
+# sustained single high/low note can have a narrow range of its own but
+# still sit far outside how the speaker normally talks.
+ADAPTIVE_SINGING_RANGE_RATIO = 1.8
+ADAPTIVE_SINGING_MEDIAN_DEVIATION_SEMITONES = 5.0
+# Fixed fallback used before ADAPTIVE_SINGING_MIN_SAMPLES is reached —
+# deliberately wide so early-session judging doesn't false-positive on
+# normal expressive speech before a real baseline exists. See the
+# provisional-calibration note above — raised alongside the bootstrap floor.
+FIXED_SINGING_RANGE_SEMITONES = 20.0
 
 # Sentence-completion correction (CLAUDE.md "Streaming / sentence-finalization
 # strategy": silence is the primary trigger, punctuation/context analysis is a
@@ -133,6 +192,51 @@ MUSIC_GATE_MODULATION_RATIO_THRESHOLD = 3.0
 # that may never come (hesitation-heavy live-stream speech routinely trails
 # off without a clean sentence-final form).
 FINALIZE_GRACE_MS = 200
+
+# S5 (2026-08-25, docs/planning/IMPROVEMENT_BACKLOG.md): session-adaptive
+# VAD_SILENCE_MS / FINALIZE_GRACE_MS. The two constants above stay as-is —
+# they're now the fixed fallback used until enough samples accumulate, and
+# the reference point the EMA-adapted values are scaled/clamped around. This
+# adapts to the CURRENT SESSION's observed rhythm as a whole, not per
+# speaker (that needs diarization — Goal priority §2차 목표, out of scope).
+# See AudioSession._effective_silence_ms/_effective_grace_ms.
+ADAPTIVE_VAD_ENABLED = True
+
+# EMA smoothing factor for both rolling stats below — kept small so one or
+# two odd utterances can't swing the adapted threshold; a genuine shift in
+# the speaker's rhythm still shows up within a few dozen sentences.
+ADAPTIVE_VAD_EMA_ALPHA = 0.2
+
+# Don't start adapting a given threshold until this many valid samples for
+# its underlying stat have been observed — before that, use the fixed
+# default above for that threshold specifically (silence/grace adapt
+# independently, on their own sample counts).
+ADAPTIVE_VAD_MIN_SAMPLES = 5
+
+# The natural inter-utterance silence gap is measured directly — wall-clock
+# time between the last speech frame of one utterance and the first speech
+# frame of the next (see AudioSession._process_frame) — deliberately NOT
+# read from _UtteranceState.silence_ms at finalize time, which is capped at
+# essentially the trigger threshold itself and so carries almost no
+# information about the speaker's actual rhythm.
+ADAPTIVE_SILENCE_TARGET_RATIO = 0.7  # trigger at this fraction of the observed average gap
+ADAPTIVE_SILENCE_MIN_MS = 350
+ADAPTIVE_SILENCE_MAX_MS = 1200
+# A raw gap at least this long is assumed unrelated to sentence rhythm (ad
+# break, scene change, speaker stepped away) and is excluded from the
+# rolling stat entirely rather than dragging it upward.
+ADAPTIVE_PAUSE_OUTLIER_MS = 8000
+
+# Speech rate (transcribed characters / spoken duration, sampled per final —
+# see AudioSession._do_finalize) scales the grace period: a slower/more
+# hesitant speaker gets more room before being forced to finalize, a brisk
+# speaker less. ADAPTIVE_RATE_BASELINE_CPS is the pace FINALIZE_GRACE_MS's
+# 200ms default was implicitly tuned around — no live-captured baseline yet
+# (same caveat as MUSIC_GATE_* above), revisit once flagged-segment-style
+# data exists for this too.
+ADAPTIVE_RATE_BASELINE_CPS = 7.0
+ADAPTIVE_GRACE_MIN_MS = 100
+ADAPTIVE_GRACE_MAX_MS = 500
 
 # Partial re-transcription cadence: re-run STT on the in-progress buffer at most this often,
 # to avoid re-transcribing on every single 0.3s chunk.

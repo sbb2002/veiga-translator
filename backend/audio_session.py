@@ -64,6 +64,7 @@ class AudioSession:
         translation_engine: TranslationEngine,
         on_event: EventSink,
         vad: SileroVAD,
+        music_gate: MusicGate,
         glossary: Glossary | None = None,
     ) -> None:
         self._stt = stt_engine
@@ -77,11 +78,31 @@ class AudioSession:
         # guarantees a single capture at a time.
         self._vad = vad
         vad.reset()
-        # Pure signal processing, no model weights — cheap enough to build
-        # fresh per session rather than share/reset like the VAD model.
-        self._music_gate = MusicGate()
+        # Shared instance loaded once at startup (main.py) — now holds a
+        # Demucs vocal-separation model, not cheap to construct per session
+        # the way the old pure-signal-processing version was. Stateless
+        # across calls (no per-session reset needed, unlike VAD's RNN state).
+        self._music_gate = music_gate
         self._frame_buffer = np.zeros(0, dtype=np.float32)
         self._utterance: _UtteranceState | None = None
+        # S5 session-adaptive VAD_SILENCE_MS/FINALIZE_GRACE_MS (see
+        # config.ADAPTIVE_VAD_ENABLED). _last_speech_at is updated on every
+        # speech frame regardless of utterance boundaries, so the gap
+        # measured when a new utterance starts is the true silence duration
+        # the speaker actually left, not our own threshold's artifact.
+        self._last_speech_at: float | None = None
+        self._pause_ema_ms: float | None = None
+        self._pause_samples = 0
+        self._rate_ema_cps: float | None = None
+        self._rate_samples = 0
+        # Session-adaptive singing-detection baseline (config.ADAPTIVE_SINGING_*)
+        # — EMA of MusicGate.pitch_stats() from utterances confirmed as
+        # unambiguous plain talking, used to judge singing relative to how
+        # THIS speaker actually sounds instead of one fixed absolute number.
+        # See _record_speech_pitch_sample.
+        self._speech_pitch_median_ema: float | None = None
+        self._speech_pitch_range_ema: float | None = None
+        self._speech_pitch_samples = 0
         # Rolling short-term context for translation continuity: the last
         # few final (JA, KO) sentence pairs, oldest first (see
         # config.FINAL_CONTEXT_HISTORY_SIZE / EVAL_REPORT_2026-08-18.md §5-E-1).
@@ -144,21 +165,22 @@ class AudioSession:
             await self._process_frame(frame)
 
     async def _process_frame(self, frame: np.ndarray) -> None:
-        self._music_gate.push(frame)
-        # AND, not a replacement for VAD: music_gate only ever downgrades a
-        # VAD "speech" call to "not speech" when its own (much coarser,
-        # ~MUSIC_GATE_WINDOW_S-lagged) read is confidently musical — it can
-        # never manufacture speech VAD didn't already see. See
-        # music_gate.py for why this sits ahead of VAD in the pipeline
-        # rather than replacing it.
-        is_speech = self._vad.is_speech(frame) and not self._music_gate.is_music_dominant()
+        # MusicGate no longer gates VAD here (2026-08-25 redesign — it now
+        # judges a finished utterance's own audio for singing, synchronously
+        # in _enqueue_finalize, not a live rolling window per frame; see
+        # music_gate.py's module docstring).
+        is_speech = self._vad.is_speech(frame)
         frame_ms = len(frame) / config.SAMPLE_RATE * 1000
 
         if is_speech:
+            now = time.monotonic()
             if self._utterance is None:
+                if config.ADAPTIVE_VAD_ENABLED and self._last_speech_at is not None:
+                    self._record_pause_sample((now - self._last_speech_at) * 1000.0)
                 self._utterance = _UtteranceState(segment_id=uuid.uuid4().hex)
             self._utterance.buffer.append(frame)
             self._utterance.silence_ms = 0.0
+            self._last_speech_at = now
         elif self._utterance is not None:
             # Keep trailing silence in the buffer (harmless for STT) so the
             # utterance's natural tail isn't clipped mid-word.
@@ -168,10 +190,10 @@ class AudioSession:
         if self._utterance is None:
             return
 
-        past_silence_threshold = self._utterance.silence_ms >= config.VAD_SILENCE_MS
-        past_grace_deadline = (
-            self._utterance.silence_ms >= config.VAD_SILENCE_MS + config.FINALIZE_GRACE_MS
-        )
+        effective_silence_ms = self._effective_silence_ms()
+        effective_grace_ms = self._effective_grace_ms()
+        past_silence_threshold = self._utterance.silence_ms >= effective_silence_ms
+        past_grace_deadline = self._utterance.silence_ms >= effective_silence_ms + effective_grace_ms
         past_hard_cap = self._utterance.duration_s() >= config.MAX_UTTERANCE_SECONDS
 
         # Silence alone is the primary trigger, but a sentence that still
@@ -190,11 +212,13 @@ class AudioSession:
             else:
                 reason = "silence_complete"
             logger.info(
-                "finalize trigger=%s seg=%s silence_ms=%.0f dur=%.1fs",
+                "finalize trigger=%s seg=%s silence_ms=%.0f dur=%.1fs eff_silence_ms=%.0f eff_grace_ms=%.0f",
                 reason,
                 self._utterance.segment_id,
                 self._utterance.silence_ms,
                 self._utterance.duration_s(),
+                effective_silence_ms,
+                effective_grace_ms,
             )
             self._enqueue_finalize()
             return
@@ -225,6 +249,87 @@ class AudioSession:
                     self._utterance.duration_s(),
                 )
                 self._enqueue_finalize()
+
+    def _record_pause_sample(self, gap_ms: float) -> None:
+        """EMA-update the observed natural inter-utterance silence gap (see
+        config.ADAPTIVE_SILENCE_* for the outlier/clamp rationale)."""
+        if gap_ms <= 0 or gap_ms >= config.ADAPTIVE_PAUSE_OUTLIER_MS:
+            return
+        alpha = config.ADAPTIVE_VAD_EMA_ALPHA
+        self._pause_ema_ms = (
+            gap_ms if self._pause_ema_ms is None else (1 - alpha) * self._pause_ema_ms + alpha * gap_ms
+        )
+        self._pause_samples += 1
+
+    def _record_rate_sample(self, char_count: int, duration_s: float) -> None:
+        """EMA-update the observed speech rate (see
+        config.ADAPTIVE_RATE_BASELINE_CPS)."""
+        if char_count <= 0 or duration_s < 0.3:
+            return
+        cps = char_count / duration_s
+        alpha = config.ADAPTIVE_VAD_EMA_ALPHA
+        self._rate_ema_cps = (
+            cps if self._rate_ema_cps is None else (1 - alpha) * self._rate_ema_cps + alpha * cps
+        )
+        self._rate_samples += 1
+
+    def _effective_silence_ms(self) -> float:
+        if (
+            not config.ADAPTIVE_VAD_ENABLED
+            or self._pause_ema_ms is None
+            or self._pause_samples < config.ADAPTIVE_VAD_MIN_SAMPLES
+        ):
+            return config.VAD_SILENCE_MS
+        target = self._pause_ema_ms * config.ADAPTIVE_SILENCE_TARGET_RATIO
+        return min(max(target, config.ADAPTIVE_SILENCE_MIN_MS), config.ADAPTIVE_SILENCE_MAX_MS)
+
+    def _effective_grace_ms(self) -> float:
+        if (
+            not config.ADAPTIVE_VAD_ENABLED
+            or self._rate_ema_cps is None
+            or self._rate_samples < config.ADAPTIVE_VAD_MIN_SAMPLES
+        ):
+            return config.FINALIZE_GRACE_MS
+        scale = config.ADAPTIVE_RATE_BASELINE_CPS / max(self._rate_ema_cps, 0.1)
+        target = config.FINALIZE_GRACE_MS * scale
+        return min(max(target, config.ADAPTIVE_GRACE_MIN_MS), config.ADAPTIVE_GRACE_MAX_MS)
+
+    def _record_speech_pitch_sample(self, median_hz: float, range_semitones: float) -> None:
+        """EMA-update the session's 'how does this speaker normally talk'
+        pitch baseline — only from utterances whose own pitch range is
+        already narrow enough to be unambiguous plain talking (see
+        config.ADAPTIVE_SINGING_BOOTSTRAP_RANGE_MAX_SEMITONES), so early
+        singing can't drag the baseline it'll later be compared against."""
+        if range_semitones > config.ADAPTIVE_SINGING_BOOTSTRAP_RANGE_MAX_SEMITONES:
+            return
+        alpha = config.ADAPTIVE_SINGING_EMA_ALPHA
+        self._speech_pitch_median_ema = (
+            median_hz
+            if self._speech_pitch_median_ema is None
+            else (1 - alpha) * self._speech_pitch_median_ema + alpha * median_hz
+        )
+        self._speech_pitch_range_ema = (
+            range_semitones
+            if self._speech_pitch_range_ema is None
+            else (1 - alpha) * self._speech_pitch_range_ema + alpha * range_semitones
+        )
+        self._speech_pitch_samples += 1
+
+    def _is_singing(self, median_hz: float, range_semitones: float) -> bool:
+        """Judge whether one utterance's pitch stats look like singing
+        rather than talking, per config.ADAPTIVE_SINGING_* — see that
+        config block for the two-signal (range + median deviation) rationale."""
+        if (
+            not config.ADAPTIVE_SINGING_ENABLED
+            or self._speech_pitch_median_ema is None
+            or self._speech_pitch_range_ema is None
+            or self._speech_pitch_samples < config.ADAPTIVE_SINGING_MIN_SAMPLES
+        ):
+            return range_semitones > config.FIXED_SINGING_RANGE_SEMITONES
+        if range_semitones > self._speech_pitch_range_ema * config.ADAPTIVE_SINGING_RANGE_RATIO:
+            return True
+        median_deviation = abs(12.0 * np.log2(median_hz / self._speech_pitch_median_ema))
+        return median_deviation > config.ADAPTIVE_SINGING_MEDIAN_DEVIATION_SEMITONES
 
     async def _emit_partial(self) -> str:
         utterance = self._utterance
@@ -389,8 +494,22 @@ class AudioSession:
         """Hand the current utterance off to the background finalize
         worker and immediately clear it — synchronous and cheap, so the
         frame-processing loop (and therefore audio ingestion) never blocks
-        on the slow STT/translation work. Next frame's `is_speech` branch
-        transparently starts a fresh _UtteranceState if speech continues."""
+        on the slow STT/translation/pitch-separation work. Next frame's
+        `is_speech` branch transparently starts a fresh _UtteranceState if
+        speech continues.
+
+        Pitch stats are NOT computed here (they were, briefly, for the
+        pre-Demucs pure-autocorrelation version — cheap enough at ~40ms to
+        run inline; the Demucs vocal-separation pass added ahead of it is
+        not, ~100-300ms, and blocking the audio-ingestion path for that on
+        every single utterance would back up incoming frames). They're
+        computed in _do_finalize instead, off the event loop thread via
+        asyncio.to_thread — same pattern as the STT call there. This is
+        safe from the old timing bug (see music_gate.py's module docstring)
+        specifically because it operates on the utterance's own fixed,
+        already-buffered audio, not a live/shared rolling window — running
+        it later doesn't change what it sees, only when the result becomes
+        available."""
         utterance = self._utterance
         self._utterance = None
         if utterance is not None:
@@ -449,13 +568,37 @@ class AudioSession:
         stt_s = 0.0
         no_speech_prob: float | None = None
         avg_logprob: float | None = None
-        # Display-only music/BGM hint (2026-08-25) — see MusicGate.music_suspected()'s
-        # docstring for why this bypasses config.MUSIC_GATE_ENABLED safely.
-        # Read once here (reflects the rolling window's most recent
-        # ~MUSIC_GATE_WINDOW_S, i.e. roughly this utterance's tail) and reused
-        # for every "final" event emitted below so the UI can swap in a
-        # placeholder instead of a confidently-wrong translation.
-        music_suspected = self._music_gate.music_suspected()
+        # Display-only singing hint (redesigned 2026-08-25 — see
+        # music_gate.py's module docstring). Runs off the event loop thread
+        # (Demucs vocal separation + pitch tracking, ~100-300ms) — see
+        # _enqueue_finalize's docstring for why this moved here instead of
+        # running inline in the audio-ingestion path. Operates on this
+        # utterance's own fixed buffered audio, so there's no live/lagged
+        # read despite running asynchronously. `music_suspected` is the
+        # wire/UI field name kept for backward compat with the frontend
+        # contract; it now specifically means "this utterance sounds sung".
+        pitch_median_hz: float | None = None
+        pitch_range_semitones: float | None = None
+        music_suspected = False
+        if config.SINGING_DETECTION_ENABLED:
+            pitch_stats = await asyncio.to_thread(self._music_gate.pitch_stats, audio)
+            pitch_median_hz, pitch_range_semitones = pitch_stats if pitch_stats is not None else (None, None)
+            music_suspected = (
+                pitch_median_hz is not None
+                and pitch_range_semitones is not None
+                and self._is_singing(pitch_median_hz, pitch_range_semitones)
+            )
+            logger.info(
+                "singing-check seg=%s pitch_hz=%s range_st=%s baseline_hz=%s baseline_range_st=%s "
+                "samples=%d -> music_suspected=%s",
+                utterance.segment_id,
+                f"{pitch_median_hz:.1f}" if pitch_median_hz is not None else None,
+                f"{pitch_range_semitones:.1f}" if pitch_range_semitones is not None else None,
+                f"{self._speech_pitch_median_ema:.1f}" if self._speech_pitch_median_ema is not None else None,
+                f"{self._speech_pitch_range_ema:.1f}" if self._speech_pitch_range_ema is not None else None,
+                self._speech_pitch_samples,
+                music_suspected,
+            )
         dropped_low_confidence = False
         audio_rms = _rms(audio)
         # Same RMS gate as _emit_partial: don't trust a beam=5 re-transcribe
@@ -531,6 +674,29 @@ class AudioSession:
                 }
             )
             return
+
+        if config.ADAPTIVE_VAD_ENABLED and not music_suspected:
+            # enqueued_at (captured synchronously at trigger time, before
+            # this coroutine ever waited in the finalize queue) is the
+            # accurate spoken duration — utterance.duration_s() would
+            # instead include however long this utterance sat queued behind
+            # others, badly overstating the actual speech rate.
+            self._record_rate_sample(len(final_text), utterance.enqueued_at - utterance.started_at)
+
+        # Calibrate the singing-detection baseline from this utterance only
+        # if STT is confident it's real, intelligible speech — see
+        # _record_speech_pitch_sample for the range-based bootstrap floor
+        # that keeps ambiguous/sung audio from contaminating it even when
+        # STT is (over)confident about the transcribed lyrics.
+        if (
+            config.ADAPTIVE_SINGING_ENABLED
+            and pitch_median_hz is not None
+            and pitch_range_semitones is not None
+            and not dropped_low_confidence
+            and no_speech_prob is not None
+            and no_speech_prob < config.WHISPER_NO_SPEECH_THRESHOLD
+        ):
+            self._record_speech_pitch_sample(pitch_median_hz, pitch_range_semitones)
 
         glossary_hint = self._glossary.translation_hint(final_text)
         context, context_translation = self._format_history()

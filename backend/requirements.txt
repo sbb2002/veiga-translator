@@ -16,3 +16,8 @@ sentence-transformers
 # transitively (huggingface_hub etc.) but declared explicitly since it's now
 # a direct dependency.
 pyyaml
+# backend/music_gate.py — Demucs (htdemucs) vocal separation ahead of pitch
+# tracking, so background music/BGM under normal talking doesn't corrupt the
+# singing-detection read (2026-08-25). Uses torch/torchaudio, already
+# required above for vad.py.
+demucs

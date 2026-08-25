@@ -345,13 +345,15 @@ function renderEvent(data) {
   entry.container.classList.toggle("music-suspected", musicSuspected);
   entry.rawText = text ?? "";
   entry.rawTranslation = translation ?? "";
-  if (musicSuspected) {
-    entry.jaLine.textContent = "";
-    entry.koLine.textContent = "";
-  } else {
-    entry.jaLine.textContent = entry.rawText;
-    entry.koLine.textContent = entry.rawTranslation;
-  }
+  // 2026-08-25's music/BGM gate is a display-only hint (see audio_session.py) —
+  // it must never hide a real transcript/translation the backend actually
+  // produced. Music detection turned out to false-positive heavily on normal
+  // speech (observed live: ~50-70% of finals flagged), so blanking text here
+  // was silently wiping most translations. Always render the real text; the
+  // music-suspected class just dims the segment's border and (debug mode
+  // only) adds a "🎵" label — see popup.html.
+  entry.jaLine.textContent = entry.rawText;
+  entry.koLine.textContent = entry.rawTranslation;
   if (type === "final") updateMusicIndicator(musicSuspected);
   // Debugging aid (see CLAUDE.md hallucination-filtering discussion): only
   // "final" events carry Whisper's confidence signals today (audio_session.py

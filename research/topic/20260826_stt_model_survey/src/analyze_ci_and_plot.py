@@ -103,6 +103,25 @@ def bar_chart(path: Path, title: str, group_labels: list[str], series: dict[str,
     plt.close(fig)
 
 
+def quant_metrics_chart(path: Path, overall_ci: dict) -> None:
+    """One subplot per metric (own y-scale) — CER/ROUGE-L (0-1) and
+    chrF++/BLEU (0-100) flatten to invisible bars on a shared axis."""
+    titles = {"cer": "CER (↓)", "chrf++": "chrF++ (↑)", "bleu_char": "BLEU(char) (↑)", "rouge_l_f1": "ROUGE-L F1 (↑)"}
+    fig, axes = plt.subplots(1, len(METRIC_KEYS), figsize=(4 * len(METRIC_KEYS), 4.5))
+    colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
+    for ax, key in zip(axes, METRIC_KEYS):
+        vals = [overall_ci[m][key]["point"] for m in METHODS]
+        errs = [overall_ci[m][key]["ci_halfwidth"] for m in METHODS]
+        ax.bar(range(len(METHODS)), vals, yerr=errs, capsize=3, color=colors[: len(METHODS)])
+        ax.set_xticks(range(len(METHODS)))
+        ax.set_xticklabels([LABELS[m] for m in METHODS], rotation=30, ha="right", fontsize=8)
+        ax.set_title(titles[key])
+    fig.suptitle("CPU 파일럿(25세그먼트) 정량 지표 — 95% CI")
+    fig.tight_layout()
+    fig.savefig(path, dpi=150)
+    plt.close(fig)
+
+
 def main() -> None:
     FIG_ROOT.mkdir(parents=True, exist_ok=True)
     all_rows = {m: load_rows(m) for m in METHODS}
@@ -120,19 +139,9 @@ def main() -> None:
     with summary_path.open("w", encoding="utf-8") as f:
         json.dump(summary, f, ensure_ascii=False, indent=2)
 
-    # quant_metrics.png: 4 metrics x 4 methods
-    series = {}
-    for m in METHODS:
-        vals = [overall_ci[m][k]["point"] for k in METRIC_KEYS]
-        errs = [overall_ci[m][k]["ci_halfwidth"] for k in METRIC_KEYS]
-        series[LABELS[m]] = (vals, errs)
-    bar_chart(
-        FIG_ROOT / "quant_metrics.png",
-        "CPU 파일럿(25세그먼트) 정량 지표 — 95% CI",
-        ["CER", "chrF++", "BLEU(char)", "ROUGE-L F1"],
-        series,
-        "score",
-    )
+    # quant_metrics.png: one subplot per metric (CER/ROUGE-L are 0-1,
+    # chrF++/BLEU are 0-100 — a shared axis flattens the small ones)
+    quant_metrics_chart(FIG_ROOT / "quant_metrics.png", overall_ci)
 
     # rtf.png
     series = {LABELS[m]: ([overall_ci[m]["rtf"]["point"]], [overall_ci[m]["rtf"]["ci_halfwidth"]]) for m in METHODS}

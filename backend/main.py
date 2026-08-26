@@ -24,7 +24,9 @@ from fastapi import FastAPI, WebSocket
 
 from backend.audio_session import AudioSession
 from backend.glossary import Glossary
-from backend.music_gate import MusicGate
+# vanilla (backend branch reset, see docs/planning/IMPROVEMENT_BACKLOG.md M1):
+# singing detection disabled — commented out, not deleted.
+# from backend.music_gate import MusicGate
 from backend.stt.faster_whisper_engine import FasterWhisperEngine
 from backend.translation.llama_server_engine import LlamaServerEngine
 from backend.vad import SileroVAD
@@ -132,12 +134,12 @@ _stt_engine: FasterWhisperEngine | None = None
 _translation_engine: LlamaServerEngine | None = None
 _glossary: Glossary | None = None
 _vad: SileroVAD | None = None
-_music_gate: MusicGate | None = None
+# _music_gate: MusicGate | None = None  # vanilla: singing detection disabled
 
 
 @app.on_event("startup")
 async def startup() -> None:
-    global _stt_engine, _translation_engine, _glossary, _vad, _music_gate
+    global _stt_engine, _translation_engine, _glossary, _vad
     _glossary = Glossary.load()
     logger.info("Glossary loaded (%d entries) from backend/glossary.json", len(_glossary))
 
@@ -147,14 +149,14 @@ async def startup() -> None:
     _vad = SileroVAD()
     logger.info("VAD model ready.")
 
-    # Loaded once and shared across sessions (2026-08-25: now holds a Demucs
-    # vocal-separation model, no longer cheap to construct per connection —
-    # see music_gate.py). warmup() also pays the one-time CUDA kernel
-    # compile cost up front instead of on a viewer's first real utterance.
-    logger.info("Loading singing-detection (Demucs vocal separation) model...")
-    _music_gate = MusicGate()
-    _music_gate.warmup()
-    logger.info("Singing-detection model ready.")
+    # vanilla: singing-detection model loading disabled (see
+    # docs/planning/IMPROVEMENT_BACKLOG.md M1). Uncomment alongside the
+    # MusicGate import/global above and the AudioSession kwarg below to
+    # restore.
+    # logger.info("Loading singing-detection (Demucs vocal separation) model...")
+    # _music_gate = MusicGate()
+    # _music_gate.warmup()
+    # logger.info("Singing-detection model ready.")
 
     logger.info("Loading STT model (this also verifies CUDA availability)...")
     # NOT wiring _glossary.whisper_hint here: `hotwords` measurably increases
@@ -194,13 +196,13 @@ async def ws_audio(websocket: WebSocket) -> None:
     assert _stt_engine is not None, "STT engine not initialized — startup event didn't run?"
     assert _translation_engine is not None, "Translation engine not initialized — startup event didn't run?"
     assert _vad is not None, "VAD not initialized — startup event didn't run?"
-    assert _music_gate is not None, "MusicGate not initialized — startup event didn't run?"
+    # assert _music_gate is not None, "MusicGate not initialized — startup event didn't run?"  # vanilla
     session = AudioSession(
         stt_engine=_stt_engine,
         translation_engine=_translation_engine,
         on_event=send_event,
         vad=_vad,
-        music_gate=_music_gate,
+        # music_gate=_music_gate,  # vanilla: singing detection disabled
         glossary=_glossary,
     )
 

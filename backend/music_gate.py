@@ -1,5 +1,12 @@
 """Per-utterance singing detector.
 
+vanilla (backend branch reset, 2026-08-26): unused — all call sites in
+backend/audio_session.py and backend/main.py are commented out, and
+config.py's SINGING_DETECTION_ENABLED block is commented out too. This file
+is left as-is (not deleted) so the code below can be reused as-is once
+reactivated. See docs/planning/IMPROVEMENT_BACKLOG.md's M1 section for why
+it was disabled and what to check before re-enabling.
+
 Redesigned 2026-08-25 (user direction — full purpose change from the
 original "catch background music playing under speech" idea): detect
 whether the SPEAKER THEMSELVES is singing, not whether music is present in

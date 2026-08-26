@@ -22,7 +22,10 @@ import numpy as np
 
 from backend import config
 from backend.glossary import Glossary
-from backend.music_gate import MusicGate
+# vanilla (backend branch reset, see docs/planning/IMPROVEMENT_BACKLOG.md M1):
+# singing detection disabled — commented out, not deleted, so it can be
+# restored by uncommenting this import and the call sites below.
+# from backend.music_gate import MusicGate
 from backend.sentence_completion import has_strong_sentence_boundary, looks_complete
 from backend.stt.base import STTEngine
 from backend.translation.base import TranslationEngine, TranslationResult
@@ -64,7 +67,7 @@ class AudioSession:
         translation_engine: TranslationEngine,
         on_event: EventSink,
         vad: SileroVAD,
-        music_gate: MusicGate,
+        # music_gate: MusicGate,  # vanilla: singing detection disabled, see import above
         glossary: Glossary | None = None,
     ) -> None:
         self._stt = stt_engine
@@ -78,11 +81,7 @@ class AudioSession:
         # guarantees a single capture at a time.
         self._vad = vad
         vad.reset()
-        # Shared instance loaded once at startup (main.py) — now holds a
-        # Demucs vocal-separation model, not cheap to construct per session
-        # the way the old pure-signal-processing version was. Stateless
-        # across calls (no per-session reset needed, unlike VAD's RNN state).
-        self._music_gate = music_gate
+        # self._music_gate = music_gate  # vanilla: singing detection disabled
         self._frame_buffer = np.zeros(0, dtype=np.float32)
         self._utterance: _UtteranceState | None = None
         # S5 session-adaptive VAD_SILENCE_MS/FINALIZE_GRACE_MS (see
@@ -95,14 +94,11 @@ class AudioSession:
         self._pause_samples = 0
         self._rate_ema_cps: float | None = None
         self._rate_samples = 0
-        # Session-adaptive singing-detection baseline (config.ADAPTIVE_SINGING_*)
-        # — EMA of MusicGate.pitch_stats() from utterances confirmed as
-        # unambiguous plain talking, used to judge singing relative to how
-        # THIS speaker actually sounds instead of one fixed absolute number.
-        # See _record_speech_pitch_sample.
-        self._speech_pitch_median_ema: float | None = None
-        self._speech_pitch_range_ema: float | None = None
-        self._speech_pitch_samples = 0
+        # vanilla: singing-detection baseline state disabled — see
+        # _record_speech_pitch_sample/_is_singing below.
+        # self._speech_pitch_median_ema: float | None = None
+        # self._speech_pitch_range_ema: float | None = None
+        # self._speech_pitch_samples = 0
         # Rolling short-term context for translation continuity: the last
         # few final (JA, KO) sentence pairs, oldest first (see
         # config.FINAL_CONTEXT_HISTORY_SIZE / EVAL_REPORT_2026-08-18.md §5-E-1).
@@ -294,42 +290,46 @@ class AudioSession:
         target = config.FINALIZE_GRACE_MS * scale
         return min(max(target, config.ADAPTIVE_GRACE_MIN_MS), config.ADAPTIVE_GRACE_MAX_MS)
 
-    def _record_speech_pitch_sample(self, median_hz: float, range_semitones: float) -> None:
-        """EMA-update the session's 'how does this speaker normally talk'
-        pitch baseline — only from utterances whose own pitch range is
-        already narrow enough to be unambiguous plain talking (see
-        config.ADAPTIVE_SINGING_BOOTSTRAP_RANGE_MAX_SEMITONES), so early
-        singing can't drag the baseline it'll later be compared against."""
-        if range_semitones > config.ADAPTIVE_SINGING_BOOTSTRAP_RANGE_MAX_SEMITONES:
-            return
-        alpha = config.ADAPTIVE_SINGING_EMA_ALPHA
-        self._speech_pitch_median_ema = (
-            median_hz
-            if self._speech_pitch_median_ema is None
-            else (1 - alpha) * self._speech_pitch_median_ema + alpha * median_hz
-        )
-        self._speech_pitch_range_ema = (
-            range_semitones
-            if self._speech_pitch_range_ema is None
-            else (1 - alpha) * self._speech_pitch_range_ema + alpha * range_semitones
-        )
-        self._speech_pitch_samples += 1
-
-    def _is_singing(self, median_hz: float, range_semitones: float) -> bool:
-        """Judge whether one utterance's pitch stats look like singing
-        rather than talking, per config.ADAPTIVE_SINGING_* — see that
-        config block for the two-signal (range + median deviation) rationale."""
-        if (
-            not config.ADAPTIVE_SINGING_ENABLED
-            or self._speech_pitch_median_ema is None
-            or self._speech_pitch_range_ema is None
-            or self._speech_pitch_samples < config.ADAPTIVE_SINGING_MIN_SAMPLES
-        ):
-            return range_semitones > config.FIXED_SINGING_RANGE_SEMITONES
-        if range_semitones > self._speech_pitch_range_ema * config.ADAPTIVE_SINGING_RANGE_RATIO:
-            return True
-        median_deviation = abs(12.0 * np.log2(median_hz / self._speech_pitch_median_ema))
-        return median_deviation > config.ADAPTIVE_SINGING_MEDIAN_DEVIATION_SEMITONES
+    # vanilla: singing-detection helpers disabled — uncomment alongside the
+    # MusicGate import/state above and the _do_finalize call site below to
+    # restore. See docs/planning/IMPROVEMENT_BACKLOG.md M1.
+    #
+    # def _record_speech_pitch_sample(self, median_hz: float, range_semitones: float) -> None:
+    #     """EMA-update the session's 'how does this speaker normally talk'
+    #     pitch baseline — only from utterances whose own pitch range is
+    #     already narrow enough to be unambiguous plain talking (see
+    #     config.ADAPTIVE_SINGING_BOOTSTRAP_RANGE_MAX_SEMITONES), so early
+    #     singing can't drag the baseline it'll later be compared against."""
+    #     if range_semitones > config.ADAPTIVE_SINGING_BOOTSTRAP_RANGE_MAX_SEMITONES:
+    #         return
+    #     alpha = config.ADAPTIVE_SINGING_EMA_ALPHA
+    #     self._speech_pitch_median_ema = (
+    #         median_hz
+    #         if self._speech_pitch_median_ema is None
+    #         else (1 - alpha) * self._speech_pitch_median_ema + alpha * median_hz
+    #     )
+    #     self._speech_pitch_range_ema = (
+    #         range_semitones
+    #         if self._speech_pitch_range_ema is None
+    #         else (1 - alpha) * self._speech_pitch_range_ema + alpha * range_semitones
+    #     )
+    #     self._speech_pitch_samples += 1
+    #
+    # def _is_singing(self, median_hz: float, range_semitones: float) -> bool:
+    #     """Judge whether one utterance's pitch stats look like singing
+    #     rather than talking, per config.ADAPTIVE_SINGING_* — see that
+    #     config block for the two-signal (range + median deviation) rationale."""
+    #     if (
+    #         not config.ADAPTIVE_SINGING_ENABLED
+    #         or self._speech_pitch_median_ema is None
+    #         or self._speech_pitch_range_ema is None
+    #         or self._speech_pitch_samples < config.ADAPTIVE_SINGING_MIN_SAMPLES
+    #     ):
+    #         return range_semitones > config.FIXED_SINGING_RANGE_SEMITONES
+    #     if range_semitones > self._speech_pitch_range_ema * config.ADAPTIVE_SINGING_RANGE_RATIO:
+    #         return True
+    #     median_deviation = abs(12.0 * np.log2(median_hz / self._speech_pitch_median_ema))
+    #     return median_deviation > config.ADAPTIVE_SINGING_MEDIAN_DEVIATION_SEMITONES
 
     async def _emit_partial(self) -> str:
         utterance = self._utterance
@@ -568,37 +568,33 @@ class AudioSession:
         stt_s = 0.0
         no_speech_prob: float | None = None
         avg_logprob: float | None = None
-        # Display-only singing hint (redesigned 2026-08-25 — see
-        # music_gate.py's module docstring). Runs off the event loop thread
-        # (Demucs vocal separation + pitch tracking, ~100-300ms) — see
-        # _enqueue_finalize's docstring for why this moved here instead of
-        # running inline in the audio-ingestion path. Operates on this
-        # utterance's own fixed buffered audio, so there's no live/lagged
-        # read despite running asynchronously. `music_suspected` is the
-        # wire/UI field name kept for backward compat with the frontend
-        # contract; it now specifically means "this utterance sounds sung".
+        # vanilla: singing detection disabled — pitch_median_hz/
+        # pitch_range_semitones stay None and music_suspected stays a fixed
+        # False. Uncomment alongside the MusicGate import/state and
+        # _is_singing/_record_speech_pitch_sample above to restore. See
+        # docs/planning/IMPROVEMENT_BACKLOG.md M1.
         pitch_median_hz: float | None = None
         pitch_range_semitones: float | None = None
         music_suspected = False
-        if config.SINGING_DETECTION_ENABLED:
-            pitch_stats = await asyncio.to_thread(self._music_gate.pitch_stats, audio)
-            pitch_median_hz, pitch_range_semitones = pitch_stats if pitch_stats is not None else (None, None)
-            music_suspected = (
-                pitch_median_hz is not None
-                and pitch_range_semitones is not None
-                and self._is_singing(pitch_median_hz, pitch_range_semitones)
-            )
-            logger.info(
-                "singing-check seg=%s pitch_hz=%s range_st=%s baseline_hz=%s baseline_range_st=%s "
-                "samples=%d -> music_suspected=%s",
-                utterance.segment_id,
-                f"{pitch_median_hz:.1f}" if pitch_median_hz is not None else None,
-                f"{pitch_range_semitones:.1f}" if pitch_range_semitones is not None else None,
-                f"{self._speech_pitch_median_ema:.1f}" if self._speech_pitch_median_ema is not None else None,
-                f"{self._speech_pitch_range_ema:.1f}" if self._speech_pitch_range_ema is not None else None,
-                self._speech_pitch_samples,
-                music_suspected,
-            )
+        # if config.SINGING_DETECTION_ENABLED:
+        #     pitch_stats = await asyncio.to_thread(self._music_gate.pitch_stats, audio)
+        #     pitch_median_hz, pitch_range_semitones = pitch_stats if pitch_stats is not None else (None, None)
+        #     music_suspected = (
+        #         pitch_median_hz is not None
+        #         and pitch_range_semitones is not None
+        #         and self._is_singing(pitch_median_hz, pitch_range_semitones)
+        #     )
+        #     logger.info(
+        #         "singing-check seg=%s pitch_hz=%s range_st=%s baseline_hz=%s baseline_range_st=%s "
+        #         "samples=%d -> music_suspected=%s",
+        #         utterance.segment_id,
+        #         f"{pitch_median_hz:.1f}" if pitch_median_hz is not None else None,
+        #         f"{pitch_range_semitones:.1f}" if pitch_range_semitones is not None else None,
+        #         f"{self._speech_pitch_median_ema:.1f}" if self._speech_pitch_median_ema is not None else None,
+        #         f"{self._speech_pitch_range_ema:.1f}" if self._speech_pitch_range_ema is not None else None,
+        #         self._speech_pitch_samples,
+        #         music_suspected,
+        #     )
         dropped_low_confidence = False
         audio_rms = _rms(audio)
         # Same RMS gate as _emit_partial: don't trust a beam=5 re-transcribe
@@ -683,20 +679,16 @@ class AudioSession:
             # others, badly overstating the actual speech rate.
             self._record_rate_sample(len(final_text), utterance.enqueued_at - utterance.started_at)
 
-        # Calibrate the singing-detection baseline from this utterance only
-        # if STT is confident it's real, intelligible speech — see
-        # _record_speech_pitch_sample for the range-based bootstrap floor
-        # that keeps ambiguous/sung audio from contaminating it even when
-        # STT is (over)confident about the transcribed lyrics.
-        if (
-            config.ADAPTIVE_SINGING_ENABLED
-            and pitch_median_hz is not None
-            and pitch_range_semitones is not None
-            and not dropped_low_confidence
-            and no_speech_prob is not None
-            and no_speech_prob < config.WHISPER_NO_SPEECH_THRESHOLD
-        ):
-            self._record_speech_pitch_sample(pitch_median_hz, pitch_range_semitones)
+        # vanilla: singing-detection baseline calibration disabled (see above).
+        # if (
+        #     config.ADAPTIVE_SINGING_ENABLED
+        #     and pitch_median_hz is not None
+        #     and pitch_range_semitones is not None
+        #     and not dropped_low_confidence
+        #     and no_speech_prob is not None
+        #     and no_speech_prob < config.WHISPER_NO_SPEECH_THRESHOLD
+        # ):
+        #     self._record_speech_pitch_sample(pitch_median_hz, pitch_range_semitones)
 
         glossary_hint = self._glossary.translation_hint(final_text)
         context, context_translation = self._format_history()

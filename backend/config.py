@@ -94,92 +94,98 @@ VAD_FRAME_SAMPLES = 512  # silero-vad requires fixed frame sizes at 16kHz; 512 s
 VAD_SPEECH_THRESHOLD = 0.5  # speech-probability cutoff
 MAX_UTTERANCE_SECONDS = 10  # hard cap: force-finalize even without silence (run-on speech safety net)
 
-# Per-utterance singing detector (backend/music_gate.py) — ON HOLD
-# 2026-08-26 (user call): still unreliable live (catches maybe half of real
-# singing, occasionally false-positives on normal speech right after a song
-# ends) and its pitch analysis was adding latency to EVERY utterance's
-# finalize, not just singing ones — contributing to the "transcript shows
-# but translation is slow/missing" complaints piling up alongside an
-# unrelated llama-server duplicate-process issue. Master switch: when False,
-# AudioSession skips calling MusicGate.pitch_stats() entirely (zero added
-# latency) and every final is emitted with music_suspected=False. Flip back
-# on to resume iterating once translation stability itself isn't in
-# question. See music_gate.py's module docstring for the detection
-# approach's own history.
-SINGING_DETECTION_ENABLED = False
-
-# 2026-08-25 (user direction): purpose changed from "catch background music
-# playing under speech" to "detect when the speaker themselves is singing",
-# via pitch (F0) tracking instead of the old syllable-rate-modulation
-# heuristic (which routinely missed sung lyrics — they carry their own
-# syllable-rate energy modulation similar to plain speech). See
-# music_gate.py's module docstring for the full history/rationale.
+# vanilla (backend branch reset, 2026-08-26): singing detector disabled and
+# call sites commented out (backend/audio_session.py, backend/main.py) — see
+# docs/planning/IMPROVEMENT_BACKLOG.md M1 for the full history and the
+# rebuild starting point. Uncomment this whole block plus those call sites
+# to restore.
 #
-# Demucs vocal separation (2026-08-25) runs ahead of pitch tracking so a
-# loud background instrumental under normal talking doesn't corrupt the
-# pitch read — see music_gate.py's docstring for why raw-audio pitch
-# tracking alone wasn't enough. "htdemucs" is the standard 4-stem model
-# (drums/bass/other/vocals); ~100-200ms per utterance once warmed up
-# (MusicGate.warmup(), called once at startup — see main.py).
-DEMUCS_MODEL_NAME = "htdemucs"
-
-PITCH_FRAME_MS = 30.0
-PITCH_HOP_MS = 15.0
-PITCH_MIN_HZ = 70.0  # below typical adult male speaking/singing fundamental
-PITCH_MAX_HZ = 500.0  # above typical adult female singing fundamental (falsetto excluded)
-PITCH_VOICED_ENERGY_FLOOR = 0.01  # frame RMS below this treated as unvoiced/silent, skipped
-PITCH_VOICING_THRESHOLD = 0.35  # normalized autocorrelation peak below this treated as unvoiced/noisy
-PITCH_MIN_VOICED_FRAMES = 6  # need at least this many voiced frames in an utterance to judge at all
-# Median-filter window (frames) applied to the F0 track before computing
-# stats — kills isolated single-frame octave-jump errors (a well-known
-# autocorrelation pitch-tracking failure mode) that otherwise blow up the
-# range estimate for perfectly normal speech. See MusicGate.pitch_stats.
-PITCH_MEDIAN_FILTER_FRAMES = 5
-
-# Session-adaptive singing baseline: compares each utterance's pitch stats
-# against a rolling model of how THIS speaker normally talks, rather than a
-# fixed number — singing register/range varies a lot by voice, so a
-# one-size-fits-all threshold either misses quiet/narrow-range singing or
-# false-positives on speakers with naturally expressive, wide-ranging
-# speech intonation.
-ADAPTIVE_SINGING_ENABLED = True
-ADAPTIVE_SINGING_EMA_ALPHA = 0.15
-ADAPTIVE_SINGING_MIN_SAMPLES = 8
-# Only feed the "how does this speaker normally talk" baseline from
-# utterances whose OWN pitch range is already narrow enough to be
-# unambiguous plain talking — keeps early singing (before enough samples
-# exist to judge adaptively) from contaminating the baseline it would be
-# compared against.
-# Provisional (2026-08-25): a single real conversational clip
-# (data/wav/일상,소통) measured through this exact pipeline came back at
-# ~13-15 semitones of range for plain talking — this autocorrelation
-# pitch tracker is prone to octave jumps (a well-known failure mode of
-# simple autocorrelation pitch tracking), which inflates apparent range.
-# 5.0 (this constant's original value) would have rejected essentially all
-# real speech from ever bootstrapping the baseline. Needs live-session
-# tuning once more real data accumulates.
+# # Per-utterance singing detector (backend/music_gate.py) — ON HOLD
+# # 2026-08-26 (user call): still unreliable live (catches maybe half of real
+# # singing, occasionally false-positives on normal speech right after a song
+# # ends) and its pitch analysis was adding latency to EVERY utterance's
+# # finalize, not just singing ones — contributing to the "transcript shows
+# # but translation is slow/missing" complaints piling up alongside an
+# # unrelated llama-server duplicate-process issue. Master switch: when False,
+# # AudioSession skips calling MusicGate.pitch_stats() entirely (zero added
+# # latency) and every final is emitted with music_suspected=False. Flip back
+# # on to resume iterating once translation stability itself isn't in
+# # question. See music_gate.py's module docstring for the detection
+# # approach's own history.
+# SINGING_DETECTION_ENABLED = False
 #
-# Update (2026-08-26, live capture w/ median filter applied): a real
-# streamer's plain conversational Japanese consistently measured 13-18
-# semitones through this exact pipeline (6 samples) — well above 10, so the
-# baseline was never bootstrapping at all and every utterance fell back to
-# FIXED_SINGING_RANGE_SEMITONES, which was itself too low and false-
-# positived on normal talk about half the time. Raised both this and the
-# fixed fallback below to actually sit above the observed normal-talk
-# range for this pipeline.
-ADAPTIVE_SINGING_BOOTSTRAP_RANGE_MAX_SEMITONES = 18.0
-# Flag as singing when EITHER the utterance's pitch range exceeds the
-# learned baseline range by this multiple, OR its median pitch sits at
-# least this many semitones away from the learned baseline median — a
-# sustained single high/low note can have a narrow range of its own but
-# still sit far outside how the speaker normally talks.
-ADAPTIVE_SINGING_RANGE_RATIO = 1.8
-ADAPTIVE_SINGING_MEDIAN_DEVIATION_SEMITONES = 5.0
-# Fixed fallback used before ADAPTIVE_SINGING_MIN_SAMPLES is reached —
-# deliberately wide so early-session judging doesn't false-positive on
-# normal expressive speech before a real baseline exists. See the
-# provisional-calibration note above — raised alongside the bootstrap floor.
-FIXED_SINGING_RANGE_SEMITONES = 20.0
+# # 2026-08-25 (user direction): purpose changed from "catch background music
+# # playing under speech" to "detect when the speaker themselves is singing",
+# # via pitch (F0) tracking instead of the old syllable-rate-modulation
+# # heuristic (which routinely missed sung lyrics — they carry their own
+# # syllable-rate energy modulation similar to plain speech). See
+# # music_gate.py's module docstring for the full history/rationale.
+# #
+# # Demucs vocal separation (2026-08-25) runs ahead of pitch tracking so a
+# # loud background instrumental under normal talking doesn't corrupt the
+# # pitch read — see music_gate.py's docstring for why raw-audio pitch
+# # tracking alone wasn't enough. "htdemucs" is the standard 4-stem model
+# # (drums/bass/other/vocals); ~100-200ms per utterance once warmed up
+# # (MusicGate.warmup(), called once at startup — see main.py).
+# DEMUCS_MODEL_NAME = "htdemucs"
+#
+# PITCH_FRAME_MS = 30.0
+# PITCH_HOP_MS = 15.0
+# PITCH_MIN_HZ = 70.0  # below typical adult male speaking/singing fundamental
+# PITCH_MAX_HZ = 500.0  # above typical adult female singing fundamental (falsetto excluded)
+# PITCH_VOICED_ENERGY_FLOOR = 0.01  # frame RMS below this treated as unvoiced/silent, skipped
+# PITCH_VOICING_THRESHOLD = 0.35  # normalized autocorrelation peak below this treated as unvoiced/noisy
+# PITCH_MIN_VOICED_FRAMES = 6  # need at least this many voiced frames in an utterance to judge at all
+# # Median-filter window (frames) applied to the F0 track before computing
+# # stats — kills isolated single-frame octave-jump errors (a well-known
+# # autocorrelation pitch-tracking failure mode) that otherwise blow up the
+# # range estimate for perfectly normal speech. See MusicGate.pitch_stats.
+# PITCH_MEDIAN_FILTER_FRAMES = 5
+#
+# # Session-adaptive singing baseline: compares each utterance's pitch stats
+# # against a rolling model of how THIS speaker normally talks, rather than a
+# # fixed number — singing register/range varies a lot by voice, so a
+# # one-size-fits-all threshold either misses quiet/narrow-range singing or
+# # false-positives on speakers with naturally expressive, wide-ranging
+# # speech intonation.
+# ADAPTIVE_SINGING_ENABLED = True
+# ADAPTIVE_SINGING_EMA_ALPHA = 0.15
+# ADAPTIVE_SINGING_MIN_SAMPLES = 8
+# # Only feed the "how does this speaker normally talk" baseline from
+# # utterances whose OWN pitch range is already narrow enough to be
+# # unambiguous plain talking — keeps early singing (before enough samples
+# # exist to judge adaptively) from contaminating the baseline it would be
+# # compared against.
+# # Provisional (2026-08-25): a single real conversational clip
+# # (data/wav/일상,소통) measured through this exact pipeline came back at
+# # ~13-15 semitones of range for plain talking — this autocorrelation
+# # pitch tracker is prone to octave jumps (a well-known failure mode of
+# # simple autocorrelation pitch tracking), which inflates apparent range.
+# # 5.0 (this constant's original value) would have rejected essentially all
+# # real speech from ever bootstrapping the baseline. Needs live-session
+# # tuning once more real data accumulates.
+# #
+# # Update (2026-08-26, live capture w/ median filter applied): a real
+# # streamer's plain conversational Japanese consistently measured 13-18
+# # semitones through this exact pipeline (6 samples) — well above 10, so the
+# # baseline was never bootstrapping at all and every utterance fell back to
+# # FIXED_SINGING_RANGE_SEMITONES, which was itself too low and false-
+# # positived on normal talk about half the time. Raised both this and the
+# # fixed fallback below to actually sit above the observed normal-talk
+# # range for this pipeline.
+# ADAPTIVE_SINGING_BOOTSTRAP_RANGE_MAX_SEMITONES = 18.0
+# # Flag as singing when EITHER the utterance's pitch range exceeds the
+# # learned baseline range by this multiple, OR its median pitch sits at
+# # least this many semitones away from the learned baseline median — a
+# # sustained single high/low note can have a narrow range of its own but
+# # still sit far outside how the speaker normally talks.
+# ADAPTIVE_SINGING_RANGE_RATIO = 1.8
+# ADAPTIVE_SINGING_MEDIAN_DEVIATION_SEMITONES = 5.0
+# # Fixed fallback used before ADAPTIVE_SINGING_MIN_SAMPLES is reached —
+# # deliberately wide so early-session judging doesn't false-positive on
+# # normal expressive speech before a real baseline exists. See the
+# # provisional-calibration note above — raised alongside the bootstrap floor.
+# FIXED_SINGING_RANGE_SEMITONES = 20.0
 
 # Sentence-completion correction (CLAUDE.md "Streaming / sentence-finalization
 # strategy": silence is the primary trigger, punctuation/context analysis is a

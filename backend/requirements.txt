@@ -20,4 +20,6 @@ pyyaml
 # tracking, so background music/BGM under normal talking doesn't corrupt the
 # singing-detection read (2026-08-25). Uses torch/torchaudio, already
 # required above for vad.py.
-demucs
+# vanilla (2026-08-26): singing detection disabled, see
+# docs/planning/IMPROVEMENT_BACKLOG.md M1 — uncomment to restore.
+# demucs

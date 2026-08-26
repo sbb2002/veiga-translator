@@ -165,9 +165,17 @@ turbo보다 CER이 높다** — 특정 카테고리 하나의 이상치가 아�
 ## 그림
 
 `fig/`(막대그래프, 오차막대=95% CI):
-- `quant_metrics.png` — 정량 지표 4종(CER/chrF++/BLEU/ROUGE-L) 5개 방법 비교.
+- `quant_metrics.png` — 정량 지표 4종(CER/chrF++/BLEU/ROUGE-L) 전체(150쌍) 5개
+  방법 비교.
 - `rtf.png` — RTF(GPU 처리 속도) — turbo만 CI가 겹치지 않게 낮음.
-- `category_cer.png` — 카테고리별 CER, n=30(CPU 파일럿의 n=5보다 CI가 좁음).
+- `category_cer.png`, `category_chrf.png`, `category_bleu.png`,
+  `category_rouge_l.png` — 카테고리별(n=30) 지표 4종 각각의 5개 방법 비교.
+  `category_chrf.png`를 보면 "turbo가 chrF++에서 4개 중 최저"라는 전체 수치의
+  원인이 보인다 — 게임/여행/일상,소통 3개 카테고리에서는 turbo가 뒤처지거나
+  동률이고, 음식,요리·패션,뷰티 2개 카테고리에서만 확실히 앞서 전체 평균이
+  끌어올려지지 않는다(오히려 최저로 나온 것). BLEU/ROUGE-L은 반대로 5개
+  카테고리 대부분에서 turbo·qwen-1.7b가 앞서는 그림이라 CER과 같은 결을
+  보인다.
 
 ## 레퍼런스
 

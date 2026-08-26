@@ -45,6 +45,8 @@ LABELS = {
 N_BOOT = 500
 SEED = 42
 METRIC_KEYS = ["cer", "chrf++", "bleu_char", "rouge_l_f1"]
+METRIC_TITLES = {"cer": "CER (↓)", "chrf++": "chrF++ (↑)", "bleu_char": "BLEU(char) (↑)", "rouge_l_f1": "ROUGE-L F1 (↑)"}
+METRIC_FILE_TAGS = {"cer": "cer", "chrf++": "chrf", "bleu_char": "bleu", "rouge_l_f1": "rouge_l"}
 
 
 def load_rows(method: str) -> list[dict]:
@@ -108,7 +110,6 @@ def bar_chart(path: Path, title: str, group_labels: list[str], series: dict[str,
 def quant_metrics_chart(path: Path, overall_ci: dict) -> None:
     """One subplot per metric (own y-scale) — CER/ROUGE-L (0-1) and
     chrF++/BLEU (0-100) flatten to invisible bars on a shared axis."""
-    titles = {"cer": "CER (↓)", "chrf++": "chrF++ (↑)", "bleu_char": "BLEU(char) (↑)", "rouge_l_f1": "ROUGE-L F1 (↑)"}
     fig, axes = plt.subplots(1, len(METRIC_KEYS), figsize=(4 * len(METRIC_KEYS), 4.5))
     colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
     for ax, key in zip(axes, METRIC_KEYS):
@@ -117,7 +118,7 @@ def quant_metrics_chart(path: Path, overall_ci: dict) -> None:
         ax.bar(range(len(METHODS)), vals, yerr=errs, capsize=3, color=colors[: len(METHODS)])
         ax.set_xticks(range(len(METHODS)))
         ax.set_xticklabels([LABELS[m] for m in METHODS], rotation=30, ha="right", fontsize=8)
-        ax.set_title(titles[key])
+        ax.set_title(METRIC_TITLES[key])
     fig.suptitle("GPU 전체(150세그먼트) 정량 지표 — 95% CI")
     fig.tight_layout()
     fig.savefig(path, dpi=150)
@@ -149,13 +150,15 @@ def main() -> None:
     series = {LABELS[m]: ([overall_ci[m]["rtf"]["point"]], [overall_ci[m]["rtf"]["ci_halfwidth"]]) for m in METHODS}
     bar_chart(FIG_ROOT / "rtf.png", "RTF (GPU) — 95% CI, 낮을수록 빠름", ["RTF"], series, "RTF")
 
-    # category_cer.png
-    series = {}
-    for m in METHODS:
-        vals = [category_ci[m][cat]["cer"]["point"] for cat in CATEGORIES]
-        errs = [category_ci[m][cat]["cer"]["ci_halfwidth"] for cat in CATEGORIES]
-        series[LABELS[m]] = (vals, errs)
-    bar_chart(FIG_ROOT / "category_cer.png", "카테고리별 CER — 95% CI (n=30)", CATEGORIES, series, "CER")
+    # category_<metric>.png — one bar chart per metric, all methods x categories
+    for key in METRIC_KEYS:
+        series = {}
+        for m in METHODS:
+            vals = [category_ci[m][cat][key]["point"] for cat in CATEGORIES]
+            errs = [category_ci[m][cat][key]["ci_halfwidth"] for cat in CATEGORIES]
+            series[LABELS[m]] = (vals, errs)
+        fname = f"category_{METRIC_FILE_TAGS[key]}.png"
+        bar_chart(FIG_ROOT / fname, f"카테고리별 {METRIC_TITLES[key]} — 95% CI (n=30)", CATEGORIES, series, METRIC_TITLES[key])
 
     # print markdown-ready tables
     print("### 전체 (95% CI)\n")

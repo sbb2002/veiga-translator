@@ -91,7 +91,9 @@ CI가 겹치지 않는 유일한 후보 — turbo보다 통계적으로 유의�
 - `out/turbo/`, `out/granite-speech-4.1-2b/`, `out/qwen3-asr-0.6b/`,
   `out/qwen3-asr-1.7b/`, `out/reazonspeech-nemo-v2/` — 방법별 전사·채점 결과.
   `out/ci_summary.json` — CI.
-- `fig/quant_metrics.png`, `fig/rtf.png`, `fig/category_cer.png`.
+- `fig/quant_metrics.png`, `fig/rtf.png` — 전체(150쌍) 지표/RTF 비교.
+  `fig/category_cer.png`, `fig/category_chrf.png`, `fig/category_bleu.png`,
+  `fig/category_rouge_l.png` — 카테고리별(n=30) 지표 4종 각각.
 
 ## 레퍼런스
 

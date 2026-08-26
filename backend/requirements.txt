@@ -12,6 +12,12 @@ httpx
 # gate (2026-08-19). Pulls in transformers/torch (torch already required
 # above for vad.py).
 sentence-transformers
+# backend/stt/qwen3_asr_engine.py — active STT engine as of 2026-08-26
+# (config.STT_ENGINE = "qwen3-asr"), see research/topic/
+# 20260826_stt_model_survey_gpu_full/. AutoModelForMultimodalLM/
+# Qwen3-ASR support needs a recent transformers; pin a floor rather than
+# trust whatever sentence-transformers pulls in transitively.
+transformers>=5.13
 # backend/translation/prompts.py loads prompts.yaml — was already pulled in
 # transitively (huggingface_hub etc.) but declared explicitly since it's now
 # a direct dependency.

@@ -37,6 +37,31 @@ WHISPER_LANGUAGE = "ja"
 WHISPER_FAST_BEAM_SIZE = 1
 WHISPER_FINAL_BEAM_SIZE = 5
 
+# Which STTEngine main.py instantiates — "faster-whisper" (default/fallback,
+# the WHISPER_* settings above) or "qwen3-asr" (below). Swapped to
+# "qwen3-asr" 2026-08-26 per user request, after
+# research/topic/20260826_stt_model_survey_gpu_full/ found Qwen3-ASR-1.7B-hf
+# statistically tied with large-v3-turbo on quality (CER/BLEU/ROUGE-L CIs
+# overlap; chrF++ point estimate even favors it) on the full 150-pair set.
+# Known open risk, not yet validated live: ~3.2x slower per utterance (RTF
+# 0.106 vs 0.033) and no per-segment confidence signal, so the
+# WHISPER_NO_SPEECH_THRESHOLD/WHISPER_AVG_LOGPROB_THRESHOLD hallucination
+# layer below is inert for this engine (see stt/qwen3_asr_engine.py's
+# docstring) — only the embedding-similarity HallucinationGate still applies.
+# Revert to "faster-whisper" if live capture shows regressions.
+STT_ENGINE = "qwen3-asr"
+
+# Qwen3-ASR-1.7B-hf (transformers, CUDA) — see stt/qwen3_asr_engine.py.
+QWEN3_ASR_MODEL_ID = "Qwen/Qwen3-ASR-1.7B-hf"
+QWEN3_ASR_DEVICE = "cuda"
+QWEN3_ASR_LANGUAGE = "Japanese"  # apply_transcription_request wants a full name, not an ISO code
+# max_new_tokens/num_beams mirror WHISPER_FAST_BEAM_SIZE/WHISPER_FINAL_BEAM_SIZE's
+# speed-vs-quality split; fast pass is always num_beams=1 (greedy), set in
+# qwen3_asr_engine.py itself.
+QWEN3_ASR_FAST_MAX_NEW_TOKENS = 128
+QWEN3_ASR_FINAL_MAX_NEW_TOKENS = 256
+QWEN3_ASR_FINAL_NUM_BEAMS = 5
+
 # Drop a Whisper segment only when BOTH no_speech_prob is >= this AND
 # avg_logprob is <= WHISPER_AVG_LOGPROB_THRESHOLD (see
 # stt/faster_whisper_engine.py) — no_speech_prob alone was measurably

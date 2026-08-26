@@ -22,12 +22,15 @@ from pathlib import Path
 
 from fastapi import FastAPI, WebSocket
 
+from backend import config
 from backend.audio_session import AudioSession
 from backend.glossary import Glossary
 # vanilla (backend branch reset, see docs/planning/IMPROVEMENT_BACKLOG.md M1):
 # singing detection disabled — commented out, not deleted.
 # from backend.music_gate import MusicGate
+from backend.stt.base import STTEngine
 from backend.stt.faster_whisper_engine import FasterWhisperEngine
+from backend.stt.qwen3_asr_engine import Qwen3ASREngine
 from backend.translation.llama_server_engine import LlamaServerEngine
 from backend.vad import SileroVAD
 
@@ -130,7 +133,7 @@ def _append_flag(control: dict) -> None:
     with FLAGGED_SEGMENTS_LOG.open("a", encoding="utf-8") as f:
         f.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
-_stt_engine: FasterWhisperEngine | None = None
+_stt_engine: STTEngine | None = None
 _translation_engine: LlamaServerEngine | None = None
 _glossary: Glossary | None = None
 _vad: SileroVAD | None = None
@@ -167,9 +170,12 @@ async def startup() -> None:
     # Glossary.translation_hint()/latin_targets() whenever STT happens to
     # transcribe the term correctly on its own; it just no longer biases STT
     # itself toward "hearing" glossary terms.
-    _stt_engine = FasterWhisperEngine()
+    if config.STT_ENGINE == "qwen3-asr":
+        _stt_engine = Qwen3ASREngine()
+    else:
+        _stt_engine = FasterWhisperEngine()
     _stt_engine.warmup()
-    logger.info("STT model ready.")
+    logger.info("STT model ready (engine=%s).", config.STT_ENGINE)
 
     logger.info("Connecting to llama-server translation backend...")
     _translation_engine = LlamaServerEngine()

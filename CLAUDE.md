@@ -106,17 +106,27 @@ boundary instead of the sentence break the speaker actually made.
 
 Current production pair, selected by benchmark rather than assumption:
 
-- **STT**: faster-whisper `large-v3-turbo` (CTranslate2, CUDA, int8_float16) — `backend/stt/`. Moved
-  off `medium` on 2026-08-19 after live capture showed enough hallucination/garbling (stock-phrase
-  hallucinations, mangled repeated-word passages) that the user lost confidence in it — see
-  `data/flagged_segments.jsonl` for the labeled examples — landing on `large-v3` as an untested
-  working hypothesis. First formal quantitative benchmark (2026-08-22,
-  `research/topic/20260822_stt_transcription_eval/report/02-largev3-vs-kotoba-whisper.md` — 150-segment
-  CER/chrF++/BLEU/ROUGE-L + LLM-judged qualitative pass, 3-way vs `large-v3` and
+- **STT**: `Qwen3-ASR-1.7B-hf` (transformers, CUDA) — `backend/stt/qwen3_asr_engine.py`,
+  `config.STT_ENGINE = "qwen3-asr"`. Moved off `medium` on 2026-08-19 after live capture showed
+  enough hallucination/garbling (stock-phrase hallucinations, mangled repeated-word passages) that
+  the user lost confidence in it — see `data/flagged_segments.jsonl` for the labeled examples —
+  landing on `large-v3` as an untested working hypothesis. First formal quantitative benchmark
+  (2026-08-22, `research/topic/20260822_stt_transcription_eval/report/02-largev3-vs-kotoba-whisper.md`
+  — 150-segment CER/chrF++/BLEU/ROUGE-L + LLM-judged qualitative pass, 3-way vs `large-v3` and
   `kotoba-tech/kotoba-whisper-v2.0-faster`) found `large-v3-turbo` within noise of `large-v3` on every
   quality metric (CER 0.292 vs 0.289) while running ~11.4x faster (RTF 0.068 vs 0.753) — moved to
-  `large-v3-turbo` to ease GPU contention with concurrent GPU use (e.g. gaming), per the user's
-  real-world complaint that motivated this benchmark.
+  faster-whisper `large-v3-turbo` (int8_float16) 2026-08-22 to ease GPU contention with concurrent
+  GPU use (e.g. gaming), per the user's real-world complaint that motivated this benchmark. On
+  2026-08-26, once GPU became available in the dev environment, a 5-candidate GPU/150-pair survey
+  (`research/topic/20260826_stt_model_survey_gpu_full/`) found `Qwen3-ASR-1.7B-hf` statistically tied
+  with `large-v3-turbo` on quality (CER/BLEU/ROUGE-L CIs overlap; chrF++ point estimate even favors
+  it) despite ~3.2x higher RTF (0.106 vs 0.033, one-shot full-clip measurement) — switched to it per
+  user request, then confirmed workable on live capture the same day (no noticeable added latency).
+  `FasterWhisperEngine` (`backend/stt/faster_whisper_engine.py`) stays available as the fallback —
+  flip `config.STT_ENGINE` back to `"faster-whisper"` to revert. Known gap: this engine exposes no
+  per-segment confidence score, so the `WHISPER_NO_SPEECH_THRESHOLD`/`WHISPER_AVG_LOGPROB_THRESHOLD`
+  hallucination-filtering layer is inert for it — only the text-based embedding-similarity
+  `HallucinationGate` still applies (see `qwen3_asr_engine.py`'s docstring).
 - **Translation**: **gemma-3-12b-it Q4_K_M** served by a llama.cpp server (chosen over Ollama for
   lower single-stream overhead; the OpenAI-compatible endpoint must honor llama.cpp's `grammar`
   field — backend startup probes this via `verify_contract` and warns if it doesn't). Benchmark

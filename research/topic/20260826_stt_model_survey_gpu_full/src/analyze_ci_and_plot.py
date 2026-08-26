@@ -34,12 +34,13 @@ TOPIC_ROOT = Path(__file__).resolve().parents[1]
 OUT_ROOT = TOPIC_ROOT / "out"
 FIG_ROOT = TOPIC_ROOT / "fig"
 
-METHODS = ["turbo", "granite-speech-4.1-2b", "qwen3-asr-0.6b", "qwen3-asr-1.7b"]
+METHODS = ["turbo", "granite-speech-4.1-2b", "qwen3-asr-0.6b", "qwen3-asr-1.7b", "reazonspeech-nemo-v2"]
 LABELS = {
     "turbo": "large-v3-turbo",
     "granite-speech-4.1-2b": "granite-speech-4.1-2b",
     "qwen3-asr-0.6b": "Qwen3-ASR-0.6B",
     "qwen3-asr-1.7b": "Qwen3-ASR-1.7B",
+    "reazonspeech-nemo-v2": "ReazonSpeech-NeMo-v2",
 }
 N_BOOT = 500
 SEED = 42

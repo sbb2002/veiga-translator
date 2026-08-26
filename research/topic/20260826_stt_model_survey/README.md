@@ -25,5 +25,8 @@ GPU가 필요한 모델은 계획서만 작성하고 실행하지 않는다는 �
   `src/transcribe_qwen3_asr.py` — 방법별 전사 스크립트.
 - `src/score_quantitative.py`, `src/judge_qualitative.py` — 채점 스크립트
   (`--method` 인자로 out/ 서브디렉터리 선택, 4개 방법 공유).
+- `src/analyze_ci_and_plot.py` — 페어드 부트스트랩 95% CI(전체+카테고리별)
+  계산 + `fig/*.png` 오차막대 그래프 생성.
 - `out/turbo/`, `out/granite-speech-4.1-2b/`, `out/qwen3-asr-0.6b/`,
-  `out/qwen3-asr-1.7b/` — 방법별 전사·채점 결과.
+  `out/qwen3-asr-1.7b/` — 방법별 전사·채점 결과. `out/ci_summary.json` — CI.
+- `fig/quant_metrics.png`, `fig/rtf.png`, `fig/category_cer.png`.

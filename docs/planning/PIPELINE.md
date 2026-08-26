@@ -12,14 +12,13 @@ flowchart TD
     D --> E["Sentence completion"]
 
     E -->|"아직 진행중<br/>(PARTIAL_UPDATE_INTERVAL_S마다)"| P1["STT fast=True<br/>(FasterWhisperEngine)"]
-    P1 --> P2["Glossary injection<br/>(translation_hint / latin_targets)"]
-    P2 --> P3["Translator LLM fast=True<br/>(LlamaServerEngine)"]
-    P3 --> P4["'partial' 이벤트<br/>→ extension UI"]
+    P1 --> P4["'partial' 이벤트<br/>(일본어 원문만, translation='')<br/>→ extension UI"]
 
     E -->|"문장 완결 판단<br/>(enqueue_finalize)"| Q["finalize queue<br/>(백그라운드 워커, 순서 보장)"]
-    Q --> F1["STT fast=False, beam=5<br/>(재전사)"]
-    F1 --> F2["Glossary injection"]
-    F2 --> F3["Translator LLM fast=False<br/>+ 최근 대화 히스토리 context"]
+    Q --> F0["Hallucination gate<br/>(no_speech_prob/avg_logprob<br/>+ 임베딩 유사도 매칭)"]
+    F0 --> F1["STT fast=False, beam=5<br/>(재전사)"]
+    F1 --> F2["Glossary injection<br/>(translation_hint / latin_targets)<br/>+ [BROADCASTER] hint"]
+    F2 --> F3["Translator LLM fast=False<br/>+ 최근 대화 히스토리 context<br/>(LlamaServerEngine, gemma-3-12b-it)"]
     F3 --> F4["'final' 이벤트<br/>(같은 segment_id로 partial 교체)<br/>→ extension UI"]
     F3 --> H["_final_history<br/>(다음 final 호출의 context로 재사용)"]
 
@@ -28,14 +27,28 @@ flowchart TD
 ```
 
 - 회색(P4) = partial 표시, 초록(F4) = final 표시.
+- **partial 트랙은 STT만 한다 — 번역이 없다.** 2026-08-19에 라이브 partial 번역(문맥 없는
+  fast LLM 호출)이 run-on 세그멘테이션 문제와 겹쳐 확신에 찬 오역을 만드는 게 확인되어
+  의도적으로 비활성화됐다 (`_emit_partial`의 번역 호출부는 주석 처리, 코드는 남아 있음 —
+  `CLAUDE.md` "Streaming / sentence-finalization strategy" 참고). `"partial"` WS 이벤트는
+  항상 `translation: ""`로 나간다.
 - partial 트랙은 메인 오디오 처리 루프(`_process_frame`) 안에서 `await`로 실행된다 —
-  이벤트 루프는 막지 않지만 **오디오 드레인(`feed_audio`)은 partial의 STT+번역이 끝날
-  때까지 대기**한다. 백그라운드 분리는 `docs/planning/IMPROVEMENT_SPECS.md` Q2로 계획됨.
+  이벤트 루프는 막지 않지만 **오디오 드레인(`feed_audio`)은 partial STT가 끝날 때까지
+  대기**한다. 백그라운드 분리는 `docs/planning/IMPROVEMENT_SPECS.md` Q2로 계획됨.
 - final 트랙은 별도 `asyncio.Queue` + 백그라운드 워커 태스크(`_finalize_worker`)로 분리되어,
   느린 beam=5 STT + LLM 호출이 오디오 수신 경로를 막지 않는다. 발화 순서는 큐 순서로 보장된다.
+- **VAD_SILENCE_MS/FINALIZE_GRACE_MS는 고정값이 아니라 세션 적응형이다** (S5,
+  `AudioSession._effective_silence_ms`/`_effective_grace_ms`) — 세션 안에서 관찰된 실제
+  발화 간 침묵 간격과 말속도의 EMA로 매 finalize 판정마다 값을 조정한다(상하한 clamp 있음).
+  아래 "Sentence completion 상세" 절의 `VAD_SILENCE_MS`/`FINALIZE_GRACE_MS` 표기는 이
+  적응형 유효값(effective value)을 가리키는 것으로 읽을 것.
 - 예외 경로(다이어그램에는 없음): STT/번역/이벤트 전송이 실패해도 세션과 워커는 죽지 않는다
   — 해당 utterance의 마지막 partial 전사/번역으로 폴백한 final을 방출하고 계속 진행한다
   (`docs/planning/IMPROVEMENT_SPECS.md` R1).
+- **노래/BGM 감지는 현재 비활성 상태다** (`vanilla` 브랜치, 2026-08-26) — `backend/music_gate.py`와
+  그 호출부(`audio_session.py`/`main.py`/`config.py`)는 삭제가 아니라 전부 주석 처리돼 있다.
+  `"final"` 이벤트의 `music_suspected` 필드는 항상 고정 `false`로 나간다. 재개 시 참고할 것과
+  중단 경위는 `docs/planning/IMPROVEMENT_BACKLOG.md`의 M1 섹션 참고.
 - 캡처 오디오는 offscreen.js가 **16kHz `AudioContext`**로 받는다 — 크롬이 내장
   안티앨리어싱 리샘플러로 변환해주므로 확장 쪽 수동 리샘플 없이 PCM16 변환만 해서 보낸다.
 - WebSocket 수명주기: 캡처 중 연결이 끊기면 offscreen.js가 백오프(1s→최대 10s)로 자동

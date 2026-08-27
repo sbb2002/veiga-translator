@@ -53,12 +53,29 @@ Qwen3-14B가 순수 품질 1위였음에도 GBNF grammar 비호환으로 미채�
 유출이 반복(`20260818` 토픽에서 이미 확인된 약점 재현), EXAONE-3.5는 스크립트는
 가장 깨끗하지만 어려운 구간을 회피/얼버무리는 경향.
 
+**정성 평가 전량화(2026-08-27, `report/04-qualitative-eval-full.md`)**: `report/03`의
+20세그먼트 서술을 STT 서베이와 동일하게 점수화(120세그먼트 × 10방법 × 세 축
+1~5: 의미 충실도 / 유창성 / 뉘앙스 이전, 사람 수동 채점). 핵심:
+- **의미 충실도 통계적 동급 클리크는 4개가 아니라 3개** — Gemma-3-12b-it(4.10) /
+  Qwen3-14B(4.12) / Qwen3-32B(4.12). EXAONE-3.5-7.8B(3.83)는 세 모델 대비 페어드
+  차 CI가 0을 제외해 유의미하게 낮다(어려운 구간 회피가 점수로 드러남).
+- **Gemma가 뉘앙스 이전 1위**(3.92) + **유창한 환각률 0%** — 틀리면 일본어 원문을
+  echo하므로(fail-loud) 탐지가 쉽다. Qwen3-14B/EXAONE-3.5는 틀려도 유창성 4점대
+  유지(유창한 오역, 탐지 어려움).
+- **뉘앙스 이전 축은 의미 충실도와 r=0.96** — 사실상 독립 축이 아니다.
+- 프로덕션 Gemma-3-12b-it 교체 근거는 정성으로도 없음.
+
 ## 산출물
 
 - `report/01-model-scoping.md` — 10개 후보 스코핑, 제외/보류 근거.
 - `report/02-results.md` — chrF++/RTF 정량 결과, 세그먼트별 진단, 겪은 이슈, 결론.
 - `report/03-ci-overlap-and-qualitative-check.md` — 상위 4개 CI pairwise 겹침 확인
   + 20세그먼트 정성 비교(모델별 실패 패턴).
+- `report/04-qualitative-eval-full.md` — 전체 120세그먼트 × 10방법 수동 정성 채점
+  (의미 충실도 / 유창성 / 뉘앙스 이전 1~5), 카테고리별·hard 그룹별 표, 축 간 상관,
+  유창성 분해.
+- `src/qualitative_eval.py` — 정성 전량 로드/집계/자체검증.
+- `out/qualitative_sample.txt`, `out/qualitative_scores.json` — 대조표 + 점수.
 - `src/common.py` — 데이터셋 로더(120클립, duration_s 교차 참조).
 - `src/translate_llm.py` — GGUF LLM 8종 공용(llama-server 필요, grammar/repeat_penalty
   옵션, LLAMA_SERVER_TIMEOUT_S 상향 패치 포함).

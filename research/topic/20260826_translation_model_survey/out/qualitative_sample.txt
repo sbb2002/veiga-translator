@@ -1,0 +1,2646 @@
+### [01] 7112_25921_45.76_52.76  (게임 / normal)
+JA_REF : じっくり探している獣医も戻ってきて凝視される
+KO_REF : 찬찬히 찾고 있는 수의사도 돌아와서 응시한다
+  gemma-3-12b-it      : 꼼꼼하게 찾고 있는 수의사도 돌아와서 뚫어져라 쳐다보네
+  qwen3-14b           : 조금 더 신중하게 찾아보던 수의사도 돌아와서 집중적으로 바라보기 시작했다.
+  qwen3-32b           : 자세히 조사하던 수의사도 돌아와서 쳐다보자.
+  exaone-3.5-7.8b     : 천천히 찾고 있던 수의사도 돌아와 집중적으로 살펴보고 있어.
+  qwen2.5-7b-baseline : 지금이라도 꼼꼼히 찾는 약사에게도 시선이 집중된다
+  llama-3-8b-instruct : 야수의 눈에 맞는 것 같아.
+  seed-x-instruct-7b  : 兽의사는 고질的に찾고 있는 동물도 있어서 凝視를 받는다.
+  nllb-200-3.3b       : 그리고 그 동물들은 다시 돌아와
+  exaone-4.0-32b      : **解释：**  
+この表現は、長時間探していた獣医がやっと戻ってきたとき、動物や人間が彼を集中して見ている様子を描写しています。  
+
+**例文：**  
+「病になった牛の状態が悪化し、獣医はじっくり探していた獣医も戻ってきて凝視される」  
+→ 牛の病状が悪化したため、獣医が長時間調査した末戻ってきたとき、農家や他の獣医が彼の報告を集中して聞いている様子。  
+
+**注意点：**
+  madlad400-3b-mt     : yyynnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
+
+### [02] 7112_25921_52.76_59.76  (게임 / normal)
+JA_REF : 猫の配送までかなりお気に入りの絵になった
+KO_REF : 고양이 배송까지 꽤 마음에 드는 그림이 되었다
+  gemma-3-12b-it      : 고양이 배송까지 꽤 마음에 드는 그림이 됐어.
+  qwen3-14b           : 고양이까지 배송해 주는 그림이 정말 마음에 들었어.
+  qwen3-32b           : 고양이 배송까지 꽤 마음에 드는 그림이 됐어.
+  exaone-3.5-7.8b     : 고양이 배송 그림까지 정말 마음에 들었어.
+  qwen2.5-7b-baseline : 🐱까지 상당히 좋아졌어요
+  llama-3-8b-instruct : 고양이의 배송까지 꽤 마음에 드는 그림이 되었다.
+  seed-x-instruct-7b  : 고양이 배송되는 동안에도 저는 이 그림을 꽤 좋아했습니다.
+  nllb-200-3.3b       : 그리고 그 그림은 제가 좋아하는 그림이 되었습니다.
+  exaone-4.0-32b      : 「猫の配送までかなりお気に入りの絵になった」라는 문장은 일본어로 보이며, 한국어로 해석하면 **"고양이 배송까지 꽤 마음에 드는 그림이 되었다"** 정도로 이해할 수 있습니다.  
+
+### 문장의 의미와 맥락:
+1. **"猫の配送"** (고양이 배송):  
+   - 문자 그대로 고양이를 배송하는 것을 의미할 수도 있지만, 여기서는 **"고양이와 관련된 배송"** 또는 **"고양이를 주제로 한 작품의 전달"**을 의미할 가능성이 높습니다.  
+   - 예를 들어, 고양이 그림을 주문하거나 배송하는 과정에서 작품이 완성된 것을 표현한 것일 수 있습니다.  
+
+2. **"かなりお気に入りの絵"** (꽤 마음에 드는 그림):
+  madlad400-3b-mt     : wjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwj
+
+### [03] 7112_25921_78.40_85.02  (게임 / normal)
+JA_REF : ちなみに小さいフレッシュは、みえる音を一人で聞いているので、
+KO_REF : 덧붙여서 작은 프레쉬는 보이는 소리를 혼자 듣고 있기 때문에
+  gemma-3-12b-it      : ちなみに小さいフレッシュは、みえる音を一人で聞いているので、
+  qwen3-14b           : 참고로 작은 프레시는 보이는 소리를 혼자서 듣고 있어서,
+  qwen3-32b           : 그치, 작은 프레시는 지금 혼자서 보이는 소리를 듣고 있어.
+  exaone-3.5-7.8b     : 참고로 작은 프레시는 혼자서 들리는 소리를 듣고 있어서,
+
+(Note: The term "フレッシュ" seems out of context without additional information, so it's translated based on potential meaning related to freshness or freshness level in a gaming or product context, as "프레시" in Korean can imply something fresh or new. If it has a specific meaning in this context, further clarification might be needed.)
+  qwen2.5-7b-baseline : 참고로 작은 프레쉬는 혼자 들려오는 소리를 듣고 있는 것 같아요.
+  llama-3-8b-instruct : 작은 프레시가 저는 하는 소리를 혼자 듣고 있습니다.
+  seed-x-instruct-7b  : 작은 프레시ュ는 혼자 들리는 소리를 듣고 있어요.
+  nllb-200-3.3b       : 그리고 그 작은 플래시는, 그 작은 플래시는, 그 작은 플래시는, 그 작은 플래시는, 그 작은 플래시는, 그 작은 플래시는, 그 작은 플래시는
+  exaone-4.0-32b      : 「ちなみに小さいフレッシュは、みえる音を一人で聞いているので、」  
+
+この文は、詩的な表現で、「ちなみに」（小さく）というイメージの「フレッシュ」（新鮮なもの、もしくは人の名前）が、目に見える音（例えば音楽や自然の音）を独りで聴いている様子を描いています。  
+
+### 가능한 해석:  
+1. **시적 표현**: 작고 순수한 존재（フレッシュ）が、 눈에 보이는 소리（예: 빛과 소리가 결합된 현상）를 혼자 경험하며 고독하거나 아름다운 순간을 느끼고 있음
+  madlad400-3b-mt     : v j ns y jsyysyyssss yysysysyssss yysysysssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+### [04] 7112_25921_85.66_94.10  (게임 / normal)
+JA_REF : わかり permits フレッシュから読んでみてください。
+KO_REF : 알아보세요 permits 프레쉬부터 읽어보세요.
+  gemma-3-12b-it      : 음... 프레쉬에서 읽어보라고요?
+  qwen3-14b           : 와카리가 허락합니다. 프레시에서 읽어보세요.
+  qwen3-32b           : 알겠어, 'フレッシュ'부터 읽어보세요.
+  exaone-3.5-7.8b     : 신선한 걸로 읽어봐줘요.
+  qwen2.5-7b-baseline : 프레시스에서 읽어보세요.
+  llama-3-8b-instruct : [TEXT TO TRANSLATE]
+
+Let's translate this as a natural continuation of the previous sentence.
+  seed-x-instruct-7b  : 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용 제발 허용
+  nllb-200-3.3b       : 이 문서는 "이미 사용 허가"입니다.
+  exaone-4.0-32b      : 「わかり」とは、日本語で「理解する」という意味の verb です。  
+
+**フレッシュな表現で読んでみます：**  
+「彼の話を聞くと、すぐにわかり！」  
+→ 「He explains things so clearly, I get it right away!」  
+
+「この本はすごくわかりやすい。」  
+→ 「This book is super easy to understand.」  
+
+「わかりにくい説明は避けてください。」  
+→ 「Avoid explanations that are hard to grasp.」  
+
+「子供でもわかりるように書いてある。」  
+→ 「It's written in a way even kids can understand.」  
+
+「わかりません？もう一回説明して。
+  madlad400-3b-mt     : u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.u.
+
+### [05] 7112_25921_94.90_101.24  (게임 / normal)
+JA_REF : 赤みは、また、能力というか意識が、、
+KO_REF : 붉은기는, 또, 능력이라고 할까 의식이...
+  gemma-3-12b-it      : 빨개짐은, 또, 능력이라고 할까 의식이…
+  qwen3-14b           : 빨개진 건, 또 능력이야 뭐 그런 거야,
+  qwen3-32b           : 붉은 빛은, 또, 능력이라기보다는 의식이, ,,
+  exaone-3.5-7.8b     : 빨강은 또 능력이나 의식이 있다는 거지.
+  qwen2.5-7b-baseline : 붉음은 또 능력或者说意识方面，
+  llama-3-8b-instruct : 적미는 또, 능력이라고나 할까 인식이,
+  seed-x-instruct-7b  : 또한, 능력이나 의식이 있다는 것은,
+  nllb-200-3.3b       : 그리고, 그것은 또한,
+  exaone-4.0-32b      : 「赤み」라는 표현은 다소 추상적이지만, 문맥을 고려해 보면 **"붉은 기운"** 또는 **"열정, 에너지, 생명력"**을 상징적으로 나타내는 것으로 해석할 수 있습니다.  
+
+### 가능한 해석:
+1. **감정적 상태**:  
+   - "붉은 기운"이 감정의 과잉(분노, 열정, 흥분)을 의미할 수 있습니다.  
+   - 예: *"그의 얼굴에 붉은 기운이 돌았다"* → 분노나 강한 감정의 표현.  
+
+2. **의식이나 능력**:  
+   - "의식"이나 "능력"과 연결된다면, **생명력, 창조적 에너지, 잠재력**을 상징할 수도 있습니다.  
+   - 예: *"그녀 안에 붉은 기운이 흐르고 있었다"* → 강렬한 의지나 예술적 영감.  
+
+3. **
+  madlad400-3b-mt     : sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss ss
+
+### [06] 7112_25922_10.00_12.00  (게임 / normal)
+JA_REF : いや分かんないでも道あるよ
+KO_REF : 아니 몰라도 길이 있어
+  gemma-3-12b-it      : 음... 잘 모르겠는데 길은 있어.
+  qwen3-14b           : 아니, 모르는 거라도 방법은 있어.
+  qwen3-32b           : 아니, 모르는 것에도 길은 있어.
+  exaone-3.5-7.8b     : 아니 그래도 길이 있어.
+  qwen2.5-7b-baseline : 알지만 길은 있잖아
+  llama-3-8b-instruct : 아무튼 길이 있어요
+  seed-x-instruct-7b  : 아니, 모르겠지만, 길이 있어요.
+  nllb-200-3.3b       : 아니, 몰라요, 하지만 방법이 있어요
+  exaone-4.0-32b      : 「いや分かんないでも道あるよ」という言葉は、何かが理解できなくても解決の道はあるという意味です。この言葉を背景に、以下のようなアドバイスを考えてみました。
+
+---
+
+### 1. **「分からない」は始まりです**
+   - 何かが分からないのは、新しい知識や経験の始まりを意味します。
+   - 例: 数学が分からなかった子が、基礎を学び始める。
+
+### 2. **「道」は見つけるものです**
+   - 道はすでに存在していますが、それを見つけるためには行動が必要です。
+   - 例: job search에서 jobが見つから
+  madlad400-3b-mt     : yssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههههه
+
+### [07] 7112_25922_108.00_110.00  (게임 / normal)
+JA_REF : ふざけんなってマジでほんとに
+KO_REF : 장난꾸러기라니 정말 정말 정말로
+  gemma-3-12b-it      : 헐, 진짜 진짜.
+  qwen3-14b           : 정말로 농담이야.
+  qwen3-32b           : 진짜로 장난치지 마라.
+  exaone-3.5-7.8b     : 진짜 장난 아니야
+  qwen2.5-7b-baseline : Ử게 나가네 진짜ALLY真的这样啊
+  llama-3-8b-instruct : 이거 진짜로 하는 거야
+  seed-x-instruct-7b  : 저 장식은 장식일 뿐이니까 그냥 그렇게 하세요
+  nllb-200-3.3b       : 농담이 아니야, 진짜야
+  exaone-4.0-32b      : "ふざけんな"라는 표현은 일본어로 "장난치지 마" 또는 "진지해라"라는 의미로 사용됩니다. 이 표현은 상대방이 장난스럽게 행동하거나 진지하지 않은 태도를 보일 때 사용되며, 상황에 따라 약간의 짜증이나 불만을 표현할 때도 쓰입니다.  
+
+### 예시:  
+- **친구가 장난으로 진지한 이야기를 피하려 할 때**:  
+  「それ真剣に考えてくれよ！ふざけんな！」  
+  ("진심으로 생각해 줘! 장난치지 마!")  
+
+- **상대방이 가볍게 반응할 때**:  
+  「この件は重要だから、ふざけんなって言われても納得しない」  
+  ("이건 중요한 문제니까, 장난친다는 말도 이해 못 해.")
+  madlad400-3b-mt     : ößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößößö
+
+### [08] 7112_25922_110.00_113.00  (게임 / normal)
+JA_REF : 夜の学校はホラーの定番だよね
+KO_REF : 밤의 학교는 공포의 정석이지.
+  gemma-3-12b-it      : 밤에 학교는 진짜 무서운 소재지.
+  qwen3-14b           : 야간 학교는 호러의 정석이지
+  qwen3-32b           : 밤의 학교는 공포의 대표작이잖아.
+  exaone-3.5-7.8b     : 밤 학교는 공포 게임의 클래식이지 않나요?
+  qwen2.5-7b-baseline : NIGHT SCHOOL은 호러의 정상이다 요네
+  llama-3-8b-instruct : 야의 학교는 호러의 정番이야.
+  seed-x-instruct-7b  : 야간 학교는 공포의 전형이죠
+  nllb-200-3.3b       : 야간 학교는 공포의 대상이잖아
+  exaone-4.0-32b      : 夜の学校は本当にホラーの定番ですね！暗い教室、窓からの冷たい光、不思議な音…そんな環境は自然と恐怖を醸し出します。  
+
+日本のホラーや怪談では、夜に学校が舞台になる 경우が多いです。例えば：  
+- **「夜の授業」**：教師が突然現れ、生徒を襲う物語。  
+- **「未解決の事件」**：学校で起きた不思議な事件が夜になって徐々に明らかになるストーリー。  
+- **「幽霊の
+  madlad400-3b-mt     : wjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwjwj
+
+### [09] 7112_25922_120.00_121.00  (게임 / normal)
+JA_REF : ロウソクゲージみたいなのある
+KO_REF : 촛불 게이지 같은 거 있어
+  gemma-3-12b-it      : 양초 게이지 같은 거 있잖아.
+  qwen3-14b           : 蠟燭 게이지 같은 게 있어.
+  qwen3-32b           : 焔 모양의 게이지 같은 거 있어.
+  exaone-3.5-7.8b     : 그런 게이지 표시가 있어
+  qwen2.5-7b-baseline : 등불 게이지 같은 게 있나요
+  llama-3-8b-instruct : 화상측정기 같은 것들이 있습니다.
+  seed-x-instruct-7b  : 로우소쿠게지가 있는 것 같아요
+  nllb-200-3.3b       : 그리고 그 안에 있는 것은
+  exaone-4.0-32b      : ロウソクゲージ（Low-voltage gauge）と 유사한 개념의 측정 장치는 여러 분야에서 사용됩니다. 아래에 몇 가지 예를 들어 설명드리겠습니다:
+
+### 1. **電圧計 (Voltmeter)**
+   - **用途**: 電流の電圧を測定する 데 사용됩니다.
+   - **種類**: 
+     - **アナログ電圧計**: Needle gauge 형태로 표시됩니다.
+     - **デジタル電圧計**: LCD나 LED로 숫자로 표시됩니다.
+   - **特徴**: 로ウソクゲージと 유사한 아날로그 스타일의 측정 장치가 있습니다.
+
+### 2. **圧力計 (Pressure Gauge)**
+   - **用途**: 압력을 측정하는 데 사용
+  madlad400-3b-mt     : 'tyou're not alone'tyou're not alone'tyou're not alone'tyou're not alone'tyou're not alone'tyou're not alone'tyou're not alone'tyou're not alone'tyou're not alone'tyou're not alone
+
+### [10] 7112_25922_123.00_124.00  (게임 / normal)
+JA_REF : ちょっと待ってロウソクがあるの
+KO_REF : 잠깐만 촛불이 있어
+  gemma-3-12b-it      : 잠깐만, 초가 있네.
+  qwen3-14b           : 잠깐 기다려, 촛불이 있어.
+  qwen3-32b           : 잠깐, 촛불이 있잖아.
+  exaone-3.5-7.8b     : 잠깐만 기다려, 촛불 있어.
+  qwen2.5-7b-baseline : 잠깐 기다려 촛불이 있어요
+  llama-3-8b-instruct : 조금 기다려 로우소크가 있는 거야
+  seed-x-instruct-7b  : 잠시 기다리세요, 저에게 몇몇가있어요
+  nllb-200-3.3b       : 잠깐만요, 촛불이 있어요
+  exaone-4.0-32b      : ロウソク？  
+
+ロウソク（로우소크）は、日本語で「로오스크」と読みますが、この言葉は特に何を指しますか？  
+
+もしロウソクが「ロウソク」（로우소크）というブランドのお菓子を指すなら、それは日本の有名なお菓子ブランドで、主にクリームパンやエクラを売っています。  
+
+もし他の意味で使われたなら、詳細を教えてください。もう一度質問をお願いします！ 😊
+  madlad400-3b-mt     : n jssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+### [11] 7112_25922_127.00_129.00  (게임 / normal)
+JA_REF : これ離ればられになったら終わりよ
+KO_REF : 이거 헤어지면 끝이야
+  gemma-3-12b-it      : これらが離ればなれになったら終わりよ
+  qwen3-14b           : 이걸 떨어뜨리면 끝장이야
+  qwen3-32b           : 이건 멀리 떠나면 끝장이야.
+  exaone-3.5-7.8b     : 이 곳 떠나면 끝이야.
+  qwen2.5-7b-baseline : 이렇게 떨어져버리면 끝이야
+  llama-3-8b-instruct : 이거 끝나면 끝이야
+  seed-x-instruct-7b  : 만약 이 사람들이 떠나간다면 끝이야
+  nllb-200-3.3b       : 우리가 여기서 떨어져나갈 때면 끝이야
+  exaone-4.0-32b      : 「これ離ればられになったら終わりよ」라는 문장은 일본어로, 한국어로 번역하면 **"이걸 떼면 떨어져 나가면 끝이야"** 정도가 됩니다.  
+
+### 해석 및 맥락:
+- **"離ればられになったら"** (때면 떨어져 나가면): 무언가를 분리하거나 제거하면 더 이상 연결되지 않거나 관계가 끊어지는 상황을 의미합니다.  
+- **"終わりよ"** (끝이야): 결과적으로 관계나 상태가 종결됨을 강조합니다.  
+
+### 가능한 상황 예시:
+1. **인간관계**: "이 관계를 끊으면 서로 완전히 끝나게 될 거야."  
+2. **팀 프로젝트**: "이 팀원을 제외하면 프로젝트가 무너질 거야."  
+3. **게임/스토리**: "이 아이템을 잃으면 게임 오버야."  
+
+문맥에 따라 해석이 달라질
+  madlad400-3b-mt     : 1999. (incl. Biblioteka)
+
+### [12] 7112_25922_135.00_136.00  (게임 / normal)
+JA_REF : じゃあロウソク全部俺が預かるから
+KO_REF : 그럼 촛불 다 내가 맡을 테니까
+  gemma-3-12b-it      : 음... 내가 촛불 다 맡을 테니까.
+  qwen3-14b           : 그럼 촛불은 전부 내가 맡길게.
+  qwen3-32b           : 그럼 초는 전부 내가 보관할게.
+  exaone-3.5-7.8b     : 그럼 로우소크 다 내가 맡을게
+  qwen2.5-7b-baseline : 그럼 와이셔트는 다 내가 맡는다
+  llama-3-8b-instruct : 그럼 로우소크 전부 저가 맡겠습니다.
+  seed-x-instruct-7b  : 그럼 로우소의 모든 것는 내가 대리하겠다는 거야
+  nllb-200-3.3b       : 그럼 전 촛불을 다 가져갈게요
+  exaone-4.0-32b      : 「じゃあロウソク全部俺が預かるから」という言葉は、日本の漫画やアニメでよく使われる台詞です。特に、男性キャラクターが女性キャラクターのためを思って、責任を引き受けることを表す場合が多いです。
+
+この台詞の意味や使い方を詳しく説明します：
+
+### 1. **意味**
+   - **ロウソク**：ロウソク（ロウソク）は、日本の伝統的なお祈りやお供のためのお札やお物です。特に、人の死を迎えるためのお供や祈りに使われ
+  madlad400-3b-mt     : yyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsyysjsy
+
+### [13] 7112_25922_146.00_148.00  (게임 / normal)
+JA_REF : 取扱説明書に2冊取られなかった今
+KO_REF : 사용설명서에 2권 뺏기지 않은 지금
+  gemma-3-12b-it      : 取扱説明書に2冊取られなかった今
+  qwen3-14b           : 이제 설명서 두 권이 없어졌네.
+  qwen3-32b           : 이제 설명서 2권을 빼앗기지 않았다.
+  exaone-3.5-7.8b     : 지금 설명서 두 권 못 받은 거 때문에 좀 곤란하네
+  qwen2.5-7b-baseline : 2권이 설명서에 없어진 지금
+  llama-3-8b-instruct : [TEXT TO TRANSLATE]
+
+이제는 설명서가 2권도 없는 상태에요.
+
+(Note: The translation is written entirely in Hangul, with no English words or phrases.)
+  seed-x-instruct-7b  : 지금 두 장의 사용설명서를 받지 못했습니다.
+  nllb-200-3.3b       : 그리고 이 두 권의 설명서를
+  exaone-4.0-32b      : 「取扱説明書に2冊取られなかった今」という表現は、取扱説明書が2冊分取られなかった状況を指しています。この状況についての詳細な説明や背景がなければ、具体的な解釈や対応方法は限られますが、一般的な考え方を提供します。
+
+### 가능한 의미와 해석:
+1. **製品の取扱説明書不足**:  
+   - 製品が出荷されましたが、取扱説明書が2冊分足りずに配送された場合、このような表現が使われる可能性があります。  
+   - **
+  madlad400-3b-mt     : icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht toenyj icht
+
+### [14] 7112_25922_152.00_154.00  (게임 / normal)
+JA_REF : ちょっと読み上げて読み上げて
+KO_REF : 좀 읽어보고 읽어보고
+  gemma-3-12b-it      : 조금 읽어주고 읽어줘.
+  qwen3-14b           : 조금만 읽어줘 읽어줘
+  qwen3-32b           : 조금 읽어上げ다, 읽어上げ다
+  exaone-3.5-7.8b     : 잠깐 읽어봐, 읽어봐
+  qwen2.5-7b-baseline : 약간 읽어드려요 읽어드려요
+  llama-3-8b-instruct : 조금 읽어보세요.
+  seed-x-instruct-7b  : 조금 읽어 조금 읽어
+  nllb-200-3.3b       : 그리고 저는 이 책을 읽고,
+  exaone-4.0-32b      : 「ちょっと読み上げて読み上げて」  
+
+この文は、「ちょっと読み上げて」という指示を2回繰り返したものです。意味としては、「少し読んでほしい」という要求や、何度も繰り返して読んでほしいというニュアンスがあります。  
+
+例えば、以下のように読むことができます：  
+- **「ちょっと読み上げて」** → 「少し読んでください」  
+- **「読み上げて読み上げて」** → 「何度も読んでほしい」  
+
+文脈によっては、強調したり、読み方
+  madlad400-3b-mt     : w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w w
+
+### [15] 7112_25922_156.00_157.00  (게임 / normal)
+JA_REF : 待ってマッチいるって俺も
+KO_REF : 기다려 매치하고 있다고 나도
+  gemma-3-12b-it      : 기다려, 매치가 필요하다고 나도.
+  qwen3-14b           : 기다리다 매치 있어.俺도
+  qwen3-32b           : 기다려, 매치가 필요하다고, 나도.
+  exaone-3.5-7.8b     : 잠깐, 나도 매치가 있어.
+  qwen2.5-7b-baseline : 참고에 매치가 있단다.
+  llama-3-8b-instruct : 나도 가질 수 있잖아
+  seed-x-instruct-7b  : 기다리는 것이 있어서 저도 기다리고 있어요
+  nllb-200-3.3b       : 잠깐만, 나랑 맞을 사람이 있잖아
+  exaone-4.0-32b      : 「待ってマッチいるって俺も」という表現は、日本語の方言や独特の表現でしょうか？  
+
+一般的な日本語では「待ってマッチいるって俺も」という表現はあまり聞かないので、方言や特定のグループの言葉かもしれません。  
+
+もし方言や独特の表現であれば、それぞれの地方やコミュニティで使われる言葉なので、文脈によっては意味が通じることもあります。  
+
+もし他の言葉や表現でございますなら、詳細を教えていただければ、より正確な解説ができます。  
+
+例えば、「待ってマ
+  madlad400-3b-mt     : wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi wi
+
+### [16] 7112_25922_16.00_18.00  (게임 / normal)
+JA_REF : あー!サムさん蹴ったでしょ!
+KO_REF : 아! 샘 형 찼지!
+  gemma-3-12b-it      : 아ー! 쌈님 차셨죠!
+  qwen3-14b           : 아아! 샘 씨를 찼잖아!
+  qwen3-32b           : 아! 삼(사)미 씨가 찼지!
+  exaone-3.5-7.8b     : 아! 샘 씨 이겼어!
+  qwen2.5-7b-baseline : 아! 삼sı님 발을ICKICKICK쳤잖아!
+  llama-3-8b-instruct : 아하! 사무샌 차꼬았겠지!
+  seed-x-instruct-7b  : 아! 저한테 踢었어요!
+  nllb-200-3.3b       : 샘 씨를 잖아
+  exaone-4.0-32b      : **サムさん**については、まだ情報が不足ですが、「蹴った」と言われた理由について考えてみます。  
+
+### 가능한 시나리오:
+1. **ゲーム/対戦中**:  
+   - サムさんがプレイヤーで、相手に蹴かれた可能性。  
+   - 例: fighting gameやスポーツ에서의攻撃。  
+
+2. **日常生活**:  
+   - 無意識に蹴ってしまったり、誤解が生じたり。  
+
+3. **メンタルな面**:  
+   - 「蹴る」が比喻的に使われ、サムさんが何かを破壊したり
+  madlad400-3b-mt     : 1000000000000000♠0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+### [17] 7112_25922_161.00_162.00  (게임 / normal)
+JA_REF : 火のついたロウソクを作る
+KO_REF : 불붙은 촛불을 만들다
+  gemma-3-12b-it      : 불 붙은 양초를 만들어요.
+  qwen3-14b           : 불이 붙은 촛불을 만든다
+  qwen3-32b           : 불이 붙은 촛불을 만든다.
+  exaone-3.5-7.8b     : 불 붙은 촛불 만들기
+  qwen2.5-7b-baseline : горящую蝋燭을 만드는 것
+  llama-3-8b-instruct : 화의 꽂힌 로우소크를 만들어요.
+  seed-x-instruct-7b  : 불로운 로우소주를 만들다
+  nllb-200-3.3b       : 불꽃 촛불을 만들죠
+  exaone-4.0-32b      : 火のついたロウソク（燭）を作るには、伝統的な日本の燭作りの技術を学ぶ必要があります。以下に、基本的な手順と注意点をお知らせします。
+
+---
+
+### **必要な材料と道具**
+1. **材料**:
+   - 燭台（木製または金属）
+   - 燭芯（ロウソク用の芯）
+   -ロウソク wax（beeswax or paraffin wax)
+   - 香料（optional, e.g., lavender, sandalwood)
+   - 水（燭を切るために使用）
+
+2. **道具**
+  madlad400-3b-mt     : prisyjssy ue iposjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjf
+
+### [18] 7112_25922_163.00_164.00  (게임 / normal)
+JA_REF : ロウダイを作る必要がある
+KO_REF : 납땜을 만들 필요가 있다
+  gemma-3-12b-it      : 로다이를 만들어야 해.
+  qwen3-14b           : 로우다이를 만들어야 한다
+  qwen3-32b           : 로우다이를 만들어야 해.
+  exaone-3.5-7.8b     : 로ودアイ 만들어야겠어
+  qwen2.5-7b-baseline : 로우대이를 만들有必要真的需要翻译吗？如果是的话，应该是로우대이를 만들有必要的话，就制作一个吧。但根据上下文，更自然的翻译可能是: 로우대이를 만들 필요가 있어 보여요.
+  llama-3-8b-instruct : 로우ダイ를 만들야 하는 거다
+  seed-x-instruct-7b  : 로우 다이를 만들어야 해요
+  nllb-200-3.3b       : 로우다이를 만들어야 해
+  exaone-4.0-32b      : ロウダイ（Low Die）は、主にダイスゲームやTRPGで使用される六面체 주사위를 의미합니다. 만약 로우다이를 직접 제작해야 한다면, 다음 단계를 참고하세요:
+
+### **로우다이 제작 방법**
+1. **재료 선택**  
+   - **플라스틱/아크릴**: 내구성이 좋고 오래 사용 가능 (레이저 커팅 또는 3D 프린팅 추천).  
+   - **우드**: 나무를 깎아 제작 (전통적인 방식이지만 정밀도가 낮을 수 있음).  
+   - **종이/카드보드**: 임시용으로 빠르게 만들 때 적합.
+
+2. **디자인**  
+   - 표준 1~6 숫자를 각 면에 균형 있게 배치 (중심을 고려해 무게 분포를 맞추세요).  
+   - 3D 모델링 툴(예: Blender)로 디자인 후
+  madlad400-3b-mt     : 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100%
+
+### [19] 7112_25922_170.00_172.00  (게임 / normal)
+JA_REF : 宿題とロウソクとマッチを組み合わせたら作れる
+KO_REF : 숙제와 양초와 성냥을 조합하면 만들 수 있다
+  gemma-3-12b-it      : 숙제랑 촛불이랑 성냥만 있으면 만들 수 있어.
+  qwen3-14b           : 숙제와 촛불과 휘장으로 만들 수 있어
+  qwen3-32b           : 숙제와 초, 매치를 조합하면 만들 수 있어.
+  exaone-3.5-7.8b     : 숙제, 라이터, 그리고 성냥을 조합하면 만들 수 있어요.
+  qwen2.5-7b-baseline : 숙제와 라이트와 매치를 조합하면 만들 수 있다
+  llama-3-8b-instruct : [TEXT TO TRANSLATE]
+
+宿題과 로우소크와 매치를 조합하면 만들 수 있다.
+
+(Note: The translation is written entirely in Hangul, as per the guidelines.)
+  seed-x-instruct-7b  : 만약 당신이 숙제와 로우소쿠와 마치를 함께 놓는다면 만들 수 있을 거예요.
+  nllb-200-3.3b       : 그리고 이 모든 것을 합쳐서
+  exaone-4.0-32b      : ロウソクとマッチを組み合わせて作れる宿題 related things are:
+
+1. **ロウソクの点火**: マッチを使ってロウソクを点火します。
+2. **ロウソクの燃え方**: マッチの火を移してロウソクが燃える様子を観察します。
+3. **ロウソクの燃える時間**: マッチを使ってロウソクの燃える時間を測定します。
+4. **ロウソクの燃える様子**: マッチの火を移してロウソクが燃える様子を観察します。
+
+These are all related to the combination of candle and match.
+  madlad400-3b-mt     : usnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjnjn
+
+### [20] 7112_25922_175.00_176.00  (게임 / normal)
+JA_REF : ロウソクがなくなれば火が消える
+KO_REF : 촛불이 없어지면 불이 꺼진다
+  gemma-3-12b-it      : 양초가 없어지면 불이 꺼져.
+  qwen3-14b           : 蠟燭이 없으면 불이 꺼질 거야
+  qwen3-32b           : 焔이 꺼지려면 촛불이 없어져야 해
+  exaone-3.5-7.8b     : 전등이 꺼지면 불이 꺼진다
+  qwen2.5-7b-baseline : 등이 없으면 불이 꺼진다
+  llama-3-8b-instruct : 불이 꺼진다
+  seed-x-instruct-7b  : 로우소쿠가 없으면 불이 꺼집니다.
+  nllb-200-3.3b       : 촛불이 없어지면 불도 꺼져요
+  exaone-4.0-32b      : 로우스톡(로우소크)이 없어지면 불이 꺼진다는 의미의 일본어 표현입니다.  
+
+로우스톡(로우소크)은 영어 **"mantle"** (맨틀)을 가리키는 말로, 가스 램프나 등잔 같은 전통적인 조명 기구에서 불꽃을 감싸는 유리 섬유 부분을 말합니다. 이 맨틀은 열을 집중시켜 불꽃을 유지하는 역할을 합니다.  
+
+따라서 **"로우스톡이 없어지면 불이 꺼진다"**는 표현은 **"맨틀이 없으면 불꽃이 유지되지 않고 꺼진다"**는 뜻으로, **의존하는 것이 없어지면 기능이 상실된다**는 비유적 의미로도 사용될 수 있습니다.  
+
+### 예시  
+- **비유적 표현**:  
+  - "그 회사는 로우스톡 없이는 존속할 수 없다." → "그
+  madlad400-3b-mt     : 1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999:1999
+
+### [21] 7112_25922_180.00_181.00  (게임 / normal)
+JA_REF : 火のついた宿題とロウソクを組み合わせたら
+KO_REF : 불붙은 숙제와 촛불을 조합하면
+  gemma-3-12b-it      : 불붙은 숙제랑 촛불을 합쳐버렸어.
+  qwen3-14b           : 불이 붙은 숙제와 초를 결합하면
+  qwen3-32b           : 점이 붙은 숙제랑 초를 섞으면?
+  exaone-3.5-7.8b     : 불 붙은 숙제랑 촛불을 합치면
+  qwen2.5-7b-baseline : 
+  llama-3-8b-instruct : 불의 꽂힌 숙제와 로우소를 조합하면
+  seed-x-instruct-7b  : 불타는 숙제와 로우소주를 함께 하면
+  nllb-200-3.3b       : 그리고 그 다음에는,
+  exaone-4.0-32b      : **火のついた宿題とロウソクを組み合わせたら…**  
+
+1. **創意的なアイデア**  
+   - ロウソクの融けた wax を宿題の紙に使って、3Dアートや装飾をする。  
+   - 火のついた宿題をロウソクの炎に近づけて、独特の香りや煙を生成し、芝居やアートの演出に 활용。  
+
+2. **危険性**  
+   - ロウソクの炎に宿題が近づくと、紙が燃えて大火になる可能性がある。  
+   - 融けた wax が
+  madlad400-3b-mt     : wtobsnr wtobsnrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+
+### [22] 7112_25922_186.00_188.00  (게임 / normal)
+JA_REF : 火のついた宿題を持っている人の近くにいる人も
+KO_REF : 불붙은 숙제를 가지고 있는 사람 근처에 있는 사람도
+  gemma-3-12b-it      : 불붙은 숙제를 가진 사람 옆에 있는 사람도
+  qwen3-14b           : 불이 붙은 숙제를 가지고 있는 사람 근처에 있는 사람도
+  qwen3-32b           : 불이 붙은 숙제를 가진 사람 옆에 있는 사람도
+  exaone-3.5-7.8b     : 불 붙은 숙제를 가진 사람 근처에 있는 사람도
+  qwen2.5-7b-baseline : 🔥번화한 곳에 있는 사람도🔥
+  llama-3-8b-instruct : 화의ついた숙제를 가지고 있는 사람의 근처에 있는 사람도
+  seed-x-instruct-7b  : 불안정한 과제를 가진 사람의 근처에 있는 사람들도
+  nllb-200-3.3b       : 그리고 그 사람들은,
+  exaone-4.0-32b      : "화재의 불씨를 들고 있는 사람 주변에 있는 사람도 위험에 노출될 수 있습니다."  
+
+보다 정확한 표현을 원하시면 다음과 같이 작성할 수 있습니다:  
+
+**"불에 타는 숙제를 들고 있는 사람 주변에 있는 사람도 위험할 수 있습니다."**  
+
+또는 상황에 따라:  
+
+**"불이나는 숙제를 가진 사람 근처에 있는 사람도 안전에 주의해야 합니다."**  
+
+의미를 더 명확히 하려면 구체적인 맥락을 추가하는 것이 좋습니다. 예를 들어:  
+- **"화학 실험 중 불꽃이 발생하는 숙제를 들고 있는 사람 주변에 있는 사람은 화상이나 화재 위험이 있습니다."**  
+- **"담배나 라이터로 숙제에 불을 붙이는 행위를 하는 사람 주변에 있는 사람은 연기나 불에 노출될 수
+  madlad400-3b-mt     : vtopopnosu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu ptu
+
+### [23] 7112_25922_194.00_195.00  (게임 / normal)
+JA_REF : あの3つ持ってるからもうじゃあ
+KO_REF : 저 3개 가지고 있으니까 이제 그럼
+  gemma-3-12b-it      : 음... 그거 3개 가지고 있으니까.
+  qwen3-14b           : 그 3개는 이미 가지고 있으니까 그냥
+  qwen3-32b           : 그 3개를 이미 가지고 있어서, 어.
+  exaone-3.5-7.8b     : 그 세 개 가지고 있으니까 이제 됐어
+  qwen2.5-7b-baseline : 그런 세 가지 가지고 있으니까 이제
+  llama-3-8b-instruct : 나가서 하나둘씩 확인해야지.
+  seed-x-instruct-7b  : 저 세 개 있으니까 저 역시도
+  nllb-200-3.3b       : 그 세 개를 가지고 있잖아
+  exaone-4.0-32b      : 「あの3つ持ってるからもうじゃあ」라는 문장은 일본어로 보이지만, 문법적으로 자연스럽지 않아 의미를 파악하기 어렵습니다. 몇 가지 가능한 해석과 조언을 드리겠습니다:
+
+1. **의도된 표현일 경우**:
+   - "あの3つ持ってるから、もうじゃあ" (저 3개를 가지고 있으니까, 이제 됐어)
+   - "持ってるからもうじゃあ" (가지고 있으니까 이제 됐어)
+
+2. **오타 가능성**:
+   - "もうじゃあ" → "もうじゃあ"가 아니라 "もうじゃあ" (이제 됐어)로 의도되었을 수 있습니다.
+   - "持ってる" → "持ってる" (가지고 있다)가 맞는지 확인이 필요합니다
+  madlad400-3b-mt     : S:t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.t.
+
+### [24] 7112_25922_198.00_203.00  (게임 / normal)
+JA_REF : あ、であのレシピあるやん今手に入ってるあの緑のレシピを使って
+KO_REF : 아 근데 그 레시피 있잖아 지금 구할 수 있는 저 초록색 레시피를 사용해서
+  gemma-3-12b-it      : 아, 있잖아, 그 레시피 있잖아, 지금 손에 있는 저 녹색 레시피로 할 거야.
+  qwen3-14b           : 아, 그 레시피 있잖아. 지금 손에 있는 그 녹색 레시피를 써서
+  qwen3-32b           : 아, 저기, 지금 손에 있는 그 녹색 레시피 쓰면 되잖아.
+  exaone-3.5-7.8b     : 아, 그 레시피 있잖아 지금 손에 들어온 그 초록색 레시피로 해볼까?
+  qwen2.5-7b-baseline : 아, 저 녹색 레시피가 있네요. 지금 사용하고 있는 그 레시피로 사용해 봤어요.
+  llama-3-8b-instruct : 아, 저거 그 레시피 있잖아? 이제 저한테 있는 그 녹색 레시피를 사용해!
+  seed-x-instruct-7b  : 아, 저 레피를 사용해, 저 초록색 레피를 사용해
+  nllb-200-3.3b       : 아, 그리고 레시피가 있어요. 지금 당장 구할 수 있는 녹색 레시피를 써요.
+  exaone-4.0-32b      : 「緑のレシピ」を使って料理を作る場合、どのような料理を作ろうと思いますか？  
+
+例えば、以下のようなアイデアがあります：  
+
+### 1. **緑のスープ**  
+   - **材料**:  
+     - 緑のレシピ（おそらく野菜や海藻などの緑色の食材）  
+     - 水またはコーヒー  
+     - おいしい肉や魚  
+   - **作り方**:  
+     - 緑のレシピを煮込んでスープにします。  
+     - 好みの香味を加えて、おいしいスープにします。
+  madlad400-3b-mt     : asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia asia
+
+### [25] 7112_25922_2.00_4.00  (게임 / normal)
+JA_REF : なんかガサガサガサガサって
+KO_REF : 뭔가 바스락바스락하고
+  gemma-3-12b-it      : 뭔가 사사삭사사삭거려.
+  qwen3-14b           : 어떤가, 갈라갈라갈라갈라하는 소리가 들려?
+  qwen3-32b           : なんか 거르르르르~
+  exaone-3.5-7.8b     : 뭐 이렇게 딱딱 소리가 나는 거야?
+  qwen2.5-7b-baseline : 가사가사가사가사하고
+  llama-3-8b-instruct : 이런 소리야!
+  seed-x-instruct-7b  : 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저
+  nllb-200-3.3b       : "이봐, 이봐, 이봐, 이봐, 이봐, 이봐, 이봐, 이봐, 이봐"
+  exaone-4.0-32b      : "ガサガサガサ"라는 표현은 주로 소리를 묘사할 때 사용되는 의성어입니다. 이 표현은 마른 잎이나 종이, 혹은 마른 풀 같은 것이 바람에 날리거나 움직일 때 나는 소리를 나타낼 때 쓰입니다. 예를 들어, 가을에 마른 잎들이 바람에 날리는 소리를 묘사할 때 "ガサガサガサ"라고 표현할 수 있습니다.
+
+이 표현은 일본의 만화나 애니메이션에서도 자주 사용되며, 특히 자연의 소리를 생생하게 전달할 때 효과적입니다. 예: "秋の葉が風に飛ばされてガサガサガサの音がした。" (가을의 잎들이 바람에 날려가며 가스가스가스의 소리가 났다.)
+
+혹시 특정 상황이나 맥락에서 이 표현을 사용하려고 하신 건가요? 더 자세한 설명이 필요하시면 알려주세요!
+  madlad400-3b-mt     : wnusnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestnestn
+
+### [26] 7112_25922_204.00_206.00  (게임 / normal)
+JA_REF : あのー右クリックで使って
+KO_REF : 저기 우클릭으로 사용해서
+  gemma-3-12b-it      : 음... 오른쪽 클릭으로 써.
+  qwen3-14b           : 어~ 오른쪽 클릭으로 사용해
+  qwen3-32b           : 음... 오른쪽 클릭으로 사용해.
+  exaone-3.5-7.8b     : 어~ 오른쪽 클릭해서 써봐
+  qwen2.5-7b-baseline : 음... 오른쪽 클릭으로 사용하세요.
+  llama-3-8b-instruct : 이거는右클릭으로 사용하세요
+  seed-x-instruct-7b  : 저기, 오른쪽 클릭으로 사용하세요.
+  nllb-200-3.3b       : 이 모든 것을 다룰 수 있습니다.
+  exaone-4.0-32b      : 右クリックで使う機能は、ブラウザやアプリによって異なりますが、一般的な例をご紹介します。  
+
+### **ブラウザでの右クリック**  
+1. **コンテスト menu**  
+   - 링크, 이미지, 텍스트 등을右クリックすると、コンテスト menuが表示されます。  
+   - **「 새 탭에서 열기」**, **「画面に全画面表示」**, **「画像を保存」**などのオプションがあります。  
+
+2. **ページのソースコード表示**  
+   - 페이지のどこかを右クリックし、**「HTML source」**を選ぶと、ページのソース
+  madlad400-3b-mt     : y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy yy y
+
+### [27] 7112_25922_206.00_208.00  (게임 / normal)
+JA_REF : その3つを組み合わせたら
+KO_REF : 그 세 가지를 조합하면
+  gemma-3-12b-it      : 그 세 가지를 합치면
+  qwen3-14b           : 그 세 가지를 조합하면
+  qwen3-32b           : 그 세 가지를 조합하면
+  exaone-3.5-7.8b     : 그 세 가지를 합치면
+  qwen2.5-7b-baseline : 그 세 가지를 합치면
+  llama-3-8b-instruct : [TEXT TO TRANSLATE]
+
+그 3개를 조합하면?
+  seed-x-instruct-7b  : 이 세 가지를 합친다면
+  nllb-200-3.3b       : 그리고 이 세 가지를 합쳐서
+  exaone-4.0-32b      : 「その3つを組み合わせたら」という文の意味や使い方について説明します。
+
+### 1. **文の意味**
+- **直訳**: "그 세 가지를 합친다면" 또는 "그 세 가지를 결합한다면"
+- **文脈**: 
+  -複数の要素や概念を組み合わせることを提案する時に使います。
+  -例えば、3つの異なるアイデア、技術、或いは状況を一つに統合することを示しています。
+
+### 2. **使用例**
+- **例1**:  
+  *"データ分析、人間の直観、AIの予測を
+  madlad400-3b-mt     : <0xF0><0x9F><0x94><0x8E> <0xF0><0x9F><0x94><0x8E> <0xF0><0x9F><0x94><0x8E> <0xF0><0x9F><0x94><0x8E> <0xF0><0x9F><0x94><0x8E> <0xF0><0x9F><0x94><0x8E> <0xF0><0x9F><0x94><0x8E> <0xF0><0x9F><0x94><0x8E> <0xF0><0x9F><0x94><0x8E> <0xF0><0x9F><0x94><0x8E> <0xF0><0x9F><0x94><0x8E> <0xF0><0x9F><0x94><0x8E> <0xF0><0x9F><0x94><0x8E> <0xF0><0x9F><0x94><0x8E> <0xF0><0x9F><0x94><0x8E> <0xF0><0x9F><0x94><0x8E>
+
+### [28] 7112_25922_208.00_210.00  (게임 / normal)
+JA_REF : あ、宿題持ってないの?宿題俺が持ってるんだ
+KO_REF : 아 숙제 없어? 숙제 내가 가지고 있구나.
+  gemma-3-12b-it      : 아, 숙제 안 가져왔어? 숙제 내가 들고 있잖아.
+  qwen3-14b           : 아, 숙제 가지고 있잖아? 숙제는 내가 가지고 있어.
+  qwen3-32b           : 아, 숙제를 안 가지고 왔어? 숙제는 내가 가지고 왔는데.
+  exaone-3.5-7.8b     : 아, 숙제 안 가져왔어? 숙제는 내가 가져왔어.
+  qwen2.5-7b-baseline : 어, 숙제 가지고 있지 않나? 숙제는 나가 가지고 있어.
+  llama-3-8b-instruct : 아, 숙제를 안 가지고 있나요? 숙제는 나한테 있어요.
+  seed-x-instruct-7b  : 숙제를 가져오지 않았니? 저가 가져왔어요
+  nllb-200-3.3b       : 숙제 안 하고?
+  exaone-4.0-32b      : **回答:**  
+
+> "あ、宿題持ってないの?宿題俺が持ってるんだ"  
+
+**意味:**  
+この言葉は、相手が宿題を持っていないと思って、自分が持っていることを強調している表現です。  
+
+**使い方の例:**  
+- **相手:** "宿題どこにあるか分からない…"  
+- **あなた:** "あ、宿題持ってないの?宿題俺が持ってるんだ!"  
+
+**注意点:**  
+- **口語的な表現:** everyday conversation에서 사용되는 casual한 language입니다。  
+- **強調のニュアンス:** "俺が持ってるんだ
+  madlad400-3b-mt     : wysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysiahenwysia
+
+### [29] 7112_25922_221.00_222.00  (게임 / normal)
+JA_REF : オッケーオッケーオッケーオッケー
+KO_REF : 오케이 오케이 오케이 오케이
+  gemma-3-12b-it      : 알았어 알았어 알았어 알았어
+  qwen3-14b           : 오케이오케이오케이오케이
+  qwen3-32b           : 오키 오키 오키 오키
+  exaone-3.5-7.8b     : 오케이오케이오케이오케이!
+  qwen2.5-7b-baseline : 오케이오케이오케이오케이
+  llama-3-8b-instruct : 오키다오키다오키다오키다
+  seed-x-instruct-7b  : 오케 오케 오케 오케
+  nllb-200-3.3b       : 좋아, 좋아, 좋아, 좋아
+  exaone-4.0-32b      : こんにちは！  
+
+「オッケー」が繰り返されたのを見ると、元気な気持ちや興奮が伝わってきますね！ 😊  
+
+もし、何か特定の意味やコード、ゲーム、アニメ、音楽などの参参があるなら、教えてください！  
+- **ゲーム**：「オッケー」が勝利の合言葉？  
+- **アニメ/漫画**：どのキャラの台詞？  
+- **音楽**： 특정 song のリ듬？  
+- **プログラミング**：コードの一部
+  madlad400-3b-mt     : 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100%
+
+### [30] 7112_25922_222.00_223.00  (게임 / normal)
+JA_REF : じゃあロウソクも渡しておくわ
+KO_REF : 그럼 촛불도 건네놓을게
+  gemma-3-12b-it      : 응, 양초도 챙겨 놓을게.
+  qwen3-14b           : 그럼 촛불도 줄게요
+  qwen3-32b           : 그럼 촛불도 건네줄게.
+  exaone-3.5-7.8b     : 그럼 로우소크도 건네줄게
+  qwen2.5-7b-baseline : 그럼 촛기도 함께 주도록 하겠어
+  llama-3-8b-instruct : 그럼 로우소쿠도 가져가줄게
+  seed-x-instruct-7b  : 그렇다면 로우소주도 보내주실래요?
+  nllb-200-3.3b       : 그럼 촛불도 줄게
+  exaone-4.0-32b      : 「じゃあロウソクも渡しておくわ」라는 문장은 일본어로, 한국어로는 "그럼 로우소크도 건네줄게" 정도로 해석될 수 있습니다.  
+
+### 문장 해석:
+- **じゃあ (jaa)** = "그럼" / "그러면" (대화에서 자연스럽게 이어지는 표현)  
+- **ロウソク (rowsoku)** = "로우소크" (영어 "low sock"의 일본식 발음으로 추정되며, 특정 제품명이나 브랜드일 가능성 있음)  
+- **も (mo)** = "도" (추가적인 대상을 나타냄)  
+- **渡しておくわ (wassete okuwa)** = "건네줄게" (미래형으로 약속하는 뉘앙스)  
+
+### 맥락에 따른 의미:
+1. **제품 교환 상황**:
+  madlad400-3b-mt     : pyyysysjsss s s an ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn ytn
+
+### [31] 8407_40837_0.00_15.28  (음식,요리 / normal)
+JA_REF : 今日はほとんど忘れていなかった、蒸気ガスパッケージを紹介します
+KO_REF : 오늘은 거의 잊지 않았던 증기가스 패키지를 소개하겠습니다.
+  gemma-3-12b-it      : 今日は 거의 다 기억하고 있어, 스팀 가스 패키지를 소개할게.
+  qwen3-14b           : 오늘은 거의 잊지 않았던 증기 가스 패키지를 소개할게요
+  qwen3-32b           : 오늘은 거의 잊지 않고, 수증기 가스 패키지를 소개할게요.
+  exaone-3.5-7.8b     : 오늘 거의 잊고 있었는데, 증기 가스 패키지를 소개할게요.
+  qwen2.5-7b-baseline : 오늘은 거의 잊고 있었던 스팀 가스 패키지를 소개합니다
+  llama-3-8b-instruct : 오늘은 거의 잊혀지지 않았지만, 蒸気ガスパッケージ를 소개합니다.
+  seed-x-instruct-7b  : 오늘은 대부분 잊지 않았고, 스팀 가스파크지를 소개하겠습니다.
+  nllb-200-3.3b       : 오늘 저는 여러분께 우리가 거의 잊어 버리지 않는 증기 가스 패키지를 소개하고자 합니다.
+  exaone-4.0-32b      : **蒸気ガスパッケージ (Steam Gas Package) の紹介**  
+
+蒸気ガスパッケージは、蒸気とガスを一緒に利用するパッケージで、主に工業や家庭でのエネルギー供給、加熱、発動などに使用されます。蒸気の高い温度とガスの高いエネルギーを組み合わせることで、効率的なエネルギー利用が可能になります。  
+
+### **主な用途**  
+1. **工業用**  
+   - manufacturing processes (製造工程)  
+   - sterilization (滅菌)  
+   - heating systems
+  madlad400-3b-mt     : 2017.01.15.
+
+### [32] 8407_40837_106.28_108.28  (음식,요리 / normal)
+JA_REF : おっと、おぶさんありがとう
+KO_REF : 이런, 아저씨 고마워요
+  gemma-3-12b-it      : 어머, 오부상 감사합니다.
+  qwen3-14b           : 어, 오브샘 고마워
+  qwen3-32b           : 아, 오브 씨, 감사합니다.
+  exaone-3.5-7.8b     : 어, 고마워 옵빠
+  qwen2.5-7b-baseline : 오빠님 감사해요
+  llama-3-8b-instruct : 아하, 부상짱 고마워!
+  seed-x-instruct-7b  : 저기, 고마워요
+  nllb-200-3.3b       : 오, 감사합니다.
+  exaone-4.0-32b      : おぶさんありがとうございます！  
+
+何かご不便をおかけしたか、または何かお手伝いが必要な場合は、ぜひ詳しくお知らせください。私はいつもここにいるので、どうかご要望に対応できるよう努めます！  
+
+例えば：  
+- **情報検索**が必要な場合  
+- **文字の訂正**や**翻訳**が必要な場合  
+- **アドバイス**や**考えの整理**が必要な場合  
+
+お気軽にお申し付けください！ 😊
+  madlad400-3b-mt     : 1999–2000: 1.
+
+### [33] 8407_40837_108.28_114.28  (음식,요리 / normal)
+JA_REF : 久しぶりの寿司だよ、いつぶり?半年くらい?めっちゃ久しぶり
+KO_REF : 오랜만에 초밥이야, 얼마만이야?반년정도? 정말 오랜만이야.
+  gemma-3-12b-it      : 오랜만에 스시잖아, 얼마나 됐지? 반년 정도? 진짜 오랜만이야.
+  qwen3-14b           : 오랜만에 스시야, 언제 만났지? 반년 정도? 진짜 오랜만이야
+  qwen3-32b           : 오랜만에 초밥 먹는 거네, 언제부터? 6개월 정도? 진짜 오랜만이야
+  exaone-3.5-7.8b     : 오랜만이야, 언제 먹었지? 대략 반 년 정도 된 것 같아. 정말 오랜만이다.
+  qwen2.5-7b-baseline : 오랜만의 회사다, 언제版权声明：以上内容著作权归openai所有，未经许可不得转载。Translated: 오랜만의 회사다, 언제
+  llama-3-8b-instruct : 장기간의 스시를 먹었다는 것 같아요, 언제였나요? 대략 6개월 정도? 정말로 장기간이 지났다.
+  seed-x-instruct-7b  : 오랜만에 寿司를 먹었네요. 몇 년 만에 먹었나요? 6개월 정도?
+  nllb-200-3.3b       : 수시도 오래 됐어요, 언제부터요? 6개월쯤?
+  exaone-4.0-32b      : 久しぶりの寿司ですね! 😊  
+半年くらいぶりなら、本当に長い時間です。  
+寿司は、食べると元気が出る気がしますよね。  
+
+最近は、どんな寿司を食べる機会がありましたか？  
+もし近々に食べる予定があるなら、おすすめの店やメニューがあれば教えてください！  
+
+(*Note: You can reply in Japanese or English—I’m happy to help either way!)
+  madlad400-3b-mt     : pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách pherzésyh ysách
+
+### [34] 8407_40837_116.28_119.28  (음식,요리 / normal)
+JA_REF : ライブ初参戦、日生さん、よいよいよい
+KO_REF : 라이브 첫 참전, 닛세이씨, 좋아요이
+  gemma-3-12b-it      : 라이브 첫 참전, 히소세さん, 요이요이요이
+  qwen3-14b           : 라이브 첫 참전, 히비코-san, 요이요이요
+  qwen3-32b           : 라이브 첫 출전, 히나시마 씨, 영차~
+  exaone-3.5-7.8b     : 라이브 첫 참전, 히가시하나 씨, 좋아좋아좋아요!
+  qwen2.5-7b-baseline : 
+  llama-3-8b-instruct : 直播初登場、일생샌, 영차영차영
+  seed-x-instruct-7b  : 첫 라이브 경험, 히로시마, 와서 와서 와서
+  nllb-200-3.3b       : 생방송 첫 경기, 히치호시 씨, 안녕하세요
+  exaone-4.0-32b      : **ライブ初参戦、日生さん、よいよいよい**  
+
+このフレーズは、ライブイベントに初めて参加した感謝や嬉しさ、そして出演者(ここでは「日生さん」)への感動を表しているようです。  
+
+### 가능한 해석과 활용:
+1. **感謝の言葉**  
+   - ライブに初参戦したことを喜び、出演者(日生さん)のパフォーマンスや存在に感動していることを表しています。  
+   - 예: *"初めてライブに行けて嬉しい！日生さんの歌声に感動しました。よいよいよい！"*  
+
+2.
+  madlad400-3b-mt     : prj jsy hsyy syy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy yyy
+
+### [35] 8407_40837_120.28_122.28  (음식,요리 / normal)
+JA_REF : トモさんありがとう、一万人
+KO_REF : 토모씨 고마워요, 만명
+  gemma-3-12b-it      : 토모상, 고마워, 만 명.
+  qwen3-14b           : 토모 씨, 고마워요. 만 명
+  qwen3-32b           : 토모 씨, 감사합니다. 1만 명.
+  exaone-3.5-7.8b     : 토모 씨, 감사합니다, 만 명 분!
+  qwen2.5-7b-baseline : 토모sensei 감사합니다, 1만 명
+  llama-3-8b-instruct : 톰짱 감사합니다, 만명
+  seed-x-instruct-7b  : 고마워요, 1만 명의 팔로워
+  nllb-200-3.3b       : 토모, 고마워요, 1만 명
+  exaone-4.0-32b      : こんにちは、トモさん！  
+ありがとうございます！一万人の心を承り、とても嬉しいです。  
+
+何か特別なお祝いやお礼が必要なんでしょうか？  
+例えば、  
+- **お祝いメッセージ**：特別な日を祝う言葉をお伝えします。  
+- **感謝の返礼**:トモさんへのプレゼントやサービスを考えます。  
+- **共有の機会**:一万人との交流の場を作ります。  
+
+希望する方向を教えていただけると、より良いお
+  madlad400-3b-mt     : 2017.05.15.--00:00:00Z 2017.05.15.--00:00:00Z
+
+### [36] 8407_40837_129.28_138.28  (음식,요리 / normal)
+JA_REF : こんばんは、あしゅあしゅさん
+KO_REF : 안녕하세요, 아슈아슈씨
+  gemma-3-12b-it      : 안녕하세요, 아슈아슈 씨.
+  qwen3-14b           : 안녕하세요, 아슈아슈 님
+  qwen3-32b           : 안녕하세요, 아슈아슈 씨.
+  exaone-3.5-7.8b     : 안녕하세요, 아사슈아슈님
+  qwen2.5-7b-baseline : こんばんは、아시유아시유sensei
+  llama-3-8b-instruct : 안녕하세요, 아슈안산
+  seed-x-instruct-7b  : 안녕하세요, 아시ュ 아시ュ 씨
+  nllb-200-3.3b       : 안녕하세요, 아저씨
+  exaone-4.0-32b      : 
+  madlad400-3b-mt     : ysssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+### [37] 8407_40837_171.28_178.28  (음식,요리 / normal)
+JA_REF : 30皿がお寿司で10皿がデザート
+KO_REF : 30접시가 초밥이고 10접시가 디저트
+  gemma-3-12b-it      : 30인분은 스시이고, 10인분은 디저트야.
+  qwen3-14b           : 30접이 회로, 10접이 디저트로요.
+  qwen3-32b           : 30접시는 회가, 10접시는 디저트입니다.
+  exaone-3.5-7.8b     : 30개 접시가 초밥이고 10개 접시가 디저트야.
+  qwen2.5-7b-baseline : 30개가 오징어而对于“30皿がお寿司で10皿がデザート”这句话，翻译为自然流畅的韩语是：
+
+30개가 오징어로, 10개가 디저트로요.
+  llama-3-8b-instruct : [TEXT TO TRANSLATE]
+
+30장의 오무라이스에서 10장의 디저트
+  seed-x-instruct-7b  : 30개의 寿司와 10개의 디저트
+  nllb-200-3.3b       : 30개의 수시, 10개의 디저트
+  exaone-4.0-32b      : 30皿のお寿司と10皿のデザートの合計は40皿です。  
+
+**計算:**  
+30 (お寿司) + 10 (デザート) = 40皿  
+
+もし、これらの皿をどのように配列したり、何か特定のルールで使うなら、詳細を教えてください。例えば、  
+- **配置の問題**: 30皿のお寿司と10皿のデザートを交互に並べる場合、どのようなパターンが考えられるでしょうか？  
+- **比率の問題**: お寿司とデザートの比率は3
+  madlad400-3b-mt     : węwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwęwę
+
+### [38] 8407_40837_178.28_181.28  (음식,요리 / normal)
+JA_REF : だからワンチャンいけるかなって感じ
+KO_REF : 그래서 왕창 갈 수 있지 않을까 하는 느낌
+  gemma-3-12b-it      : 그러니까, 혹시 될까나 싶어.
+  qwen3-14b           : 그래서 한 번은 될 수도 있을 것 같아.
+  qwen3-32b           : 그래서 한 번은 될 것 같아.
+  exaone-3.5-7.8b     : 그래서 우승할 수 있을지도 모른다고 생각해
+  qwen2.5-7b-baseline : 그래서 한번 가능할 것 같아요.
+  llama-3-8b-instruct : 그냥 가자고 생각하고 있어.
+  seed-x-instruct-7b  : 그래서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테 와서 저한테
+  nllb-200-3.3b       : 그래서 저는 "이봐, 내가 이 일을 할 수 있을까?"
+  exaone-4.0-32b      : 「だからワンチャンいけるかなって感じ」という表現は、何かを成し可能と感じる気持ちを表しています。この言葉を使う状況や意図によって、いくつかの解釈が可能です。
+
+### 1. **自信や可能性への期待**
+   - **意味**: 「ワンチャン」（一発）で成功できる、あるいは努力すれば必ず成し可能だと感じること。
+   - **例**:  
+     「この試験は難しいけど、だからワンチャンいけるかなって感じ」  
+     →試験に対する自信や可能性
+  madlad400-3b-mt     : wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+
+### [39] 8407_40837_185.28_194.28  (음식,요리 / normal)
+JA_REF : つまみ食い、もう始めてもいいかな
+KO_REF : 안주 먹고 이제 시작해도 될까
+  gemma-3-12b-it      : 음... 이제 시작해도 될까?
+  qwen3-14b           : 조금씩 먹어보면, 이제 시작해도 괜찮을까?
+  qwen3-32b           : 조금씩 먹어도 괜찮을까?
+  exaone-3.5-7.8b     : 좀 더 시작해도 될까?
+  qwen2.5-7b-baseline : 꼬리가.BLL
+  llama-3-8b-instruct : 식사 시작해도 괜찮아
+  seed-x-instruct-7b  : 저 окон문을 打开吧
+  nllb-200-3.3b       : 이제 시작해 볼까요?
+  exaone-4.0-32b      : つまみ食い（つまみ食い）は、日本の流行語で、少しずつ食べる様子を表します。もう始めてもいいかな？という意味で、食事を始めるタイミングを尋ねています。  
+
+###答えの例:
+- **「はい、でも、少しずつ食べるようにしてください。」**  
+  (はい、でも、少しずつ食べるようにしてください。)  
+
+- **「まずは一口だけ試してみるのはどうですか？」**  
+  (まずは一口だけ試してみるのはどうですか？)  
+
+つまみ食いは、食べす
+  madlad400-3b-mt     : yyt yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys yys
+
+### [40] 8407_40837_212.28_219.28  (음식,요리 / normal)
+JA_REF : じゃあ今からね、体重測定から始めますね、何キロ増えるのか
+KO_REF : 그럼 지금부터 체중 측정부터 시작할게요, 몇 킬로그램 늘어나는지
+  gemma-3-12b-it      : 음... 그럼 이제부터 체중 측정부터 시작할게요, 몇 キロ 늘었을지.
+  qwen3-14b           : 그럼 이제부터 체중 측정부터 시작할게요, 몇 킬로그램이나 늘었는지 봅시다.
+  qwen3-32b           : 그럼 지금부터, 체중 측정부터 시작할게요, 몇 킬로 늘었는지.
+  exaone-3.5-7.8b     : 그럼 지금부터 체중 측정으로 시작할게요, 얼마나 늘어날지 기대돼요.
+  qwen2.5-7b-baseline : 그럼 지금부터 체중 측정부터 시작할게요, 몇 킬로 늘어나는지 보겠습니다.
+  llama-3-8b-instruct : 지금부터는 체중 측정부터 시작할게요, 얼마나 몸무게가 늘어나는지 보자.
+  seed-x-instruct-7b  : 그렇다면 지금부터 무게중량 측정을 시작하겠습니다. 몇 킬로그램이 늘었나요?
+  nllb-200-3.3b       : 이제부터 몸무게를 측정해 보겠습니다.
+  exaone-4.0-32b      : 体重測定は健康管理に重要ですが、体重の増減は食生活、運動、遺伝、ホ르몬などさまざまな要因によって影響を受けます。  
+
+### 📊 **体重変化の考慮事項**  
+1. **食事の量と質**:  
+   - calorie surplus（calorie surplus）が続くと体重が増えます。  
+   - protein-rich diet（protein-rich diet）が筋肉増加に 도움を 줄 수 있습니다。  
+
+2. **運動の有無**:  
+   - weightlifting（weightlifting）やHIIT（HIIT）は体重増
+  madlad400-3b-mt     : źśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśśś
+
+### [41] 8407_40837_231.28_237.28  (음식,요리 / normal)
+JA_REF : あれ、消えた、待って待ってもう一回
+KO_REF : 어, 꺼졌어, 잠깐만, 잠깐만 다시
+  gemma-3-12b-it      : 어, 사라졌어. 기다려, 기다려도 한 번 더.
+  qwen3-14b           : 아, 사라졌어, 기다려 기다려, 한 번 더 해줘
+  qwen3-32b           : 그게, 사라졌네, 기다려 기다려 다시 한 번
+  exaone-3.5-7.8b     : 어, 사라졌어, 기다려봐, 다시 한번
+  qwen2.5-7b-baseline : 어라, 사라졌어. 기다리고 기다리고 또 한번
+  llama-3-8b-instruct : 이거, 사라졌어, 기다려 기다려 다시 한번.
+  seed-x-instruct-7b  : 저기, 사라졌어요, 기다리세요, 한 번 더 기다리세요.
+  nllb-200-3.3b       : 아, 사라졌어요. 잠깐, 잠깐, 또 한번.
+  exaone-4.0-32b      : 「あれ、消えた、待って待ってもう一回」라는 문구는 일본어로, 한국어로는 "그거, 사라졌어, 기다려 기다려 한 번 더"라는 의미입니다. 이 문구는 무언가가 사라졌을 때 다시 시도하거나 반복하려는 의도를 담고 있는 것으로 보입니다.  
+
+### 가능한 해석:  
+1. **기술적 문제**:  
+   - 앱, 웹사이트, 게임 등에서 데이터가 일시적으로 사라졌을 때 재시도하는 상황을 표현한 것일 수 있습니다.  
+   - 예: *"페이지가 로드되지 않아 다시 시도합니다."*  
+
+2. **대화 중 누락**:  
+   - 대화 중 일부 내용이 잘렸을 때 다시 말해달라는 요청으로 해석될 수도 있습니다.  
+   - 예: *"방금 말한 부분이 잘 안 들렸어요. 다시 한 번 말씀해 주세요
+  madlad400-3b-mt     : pyysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysysys
+
+### [42] 8407_40837_259.28_267.28  (음식,요리 / normal)
+JA_REF : 全然見えんかった、えっとねー体重は54.5、この服を着て54.5です
+KO_REF : 전혀 보이지 않았다. 음.. 몸무게는 54.5 이 옷을 입고 54.5 입니다.
+  gemma-3-12b-it      : 전혀 안 보였어, 음... 체중은 54.5, 이 옷 입고 54.5야.
+  qwen3-14b           : 전혀 보이지 않았어, 음... 체중은 54.5야, 이 옷을 입었을 때 54.5야.
+  qwen3-32b           : 전혀 보이지 않았어. 음, 내 체중은 54.5kg이야. 이 옷을 입고 54.5kg이야.
+  exaone-3.5-7.8b     : 전혀 안 보였어, 어... 체중이 54.5야, 이 옷을 입어도 54.5야.
+  qwen2.5-7b-baseline : 전혀 보이지 않았어요, 음, 무게는 54.5kg, 이 옷을 입으면 54.5kg입니다
+  llama-3-8b-instruct : 전혀 보이지 않았어, 음... 몸무게는 54.5, 이 옷을 입으면 54.5야.
+  seed-x-instruct-7b  : 전혀 보이지 않았어요, 저 몸무게는 54.5, 저 옷을 입었을 때는 54.5였어요.
+  nllb-200-3.3b       : 저는 전혀 보이지 않았습니다. 음, 저는 54.5kg입니다. 이 옷은 54.5kg입니다.
+  exaone-4.0-32b      : 「全然見えんかった、えっとねー体重は54.5、この服を着て54.5です」  
+
+この文は、主に体重について言及しているようですが、文脈が少し不明確です。以下にいくつかの可能な解釈と対応を提案します：  
+
+### 1. **体重を隠しようとしているのか？**  
+   - 「全然見えんかった」（全然見えなかった）と言いながら、体重を明示しているので、周囲に知られなかったか、自分で隠していたことを意味する可能性があります。  
+   - **対応例**:
+  madlad400-3b-mt     : 0800101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101
+
+### [43] 8407_40837_267.28_271.28  (음식,요리 / normal)
+JA_REF : はい、皆さん覚えていてください、どんぐらい増えるかな
+KO_REF : 네, 여러분 기억하세요, 얼마나 늘어날까
+  gemma-3-12b-it      : 네, 여러분 기억해주세요, 얼마나 늘어날까?
+  qwen3-14b           : 네, 여러분은 기억해 두세요, 대략 얼마나 늘어날지.
+  qwen3-32b           : 네, 여러분이 기억해 주세요. 얼마나 많이 늘어날지.
+  exaone-3.5-7.8b     : 네, 모두 기억해 주세요, 얼마나 늘어날지 모르겠어요.
+  qwen2.5-7b-baseline : 네, 모두들 기억해 주세요, 얼마나 늘어날지 모르겠네요
+  llama-3-8b-instruct : 이제 기억하세요, 얼마나 더 늘어날까요?
+  seed-x-instruct-7b  : 네, 여러분 기억하십시오, 多少 더 올지 모르겠지만
+  nllb-200-3.3b       : 그리고, 여러분, 기억하세요, 얼마나 더 많은 수를 얻을 수 있을까요?
+  exaone-4.0-32b      : はい、皆さん覚えていてください、どんぐらい増えるかな  
+
+(この文は、「皆さん、覚えていてください。どんぐらい増えるかな？」という意味です。「どんぐらい」は「どれくらい」の方言的な表現で、数量や程度を尋ねる時に使います。)  
+
+例えば、  
+- **「いくらくらい借りるのですか？」** → 「どんぐらい借りるのですか？」  
+- **「どれくらい時間かかるかな？」** → 「どんぐらい時間かかるか
+  madlad400-3b-mt     : wyess one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one ss one s
+
+### [44] 8407_40837_285.28_291.28  (음식,요리 / normal)
+JA_REF : え、じゃあ俺も一回毎日大食いしてみようかな
+KO_REF : 어, 그럼 나도 한번 매일 대식해볼까?
+  gemma-3-12b-it      : 음, 그럼 나도 한번 매일 대식해 볼까?
+  qwen3-14b           : 어, 그럼 나도 하루에 한 번씩 대식해보는 건 어때?
+  qwen3-32b           : 으, 그렇다면 나도 하루에 한 번씩 매일 대식을 해보는 거야.
+  exaone-3.5-7.8b     : 어, 그럼 나도 매일 한 번 과식해볼까?
+  qwen2.5-7b-baseline : 어, 그럼 나도 일주일에 한 번씩 대식이 해볼까나
+  llama-3-8b-instruct : 나도 매일 한번씩 큰 식사를 해보자나
+  seed-x-instruct-7b  : 그래서 저도 하루에 한 번씩 많이 먹어볼까요?
+  nllb-200-3.3b       : 그래, 그럼 나도 하루에 한 번씩 먹어볼게
+  exaone-4.0-32b      : 
+  madlad400-3b-mt     : ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+### [45] 8407_40837_297.28_301.28  (음식,요리 / normal)
+JA_REF : マジでもっと大きくなりたかった
+KO_REF : 정말로 더 크고 싶었다.
+  gemma-3-12b-it      : 진짜 좀 더 컸으면 됐을 텐데.
+  qwen3-14b           : 진짜로 더 커지고 싶었어
+  qwen3-32b           : 정말 더 커지고 싶었어.
+  exaone-3.5-7.8b     : 진짜 더 크고 싶었어
+  qwen2.5-7b-baseline : 정말 더 커졌으면 좋았겠는데
+  llama-3-8b-instruct : 진짜 더 큰 것을 원했어요.
+  seed-x-instruct-7b  : 저도 좀 더 커질 수 있었음 좋았음
+  nllb-200-3.3b       : 저는 정말 더 커지고 싶었습니다.
+  exaone-4.0-32b      : 「マジでもっと大きくなりたい」と言うあなたの気持ち、とても分かります。成長への欲望は人間の本音ですから、その想い 자체がすでに素晴らしい一歩です。  
+
+### 1. **「大きくなる」の意味を定める**  
+   - **体格**: physiqueを大きくするなら、栄養バランスと筋肉トレーニングがキーワードです。  
+   - **精神的成長**: 知識や経験を蓄えるなら、毎日1つ라도新しいことを学ぶ習慣が重要です。  
+   - **社会的影響力**: 周りに影響を
+  madlad400-3b-mt     : 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100% 100%
+
+### [46] 8407_40837_304.28_308.28  (음식,요리 / normal)
+JA_REF : よし、54.5、みんな覚えててね、ほんと
+KO_REF : 좋아, 54.5 모두 기억해, 정말
+  gemma-3-12b-it      : 좋아, 54.5, 다들 기억해 줘, 진짜
+  qwen3-14b           : 좋아, 54.5야, 모두 기억해 두세요, 진짜로
+  qwen3-32b           : 좋아, 54.5, 다들 기억해 주세요, 진짜
+  exaone-3.5-7.8b     : 좋아, 54.5, 다들 알잖아, 진짜야
+  qwen2.5-7b-baseline : 좋아, 54.5, everybody 기억해, 진짜
+  llama-3-8b-instruct : 예, 54.5, 모두 기억해 두세요, 정말.
+  seed-x-instruct-7b  : 좋아요, 54.5, 모두 기억하세요, 호ント로
+  nllb-200-3.3b       : 54.5입니다. 모두 기억하세요.
+  exaone-4.0-32b      : "よし、54.5、みんな覚えててね、ほんと"라는 문장은 일본어로, 한국어로 번역하면 다음과 같습니다:  
+
+**"좋아, 54.5, 다들 기억해 줘, 진짜"**  
+
+### 해석 및 배경:
+- **54.5**: 숫자로, 특정한 의미(예: 점수, 측정값, 암호 등)가 있을 수 있습니다. 맥락에 따라 해석이 달라질 수 있습니다.  
+- **みんな覚えててね**: "다들 기억해 줘"라는 뜻으로, 누군가에게 중요한 정보를 상기시키는 표현입니다.  
+- **ほんと**: "진짜"라는 의미로, 강조를 나타냅니다.  
+
+### 가능한 상황:
+1. **게임/퀴즈**: 점수나 정답을 상기시키는 상황일 수
+  madlad400-3b-mt     : v n l je pwwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee pwwnee
+
+### [47] 8407_40837_322.28_325.28  (음식,요리 / normal)
+JA_REF : ふーてらのてらは、めしてらのてら!
+KO_REF : 후테라노테라는 메시라노테라!
+  gemma-3-12b-it      : 푸ー테라의 테라는, 메세테라의 테라!
+  qwen3-14b           : 후테라의 테라는, 메시테라의 테라!
+  qwen3-32b           : 후테라는 테라는, 메스테라의 테라!
+  exaone-3.5-7.8b     : 이런 소리, 정말 대단해!
+  qwen2.5-7b-baseline : 부terra의 테라는, 멍terra의 테라!
+  llama-3-8b-instruct : 훌쩜의 훌쩜은, 멋쩜의 멋쩜이야!
+  seed-x-instruct-7b  : 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저 저
+  nllb-200-3.3b       : , , !
+  exaone-4.0-32b      : 「ふーてらのてらは、めしてらのてら!」라는 문장은 일본어로 보이지만, 문법적으로 약간 어색한 부분이 있습니다. 아마도 의도하신 의미는 다음과 같을 수 있습니다:
+
+**「ふーてらのてらは、めしてらのてら!」**  
+→ **"후테이라의 테라(상황)는, 메시리라의 테라(상황)!"**  
+(의미: "후테이라의 상황은, 메시리라의 상황이다!")
+
+### 가능한 해석:
+1. **의역/비유적 표현**:  
+   - "후테이라"와 "메시리라"가 특정한 개념, 사람, 또는 상황을 가리키는 약어나 별칭일 수 있습니다.  
+   - 예: 게임, 애니메이션, 또는 커뮤니티에서 사용되는 은어일 가능성.
+
+2. **문
+  madlad400-3b-mt     : tyonw snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob snob sn
+
+### [48] 8407_40837_325.28_330.28  (음식,요리 / normal)
+JA_REF : ということで、今日はお寿司100貫を食べていこうと思います
+KO_REF : 그래서 오늘은 초밥 100관을 먹고 가려고 합니다.
+  gemma-3-12b-it      : ということで, 오늘 100貫 스시 먹어보도록 하겠습니다.
+  qwen3-14b           : 그래서 오늘은 회 100貫을 먹어볼 생각입니다.
+  qwen3-32b           : 그러니까, 오늘은 100貫의 초밥을 먹어보려고 해요.
+  exaone-3.5-7.8b     : 그래서 오늘은 100관의 스시를 먹어보려고 해요.
+  qwen2.5-7b-baseline : 그래서 오늘은 오징어 100개를 먹어볼까thoughts...
+  llama-3-8b-instruct : 오늘은 100貫의寿司를 먹어보려 합니다.
+  seed-x-instruct-7b  : 그래서 저는 오늘 寿司 100개를 먹을 거예요
+  nllb-200-3.3b       : 그래서 오늘 저는 100개의 스시지를 먹습니다.
+  exaone-4.0-32b      : お寿司を100貫食べるのは、まさに「寿司の盛り上がり」の極致です! �🍣  
+
+### 📜 **100貫寿司の冒険**  
+1. **目標の貫数**  
+   - 1貫 = 20枚の寿司 → **100枚**を目指します。  
+   - 大盤で3~4枚が1貫な場合もあるので、店によっては調整が必要です。  
+
+2. **攻略 전략**  
+   - **早食いモード**:寿司が冷める前に一気に食べる。  
+   - **特大盤挑戦
+  madlad400-3b-mt     : youyou'ree iusingyou're usingyou're usingyou're usingyou're usingyou're usingyou're usingyou're usingyou're usingyou're usingyou're usingyou're usingyou're usingyou're usingyou're usingyou're usingyou're usingyou're usingyou're usingyou're usingyou're using you're using you're using you're using you're using you're using you're using you're using you're using you're using you're using you're using you're using you're using you're using you're using you're using you're using you're using you're using you're using you're using you're using you're using you're using you're using you're using you're using you're using
+
+### [49] 8407_40837_330.28_333.28  (음식,요리 / normal)
+JA_REF : それでは食べていきましょう
+KO_REF : 그럼 먹고 갑시다
+  gemma-3-12b-it      : 그럼 맛있게 먹어볼까요.
+  qwen3-14b           : 그럼 먹어볼게요
+  qwen3-32b           : 그럼 먹어볼게요.
+  exaone-3.5-7.8b     : 그럼 먹어볼까요?
+  qwen2.5-7b-baseline : 그럼 먹어봅시다
+  llama-3-8b-instruct : 그럼 먹어보아요
+  seed-x-instruct-7b  : 그럼 먹어 봅시다.
+  nllb-200-3.3b       : 자, 이제 먹자.
+  exaone-4.0-32b      : **"그럼 먹으러 갑시다!"**  
+
+이 표현은 자연스럽고 일상적인 대화에서 잘 어울리는 문장입니다.  
+
+### 추가 정보:
+- **"그럼"**은 앞서 언급된 내용에 이어 자연스럽게 다음 행동을 제안할 때 사용됩니다.  
+- **"먹으러 갑시다"**는 함께 이동할 때 제안하는 표현으로, 친근한 분위기를 만듭니다.  
+
+예시:  
+- **"배가 고프네요. 그럼 먹으러 갑시다!"**  
+- **"이 근처에 맛있는 식당이 있어요. 그럼 먹으러 갈까요?"**  
+
+원하시는 맥락에 맞게 변형해 사용하시면 됩니다! 😊
+  madlad400-3b-mt     : visstnessen s ssssjsen s ssssjsen s ssssjsen s ssssjsen s ssssjsen s ssssjsen s ssssjsen s ssssjsen s ssssjsen s ssssjsen s ssssjsen s ssssjsen ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+### [50] 8407_40837_355.28_359.28  (음식,요리 / normal)
+JA_REF : そう、めっちゃ小柄なんですよ
+KO_REF : 맞아요, 엄청 작아요.
+  gemma-3-12b-it      : 응, 진짜 아담해.
+  qwen3-14b           : 그렇죠, 진짜 작아요.
+  qwen3-32b           : 네, 정말 키가 작아요.
+  exaone-3.5-7.8b     : 그렇죠, 정말 작은 편이에요.
+  qwen2.5-7b-baseline : 그럼, 정말 작아요.
+  llama-3-8b-instruct : 그냥 작쟈나.
+  seed-x-instruct-7b  : 네, 저는 정말 작은 편이에요.
+  nllb-200-3.3b       : 네, 아주 작은 것 같네요.
+  exaone-4.0-32b      : 「そう、めっちゃ小柄なんですよ」라는 표현은 일본어로, "그렇다, 정말 작다"라는 의미입니다. 이 표현은 주로 자신의 키가 작다는 것을 강조할 때 사용됩니다. 
+
+예를 들어, 누군가가 당신의 키를 언급하며 "너 작다"라고 말했을 때, 당신이 "そう、めっちゃ小柄なんですよ"라고 답할 수 있습니다. 이는 자신의 키를 인정하면서도 약간의 농담이나 친근한 분위기를 만들기 위해 사용됩니다.
+
+이 표현은 일상 대화에서 자주 사용되며, 특히 친구나 가까운 사람들과의 대화에서 자연스럽게 사용됩니다.
+  madlad400-3b-mt     : ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+### [51] 8407_40837_377.28_382.28  (음식,요리 / normal)
+JA_REF : この挨拶、特に意味はないかな
+KO_REF : 이 인사, 특별한 의미는 없을까?
+  gemma-3-12b-it      : 이 인사, 특별한 의미는 없어.
+  qwen3-14b           : 이 인사말은 특별한 의미가 있는 건가?
+  qwen3-32b           : 이 인사말, 특별히 의미가 없을까.
+  exaone-3.5-7.8b     : 이 인사는 별로 의미는 없는 것 같아요.
+  qwen2.5-7b-baseline : 이 인사에는 특별한 의미는 없을 것 같아.
+  llama-3-8b-instruct : 이 말은 특별한 의미가 없는 것 같아요.
+  seed-x-instruct-7b  : 이 인사는 특별히 의미가 없는 것 같네요.
+  nllb-200-3.3b       : 이 인사말은 특별한 의미가 없나요?
+  exaone-4.0-32b      : 「この挨拶、特に意味はないかな」라는 문장은 일본어로, 한국어로 번역하면 **"이 인사는 특별히 의미가 없는 걸까?"** 정도가 됩니다.  
+
+### 해석 및 맥락:
+1. **의미 없는 인사**:  
+   - 말 그대로 "이 인사는 형식적이거나 실질적인 의미가 없다"는 뉘앙스입니다.  
+   - 예를 들어, 상사가 직원에게 "오늘도 힘내세요"라고 말하는 것처럼, 진심이 담기지 않은 관례적인 말로 해석될 수 있습니다.  
+
+2. **의문형 표현**:  
+   - "かな"는 추측이나 의문을 나타내는 어미로, **"의미가 없는 걸까?"**라고 자신에게 묻는 듯한 느낌입니다.  
+   - 상대방의 인사가 진심인지, 혹은 단순한 관습인지 의심하는 상황에서
+  madlad400-3b-mt     : 1000000000000000♠0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+### [52] 8407_40837_382.28_386.28  (음식,요리 / normal)
+JA_REF : なんか先輩が、なんかこんなのもいいねみたいな
+KO_REF : 뭔가 선배님이 뭔가 이런 것도 좋네 이런 것도 좋아요.
+  gemma-3-12b-it      : なんか 선배가, 뭔가 이런 것도 좋네 같은.
+  qwen3-14b           : 어쩐지 선배가, 어쩐지 이런 것도 괜찮지 않겠어みたいな
+  qwen3-32b           : 어느 정도 선배가, 이런 것도 괜찮다던 것 같아.
+  exaone-3.5-7.8b     : 어떤 선배가 이런 거 좋아하는 것 같아요.
+  qwen2.5-7b-baseline : 뭔가 선배가 이런 것도 좋다고 말하네
+  llama-3-8b-instruct : 어떤 선배가, 어떤 것 같아도 좋은 것 같아요.
+  seed-x-instruct-7b  : 저한테 선배가 뭐 저거 좋아 보이는 거 같아요
+  nllb-200-3.3b       : 어떤 선배가 이런 걸 할 수 있겠나?
+  exaone-4.0-32b      : 「なんか先輩が、なんかこんなのもいいねみたいな」という表現は、先輩が何かを気に入った様子や、柔軟な考え方を持っていることを暗示しているようです。  
+
+### 가능한 해석과 사용 예시:
+1. **先輩が柔軽な態度を示した時**  
+   - 例: *"先輩が、'なんかこんなのもいいね'って言ってくれたから、少し安心した。"*  
+   → 규칙에 얽매이지 않거나 유연한 사고를 가진 모습을 강조할 때.
+
+2. **何かに対する寛容さ**  
+   - 例: *"先輩は、'なんかこんなのもいいね'って
+  madlad400-3b-mt     : wnestwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntwntw
+
+### [53] 8407_40837_386.28_389.28  (음식,요리 / normal)
+JA_REF : で、一緒に考えた、やったっけな、どうやったっけ
+KO_REF : 그래서 같이 생각했어, 했지, 어떻게 했지?
+  gemma-3-12b-it      : 음... 같이 생각했었지, 어떻게 했더라?
+  qwen3-14b           : 그리고 함께 생각해서, 했었지, 어떻게 했었지
+  qwen3-32b           : 그러니까, 함께 생각해보고, 어떻게 했는지 기억나?
+  exaone-3.5-7.8b     : 그리고 같이 생각했어, 해냈어, 어떻게 해냈지?
+  qwen2.5-7b-baseline : 그럼, 같이 생각한 거랑, 어떻게 했지 기억나나
+  llama-3-8b-instruct : 그냥 생각해본 것 같아요, 실제로는 어떻게 했는지는 모르겠어요.
+  seed-x-instruct-7b  : 함께 고민했나요? 뭐가 되었나요?
+  nllb-200-3.3b       : 그래서 우리는 함께 생각했죠. "아, 그래, 그래, 그래".
+  exaone-4.0-32b      : 「で、一緒に考えた、やったっけな、どうやったっけ」라는 문장은 일본어로 자연스럽지 않은 표현입니다. 아마도 다음과 같은 의미로 의도하셨을 것 같습니다:
+
+1. **「一緒に考えたんですが、どうやったんですか？」**  
+   (함께 생각해봤는데, 어떻게 했나요?)  
+   - 예: 협업 과정에서 방법을 묻는 상황.
+
+2. **「やったっけな？」** → **「やったんですか？」**  
+   (했나요?)로 교정하면 더 자연스럽습니다.
+
+3. **「どうやったっけ」** → **「どうやったんですか？」**  
+   (어떻게 했나요?)로 수정하면 문법적으로 맞습니다.
+  madlad400-3b-mt     : 1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+### [54] 8407_40837_398.28_401.28  (음식,요리 / normal)
+JA_REF : 総額ね、5000円くらいですね
+KO_REF : 총액은 5000엔 정도군요.
+  gemma-3-12b-it      : 총액은 음, 5000엔 정도겠네요.
+  qwen3-14b           : 총액은, 5000엔 정도에요
+  qwen3-32b           : 총액은 5000엔 정도겠지.
+  exaone-3.5-7.8b     : 총계로 약 5000엔 정도네요.
+  qwen2.5-7b-baseline : 전체 금액은 대략 5000엔 정도네요
+  llama-3-8b-instruct : 이거는 5000엔쯤 되겠군요
+  seed-x-instruct-7b  : 그래서 총 금액은 5,000엔 정도로 되겠네요.
+  nllb-200-3.3b       : 총 5000달러 정도죠.
+  exaone-4.0-32b      : はい、5000円くらいですね。  
+
+もし、この金額がどのような目的で使われるのか教えていただければ、より具体的なアドバイスや支払い方法の提案ができるかもしれません。  
+
+例えば：  
+- **旅行やお土産**：交通費やお土産の予算として使う場合  
+- **食費**：飲食や外食の予算  
+- **購入予算**：商品やサービスの購入  
+
+必要に応じてお知らせください！ 😊
+  madlad400-3b-mt     : in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in
+
+### [55] 8407_40837_401.28_412.28  (음식,요리 / normal)
+JA_REF : 何のネタか、そりゃあね、一番大好きな穴子からで決めてた
+KO_REF : 무슨 소재인지, 그거야, 제일 좋아하는 붕장어부터 정했어.
+  gemma-3-12b-it      : 뭐야, 그건 제일 좋아하는 아나고로 정했어.
+  qwen3-14b           : 어떤 농담인지, 그건 말이 필요 없이 내가 가장 좋아하는 게릴라에서 결정했어
+  qwen3-32b           : 어떤 재료인지, 그건 내가 가장 좋아하는 약사(穴子)에서부터 정해놨어.
+  exaone-3.5-7.8b     : 어떤 주제인지 모르겠지만, 아~ 이거 내가 제일 좋아하는 아나코에서 정한 거야.
+  qwen2.5-7b-baseline : 가장 좋아하는 생선부터 결정했으니, 어떤哏ickness这个指令翻译自日语，但提供的文本似乎不完整或有误，因为它没有直接对应于给定的[TEXT TO TRANSLATE]标签。根据提供的上下文，我会翻译给出的日语句子：
+
+[TEXT TO TRANSLATE]何のネタか、そりゃあね、一番大好きな穴子からで決めてた
+
+翻译为：
+ネタ는 어떤 거지, 사실은 가장 좋아하는 생선부터 결정했어.
+  llama-3-8b-instruct : 나의 가장 좋아하는 고기에서 결정했어.
+  seed-x-instruct-7b  : 그게 뭐야, 그건 제가 제 마음에 가장 좋아하는 구멍에서 결정했거든지
+  nllb-200-3.3b       : 어떤 이야기인지, 뭐든, 내가 좋아하는 구멍에서 결정했지.
+  exaone-4.0-32b      : 「何のネタか、そりゃあね、一番大好きな穴子からで決めてた」  
+
+この文は、おそらく日本のインターネット文化や独特の表現を使ったユーモアのある文です。  
+
+- **「ネタ」**: 인터넷에서 유행하는 농담, 밈, 또는 유머 콘텐츠를 의미합니다.  
+- **「そりゃあね」**: 약간의 농담이나 아이러니를 담은 표현으로, "그렇다고는 하지만" 같은 뉘앙스입니다.  
+- **「一番大好きな穴子からで決めてた」**: 여기서 "穴子"는 여러 의미를 가질 수 있지만, 주로 **"해파리"**를 가리키는 경우가 많습니다. "해파리를 가장 좋아해서 결정했다"는 식으로
+  madlad400-3b-mt     : 1999.01.01.000001999-01-01-00001999-01-01-00001999-01-01-00001999-01-01-00001999-01-01-00001999-01-01-00001999-01-01-00001999-01-01-00001999-01-01-00001999-01-01-00001999-01-01-00001999-01-01-0000199
+
+### [56] 8407_40837_430.28_435.28  (음식,요리 / normal)
+JA_REF : 米田はね、明日動画上げるのでお楽しみに
+KO_REF : 요네다는 내일 동영상 올리니까 기대해주세요.
+  gemma-3-12b-it      : 요미타는 내일 영상 올리니까 기대해도 돼.
+  qwen3-14b           : 미다라는 내일 영상 올릴 거라서 기대해 주세요
+  qwen3-32b           : 미타다는, 내일 영상을 올릴 테니까 기대해 주세요.
+  exaone-3.5-7.8b     : 미나시, 내일 영상 올릴 거니까 기대해!
+  qwen2.5-7b-baseline : 미단은 내일 동영상 올리니까 기대해라
+  llama-3-8b-instruct : 밀田는 내일 동영상 올릴테니 기대하세요.
+  seed-x-instruct-7b  : 미타, 내일 영상 올리니 즐거워하세요
+  nllb-200-3.3b       : 미타는 내일 영상을 올릴 예정입니다.
+  exaone-4.0-32b      : **"米田はね、明日動画上げるのでお楽しみに"**  
+
+この文は日本語で、「米田さんは明日動画を上げるので、お楽しみに」という意味です。  
+
+### breakdown:
+- **米田はね**: 「米田さんは」（発信者が米田さんに話しかけるニックネームや呼び名）  
+- **明日動画上げるので**: 「明日動画を上げるので」（ tomorrow, I'll upload a video, so...）  
+- **お楽しみに**: 「お楽しみに」（ please look forward to it）  
+
+### usage:
+- YouTubeやTw
+  madlad400-3b-mt     : wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj wyj
+
+### [57] 8407_40837_456.28_460.28  (음식,요리 / normal)
+JA_REF : 今日はお寿司だけ一応、でも一応ね
+KO_REF : 오늘은 초밥만 일단, 그래도 일단은..
+  gemma-3-12b-it      : 오늘만은 스시만 먹을 생각이고, 뭐 그래도.
+  qwen3-14b           : 오늘은 회만 일단, 근데 일단이야
+  qwen3-32b           : 오늘은 적당히 초밥만 먹을 예정이지만, 진짜로 말야.
+  exaone-3.5-7.8b     : 오늘은 스시만 먹을까, 그래도 괜찮으면 다른 것도 먹을 수 있어
+  qwen2.5-7b-baseline : 오늘은 오징어만 한蹚inally, 도 한蹚inally, 하지만 한蹚inally
+  llama-3-8b-instruct : 오늘은 스시만 먹을 거예요, 데모 데모야
+  seed-x-instruct-7b  : 오늘은 오늘만의 오늘입니다. 그럼에도 불구하고 오늘만의 오늘입니다.
+  nllb-200-3.3b       : 오늘 수시만 먹으세요.
+  exaone-4.0-32b      : 「今日はお寿司だけ一応、でも一応ね」라는 문장은 일본어로, 한국어로 번역하면 **"오늘은 일단 스시만, 근데 일단이야"** 정도로 해석할 수 있습니다.  
+
+### 해석 및 맥락:
+1. **「今日はお寿司だけ」**  
+   - "오늘은 스시만 (다른 건 안 먹을 거야)"라는 의미로, 스시에 집중하겠다는 뉘앙스입니다.  
+   - 예: 다른 음식은 배제하고 스시만 선택했다는 뜻일 수 있습니다.  
+
+2. **「一応、でも一応ね」**  
+   - **「一応」**은 "일단", "일단은"이라는 뜻으로, 약간의 조건이나 제한을 나타냅니다.  
+   - **「でも一応ね」**는 "근데 일단
+  madlad400-3b-mt     : 2018-05-16 10:00:00 - 10:00:00
+
+### [58] 8407_40837_460.28_465.28  (음식,요리 / normal)
+JA_REF : あの、もし全部食べきれたらプリンが1個あります
+KO_REF : 저기, 만약 다 먹으면 푸딩이 1개 있어요.
+  gemma-3-12b-it      : 음... 만약 다 먹을 수 있으면 푸딩이 하나 있어요.
+  qwen3-14b           : 어, 만약에 다 먹을 수 있다면 프린이 하나 있어요
+  qwen3-32b           : 음, 전부 다 먹을 수 있다면 푸딩이 하나 있습니다.
+  exaone-3.5-7.8b     : 어, 다 먹으면 푸딩 하나 있어요.
+  qwen2.5-7b-baseline : 그럼 다 먹으면プリン가 1개 있어요
+  llama-3-8b-instruct : 만약에 전부 먹을 수 있었다면 프린지가 하나 있어요.
+  seed-x-instruct-7b  : 만약 다 먹어버린다면 저기에 한 개 있어요
+  nllb-200-3.3b       : 아, 만약 제가 모든 것을 먹으면, 저는 한 개의 펄을 가지고 있습니다.
+  exaone-4.0-32b      : **回答:**  
+もし全部食べきれたら、プリンが1個残ります。  
+
+**説明:**  
+「全部食べきれたら」という条件が付層されているため、プリンの数は1個となります。  
+
+**例시:**  
+- 「10個のプリンを全部食べきったら、1個残る」と解釈できます。  
+- もしプリンの総数が分からない場合、「全部食べきれたら1個残る」という情報から、食べた数 + 1 =総数と推測できます。  
+
+必要に応じて詳細を追加してください！
+  madlad400-3b-mt     : wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsęsęs wąsę
+
+### [59] 8407_40837_470.28_474.28  (음식,요리 / normal)
+JA_REF : ね、米田マジで楽しみにしてて、めっちゃ
+KO_REF : 있잖아, 요네다 정말로 기대하고 있어, 굉장히
+  gemma-3-12b-it      : 음... 요미타, 진짜 기대하고 있을게, 엄청.
+  qwen3-14b           : 네, 유다 마저 진짜로 기대하고 있어, 진짜로
+  qwen3-32b           : 야, 이다가 진짜 기대하고 있어, 진짜로
+  exaone-3.5-7.8b     : 네, 미다 진짜 기대하고 있었어, 엄청
+  qwen2.5-7b-baseline : 미나타 정말 기대하고 있어, 멍청이
+  llama-3-8b-instruct : 네, 미타 마지데 樂しみにしてて, 메치야
+  seed-x-instruct-7b  : 미타 마지로 즐기세요, 메차
+  nllb-200-3.3b       : 미타미, 정말 기대하고 있어요
+  exaone-4.0-32b      : 米田マジで楽しみにしてて、めっちゃ！  
+
+(^_^)  
+
+米田さんの活動が本当に楽しみですね！どんな内容でも、きっと素敵なものになると思います。期待がいっぱいです！  
+
+もし具体的な内容や質問があれば、ぜひ教えてください！お手伝いできる範囲で精一杯応えますよ！  
+
+(✿◠‿◠)
+  madlad400-3b-mt     : wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy wy
+
+### [60] 8407_40837_482.28_487.28  (음식,요리 / normal)
+JA_REF : 陸上のね、長距離1500とかやってるかな
+KO_REF : 육상에서 장거리 1500 이런거 하고 있을까?
+  gemma-3-12b-it      : 육상 쪽은, 장거리 1500 같은 거 뛰려나?
+  qwen3-14b           : 육상에서 1500미터 같은 장거리 경기를 해봤나?
+  qwen3-32b           : 육상에서, 1500미터 긴거리 달리기 같은 걸 하고 있나?
+  exaone-3.5-7.8b     : 땅에서 말이야, 장거리 1500미터 정도 뛰는 거 해봤나?
+  qwen2.5-7b-baseline : 장거리 1500미터를 해볼까 봐?
+  llama-3-8b-instruct : 지상에서 1500m 장거리 같은 거 해요?
+  seed-x-instruct-7b  : 지상에서, 150km/h와 같은 속도로 가는 거야?
+  nllb-200-3.3b       : 육상에서는 1500마일 정도 걸려요
+  exaone-4.0-32b      : 陸上競技で1500mは、長距離競技の一種で、多くの高校や大学、プロのトラック競技で重要な種目です。特に高校や大学の陸上競技大会では、1500mは常に出る種目で、選手たちはこの距離に特化した訓練を行います。
+
+1500mは、約4分間で走る距離で、持久力とスピードのバランスが重要な競技です。この距離を走る選手たちは、高速で長時間走る能力を養うため、特定のトレーニングメニューに従って練
+  madlad400-3b-mt     : yndDs sjeuoaspnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnlnl
+
+### [61] 1373_5567_102.40_111.99  (일상,소통 / hard)
+JA_REF : で、なんかね、最近、ちょっと、途中で写真とかを挿入できるように、なんか、ソフトを使って配信してるんですよね。
+KO_REF : 그래서 뭐라고 할지, 요즘 잠깐 중간에 사진 같은 걸 삽입할 수 있도록 뭔가 소프트웨어를 사용해서 라이브 하고 있거든요.
+  gemma-3-12b-it      : 음... 요즘은 좀, 방송 중에 사진 같은 걸 중간에 넣을 수 있게, 뭐, 소프트 같은 걸로 방송하고 있어요.
+  qwen3-14b           : 그러니까, 요즘 좀, 중간에 사진 같은 걸 넣을 수 있게 해서, 소프트웨어를 써가며 방송하고 있어요.
+  qwen3-32b           : 그러니까, 요즘은 좀, 중간중간 사진 같은 걸 삽입할 수 있게 소프트를 써가면서 방송하고 있거든요.
+  exaone-3.5-7.8b     : 그리고 요즘 좀, 중간에 사진 같은 걸 삽입할 수 있게 소프트를 써서 방송하고 있잖아요.
+  qwen2.5-7b-baseline : 근데, 최근에 좀 쓰다듬는 소프트웨어를 이용해서 중간에 사진을 추가할 수 있게 방송을 하고 있네요.
+  llama-3-8b-instruct : 근데 최근에 소프트웨어를 사용해 방송을 하면서 사진이나 다른 콘텐츠를 중간에 삽입할 수 있게 되었습니다.
+  seed-x-instruct-7b  : 최근에 저는 사진을 중간에 삽입할 수 있도록 して、어떤 거 같이 사용하고 있어요.
+  nllb-200-3.3b       : 그리고, 요즘은, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런, 이런,
+  exaone-4.0-32b      : 最近では、写真や画像を途中に挿入して配信する機能を提供するソフトやツールが多くあります。以下にいくつかの方法をご紹介します：
+
+### 1. **ライブ配信ツール**
+   - **YouTube Live**: YouTubeのライブ配信において、画面の一部に画像を表示させることができます。ただし、画像のサイズや位置を調整する機能は限定的です。
+   - **Twitch**: Twitchのライブ配信でも。画像を表示させる機能がありますが。、Twitchの画面に表示させるためには、画像をURLで表
+  madlad400-3b-mt     : wyosssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+### [62] 1373_5567_111.99_121.85  (일상,소통 / hard)
+JA_REF : なので、なんかね、私たちと、皆さん、私たちじゃない、私と皆さんの間に、あの、時差が、10秒とか20秒くらいあるのかな。みたいなんですけど。
+KO_REF : 그래서 뭔가 우리랑 여러분, 우리가 아니라 저랑 여러분 사이에 저 시차가 10초나 20초 정도 있으려나. 그런 것 같은데요.
+  gemma-3-12b-it      : 그러니까, 뭔가 저희랑, 여러분, 저희가 아니구, 제가 여러분 사이에, 음, 시차가 10초나 20초 정도 있는 거 같아요.
+  qwen3-14b           : 그래서, 어째서인지 우리와, 여러분과, 우리 아닌, 나와 여러분 사이에, 그, 시간 차가 10초나 20초 정도 있을 것 같아요. 그런 것 같아요.
+  qwen3-32b           : 그러니까, 우리랑, 여러분, 우리랑은 아니고, 나랑 여러분 사이에, 그, 시간 차이가 10초나 20초 정도 있는 것 같아요. 그런 것 같아요.
+  exaone-3.5-7.8b     : 그래서, 좀 말하자면, 우리랑 여러분 사이에 시차가 10초나 20초 정도 있는 것 같아요. 이런 느낌이에요.
+  qwen2.5-7b-baseline : 그래서, 어차피, 우리가랑, 여러분들랑, 우리가 아니고, 우리가랑 여러분들사이에, 그쵸, 시간차가, 10초정도거나 20초정도 있는 것 같아요. 같아 보이네요.
+  llama-3-8b-instruct : [TEXT TO TRANSLATE]
+
+이건 뭐야, 우리끼리랑, 모두랑, 우리가 아니고, 나랑 모두랑 사이에, 그거랑, 시간차가 10초나 20초정도 있나 싶은데.
+
+(Note: The translation is written in Hangul, as per the guidelines.)
+  seed-x-instruct-7b  : 그래서 저와 여러분들, 저와 여러분들 사이에는, 10초, 20초 정도의 시간 차이가 있는 것 같아요. 저는 그렇게 생각하거든요.
+  nllb-200-3.3b       : 그래서, 우리나, 여러분, 우리 아닌 여러분, 저와 여러분 사이에, 10초, 20초 정도의 시간차가 있는 것 같네요.
+  exaone-4.0-32b      : time difference of 10 or 20 seconds? That sounds like a very specific delay! Are you referring to a technical issue (like network latency), a synchronization problem, or something else?  
+
+If it's about communication delays (e.g., in online gaming, calls, or data transfers), such small gaps can sometimes be noticeable, especially in real-time applications. Let me know if you'd like help troubleshooting or understanding the cause!  
+
+(또는 철학적/은유적인 의미로 사용하셨다면, 더 재미있는 해석이 가능하겠네요 😊)
+  madlad400-3b-mt     : wynesyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniewsyniews
+
+### [63] 1373_5567_122.00_126.63  (일상,소통 / hard)
+JA_REF : ちょっとまあ、それは、あまり気にしないように、ちょっとね、配信していきたいと思います。
+KO_REF : 뭐 좀, 그건 가급적 무시하고 좀 라이브 해보겠습니다.
+  gemma-3-12b-it      : 음..., 뭐, 그건 너무 신경 쓰지 않고, 그냥 방송 진행해 볼게요.
+  qwen3-14b           : 조금만, 그건 좀 신경 쓰지 말고, 조금은, 방송을 진행해 보고 싶어요.
+  qwen3-32b           : 조금만, 그건, 너무 신경 쓰지 않으려고, 잠시만, 방송을 계속하고 싶어요.
+  exaone-3.5-7.8b     : 살짝만, 그건 별로 신경 쓰지 않으려고 해. 조금만, 지금 스트리밍 해보고 싶어.
+  qwen2.5-7b-baseline : 약간 아但是对于'[TEXT TO TRANSLATE]'部分，以下是翻译：
+
+간단히 말해, 그건 크게 신경 쓰지 않으려고, 좀 더 조심해서 방송하고 싶습니다.
+  llama-3-8b-instruct : 조금만 생각하지 않고, 그건 별로 신경 쓰이지 않아, 조그마한 것 같아, 방송을 계속하고 싶은 생각입니다.
+  seed-x-instruct-7b  : 저한테 조금 마아, 저한테 조금 마아, 저한테 조금 마아, 저한테 조금 마아, 저한테 조금 마아, 저한테 조금 마아, 저한테 조금 마아, 저한테 조금 마아, 저한테 조금 마아, 저한테 조금 마아, 저한테 조금 마아, 저한테 조금 마아, 저한테 조금 마아, 저한테 조금 마아, 저한테 조금 마아, 저한테 조금 마아, 저한테 조금 마아, 저한테 조금 마아, 저한테 조금 마아, 저한테 조금 마
+  nllb-200-3.3b       : 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금, 조금
+  exaone-4.0-32b      : 「ちょっとまあ、それは、あまり気にしないように、ちょっとね、配信していきたいと思います。」  
+
+この文は、何かを配信したいという意向を表しつつ、周囲の反応に対しては「気にしないように」という柔らかなニュアンスを含んでいるようです。具体的な文脈によりますが、例えば以下のような状況で使われるかもしれません：  
+
+- **芸能人や著名な人物が、批判や世間の評価に気にせず配信を続けることを表す場合**  
+  (例：「
+  madlad400-3b-mt     : v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v
+
+### [64] 1373_5567_127.20_133.94  (일상,소통 / hard)
+JA_REF : よし。で、えーと、ちょっと待ってくださいね。私のチャットが見やすいように、自分のページをスマホで見ますね。
+KO_REF : 좋아. 그런데 음, 잠시만요. 제 채팅을 보기 쉽게 제 페이지를 스마트폰으로 볼게요.
+  gemma-3-12b-it      : 음... 잠깐만요. 제 채팅이 잘 보이게 제 페이지를 스마트폰으로 볼게요.
+  qwen3-14b           : 좋아요. 근데, 어, 잠깐 기다려 주세요. 제가 스마트폰으로 내 페이지를 보면서 채팅을 좀 더 보기 편하게 할게요.
+  qwen3-32b           : 좋아. 어, 잠깐만 기다려줘. 내 채팅을 보기 편하게 하려면, 내 페이지를 스마트폰으로 확인할게.
+  exaone-3.5-7.8b     : 네, 잠깐 기다려 주세요. 제 채팅이 잘 보이도록 스마트폰으로 제 페이지를 확인하고 있어요.
+  qwen2.5-7b-baseline : 좋아. 그런데, 잠깐 기다려주세요. 제 채팅이 보기 쉽게为了让输出符合指令要求，我将直接提供韩文翻译：
+
+좋아. 그런데, 잠깐 기다려주세요. 제 채팅이 보기 쉽게
+  llama-3-8b-instruct : 예쁘게 하려면 조금 기다려보세요. 저는 스마트폰으로 내 페이지를 확인할게요.
+  seed-x-instruct-7b  : 좋습니다. 제 채팅이 잘 보이게 제 페이지를 좀 더 보실래요?
+  nllb-200-3.3b       : 좋아요. 음, 잠시만요. 제 대화방은 좀 더 편하게 볼 수 있습니다. 제 페이지는 휴대폰에서 볼 수 있습니다.
+  exaone-4.0-32b      : 了解しました！スマホで見やすいように、短い文章で簡単に伝えますね。  
+
+何か特定のテーマや質問がありますか？例えば：  
+- **情報検索**：特定のトピックについて知りたいですか？  
+- **アドバイス**：どんな助言が必要ですか？  
+- **娱乐**:面白い話や趣向を望んでますか？  
+
+短くお答えください！😊
+  madlad400-3b-mt     : yhyssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+### [65] 1373_5567_134.90_138.76  (일상,소통 / hard)
+JA_REF : よいしょ。はい。オッケー。これで、見られるようになりました。
+KO_REF : 에구구. 네. OK. 이제 볼 수 있게 됐어요.
+  gemma-3-12b-it      : 영차. 네. 오케이. 이제 볼 수 있게 됐어요.
+  qwen3-14b           : 영차. 예. 오케이. 이렇게 되면 보일 거예요.
+  qwen3-32b           : 영차. 하이. 오케이. 이렇게 되면, 볼 수 있게 됐어요.
+  exaone-3.5-7.8b     : 영차. 네, 오케이. 이렇게 해서 이제 볼 수 있게 됐어.
+  qwen2.5-7b-baseline : 又好又요. 네. 오케이. 이제 보이기 시작했습니다.
+  llama-3-8b-instruct : 영차! 알겠어요. 이제 보이게 되었습니다.
+  seed-x-instruct-7b  : 좋아요. 이제 볼 수 있게 되었어요.
+  nllb-200-3.3b       : 좋아요. 네. 좋아요. 이제, 볼 수 있게 됐어요.
+  exaone-4.0-32b      : 「よいしょ。はい。オッケー。これで、見られるようになりました。」  
+
+この文は、何かの作業や準備が完了して、ようやく目に見える状態になったことを表しています。例えば、  
+
+- **芸術作品**：絵や彫刻を仕上げて展示できる状態にしたとき  
+- **建設現場**：建物が完成して公に公開できるようになったとき  
+- **デジタルコンテンツ**：画像や動画が加工を終えて公開準備ができたとき  
+
+「見られるようになりました」という表現は、何かが隠されていたもの
+  madlad400-3b-mt     : yjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsjichtsj
+
+### [66] 1373_5567_138.91_146.61  (일상,소통 / hard)
+JA_REF : はい。じゃあ、えーと、皆さんこんばんは。国内登山？っていうね、コメントが、はい。ありますね。
+KO_REF : 네. 그럼, 음, 여러분 안녕하세요. 국내 등산? 이라는 댓글이 네. 있네요.
+  gemma-3-12b-it      : 네. 그럼, 음..., 여러분 안녕하세요. 국내 등산? 이라는 댓글이, 네. 있네요.
+  qwen3-14b           : 네. 그럼, 어, 여러분 안녕하세요. 국내 등반?っていうね, 댓글이, 네. 있습니다ね.
+  qwen3-32b           : 네. 어, 여러분 안녕하세요. 국내 등산? 이라는, 코멘트가, 네. 있습니다.
+  exaone-3.5-7.8b     : 응. 음, 여러분 안녕하세요. 국내 등산이라고요? 댓글이 있네요. 있어요.
+  qwen2.5-7b-baseline : 네. 그러니까, 응, 안녕하세요. 국내 登山? 이런 댓글이 있어요. 있어요.
+  llama-3-8b-instruct : [TEXT TO TRANSLATE]
+
+어, 뭐야? 여러분 안녕하세요. 국내산행이야? 하는 댓글이 있네, 있네.
+  seed-x-instruct-7b  : 네. 그렇다면 여러분들 안녕하십시오. 국내 등반가요? 저는 있습니다.
+  nllb-200-3.3b       : 네. 그럼, 여러분, 안녕하세요. 국내 산악?
+  exaone-4.0-32b      : 
+  madlad400-3b-mt     : wįsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsęsę
+
+### [67] 1373_5567_146.80_151.59  (일상,소통 / hard)
+JA_REF : えっとですね、今回は、えーと、国内ではなく、海外の登山についてちょっと、発表したいと思います。
+KO_REF : 음, 이번에는 음, 국내가 아니라 해외 등산에 대해 좀 발표하고 싶습니다.
+  gemma-3-12b-it      : 음..., 이번에는 국내가 아니라 해외 등반에 대해 조금 발표하고 싶습니다.
+  qwen3-14b           : 음, 이번엔 국내가 아니라 해외 등반에 대해 조금 발표하고 싶어요.
+  qwen3-32b           : 음, 이번에는 해외에서의 등산에 대해 발표하고 싶습니다.
+  exaone-3.5-7.8b     : 음... 이번엔 국내가 아니라 해외 등산에 대해 잠깐 소개해볼까 해요.
+  qwen2.5-7b-baseline : 음, 이번에는 엄청난 내용을 들려드릴까 합니다. 국내가 아니라, 외국의 산악 활동에 대해 조금 말씀드리고자 합니다.
+  llama-3-8b-instruct : 음, 알겠습니다. 이번에는 해외의 등산에 대해 조금 발표하고 싶습니다.
+  seed-x-instruct-7b  : 저기요, 이번에는 한국이 아닌 외국의 산행에 대해서 조금 더 말하려고 합니다.
+  nllb-200-3.3b       : 자, 이번에는, 음, 국내에서 아니라, 해외에서 산악에 대해 조금 얘기하고 싶습니다.
+  exaone-4.0-32b      : 海外登山について発表する際には、以下の点を中心に構成することをおすすめします。  
+
+---
+
+### **1. topicの明確化**  
+- **どの海外山を対象とするか**  
+  - 例: アルプスの mont Blanc, NepalのEverest, 日本以外の山(예: Kilimanjaro)  
+- **登山の目的**  
+  -예:挑戦記、文化体験、環境保護活動など  
+
+---
+
+### **2.登山の背景と意義**  
+- **海外登山の特徴**  
+  - 언어/気候/法律の違い、現地ガイド
+  madlad400-3b-mt     : n ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss s
+
+### [68] 1373_5567_157.50_159.63  (일상,소통 / hard)
+JA_REF : じゃーん。はい。ビールを用意しました。
+KO_REF : 짜잔. 네. 맥주 준비했어요.
+  gemma-3-12b-it      : 짠! 네, 맥주 준비했어요.
+  qwen3-14b           : 자~ん. 네. 맥주를 준비했어요.
+  qwen3-32b           : 자~. 응. 맥주를 준비했어.
+  exaone-3.5-7.8b     : 응? 네. 맥주 준비했어요.
+  qwen2.5-7b-baseline : 자네. 네. 맥주를 준비했습니다.
+  llama-3-8b-instruct : 제대로 준비했어요.
+  seed-x-instruct-7b  : 그럼요. 네. 저는 맥주를 준비해 놓았어요.
+  nllb-200-3.3b       : - 네, 맥주 준비했어요
+  exaone-4.0-32b      : **はい、ありがとうございます！**  
+ビールが用意されたようです。お疲れの際に一杯でもどうですか？  
+
+> 🍺 **ビールのおすすめポイント**  
+> - **冷やすなら**: 4℃前後が最適です。  
+> - **飲むなら**:glassに注いで、軽くقpeeしながら楽しんでください。  
+> - **おつま**:チェeseやフруитスを添えるとさらに美味！  
+
+お気軽にご利用ください！（^_^)
+  madlad400-3b-mt     : p jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz jz j
+
+### [69] 1373_5567_165.64_178.08  (일상,소통 / hard)
+JA_REF : これは、えーと、私、えー、7月上旬かな。7月だっけ。7月かな、に、エルブレスっていうアウトドア用品店で、あの、イベントやったんですよ。
+KO_REF : 이것은, 음, 나, 어, 7월 초순인가. 7월인가? 7월이었나, 에블레스라는 아웃도어 용품점에서 그 이벤트를 했거든요.
+  gemma-3-12b-it      : 이거, 음... 저, 7월 초쯤이었나. 7월이었지? 7월쯤에 엘브레스라는 아웃도어 매장에서, 그, 이벤트 했었거든요.
+  qwen3-14b           : 이건, 응, 저, 응, 7월 상旬이었을 거예요. 7월이었나요. 7월이었겠죠,에, 엘브레스라는 아웃도어 용품점에서, 그, 이벤트를 했었어요.
+  qwen3-32b           : 이건, 음... 제가, 음... 7월 초쯤일 거예요. 7월이었나요? 7월 쯤, '엘브레스'라는 아웃도어 용품점에서 이벤트를 했던 거죠.
+  exaone-3.5-7.8b     : 어, 음, 제가 생각해보니 7월 초네요. 7월이네요, 에, 엘브르레스라는 야외용품점에서 이벤트를 했거든요.
+  qwen2.5-7b-baseline : 이게, 응, 나, 응, 7월 초였나. 7월이었나. 7월이었나,에, 엘브레스라는 야외용품점에서, 그 Tradable Event, 했었어요.
+  llama-3-8b-instruct : [TEXT TO TRANSLATE]
+
+이건, 음..., 저는, 음..., 7월 초순인가. 7월 맞아요. 7월인가,에, 엘브레스라는 아웃도어 용품점에서, 그, 이벤트 했었어요.
+  seed-x-instruct-7b  : 저는, 저는, 저는, 저는, 저는 7월 초순 경이었을 거예요. 저는 7월이었을 거예요. 저는 에르브레스라는 자동차량품점에서 인증서를 받았어요.
+  nllb-200-3.3b       : 이건, 음, 제가, 음, 7월 초에, 7월 중순에, 음, 엘브레즈라는 야외 용품 가게에서, 음, 행사를 했습니다.
+  exaone-4.0-32b      : 7月上旬にエルブレスでイベントを行ったのを指していますね。  
+
+具体的な内容やイベントのテーマ、参加状況などについてもっと詳しく知りたいですか？  
+
+例えば、  
+- **イベントの内容**:product demo、ワークショップ、セールなどのどれでしたか？  
+- **参加者**:一般の方、業界関係者、特定のグループなど？  
+- **特典**:割引、プレゼント、スポンサーなどの付き合いがありましたか？  
+
+情報があれば、より詳
+  madlad400-3b-mt     : v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y v y
+
+### [70] 1373_5567_178.20_183.93  (일상,소통 / hard)
+JA_REF : 御茶ノ水店で。その時にね、視聴者さんが持ってきてくださって、ちょっと今日、飲んでみようと思って、残しておきました。
+KO_REF : 오차노미즈점에서. 그때 시청자분들이 가져다 주셔서 오늘 좀 마셔보려고 남겨뒀어요.
+  gemma-3-12b-it      : 거의 오차노미즈점에서. 그때 시청자분이 가져다주셔서, 오늘 조금 마셔보려고 남겨뒀어요.
+  qwen3-14b           : 오차노마에점에서요. 그때 시청자분이 가져오셨는데, 오늘 조금 마셔보려고 남겨두었어요.
+  qwen3-32b           : 그치노미 점에서요. 그때 시청자분이 가져다 주셨는데, 오늘은 잠깐 마셔보려고 남겨두었어요.
+  exaone-3.5-7.8b     : 어차노수점에서요. 그때 시청자분들이 가져다주셔서, 오늘 좀 마셔볼까 해서 남겨두었어요.
+  qwen2.5-7b-baseline : 고-Speed 역에서. 그때에查看详情
+zystyle
+고-Speed 역에서. 그때에 시청자님이 가져와주신 걸 오늘 조금 마셔볼까thoughtfully considering, 조금 남겨두었습니다.
+  llama-3-8b-instruct : 수제자에서 그때는 너네, 시청자가 가져와 주셔서 오늘은 조금 마셔보려고 생각하고 남겨두었습니다.
+  seed-x-instruct-7b  : 그 때 시청자분들이 가져주셨는데, 오늘 마시고 싶어서 남겨두었어요.
+  nllb-200-3.3b       : 이 시점에서는, 시청자들이 가져왔고, 오늘, 한 잔 마시려고, 남겨두었습니다.
+  exaone-4.0-32b      : 「御茶ノ水店で。その時にね、視聴者さんが持ってきてくださって、ちょっと今日、飲んでみようと思って、残しておきました。」  
+
+この文は、お茶を売る店(御茶ノ水店)で、視聴者(お客様)が持ってきたお茶を飲んでみようと思ったが、今日は残しておいたという内容です。  
+
+### 文の意味と使い方  
+- **御茶ノ水店で**：茶屋(お茶を売る店)で  
+- **その時にね、視聴者さんが持って
+  madlad400-3b-mt     : ööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööööö
+
+### [71] 1373_5567_18.39_22.40  (일상,소통 / hard)
+JA_REF : よいしょ。はい。映ったら、皆さん、教えてください。
+KO_REF : 아이고. 네. 찍혔으면 여러분 알려주세요.
+  gemma-3-12b-it      : 영차. 네. 화면 떴으면, 다들 알려주세요.
+  qwen3-14b           : 영차. 예. 촬영이 되면, 모두들 알려주세요.
+  qwen3-32b           : 영차. 하이. 방송이 시작되면, 여러분께 알려드릴게요.
+  exaone-3.5-7.8b     : 영차. 네. 찍으면 다들 알려줘.
+  qwen2.5-7b-baseline : 又好又요. 화면이 나오면, everybody, 알려주세요.
+  llama-3-8b-instruct : 영차. 알았어. 촬영하면, 모두에게 가르쳐 주세요.
+  seed-x-instruct-7b  : 좋아요. 저기요. 만약 여러분이 저기를 보신다면 저기를 가르eç 주십시오.
+  nllb-200-3.3b       : 좋아요. 네. 보여지면, 여러분, 알려주세요.
+  exaone-4.0-32b      : 「よいしょ」は日本語で「良い子」や「良い子たち」を意味する表現で、特に子供たちに対して使われることが多いです。  
+
+「はい。映ったら、皆さん、教えてください。」という文は、例えばテレビ番組や教室などで、カメラが正位置に捉えられたら、参加者たちに指示を出す様子を表しています。  
+
+### Meaning:  
+- **よいしょ** → Good job / Well done (often used to children).  
+- **はい。映ったら、皆さん、教えてください。** → "Okay, once it's
+  madlad400-3b-mt     : yysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysometysomety
+
+### [72] 1373_5567_184.24_186.56  (일상,소통 / normal)
+JA_REF : これ、どこのビールなんだろう。流れ星。
+KO_REF : 이거 어디 맥주일까? 별똥별.
+  gemma-3-12b-it      : これ、どこのビールなんだろう。流れ星。
+이거, 뭐 어디 맥주일까. 흐르다.
+  qwen3-14b           : 이건 어디서 만든 맥주야? 유성운.
+  qwen3-32b           : 이건 어디서 나온 맥주지. 유성.
+  exaone-3.5-7.8b     : 이거 어디서 온 맥주야? 별똥별 같아.
+  qwen2.5-7b-baseline : 이게 어디선가 만든 맥주인가 보다. 별똥별.
+  llama-3-8b-instruct : 이거는 어디서 마시고 있는 것 같아요.流れ星.
+
+(Note: The translation is written entirely in Hangul, as per the guidelines.)
+  seed-x-instruct-7b  : 저건 어디서 온 맥주일까. 별똥.
+  nllb-200-3.3b       : 이건 어떤 맥주죠?
+  exaone-4.0-32b      : 「流れ星」は日本のビールブランドです。  
+
+### 詳細情報：
+- **製造会社**: アサヒビール（Asahi Beer）
+- **商品名**: アサヒ「流れ星」（Asahi "Taiyaki"）
+- **タイプ**: 라거（Lager）
+- **アルコール度**: 4.8%
+- **味profile**:clean, crisp, and slightly sweet with a hint of grain flavor.
+
+### 注意点：
+- 「流れ星」は日本語で"falling star"を意味し、ビールの名前です。  
+- 同じアサヒのビールとして「超熟」や「スーパードラフト」なども有
+  madlad400-3b-mt     : ةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةيةية
+
+### [73] 1373_5567_188.57_197.98  (일상,소통 / hard)
+JA_REF : 国産ホップ農家の方が育てたホップを、ま、国産のホップが使われたビールということで、美味しそう。じゃあ、いただきます。
+KO_REF : 국산 홉 농가 분들이 기른 홉을, 뭐 국산 홉이 사용된 맥주라고 하니 맛있을 것 같아. 그럼 잘 먹겠습니다.
+  gemma-3-12b-it      : 음... 국내 호프 농가 분들이 키운 호프를, 뭐, 국내 호프가 사용된 맥주라고 하니까 맛있어 보이네. 그럼, 한 잔 할게요.
+  qwen3-14b           : 국산 홉 농가에서 키운 홉을 사용한, 말이죠, 국산 홉이 사용된 맥주라서 맛있어 보여요. 그럼, 맛보겠습니다.
+  qwen3-32b           : 국산 홉 농가에서 키운 홉을, 음, 국산 홉이 사용된 맥주니까 맛있어 보이네요. 그럼, 맛보겠습니다.
+  exaone-3.5-7.8b     : 국내산 홉 농부들께서 키우신 홉을 써서, 국내산 홉을 사용한 맥주라니 정말 맛있을 것 같아요. 그럼 맛있게 먹겠습니다.
+  qwen2.5-7b-baseline : 국산 호프 농가에서 키운 호프를 사용한 맥주라니, 맛있겠네요. 그럼, 드리겠습니다.
+  llama-3-8b-instruct : 나라산 호프 농가가 기른 호프를, 마, 나라산의 호프가 사용된 맥주라면美味しそう. 저는, 이따가 드리겠습니다.
+
+Note: The translation is written entirely in Hangul, as per the instructions.
+  seed-x-instruct-7b  : 국산 홉을 사용한 맥주라는 것은 麦酒를 만드는 농부가 자라는 것을 의미하는데, 麦酒를 만드는 농부가 자라는 것은 麦酒를 만드는 농부가 麦酒를 만드는 농부가 麦酒를 만드는 농부가 麦酒를 만드는 농부가 麦酒를 만드는 농부가 麦酒를 만드는 농부가 麦酒를 만드는 농부가 麦酒를 만드는 농부가 麦酒를 만드는 농부가 麦酒를 만드는 농부가 麦酒를 만드는 농부가 麦酒를 만드는 농부가 麦酒를 만드는 농부가 麦酒를 만드는 농부가 麦酒를 만드는 농부가 麦酒를 만드는 농부가 麦酒를 만드는
+  nllb-200-3.3b       : 그리고, 제가 좋아하는 맥주 중 하나는, 밭에서 생산된 밭입니다.
+  exaone-4.0-32b      : 国産ホップを使ったビールは、香りと味が豊かで、本当に美味しそうですね！農家の方々の手で育てられたホップを使ったビールは、特に価値があると思います。  
+
+いただきます！  
+
+(^_^)  
+
+ビールの味がどのように感じましたか？香りや苦み、果実香のようなnoteが感じましたか？  
+
+また、国産ホップを使ったビールは、日本の気候や土壌で育てられた独特の風味があると言われています。ぜひ詳細な感想を教えていただければ
+  madlad400-3b-mt     : vyynjnyysssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+### [74] 1373_5567_200.19_203.88  (일상,소통 / hard)
+JA_REF : うわー。はい。なんか、パッケージもすごいおしゃれ。はい。
+KO_REF : 우와. 네. 왠지 패키지도 엄청 멋지네요.
+  gemma-3-12b-it      : 우와ー. 네. 패키지도 엄청 예쁘네요.
+  qwen3-14b           : 와아~. 네. 어쩐지, 패키지도 진짜 멋지다. 네.
+  qwen3-32b           : 와. 네. 어, 포장도 진짜 멋지다. 네.
+  exaone-3.5-7.8b     : 우와~. 네. 패키지도 진짜 멋지네요. 네.
+  qwen2.5-7b-baseline : 와~. 하이. 패키지도超级抱歉，您的输入似乎包含了一些我不太能理解的元素。特别是“패키지도”这部分，它看起来像是韩语和日语的混合体，但在这句日语句子中并没有这样的词汇。根据上下文，我将假设这是对日语“パッケージ”（package）的韩语翻译，并进行翻译。
+
+와~. 하이. 패키지도超级抱歉，这段翻译出现了问题。请允许我重新进行翻译。
+
+와~. 하이. 패키지도超级抱歉，再次出现了问题。让我尝试直接翻译这句日语句子：
+
+와~. 하이. 패키지도 정말 멋지네요.
+  llama-3-8b-instruct : 어어. 알겠어요. 뭐, 패키지도 너무 멋있어요. 알겠어요.
+  seed-x-instruct-7b  : 와우. 안녕하세요. 저 패커지도 멋있네요. 안녕하세요.
+  nllb-200-3.3b       : . . . . .
+  exaone-4.0-32b      : ありがとうございます！パッケージのデザインについて言われると嬉しいですね。  
+
+どんな点がおしゃれだと思われたか、もしございましたら詳しく教えてください！colorやフォーマット、使いやすさなど、どんな部分でも構いません。  
+
+例えば：  
+- **デザインのテーマ** (e.g.,自然をモチーフにした、ミニマルな配色)  
+- **特徴的な要素** (e.g.,金 Handcrafted font、エンメラージ効果)  
+- **実用性** (e.g.,オープン時のインタラクティブな
+  madlad400-3b-mt     : ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+### [75] 1373_5567_204.40_205.66  (일상,소통 / normal)
+JA_REF : 視聴者様、ありがとうございます。
+KO_REF : 시청자님 감사합니다.
+  gemma-3-12b-it      : 시청자 여러분, 감사합니다.
+  qwen3-14b           : 시청자 여러분, 감사합니다.
+  qwen3-32b           : 시청자 여러분, 감사합니다.
+  exaone-3.5-7.8b     : 시청자 여러분, 감사합니다.
+  qwen2.5-7b-baseline : 시청자님 감사합니다.
+  llama-3-8b-instruct : 관객님, 감사합니다.
+  seed-x-instruct-7b  : 시청해 주신 분들, 감사합니다.
+  nllb-200-3.3b       : 감사합니다.
+  exaone-4.0-32b      : 視聴者様、ありがとうございます。  
+
+(또는 더 자연스러운 표현으로)  
+**"ありがとうございます。"**  
+
+이 표현은 방송이나 공식적인 자리에서 시청자나 청중에게 감사를 전할 때 자주 사용됩니다. 필요에 따라 **"ありがとうございます。ありがとうございます。"**처럼 반복하거나, **"ありがとうございます。ありがとうございます。ありがとうございます。"**로 강조할 수도 있습니다.  
+
+더 캐주얼한 상황이라면 **"ありがとうございます。ありがとうございます。ありがとうございます。"**라고 할 수 있습니다.  
+
+도움이 필요하시면 언제든지 말씀해 주세요! 😊
+  madlad400-3b-mt     : us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us us
+
+### [76] 1373_5567_205.71_208.64  (일상,소통 / hard)
+JA_REF : で、えーと、グラスはね、これ超お気に入りなんですけど、
+KO_REF : 근데 음, 글라스는요, 이거 완전 마음에 드는데요
+  gemma-3-12b-it      : 음..., 글라스는 네, 이거 진짜 마음에 들어요.
+  qwen3-14b           : 그리고, 어, 이 유리잔은 정말 마음에 들어요, 뭐.
+  qwen3-32b           : 그리고, 음... 이 잔은 정말로 제게는 최고로 좋아하는 거예요.
+  exaone-3.5-7.8b     : 그리고 음..., 글라스는 정말 마음에 들어요, 이거 정말 좋아하는데요.
+  qwen2.5-7b-baseline : 그래서, 어, 글래스는 này, 이really super 좋아하는 것 같아요.
+  llama-3-8b-instruct : 데, 음..., 그래스는 네, 이거는 초超 좋아하는 거예요.
+  seed-x-instruct-7b  : 저한테 이 제품이 아주 마음이 좋아요.
+  nllb-200-3.3b       : 그리고, 음, 글래스는 제가 가장 좋아하는 것 중 하나죠.
+  exaone-4.0-32b      : 「グラス」がお気に入りのアイテムなんですね! 어떤 종류의 글라스인가요? 와인 글라스, 칵테일 글라스, 혹은 특별한 디자인의 글라스 같은 건가요?  
+
+예를 들어:  
+- **와인 글라스**라면, 어떤 와인을 즐기시는지 궁금해요.  
+- **디자인이 독특한 글라스**라면, 어디서 구입하셨는지 알려주세요!  
+
+더 자세히 알려주시면, 추천이나 관련 정보를 드릴 수 있을 것 같아요. 😊
+  madlad400-3b-mt     : w o we sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+### [77] 1373_5567_208.66_220.91  (일상,소통 / hard)
+JA_REF : これは、えっとスイスの、えー、このクライネ・シャイデックっていう、あの、グリンデルワルドのね、この、こう、高い山の上の方にある駅の、はい。えー、これ、グラスですね。
+KO_REF : 이것은, 어 스위스의, 어, 이 클라이네 샤이덱이라고 하는, 그, 그린델왈드의, 이, 이렇게, 높은 산 위쪽에 있는 역의 네. 어. 이거 유리잔이네요.
+  gemma-3-12b-it      : 이거, 음... 스위스, 에... 클라인 샤이덱이라는, 아, 그린델발트의, 이, 높은 산 위쪽에 있는 역이요. 네. 이거, 유리잔이죠.
+  qwen3-14b           : 이건, 음 스위스의, 어, 이 클라인 쉐이데크라고 하는, 그, 그린델바르트의, 응, 높은 산 위에 있는 역이야. 맞아. 어, 이건 그라스야.
+  qwen3-32b           : 이건, 음, 스위스의, 음, 클라인-샤이데크라는, 그, 그린델바ルド의, 이, 이런, 높은 산 위에 있는 역이에요. 응, 이거, 유리잔이에요.
+  exaone-3.5-7.8b     : 이거 스위스에 있는, 아, 이 클라이네 샤이데크라고 하는 곳이죠, 그 유명한 그린델발트 근처에 있는, 높은 산 정상 근처의 역이네요. 맞아요, 그라스인 거죠.
+  qwen2.5-7b-baseline : 이게 스위스의, 어, 이 클라인네 시아디크라는, 아, 그린델왈드의, 이런, 높은 산 위쪽에 있는 역이에요.
+  llama-3-8b-instruct : 이건, 음... 스위스의, 이거, 클라인-샤이데크라고 하는, 그거, 그린델와르트의 네, 이렇게, 높은 산 위에 있는 역의, 하이. 이거, 글라스네.
+  seed-x-instruct-7b  : 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기, 저기,
+  nllb-200-3.3b       : 이건 스위스의, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드, 글린데르발드
+  exaone-4.0-32b      : Yes, you're referring to **Clausen-Schiedeck** (クライネ・シャイデック), a station located in the Swiss Alps, near **Grindelwald** (グリンデルワルド). The area is known for its stunning mountain scenery and is part of the **Bernese Oberland** region.  
+
+The **Glacier Express** (グラス・エキスプレス), a famous scenic train route, passes through this area, offering breathtaking views of the Alps.  
+
+Would you like more details about the station, the Glacier Express, or the surrounding attractions? 😊
+  madlad400-3b-mt     : pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y pr y
+
+### [78] 1373_5567_220.97_222.58  (일상,소통 / hard)
+JA_REF : じゃあ、これでちょっと、いただきます。
+KO_REF : 그럼 이걸로 좀 먹어보겠습니다.
+  gemma-3-12b-it      : 음, 이걸로 조금만 먹어볼게요.
+  qwen3-14b           : 그럼, 이걸로 잠깐, 맛있게 먹겠습니다.
+  qwen3-32b           : 그럼, 이걸로 잠시, 맛있게 먹겠습니다.
+  exaone-3.5-7.8b     : 그럼 잠깐 먹겠습니다.
+  qwen2.5-7b-baseline : 그럼, 이 정도로 먼저 식사합니다.
+  llama-3-8b-instruct : 그럼 이제 조금, 받겠습니다.
+  seed-x-instruct-7b  : 그럼 저기는 조금 더 주세요.
+  nllb-200-3.3b       : 그럼, 이제 조금만...
+  exaone-4.0-32b      : おそびます。  
+
+(「いただきます」の後に「おそびます」と言うのは、日本語の慣習的な表現です。食事の始まりを告知する言葉で、「ごちそうさまでございます」や「いただきます」と同じような意味を持ちます。)  
+
+ただし、この表現は主に「おそびます」と言うより、「ごちそうさまでございます」や「いただきます」が一般的です。  
+
+おそびます。  
+
+(もし、特定の文脈や状況で使われる表現なら、詳細を教えていただければ、より正確な回答ができます。)
+  madlad400-3b-mt     : y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+
+### [79] 1373_5567_223.70_227.42  (일상,소통 / hard)
+JA_REF : あ、皆さん予想してますね。マッターホルンですかって、次登る山。
+KO_REF : 아, 다들 예상하시네요. 마터호른이냐고요, 다음에 올라갈 산.
+  gemma-3-12b-it      : 아, 다들 예상하고 있었죠? 마터호른이요? 다음으로 올라갈 산.
+  qwen3-14b           : 아, 여러분은 예상하셨겠죠. 다음에 오를 산은 마터호른이에요.
+  qwen3-32b           : 아, 여러분들이 예상하고 있네요. 다음에 오를 산이 마타호른이냐고.
+  exaone-3.5-7.8b     : 아, 모두 예상했겠죠? 마터홀른이라고요? 다음으로 오르는 산이네요.
+  qwen2.5-7b-baseline : 아, 모두们预料到了吧。下次登的山是马特洪峰吧？
+  llama-3-8b-instruct : 아, 모두가 예상하고 계시네. 마터홀런이야? 다음에 오르는 산.
+  seed-x-instruct-7b  : 아, 여러분 모두 예상을 하셨군요. 저기는 마터홀런이고, 저기는 다음에 오르는 산이에요.
+  nllb-200-3.3b       : 여러분들은 아마 다음 산이 매터호른이라고 예상하실 겁니다.
+  exaone-4.0-32b      : 「マッターホルンですか」という言葉は、日本の伝承や民間信仰、あるいは特定の文化的な文脈で使われる表現のようです。もし、これが山の名前や地名を指しているなら、おそらく日本の地方の方言や歴史的な背景が関係している可能性があります。  
+
+ただし、「マッターホルン」という言葉は、一般的な日本語の単語ではなく、特定の地域や文脈での使用例として思いつくのは難しいです。もし、この言葉がどこから出てきたのかご存知なら、詳しい情報を教えていた
+  madlad400-3b-mt     : yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yysn yys
+
+### [80] 1373_5567_23.75_26.94  (일상,소통 / hard)
+JA_REF : ちょっとね、今日は、若干のタイムラグ、あ、
+KO_REF : 잠깐만, 오늘은 약간의 타임래그, 아,
+  gemma-3-12b-it      : 음..., 오늘 뭔가 딜레이가 좀 있는 것 같아.
+  qwen3-14b           : 조금만, 오늘은 약간의 타임 라그가 있었어, 아,
+  qwen3-32b           : 조금 말할게, 오늘은 약간의 시간 지연이, 아~
+  exaone-3.5-7.8b     : 살짝, 오늘은 약간의 지연이 있어서, 아~
+  qwen2.5-7b-baseline : 약간의 시간 차이가 있었네요, 어...
+  llama-3-8b-instruct : 조금 늦었네, 오늘은 시간 차가 있네, 알.
+  seed-x-instruct-7b  : 오늘은 조금 タイ 루그, 아, 조금 タイ 루그, 아, 조금 タイ 루그, 아, 조금 タイ 루그, 아, 조금 タイ 루그, 아, 조금 タイ 루그, 아, 조금 タイ 루그, 아, 조금 タイ 루그, 아, 조금 タイ 루그, 아, 조금 タイ 루그, 아, 조금 タイ 루그, 아, 조금 タイ 루그, 아, 조금 タイ 루그, 아, 조금 タイ 루그, 아, 조금 タイ 루그, 아, 조금 タイ 루그, 아, 조금 タイ 루그, 아, 조금 タイ 루그, 아, 조금 タイ 루그, 아, 조금 タイ
+  nllb-200-3.3b       : 그리고, 오늘, 약간의 시간적 차이는, 음,
+  exaone-4.0-32b      : 「ちょっとね、今日は、若干のタイムラグ、あ」という表現は、日本語で少し変な部分があります。正しい表現や意味を理解するために、以下の点を確認してください：
+
+### 1. **「タイムラグ」の使用**
+   - 「タイムラグ」は英語の「time lag」を借用した言葉で、日本語でも使われることがありますが、主に技術や経済の分野で使います。
+   - 例：「データの伝送にタイムラグがある」
+   - 일상 대화에서는「遅れ」や「遅延」と言い替えるのが自然
+  madlad400-3b-mt     : sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss sss ss
+
+### [81] 1373_5567_231.50_238.03  (일상,소통 / hard)
+JA_REF : あ、ちょっと、私、注ぎ方が、あんまり上手じゃなくて、泡が出ちゃった。ちょっと、ちょっと待ちましょうね。はーい。
+KO_REF : 아, 잠깐만, 나 붓는 걸 잘 못해서 거품이 났어. 잠깐만, 잠깐만 기다릴게요. 네.
+  gemma-3-12b-it      : 아, 잠깐, 내가 따르는 게, 별로 잘 안 돼서, 거품이 올라왔어. 잠깐, 잠깐만 기다려줘. 하ー이.
+  qwen3-14b           : 아, 잠깐, 제가 따르는 방법이 좀 못해서 거품이 나와요. 잠깐, 잠깐 기다려 주세요. 하이.
+  qwen3-32b           : 아, 잠깐, 나, 부어주는 방법이, 그렇게 잘하지 못해서 거품이 생겼어. 잠깐, 잠깐 기다려주자. 하~.
+  exaone-3.5-7.8b     : 아, 잠깐만요, 제가 넣는 방법이 좀 서툴러서 거품이 생겼어요. 잠깐만 기다려 주세요. 네, 알겠습니다.
+  qwen2.5-7b-baseline : 아, 잠시, 나는 샴푸를 바르는 방법이 really not very good이라서 거품이 나버렸어요. 조금만 기다려주세요. 하아.
+  llama-3-8b-instruct : 아, 조금, 내,注ぎ方이, 안 마니上手じゃなくて, foam이 났다. 조금, 조금 기다리마しょうね. 하이.
+  seed-x-instruct-7b  : 저는 물을 부어넣는 법을 잘 못해서 泡이 나왔어요. 조금 기다리실래요?
+  nllb-200-3.3b       : 아, 잠깐, 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가.. 제가
+  exaone-4.0-32b      : 大丈夫です、泡が出ても気にしないでください。お茶を注ぐのはやっぱり技術が必要なので、練習を重ねれば上手になるんです。  
+
+次回は、お茶を注ぐときに、少しずつ落ち着いて注いでみるのはどうですか？  
+
+お茶が芯を持ち、美味しく飲めることを目指して、お茶道の精神を生活に取り入れてみるのも良いですね。  
+
+また、お茶を注ぐ時に、呼吸を深くしながら、落ち着いた心で行うと、
+  madlad400-3b-mt     : psawnsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+### [82] 1373_5567_240.87_242.99  (일상,소통 / normal)
+JA_REF : エベレスト？っていうコメントもありますね。
+KO_REF : 에베레스트? 라는 댓글도 있네요.
+  gemma-3-12b-it      : 에베레스트? 라고 하는 댓글도 있네요.
+  qwen3-14b           : 에베레스트?라는 댓글도 있네요.
+  qwen3-32b           : 에베레스트?라는 댓글도 있네요.
+  exaone-3.5-7.8b     : 에베레스트에 대한 댓글도 있네요.
+  qwen2.5-7b-baseline : 에베레스트라는 댓글도 있습니다.
+  llama-3-8b-instruct : 에베레스트 같은 댓글도 있군요.
+  seed-x-instruct-7b  : 에베레스 토? 이런 코멘트도 있네요.
+  nllb-200-3.3b       : 에베레스트라는 말이 있습니다.
+  exaone-4.0-32b      : 
+  madlad400-3b-mt     : 2018.03.16.--00:00:00, 00:00:00, 00:00:00, 00:00:00, 00:00:00, 00:00:00, 00:00:00, 00:00:00, 00:00:00, 00:00:00, 00:00:00, 00:00:00, 00:00:00, 00:00:00, 00:00:00, 00:00:00, 00:00:00, 00:00:00, 00:00:
+
+### [83] 1373_5567_243.38_247.53  (일상,소통 / hard)
+JA_REF : どうでしょうか。はい。えーと。
+KO_REF : 어떨까요? 네. 음.
+  gemma-3-12b-it      : 음... 어떨까요?
+  qwen3-14b           : 어떠셨나요. 네. 어음.
+  qwen3-32b           : 어떻게 생각하시겠어요? 응, 음...
+  exaone-3.5-7.8b     : 어떻게 할까요? 네, 음...
+  qwen2.5-7b-baseline : 어떻습니까? ह이. 음.
+  llama-3-8b-instruct : 어때요? 하이. 음...
+  seed-x-instruct-7b  : 어떻게 생각하십니까? 예. 에어요.
+  nllb-200-3.3b       : 어떻게 하시나요?
+  exaone-4.0-32b      : 「どうでしょうか。はい。えーと。」라는 표현은 일본어에서 자연스러운 흐름을 가진 대화의 일부로 보입니다. 이 표현은 상대방의 말을 듣고 약간의 고민이나 반응을 보이는 상황에서 사용될 수 있습니다.  
+
+### 해석 및 설명:
+1. **「どうでしょうか。」**  
+   - "어떻게 할까요?" 또는 "어떻게 생각하시나요?"라는 의미로, 상대방의 의견을 묻거나 자신의 생각을 조심스럽게 표현할 때 사용됩니다.  
+   - 예:  
+     - A: 「この本はどうですか？」 (이 책은 어때요?)  
+     - B: 「どうでしょうか…面白いですが、少し難しいかもしれません。」 (어떻게 할까요… 재미있지만, 조금 어려울 수도 있겠네요.)  
+
+2. **「はい。」
+  madlad400-3b-mt     : ףהואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הואף הוא
+
+### [84] 1373_5567_250.74_256.32  (일상,소통 / normal)
+JA_REF : 南極大陸の山とかですか。南極でしょうかね。どうかな。
+KO_REF : 남극 대륙의 산인가요? 남극일까요? 어딜까요.
+  gemma-3-12b-it      : 남극 대륙의 산들인가요. 남극일까요? 어떨까요.
+  qwen3-14b           : 남극 대륙의 산 같은 곳이겠죠. 남극인가 봐요. 어때요?
+  qwen3-32b           : 남극 대륙의 산 같은 거 말인가요? 아마 남극이겠죠. 어떻게 생각하세요?
+  exaone-3.5-7.8b     : 남극의 산인가요? 남극일 수도 있겠네요. 잘 모르겠어요.
+  qwen2.5-7b-baseline : 남극 대륙의 산인가요? 남극일까요? 어떻게 아나?
+  llama-3-8b-instruct : 남극 대륙의 산とか요. 남극이겠나요. 어떻게 되나.
+  seed-x-instruct-7b  : 남극의 산이나 뭐가 있나요? 남극이 아닌가요? 어rati요?
+  nllb-200-3.3b       : 남극의 산이냐? 남극이냐?
+  exaone-4.0-32b      : 南極大陸には、地球上で 가장 높은 산 중 하나인 **에레부스 산(Mount Erebus)**과 **트랜스앤타크틱 산(Mount Tristian)**이 있습니다.  
+
+- **에레부스 산**: 해발 3,794m로, 남극에서 가장 높은 활화산입니다.  
+- **트랜스앤타크틱 산**: 해발 4,488m로, 남극 대륙에서 가장 높은 산입니다.  
+
+남극은 대륙이지만, 지리적으로는 **남극주(Antarctic Peninsula)**와 같은 산악 지형이 있습니다. 따라서 "남극 대륙의 산"이라고 표현할 수 있습니다.  
+
+혹시 특정 산이나 지형에 대해 더 알고 싶으신가요? 😊
+  madlad400-3b-mt     : ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+### [85] 1373_5567_256.68_259.22  (일상,소통 / hard)
+JA_REF : はい。まずはちょっと、ビールで乾杯したいと思います。
+KO_REF : 네. 우선 맥주로 건배를 하도록 하겠습니다.
+  gemma-3-12b-it      : 음... 우선, 비루로 건배하고 싶어요.
+  qwen3-14b           : 네. 먼저 잠시 비어로 건배하고 싶어요.
+  qwen3-32b           : 네. 우선 잠시, 맥주로 건배하고 싶습니다.
+  exaone-3.5-7.8b     : 네, 일단 맥주로 건배하고 싶어요.
+  qwen2.5-7b-baseline : 네. 먼저는 조금씩 맥주로 건배하고 싶습니다.
+  llama-3-8b-instruct : 나도 맥주로 건배하고 싶은데!
+  seed-x-instruct-7b  : 네. 우선 저는 비어로 건배하고 싶습니다.
+  nllb-200-3.3b       : 네, 먼저, 맥주 한잔 하고 싶습니다.
+  exaone-4.0-32b      : 
+  madlad400-3b-mt     : yyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiyyiy
+
+### [86] 1373_5567_272.00_275.53  (일상,소통 / hard)
+JA_REF : なのでね、お酒とか、ほとんどもう、飲んでなかったんですよ。最近。
+KO_REF : 그래서 술이라든가, 거의 그냥 마시지 않았어요. 요즘.
+  gemma-3-12b-it      : 그러니까, 술 같은 거, 거의 이제, 안 마셨었거든요. 요즘은.
+  qwen3-14b           : 그래서요, 술 같은 건 거의 안 마시고 있었어요. 최근에요.
+  qwen3-32b           : 최근엔 거의 술도 안 마셨어요.
+  exaone-3.5-7.8b     : 그래서요, 요즘 거의 술을 마시지 않았어요.
+  qwen2.5-7b-baseline : 그래서 최근에 거의 술을 거의 안 마셨어요.
+  llama-3-8b-instruct : 근데 네, 술이나, 거의 이제, 마셨지 않았어요. 최근에.
+  seed-x-instruct-7b  : 저는 최근에 술을 안 마셨거든요.
+  nllb-200-3.3b       : 그래서, 술은 거의 안 마셨죠.
+  exaone-4.0-32b      : そうですね。最近はお酒を飲んでいませんか？  
+
+もし飲んでいないのであれば、健康に良い影響があるかもしれません。お酒は適度に飲むとリラックス効果があると言われますが、過剰に飲むと体に悪影響を与えることもあります。  
+
+飲んでいない理由があれば、それは素敵な選択かもしれません。もし飲みたいと思ったときには、自分の体状や状況を考慮して、安全にお楽しみいただければいいと思います。  
+
+どうぞ健康な毎日を
+  madlad400-3b-mt     : wnssjeesjstatwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnieetwnie
+
+### [87] 1373_5567_276.00_280.71  (일상,소통 / hard)
+JA_REF : はい。今日は、あ、久しぶりでも、だ、実は昨日、我慢できなくて飲んじゃったんですけど。
+KO_REF : 네. 오늘은, 아, 오랜만이라도, 그도 그럴게, 실은 어제 참을 수 없어서 마셔 버렸지만요.
+  gemma-3-12b-it      : 응. 오늘, 아, 오랜만인데, 있, 사실 어제, 참을 수가 없어서 마셔버렸거든요.
+  qwen3-14b           : 네. 오늘은, 아, 오랜만인데, 근데 사실 어제는 참지 못해서 마셔버렸어요.
+  qwen3-32b           : 네. 오늘은, 아, 오랜만이라도, 사실 어제는 참지 못하고 마셔버렸거든요.
+  exaone-3.5-7.8b     : 응. 오늘은, 아, 오랜만이네, 사실 어제 너무 참을 수가 없어서 많이 마셨어.
+  qwen2.5-7b-baseline : 네. 오늘은, 아, 오랜만이지만,实际上是昨天我忍不住喝了酒。
+  llama-3-8b-instruct : [TEXT TO TRANSLATE]
+
+오늘은, 아, 오랜만이지만, 다, 실제로는 вчера, 참을 수 없어서 마셨습니다.
+  seed-x-instruct-7b  : 예. 오늘은 오랜만에 마시게 되었어요. 사실 어제는 참을 수 없어서 마셨어요.
+  nllb-200-3.3b       : 네, 오늘, 음, 오래전부터는 아니죠, 사실 어제, 참을 수 없었기 때문에 마셨죠.
+  exaone-4.0-32b      : 「はい。今日は、あ、久しぶりでも、だ、実は昨日、我慰できなくて飲んじゃったんですけど。」  
+
+この文は、少し不自然な部分があります。より自然な表現に修正すると、  
+
+**「はい。今日は、あ、久しぶりでも、実は昨日、我慰できなくて飲んじゃったんですけど。」**  
+
+- **「だ」** は文脈から不要なので省きました。  
+- **「我慰」** は「我慰」(自分を慰める)の意味ですが、ここでは「我慰できなくて」
+  madlad400-3b-mt     : wyeństwosnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyśnyś
+
+### [88] 1373_5567_28.24_33.58  (일상,소통 / hard)
+JA_REF : こんにちは。あ、こんにちはじゃない。こんばんはだ。皆さん、こんばんは。
+KO_REF : 점심 드셨어요? 아, 점심 드셨어요가 아니라. 저녁 드셨어요다. 여러분 저녁 드셨어요?
+  gemma-3-12b-it      : 안녕하세요. 아, 안녕하세요가 아니네.こんばんは네요. 여러분,こんばんは.
+  qwen3-14b           : 안녕하세요. 아, 안녕하세요가 아니에요. 밤 인사예요. 여러분, 밤 인사예요.
+  qwen3-32b           : 안녕하세요. 아, 안녕하세요는 아니고. 안녕히 계세요. 여러분, 안녕히 계세요.
+  exaone-3.5-7.8b     : 안녕하세요. 아, 안녕하세요가 아니에요. 저녁입니다. 모두들, 저녁입니다.
+  qwen2.5-7b-baseline : 안녕하세요. 아, 안녕하세요가 아니라 오늘은 저녁입니다. 여러분, 저녁입니다.
+  llama-3-8b-instruct : [TEXT TO TRANSLATE]
+안녕하세요. 아, 안녕하세요가 아니에요. 좋은 밤입니다. 여러분, 좋은 밤입니다.
+
+(Note: The translation is written entirely in Hangul, as required.)
+  seed-x-instruct-7b  : 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안ν하세요. 안ν하세요. 안ν하세요. 안ν하세요. 안ν하세요. 안ν하세요. 안ν하세요. 안ν하세요. 안ν하세요. 안ν하세요. 안ν하세요. 안ν하세요. 안ν하세요. 안ν하세요. 안ν하세요. 안ν하세요. 안ν하세요. 안ν하세요. 안ν하세요.
+  nllb-200-3.3b       : 안녕하세요. 오, 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요.
+  exaone-4.0-32b      : こんばんは！  
+
+正確な時間帯の挨拶、素敵ですね。  
+ただ、日本語では「こんばんは」が正しい表記なので、  
+「こんばんはだ」と言うのは少し変です。  
+
+お元のご利用を心よりお待ちしております！  
+何か特定の時間帯や状況での挨拶が必要な場合は、  
+ぜひ詳しく教えてください。  
+
+(例：「夜にしか話さないキャラクター」や「24時間連続サービス」の雰囲気など)  
+
+お気軽に
+  madlad400-3b-mt     : ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+### [89] 1373_5567_281.33_284.11  (일상,소통 / hard)
+JA_REF : 昨日はねもう、我慢できなくて、ちょっとハイボール飲んじゃったんですけど。
+KO_REF : 어제는 더 이상 참을 수 없어서 하이볼을 조금 마셔 버렸거든요.
+  gemma-3-12b-it      : 어제는 진짜, 참을 수가 없어서 살짝 하이볼 마셔버렸는데.
+  qwen3-14b           : 어제는 정말 참지 못해서, 조금만 하이볼을 마셨는데요.
+  qwen3-32b           : 어제는 참지 못하고, 잠깐 하이볼을 한 잔 했는데.
+  exaone-3.5-7.8b     : 아, 어제는 정말 참을 수가 없어서 잠깐 하이볼 한잔 마셨어요.
+  qwen2.5-7b-baseline : 어제는 진짜 참을성이 없어서, 약간 해이보울 마셨는데요.
+  llama-3-8b-instruct : 어제는 내일이네, 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참 참참
+  seed-x-instruct-7b  : 저도 어제 참을 수 없어서 조금 하이볼을 마셨거든요.
+  nllb-200-3.3b       : 어제, 너무 피곤해서, 하이볼을 좀 마셨는데
+  exaone-4.0-32b      : 「昨日はねもう、我慢できなくて、ちょっとハイボール飲んじゃったんですけど。」  
+
+この文は、昨日の夜に気分が上昇して、ついハイボールを飲んでしまったことを打ち明ける表現です。  
+
+### 文脈の補足  
+- **「ねもう」**: 「ねもう」は、「ね」(寝る)と「もう」(すでに)が組み合わさった言葉で、「寝ることもすでに」という意味に近いですが、ここでは「昨日は」の強調として使われているようです。  
+- **「我慰できなくて」**:「我
+  madlad400-3b-mt     : wyu ysssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+### [90] 1373_5567_291.15_296.32  (일상,소통 / hard)
+JA_REF : はい。あ、白馬岳登って来ました。って方いますね。お天気良かったんじゃないですか。今日とか。
+KO_REF : 네. 아, 하쿠바다케 등반하고 왔어요 라는 분이 계시네요. 날씨 좋았잖아요. 오늘.
+  gemma-3-12b-it      : 음... 백마산 올라오셨다 하는 분들 있네요. 날씨 좋았을 것 같은데요, 오늘 같은 날엔.
+  qwen3-14b           : 네. 아, 하쿠마가타케를 오르셨네요. 그런 분들이 계시네요. 오늘 같은 날씨였으면 좋겠다고 생각해요.
+  qwen3-32b           : 네. 아, 하白马岳을 등반 왔다면서요. 날씨는 좋았지 않나요? 오늘 같은 날이요.
+  exaone-3.5-7.8b     : 네, 백마봉 등반하고 왔어요. 날씨 참 좋았죠? 오늘 같은 날이요.
+  qwen2.5-7b-baseline : 네. 아, 백마정에 오신 분 있네요. 오늘 날씨 좋지 않았나요. 오늘 같은 날씨에요.
+  llama-3-8b-instruct : [TEXT TO TRANSLATE]
+
+하늘이 좋았잖아요. 오늘은 말야.
+  seed-x-instruct-7b  : 네. 저기에 하와마산에 올라왔군요. 날씨가 좋았나요? 오늘 같은 날씨였나요?
+  nllb-200-3.3b       : 그래, 아, 백마산에 올라왔어. 뭐, 누가 있냐. 날씨가 좋았나 봐. 오늘이나.
+  exaone-4.0-32b      : はい、白馬岳(しろまだけ)に登ったとのことですね！お天気が良かったなら、素晴らしい景色が見えたのではないでしょうか？  
+
+白馬岳は日本の名所で、特に冬にはスキー場として有名ですが、春の登山も美しい季節です。今日の天候が良かった다면、雪山の青い空や花々の風景を楽しめたのではないでしょうか？  
+
+登山後の疲れは、温かい飲み物やおいしいお弁護で癒やしていただけたかと思います。  
+
+ご希望により、白馬
+  madlad400-3b-mt     : wynośćośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćynośćy
+
+### [91] 7266_28097_0.00_8.64  (패션,뷰티 / normal)
+JA_REF : こちら、左手の中指も取れちゃって、その数日前にも右手、両方とも今回は中指が取れてしまいました。
+KO_REF : 여기 왼손 중지도 떨어져 버려서, 그 며칠 전에도 오른손, 둘 다 이번에는 중지가 떨어져 버렸습니다.
+  gemma-3-12b-it      : 여기, 왼손 중지도 뽑혀 버렸고, 며칠 전에 오른손, 양쪽 다 이번엔 중지였어요.
+  qwen3-14b           : 이쪽, 왼손의 중지도 떨어져 버렸고, 그 며칠 전에는 오른손도 양쪽 모두 이번엔 중지가 떨어져 버렸어요.
+  qwen3-32b           : 이쪽은 왼손의 중지가 떨어져 버렸는데, 그 이틀 전에 오른손도 떨어졌어요. 이번에는 양손의 중지가 다 떨어져 버렸네요.
+  exaone-3.5-7.8b     : 왼손 중지까지 다치고, 며칠 전에는 오른손도 양쪽 모두 중지가 부러졌어요.
+  qwen2.5-7b-baseline : 여기서 왼손 검지가 빠져버리고, 그 몇日前天也掉了中指。这次也是左右两边的中指都掉了。
+  llama-3-8b-instruct : 이번에는 왼손과 오른손의 중지를 모두 잃어버렸습니다.
+  seed-x-instruct-7b  : 저기, 왼손의 중지도 손가락도 떨어졌고, 며칠 전에 오른손, 두 손모두 중지가 떨어졌어요.
+  nllb-200-3.3b       : 여기, 왼손의 중간 손가락도, 그리고 며칠 전에도 오른손의 중간 손가락도, 두 손가락 모두, 모두 잃었습니다.
+  exaone-4.0-32b      : 左手の中指が取れてしまった状況と、数日前には右手の中指も同様の状況になったとのことです。このような状況は、指先の怪我や外傷、あるいは慢性的な問題が原因である可能性があります。以下に、考慮すべき点と対処法を整理しました。
+
+### 1. **原因の特定**
+   - **外傷性 원인**:  
+     指を強く打ち付けたり、重いものを掴んだり、工具を扱うなどの行為で指先が損傷した可能性があります。特に
+  madlad400-3b-mt     : pthænæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæsnyæ
+
+### [92] 7266_28097_102.40_106.04  (패션,뷰티 / normal)
+JA_REF : その後一緒にご飯とかは行ったりするんですけど、
+KO_REF : 그다음에 같이 밥 같은 거 먹고 그러는데
+  gemma-3-12b-it      : 그 다음에는 같이 밥이라든지 가기도 하고요.
+  qwen3-14b           : 그 후에는 함께 밥이나 가끔 가기도 해요,
+  qwen3-32b           : 그 후에는 함께 음식을 먹거나 그런 걸 하죠.
+  exaone-3.5-7.8b     : 그 후에 같이 밥 먹으러 가거나 하는 거죠.
+  qwen2.5-7b-baseline : 그 후 함께 저녁을 먹는🏼 것들도 종종 합니다만,
+  llama-3-8b-instruct : 그 다음에 같이 밥이나 하는 거 같아요.
+  seed-x-instruct-7b  : 그 후 저는 가끔 저와 함께 가서 저와 저의 친구들과 저의 가족들과 저의 친구들과 저의 가족들과 저의 친구들과 저의 가족들과 저의 친구들과 저의 가족들과 저의 친구들과 저의 가족들과 저의 친구들과 저의 가족들과 저의 친구들과 저의 가족들과 저의 친구들과 저의 가족들과 저의 친구들과 저의 가족들과 저의 친구들과 저의 가족들과 저의 친구들과 저의 가족들과 저의 친구들과 저의 가족들과 저의 친구들과 저의 가족들과 저의 친구들과 저의 가족들과 저의 친구들과 저의 가족들과
+  nllb-200-3.3b       : 그리고는 저녁을 같이 먹기도 하고
+  exaone-4.0-32b      : その後一緒にご飯や飲みに行ったりするんですが、  
+
+この文は、例えば会議や打合せの後に、仲間と食事や飲みに行くことを指しています。日本語では「ご飯を食べる」よりも「ご飯に行く」という表現が自然です。  
+
+### 例文の拡張:  
+- **会議後の流れ**:  
+  *「会議が終わった後、皆で近くのイタリアン・レストランにご飯に行きました。話が盛り上がって、酒も飲んで楽しい時間を過ごしました。」*  
+
+- **ビジネスとプライベート
+  madlad400-3b-mt     : 10000000000000♠0.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+### [93] 7266_28097_106.04_111.56  (패션,뷰티 / normal)
+JA_REF : ネイルはちょっと行くときはお休みになっちゃう方が多くて、
+KO_REF : 네일은 잠깐 갈 때는 쉬시는 분들이 많아서
+  gemma-3-12b-it      : 네일은 좀 가려고 하면 쉬는 날이 더 많은 것 같고,
+  qwen3-14b           : 네일은 잠깐 다녀오는 경우가 많아서 쉬는 경우가 많아요,
+  qwen3-32b           : 네일은 조금 가는 경우가 많아서, 휴무가 되는 경우가 더 많아.
+  exaone-3.5-7.8b     : 네일은 잠깐 쉴 때가 많아서요,
+  qwen2.5-7b-baseline : 네일은 조금 가는 ...
+
+
+
+[PREVIOUS TRANSLATION]
+네일은 조금 가는 때는 휴업이 더 많아요,
+  llama-3-8b-instruct : 네일은 가끔씩 가는 때는 휴식이 더 많아요.
+  seed-x-instruct-7b  : 네이루는 가끔 가는 시간에 많은 사람들이 쉬게 되는 경우가 있어서
+  nllb-200-3.3b       : 네일 (Nail) 은 휴식을 취하는 것이 더 편하다고 생각했어요.
+  exaone-4.0-32b      : ネイル（ネイル・オイル）を使用する際にお休みになる方が多い理由は、いくつかの要因が考えられます。以下に詳しく説明します：
+
+### 1. **刺激性や肌への負担**
+   - ネイルオイルは、指先やネイルbed（爪の基盤）を保湿し、強度を保つために使用されますが、一方で刺激性のある成分（例：レンティルオイル、ティ트리オイルなど）が含まれている場合があります。
+   - 特に敏感肌の方や乾燥しやすい
+  madlad400-3b-mt     : wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen wjen
+
+### [94] 7266_28097_111.56_118.04  (패션,뷰티 / normal)
+JA_REF : ちょっと施術のお客様が減ってはいるので、
+KO_REF : 약간의 시술 고객이 줄어들기는 해서
+  gemma-3-12b-it      : 조금씩 손님이 줄어드는 것 같아서,
+  qwen3-14b           : 조금은 치료 받으러 오시는 고객이 줄어들긴 했지만,
+  qwen3-32b           : 조금은 치료를 받는 고객이 줄어들긴 했지만,
+  exaone-3.5-7.8b     : 조금씩 시술 손님 수가 줄어들고 있어서요.
+  qwen2.5-7b-baseline : 요금이 줄어든 것 같아요.
+  llama-3-8b-instruct : 고객이 조금 줄어들긴 하는데.
+  seed-x-instruct-7b  : 조금 더 고객이 줄었지만,
+  nllb-200-3.3b       : 그리고 저는 이 수술을 하기 위해
+  exaone-4.0-32b      : 施術のお客様が減っている状況を改善するためには、いくつかの戦略を試すことができます。以下のアドバイスが参考になるかもしれません：
+
+### 1. **プロモーションと特典の提供**
+   - **新規お客様向けの特典**: например、初回施術割引や無料のアドバイスを提供します。
+   - **既存お客様向けのロyaltyプログラム**: 定期的な施術を受けるお客様にポイントや特典を提供します。
+
+### 2. **口コミと紹介を促進**
+   - **お客
+  madlad400-3b-mt     : n jjj sjjjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsjsj
+
+### [95] 7266_28097_118.04_124.44  (패션,뷰티 / normal)
+JA_REF : どっかのタイミングで少しだけ募集するかもは考えているので、
+KO_REF : 어딘가의 타이밍에 조금만 모집할지도 생각하고 있기 때문에
+  gemma-3-12b-it      : 어느 타이밍에 조금만 모집할 수도 있다는 건 생각해 보고 있어요.
+  qwen3-14b           : 어느 시점에서든 조금은 모집할 수도 있다는 생각은 해두고 있어.
+  qwen3-32b           : 어느 타이밍에서는 조금만 모집할 수도 있겠다고 생각하고 있어요,
+  exaone-3.5-7.8b     : 어느 시점에서 조금 모집을 고려하고 있을지도 몰라.
+  qwen2.5-7b-baseline : 어디서든 조금씩 모집을 할 수도 생각 중이다.
+  llama-3-8b-instruct : [TEXT TO TRANSLATE]
+
+어떤 타이밍에 조금씩 모집할 수도 있지 않을까 생각하고 있습니다.
+  seed-x-instruct-7b  : 저는 タイ에 있는 어떠한 장소에서 조금 募금을 할지 고려하고 있습니다.
+  nllb-200-3.3b       : 그래서 저는 이 프로젝트를 시작하기 위해
+  exaone-4.0-32b      : どっかのタイミングで少しだけ募集するかもは考えているので、  
+
+**以下の点を考慮して、計画を立てるのが良いでしょう。**  
+
+1. **目的を明確にする**  
+   - 募集の目的（例: プロジェクト資金、コミュニティ拡張、イベント主催など）を明確にし、対象を絞り込みます。  
+
+2. **タイミングの選び方**  
+   - seasonality（季節性）やイベント（限定オffers、特定の日付）を利用すると効果的です。  
+   - 例：
+  madlad400-3b-mt     : pypýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchpýchp
+
+### [96] 7266_28097_124.44_131.80  (패션,뷰티 / normal)
+JA_REF : まだ具体的に考えていないので、もうちょっとお待ちいただけたら嬉しいです。
+KO_REF : 아직 구체적으로 생각하지 않아서 조금만 더 기다려주시면 감사하겠습니다.
+  gemma-3-12b-it      : 아직 구체적으로 생각 안 해서, 조금만 더 기다려주시면 좋겠어요.
+  qwen3-14b           : 아직 구체적으로 생각하지는 않았기 때문에, 조금 더 기다려 주시면 정말 기쁠 것 같아요.
+  qwen3-32b           : 아직 구체적으로 생각하지 않았기 때문에, 잠시만 기다려 주시면 정말 감사하겠습니다.
+  exaone-3.5-7.8b     : 아직 구체적으로 생각하고 있지 않아서, 조금만 더 기다려주시면 기쁩니다.
+  qwen2.5-7b-baseline : 더 구체적으로 생각해보지 않았기 때문에, 조금 더 기다려 주시면 감사하겠습니다.
+  llama-3-8b-instruct : [TEXT TO TRANSLATE]
+
+아직 구체적으로 생각해 보지 않았으니, 조금 더 기다려 주셔도 좋아요.
+  seed-x-instruct-7b  : 아직 구체적으로 생각하지 못했기 때문에, 조금만 기다리게 해 주시면 저를 기쁘게 하실 수 있을 거 같아요.
+  nllb-200-3.3b       : 아직 구체적으로 생각하지는 않았기 때문에 조금만 더 기다려주시면 좋겠습니다.
+  exaone-4.0-32b      : 分かりました。お話をお聞きしながら、より具体的な方向性を考えさせていただきます。  
+
+いまの段階では、以下の点を中心に考えていますが、まだ決めていない部分もあります：  
+
+1. **主題の範囲**  
+   - 例えば、人間関係、技術、日常の小事、専門分野など、どのようなテーマを扱うか。  
+   - 特定の分野に絞るか、幅広く扱うか。  
+
+2. **表現のスタイル**  
+   -より形式的か、かわいく書き込むか、かんじょうに
+  madlad400-3b-mt     : pjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpjpj
+
+### [97] 7266_28097_131.80_134.56  (패션,뷰티 / normal)
+JA_REF : というわけで、こちらもよく聞かれますが、
+KO_REF : 그렇기 때문에, 이쪽도 자주 듣습니다만,
+  gemma-3-12b-it      : 그래서 이것도 자주 들어요.
+  qwen3-14b           : 그렇게 되었으니, 이쪽도 자주 물어보시는 건데,
+  qwen3-32b           : 그렇기 때문에, 이쪽도 자주 묻는 질문이지만,
+  exaone-3.5-7.8b     : 그래서 이것도 자주 물어보는 질문인데,
+  qwen2.5-7b-baseline : 이렇게도, 여기서도 자주 묻는 질문이지만,
+  llama-3-8b-instruct : 따라서 저희도 자주 듣는 질문입니다.
+  seed-x-instruct-7b  : 그렇다면, 저희도 잘 들을 수 있겠지만,
+  nllb-200-3.3b       : 그래서, 여러분들은 종종 이런 질문을 받습니다.
+  exaone-4.0-32b      : 「というわけで、こちらもよく聞かれますが、」  
+
+この表現は、話者が周囲からよく質問されたり、同じ内容の質問を受けたりすることを指しています。主に以下のような文脈で使われます：  
+
+1. **よく同じ質問を受ける場合**  
+   - 例：「というわけで、こちらもよく聞かれますが、この製品の詳細を教えていただけますか？」  
+   → 「多分なお、この点はよく問われますが…」という意味で、慣れた質問であることを示します。  
+
+2. **
+  madlad400-3b-mt     : you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you you
+
+### [98] 7266_28097_134.56_139.96  (패션,뷰티 / normal)
+JA_REF : これはプリジェルのネイルプレップというプレプライマーの液体なんですけど、
+KO_REF : 이것은 프리젤 네일 프렙이라고 하는 프리 프라이머 액체인데요.
+  gemma-3-12b-it      : 이건 프리젤의 네일 prep이라는 프라이머 액체예요.
+  qwen3-14b           : 이건 프리젤의 네일 프렙이라는 프리프라이머 용액이에요,
+  qwen3-32b           : 이건 프리제르의 네일 프레프라는 프리프라이머 액체예요,
+  exaone-3.5-7.8b     : 이게 프리제럴의 네일 프레프라는 액체 프라임아인데,
+  qwen2.5-7b-baseline : 이는 프리제르의 네일 프리프라는 프리프라이머의 액체예요.
+  llama-3-8b-instruct : 이건 프리지엘의 네일 프레ップ라는 프레프라이머의 액체야.
+  seed-x-instruct-7b  : 프레플레이머의 액체입니다. 저기는 프레플레이머의 액체입니다. 저기는 프레플레이머의 액체입니다. 저기는 프레플레이머의 액체입니다. 저기는 프레플레이머의 액체입니다. 저기는 프레플레이머의 액체입니다. 저기는 프레플레이머의 액체입니다. 저기는 프레플레이머의 액체입니다. 저기는 프레플레이머의 액체입니다. 저기는 프레플레이머의 액체입니다. 저기는 프레플레이머의 액체입니다. 저기는 프레플레이머의 액체입니다. 저기는 프레플레이머의 액체입니다. 저기는 프레플레이머의 액체입니다. 저기는 프레
+  nllb-200-3.3b       : 이것은 프리젤의 네일 플랩이라고 불리는 프리프라임의 액체입니다.
+  exaone-4.0-32b      : プリジェルのネイルプレップ（Nail Prep）は、ネイルアートのベースとして使用されるプレプライマー（プライマー）の一種で、特に **液体状のプリジェル**として知られています。この製品は、ネイル 폴리ッシュや Gel Nail Polish をより強く密着させ、持ちやすさと耐久性を高めるために使われます。
+
+### 주요 특징 및 사용법:
+1. **目的**:  
+   - 네일리라や Gel Polish が 손톱에 균일하게付くように、表面を平滑にし、吸収性をlowに調整します。  
+   - 기존의 폴리시보다 ** longer wear
+  madlad400-3b-mt     : yyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjyysjy
+
+### [99] 7266_28097_139.96_145.28  (패션,뷰티 / normal)
+JA_REF : 別にエタノール成分が入っている液体だったら何でもいいです。
+KO_REF : 따로 에탄올 성분이 들어있는 액체라면 뭐든지 좋습니다.
+  gemma-3-12b-it      : 별에 에탄올 성분이 들어있는 액체면 뭐든지 괜찮아요.
+  qwen3-14b           : 에탄올 성분이 들어 있는 액체면 뭐든 괜찮아요.
+  qwen3-32b           : 별로 에탄올 성분이 들어간 액체면 뭐든 괜찮아요.
+  exaone-3.5-7.8b     : 에탄올 성분이 들어간 액체면 뭐든지 괜찮아요.
+  qwen2.5-7b-baseline : 알코올 성분이 들어 있는iquid이라면什么都都可以。
+  llama-3-8b-instruct : 이 liquids에 에탄올 성분이 들어가도 상관없습니다.
+  seed-x-instruct-7b  : 에탄올 성분이 들어있는 액체라면 무엇이든 괜찮습니다.
+  nllb-200-3.3b       : 이산화탄소와 에탄올이 들어있는 액체라면
+  exaone-4.0-32b      : エタノール(에탄올) 성분이 포함된 액체는 다양한 용도로 사용될 수 있습니다. 다음은 몇 가지 예시입니다:
+
+### 1. **알코올 음료**
+   - **맥주, 와인, 소주, 위스키, 보드카** 등 주류: 에탄올이 주요 성분으로, 음용 목적으로 사용됩니다.
+   - **리큐르**: 알코올에 향료나 당분을 첨가한 음료 (예: 진, 럼, 데킬라).
+
+### 2. **의약품 및 소독제**
+   - **의료용 알코올**: 70~90% 에탄올 용액으로 소독이나 상처 소독에 사용됩니다.
+   - **알코올 기반 약물**: 일부 약물의 용매나 보존제로 사용됩니다.
+
+### 3. **화장품 및 개인 관리**
+   - **향수, 로션, 헤어 스프레이**: 에탄올이 용매나 보존제로 포함될 수 있습니다
+  madlad400-3b-mt     : p eitjjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjfjf
+
+### [100] 7266_28097_145.28_151.00  (패션,뷰티 / normal)
+JA_REF : これを根元に一旦しみ渡していきましょう。
+KO_REF : 이것을 뿌리로 일단 스며들어가도록 하겠습니다.
+  gemma-3-12b-it      : 이걸 기반으로 일단 촉촉하게 적셔보자.
+  qwen3-14b           : 이걸 뿌리 부분에 일단 스며들게 해볼게요.
+  qwen3-32b           : 이걸 뿌리부터 천천히 스며들어가자.
+  exaone-3.5-7.8b     : 이걸 일단 뒤집어서 넘겨보자.
+  qwen2.5-7b-baseline : 이 부분부터 한번 젖혀볼까요.
+  llama-3-8b-instruct : 지금부터 시작하겠습니다.
+  seed-x-instruct-7b  : 이 사실을 바탕으로 하여 앞으로 나아가자.
+  nllb-200-3.3b       : 이 문제를 근본적으로 해결해 봅시다.
+  exaone-4.0-32b      : 「これを根元に一旦しみ渡していきましょう」라는 문장은 일본어로, 한국어로 번역하면 **"이것을 근본적으로 한 번에 건너도록 합시다"** 또는 **"이것을 근본부터 한 번에 해결해 나갑시다"**라는 의미입니다.  
+
+### 해석 및 맥락:
+- **根元に (미나도시)** : "근본적으로", "본질적으로"라는 뜻으로, 문제나 상황의 핵심을 다루는 것을 강조합니다.  
+- **一旦しみ渡していきましょう** : "한 번에 건너도록 합시다"라는 의미로, 한 번에 완전히 해결하자는 제안을 담고 있습니다.  
+
+### 사용 예시:
+- **문제 해결** : "이 프로젝트의 어려움을 근본부터 한 번에 해결해 나가자."  
+- **협력** : "의견 차이를
+  madlad400-3b-mt     : py yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt yt y
+
+### [101] 7266_28097_151.00_157.68  (패션,뷰티 / normal)
+JA_REF : そのまま剥がしちゃうと結構地詰めが持っていかれてしまうことが多いので、
+KO_REF : 그대로 떼어 버리면 상당히 땅을 채워 넣는 경우가 많기 때문에,
+  gemma-3-12b-it      : 그대로 뜯어내면 꽤 엉성해지는 경우가 많아서,
+  qwen3-14b           : 그대로 벗겨 버리면 지터메가 많이 빠져 버리는 경우가 많아서,
+  qwen3-32b           : 그대로 떼어 버리면 사실상 피부 본연의 톤이 그대로 남지 못하고, 자주 그런 경우가 많아서,
+  exaone-3.5-7.8b     : 그대로 벗기면 꽤 꽉 차 있어서 쉽게 벗겨지기 어려울 때가 많아요.
+  qwen2.5-7b-baseline : 그냥 떼면 종종 손에 들어가는 게 많아요.
+  llama-3-8b-instruct : 지금은 그대로 뜯어내면 꽤 땅에 묻혀버리는 경우가 많아요.
+  seed-x-instruct-7b  : 만약 皮肤 그대로 벗겨내게 되면 皮肤이 손상을 입을 수 있기 때문에,
+  nllb-200-3.3b       : 그리고 이 껍질은 껍질이 찢어지면,
+  exaone-4.0-32b      : 「そのまま剥がしちゃうと結構地詰めが持っていかれてしまうことが多いので、」  
+
+この文は、何かを急に剥がすと、地詰め（土収め）が逃げてしまうことを指しています。具体的な文脈によって意味が変わりますが、例えば：  
+
+- **農業・園芸**:Plantの根や土を急に剥がすと、栄養が流れるため、地詰めが減る。  
+- **建設・造園**:草や花を移植する際、急に取り除くと周囲の土が乱れてしま
+  madlad400-3b-mt     : 2018.01.16.-0001:0000001:000000000000♠16.166666666666666666678888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888890000000000000000♠16.1666
+
+### [102] 7266_28097_157.68_162.00  (패션,뷰티 / normal)
+JA_REF : ただ厚みがあると地詰めが持っていかれやすいので、
+KO_REF : 다만 두께감이 있으면 충전재를 가져가기 쉽기 때문에
+  gemma-3-12b-it      : 그냥 두께가 있으면 지툼에 밀리기 쉬우니까,
+  qwen3-14b           : 그저 두꺼운 경우엔 지메가 쉽게 빠질 수 있어서,
+  qwen3-32b           : 그냥 두께가 있으면, 땅이 꽉 찰수록(지질) 끌려가기 쉬워.
+  exaone-3.5-7.8b     : 두께가 있으면 밀집하기 쉽지만, 공간이 협소해서 움직이기 불편할 수 있어.
+  qwen2.5-7b-baseline : 단히미가 있으면 지착이가 쉽게 가져가기 쉬워요.
+  llama-3-8b-instruct : 지면이 얇은 것은 쉽게 눌려지지만,
+  seed-x-instruct-7b  : 두께가 있어야  земля 주변화를 할 수 있기 때문에,
+  nllb-200-3.3b       : 하지만, 이 두께는 더 많은 덩어리가 있기 때문에
+  exaone-4.0-32b      : 「ただ厚みがあると地詰めが持っていかれやすいので、」라는 문장은 일본어로, 한국어로는 **"두꺼운 부분이 있으면 땅에 묻힐 때 쉽게 떨어지기 때문에,"** 정도로 해석할 수 있습니다.  
+
+### 문장의 의미와 맥락:
+- **厚みがある (두꺼운 부분이 있다)**: 물체의 특정 부분이 두껍다는 것을 나타냅니다.  
+- **地詰め (땅에 묻힘)**: 주로 작물이나 식물이 땅에 심어지는 상황을 의미합니다.  
+- **持っていかれやすい (쉽게 떨어지다)**: 두꺼운 부분 때문에 땅에 묻힐 때 분리되거나 손상되기 쉽다는 뜻입니다.  
+
+### 예시 상황:
+이 문장은 아마도 **종자나 묘목을 심을 때 두꺼운 부분이 있
+  madlad400-3b-mt     : pynnonessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynessss Noynesss
+
+### [103] 7266_28097_162.00_167.16  (패션,뷰티 / normal)
+JA_REF : この親指、薬指が今回はちょっと心配な要素でございます。
+KO_REF : 이 엄지손가락, 약지가 이번에는 좀 걱정스러운 요소입니다.
+  gemma-3-12b-it      : 이번에는 이 엄지, 약지가 좀 걱정되는 요소예요.
+  qwen3-14b           : 이번엔 이 엄지와 중지가 약간 걱정스러운 요소입니다.
+  qwen3-32b           : 이 엄지, 약지가 이번에는 약간 걱정스러운 요소입니다.
+  exaone-3.5-7.8b     : 이 검지랑 약지가 이번엔 좀 걱정되는 부분이네요.
+  qwen2.5-7b-baseline : 이 손가락들, 특히 이번에는 중지와 검지가 좀 걱정되는 요소예요.
+  llama-3-8b-instruct : 이번에는 약간의 문제점이 있습니다.
+  seed-x-instruct-7b  : 저번 주에 비해 제 검지 손가락과 약지가 이번 주에는 조금 걱정이 됩니다.
+  nllb-200-3.3b       : 그리고 이 엄지손가락, 이 가락은, 이 손가락은,
+  exaone-4.0-32b      : 「この親指、薬指が今回はちょっと心配な要素でございます」という表現は、医療や手術の文脈で使われることが多いです。この文脈では、親指(thumb)や薬指(index finger)に何らかの問題があることを指しています。具体的な状況や背景により、この表現の意味や使用方法が変わる可能性があります。
+
+### 1. **医療的な文脈**
+   - **手術や治療の際の注意点**: 手術や治療の際に親指や薬指に特別な注意が必要な
+  madlad400-3b-mt     : 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100% natural, 100
+
+### [104] 7266_28097_167.16_172.84  (패션,뷰티 / normal)
+JA_REF : こんばんは、よろしくお願いします。
+KO_REF : 안녕하세요, 잘 부탁드립니다.
+  gemma-3-12b-it      : 안녕하세요, 잘 부탁드립니다.
+  qwen3-14b           : 안녕하세요, 잘 부탁드립니다.
+  qwen3-32b           : 안녕하세요, 잘 부탁드립니다.
+  exaone-3.5-7.8b     : 안녕하세요, 잘 부탁드립니다.
+  qwen2.5-7b-baseline : 안녕하세요, 잘 부탁드립니다.
+  llama-3-8b-instruct : 안녕하세요, 잘 부탁합니다.
+  seed-x-instruct-7b  : 안녕하세요, 저를 잘 대접해 주십시오.
+  nllb-200-3.3b       : 안녕하세요, 안녕하세요
+  exaone-4.0-32b      : こんばんは、よろしくお願いします。  
+
+私もこんばんはです！こちらは日本語でございますか？もし英語でのやり取りを望まれるのなら、いつでも変更可能です。  
+
+何か特定の質問や 도움이 필요なことがありますか？例えば、日本語の文法、文化、旅行、学習などについての質問など、お気軽にお知らせください。  
+
+よろしくお願いします！😊
+  madlad400-3b-mt     : wsw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ssw ss
+
+### [105] 7266_28097_17.24_24.96  (패션,뷰티 / normal)
+JA_REF : 色味はちょっとお楽しみとして、はい、じゃあまずね、早速いつも通り爪を取っていきたいと思います。
+KO_REF : 색감은 조금 기대하고, 네, 그럼 우선입니다, 바로 평소처럼 손톱을 떼어 가고 싶습니다.
+  gemma-3-12b-it      : 색감은 조금 놀라워하는 재미로 두고, 네, 그럼 일단은, 늘 하듯이 큐티클 제거부터 할게요.
+  qwen3-14b           : 색감은 잠시 즐길 수 있는 것이라서, 예, 그렇다면 먼저 보통처럼 바로 손톱을 제거해 보고 싶어요.
+  qwen3-32b           : 색감은 잠시 즐거움으로 남기고, 좋아, 우선은 항상 그렇듯이 손톱을 제거해볼게요.
+  exaone-3.5-7.8b     : 색깔은 좀 더 기대해보세요, 네, 그럼 먼저 말씀드리자면, 평소처럼 손톱을 다듬고 싶어요.
+  qwen2.5-7b-baseline : 색상은 조금 더 기대해 보는 거로, 그렇다면 먼저一如既往地，我们先把指甲剪了吧。
+  llama-3-8b-instruct : 이건 좀 즐거운 색깔이야, 알겠어, 그래도 먼저는 늘 하는대로 손톱을 빼먹을 생각이야.
+  seed-x-instruct-7b  : 저의 취향과 입맛은 조금 즐겁니다, 그럼, 저는 바로 손톱을 가져왔다고 생각하십시오.
+  nllb-200-3.3b       : 그리고, 색을 조금만 더 재미있게 보시면, "좋아, 그럼, 빨리, 평소처럼 손톱을 뽑아 보겠습니다".
+  exaone-4.0-32b      : 「色味はちょっとお楽しみとして、はい、じゃあまずね、早速いつも通り爪を取っていきたいと思います。」  
+
+この文は日本語で、主に爪を切る手順や行為を説明する内容です。文脈によっては、例えば美容や手のケアに関する指導、または日常のお手入れの一部として読み解けるでしょう。  
+
+### 文の意味と構造:  
+1. **「色味はちょっとお楽しみとして」**  
+   - 「色味」は通常「色と香味」を意味し、ここでは文脈によって「お
+  madlad400-3b-mt     : 10:00:00 10:00:00 10:00:00 10:00:00 10:00:00 10:00:00 10:00:00 10:00:00 10:00:00 10:00:00 10:00:00 10:00:00 10:00:00 10:00:00 10:00:00 10:00:00 10:00:00 10:00:00 10:00:00 10:00:00 10:00:00 10:00:00 1
+
+### [106] 7266_28097_172.84_177.56  (패션,뷰티 / normal)
+JA_REF : いつもネイルを見に来てくださる方、
+KO_REF : 항상 네일 보러 와주시는 분들
+  gemma-3-12b-it      : いつも 네일 보러 와주시는 분들,
+  qwen3-14b           : 항상 네일을 보러 오시는 분들,
+  qwen3-32b           : 항상 네일을 보러 오시는 분들,
+  exaone-3.5-7.8b     : 항상 네일을 보러 와주시는 분들께,
+  qwen2.5-7b-baseline : 항상 네일을来看原文翻译
+assistant
+항상 네일을来看原文翻译
+assistant
+항상 네일을 보러 오시는 분들,
+  llama-3-8b-instruct : 언제나 네일을 보러 오신 분들,
+  seed-x-instruct-7b  : ネイルを見に来てくれる方、
+  nllb-200-3.3b       : 그리고 저는 제 친구들 중 한 명인
+  exaone-4.0-32b      : いつもネイルを見に来てくださる方、  
+
+**こんにちは!**  
+
+いつもネイルを見に来てくださる方のために、より一層お手柄になりるよう努めています。  
+
+### 📌 **ご利用のご案内**  
+1. **ネイルの状態**  
+   - 最新のネイルの写真やデータを提供できます。  
+   - 特定の部分を拡大してご覧になりたい場合は、お知らせください。  
+
+2. **アクセサリーのコーディネート**  
+   - ネイルに合うアクセサリーの推薦が必要な場合、おす
+  madlad400-3b-mt     : pędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaśpędyaś
+
+### [107] 7266_28097_177.56_184.16  (패션,뷰티 / normal)
+JA_REF : 推しがオレンジなので今回もお真似しますと言ってくださる方がちょこちょこいらっしゃるんですけど、
+KO_REF : 추천이 오렌지라서 이번에도 따라하겠다고 해주시는 분들이 종종 계시는데요.
+  gemma-3-12b-it      : 내 최애가 오렌지색이라 이번에도 따라 할게요 라고 말씀해주시는 분들이 가끔 계시는데,
+  qwen3-14b           : 추시가 오렌지라서 이번에도 따라해 주시는 분들이 여기저기 계시지만,
+  qwen3-32b           : 제가 좋아하는 색이 오렌지라 이번에도 제가 따라하는 거라고 해주신 분들이 종종 계시는데요,
+  exaone-3.5-7.8b     : 오렌지 추천하시니까 이번에도 똑같이 해주시겠다는 분들이 좀 많네요.
+  qwen2.5-7b-baseline : 추시가 오렌지라서 이번에도 옷 색깔을 따라한다고 말씀하시는 분들이 종종 계시네요 하지만
+  llama-3-8b-instruct : 이번에도 저를模擬하는 사람이ちょこちょこ 나타나게 되더군요.
+  seed-x-instruct-7b  : 저를 따라하라고 하는 분들이 몇몇몇몇 있어요. 저는 이번에도 저와 같이 하실 분들이 있다고 하셨어요.
+  nllb-200-3.3b       : 오렌지색으로 된 튀김을 보시면, 이 경우에도 똑같이 할 수 있을 것 같네요.
+  exaone-4.0-32b      : 「推しがオレンジなので今回もお真似します」という言葉を使う方がちょこちょこいらっしゃるという状況について、以下のように考えることができます：
+
+1. **言葉の意味**  
+   「推しがオレンジなので今回もお真似します」という表現は、推し（好きな人）がオレンジ色を好み、それを真似して自分もオレンジ色のものを使うという意味になります。これは、推しのスタイルや好みを真似して自分のファッションや行動に反映させることを表しています。
+
+2. **ちょ
+  madlad400-3b-mt     : piyeensiestj dmsessj hhjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsjhnsj
+
+### [108] 7266_28097_184.16_188.72  (패션,뷰티 / normal)
+JA_REF : 久々に違う色をやりたいと思うので、
+KO_REF : 오랜만에 다른 색을 하고 싶어서
+  gemma-3-12b-it      : 오랜만에 다른 색깔을 해보고 싶어서,
+  qwen3-14b           : 오랜만에 다른 색으로 해보고 싶어서,
+  qwen3-32b           : 다시 색을 바꿔보고 싶네요.
+  exaone-3.5-7.8b     : 오랜만에 다른 색으로 해보고 싶어.
+  qwen2.5-7b-baseline : 오랜만에 다른 색을 해보고 싶다니깐,
+  llama-3-8b-instruct : 내가 새로운 색을 시도하고 싶은 생각이 들어.
+  seed-x-instruct-7b  : 오랜만에 색을 바꾸고 싶다고 생각했을 거예요.
+  nllb-200-3.3b       : 그리고 저는 항상 다른 색을 원했습니다.
+  exaone-4.0-32b      : 久々に違う色をやりたいと思うので、  
+
+1. **新しい色の選び方**  
+   - **好きな色の拡張**: 現在好きな色をBaseにして、そのトーン(明度/ 채도)を変化させた色を試してみる。  
+     *예:blueを好きなら、青基のパラレルカラー(cyan, violet)やアンティークなバージョン(teal, slate)を追加。*  
+   - **補色 활용**: currentColorの補色(opposite on color wheel)を取り入れ、対比を生む。  
+     *예:redがあるならgreenをアクセントに.*  
+
+2. **実
+  madlad400-3b-mt     : ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss ss
+
+### [109] 7266_28097_188.72_193.12  (패션,뷰티 / normal)
+JA_REF : いつもオレンジ色参考にしてくださっている方は本当にすみません。
+KO_REF : 항상 주황색 참고해주시는 분들은 정말 죄송합니다.
+  gemma-3-12b-it      : いつもオレンジ色を参考にさせていただいている方、本当に申し訳ありません。
+  qwen3-14b           : 항상 오렌지색을 참고해 주시는 분들께 진심으로 감사드립니다.
+  qwen3-32b           : 항상 오렌지색을 참고해 주시는 분들께 정말 미안합니다.
+  exaone-3.5-7.8b     : 항상 오렌지색 참고해 주시는 분들께 진심으로 죄송합니다.
+  qwen2.5-7b-baseline : 오렌지색을 항상 참고해주시는 분들 정말 감사합니다.
+  llama-3-8b-instruct : 네, 항상 오렌지색 참고해 주셔서 정말 감사합니다.
+  seed-x-instruct-7b  : 저의 색상 참고 하시는 분들은 정말 저를 따라하지 마세요.
+  nllb-200-3.3b       : 그리고 이 모든 것은 오렌지색을 사용해서
+  exaone-4.0-32b      : こんにちは、お忙しい中にも関わらず、いつもオレンジ色を参考にしてくださることに対して、私は感謝を表します。  
+
+お気持ちを伝えるために、以下の点を考慮してみます:  
+
+1. **感謝の表現**:  
+   - "いつもオレンジ色を参考にしてくださることに、心より感謝します。"  
+   - "ご指導やアドバイスをいただくことをとても大切にしています。"  
+
+2. **謝罪の必要性**:  
+   - もし、何か不足や誤解があった場合、具
+  madlad400-3b-mt     : var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var var
+
+### [110] 7266_28097_195.16_204.16  (패션,뷰티 / normal)
+JA_REF : やっぱり表面が分厚いと地詰めが持っていかれがちなんですよね。
+KO_REF : 역시 표면이 두꺼우면 맨땅 포장이 가져가기 십상인 것이군요.
+  gemma-3-12b-it      : やっぱり 표면이 두꺼우면 지층이 뺏겨버리는 경향이 있잖아.
+  qwen3-14b           : 그래서 표면이 두꺼우면 안에 채워진 게 다 빠져나가기 쉬운 거죠.
+  qwen3-32b           : 겉이 두꺼우면 속이 쏠리는 편이에요.
+  exaone-3.5-7.8b     : 결국 표면이 두껍고 꽉 차 있는 경우가 많죠.
+  qwen2.5-7b-baseline : 물론 표면이 두꺼우면 바닥이 비워져가는 것 같아요.
+  llama-3-8b-instruct : 지면이 얇은 것은 지지대가 잡히지 않는 것 같아요.
+  seed-x-instruct-7b  : 결국 표면이 두꺼우면  зем니다 하고 가는 거군요.
+  nllb-200-3.3b       : 그리고 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것은, 이 모든 것들이, 이 모든 것들이, 이 모든 것들이, 이 모든 것들이, 이 모든 것들이, 이 모든 것들이, 이 모든 것들이, 이 모든 것들이, 이 모든 모든 것들이,
+  exaone-4.0-32b      : はい、そうです。表面が分厚い食材を地詰めに入れると、煮えた水が冷めることが多いです。特に肉や魚などの場合、表面が厚いと中まで熱が通りにくく、地詰めが冷めてしまうことがあります。  
+
+###対策としては：  
+1. **小分けにする**：厚切りの肉や魚を小さく切って地詰めに入れると、熱が均一に通りやすくなります。  
+2. **予熱する**：地詰めを入れる前に沸騰した状態でおいて、食材を投入
+  madlad400-3b-mt     : wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wynn wyn
+
+### [111] 7266_28097_204.16_210.20  (패션,뷰티 / normal)
+JA_REF : 表面が薄い方がパラッと剥がれるんですけど、
+KO_REF : 겉면이 얇아야 팍 벗겨지는데
+  gemma-3-12b-it      : 표면이 얇은 부분이 얇게 벗겨지는데,
+  qwen3-14b           : 표면이 얇은 쪽은 편하게 벗겨질 수 있어요,
+  qwen3-32b           : 겉이 얇아야 퍼~라~ 벗겨지지 않아요.
+  exaone-3.5-7.8b     : 표면이 얇은 쪽이 더 쉽게 벗겨져요.
+  qwen2.5-7b-baseline : 표면이 얇은 쪽이 쉽게 벗겨지는데요,
+  llama-3-8b-instruct : 표면이 얇은 쪽이 파라っと 벗겨질 거예요.
+  seed-x-instruct-7b  : 表面이 얇은 것은 쉽게 벗겨집니다.
+  nllb-200-3.3b       : 그리고 이 표면이 얇으면,
+  exaone-4.0-32b      : 表面が薄い方がパラッと剥がれる現象は、特に **食品、化粧品、工業製品**などでよく見られます。この現象の原因と対策を考えてみます。
+
+### 1. **原因**
+   - **材質の不균일性**: 表面が薄く、内部との接着力が弱い場合。
+   - **加工 과정**:coatings, films, or coatings applied unevenly.
+   - **環境 요인**: humidity, temperature changes leading to delamination.
+   - **使用 조건**: excessive friction, impact, or chemical exposure.
+
+### 2. **対策**
+   - **材質改良**: thicker, more uniform coatings or adhesives.
+   -
+  madlad400-3b-mt     : yy ssss sssss sssss sssss sssss sssss sssss sssss sssss sssss sssss sssss sssss sssss sssss sssss sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+### [112] 7266_28097_210.20_214.48  (패션,뷰티 / normal)
+JA_REF : ちょっとだけスポンジファイルをかけていきましょうか。
+KO_REF : 잠깐 스폰지 파일을 걸어갈까요?
+  gemma-3-12b-it      : 조금만 스펀지 파일로 깎아볼까요?
+  qwen3-14b           : 조금만 스폰지파일을 써볼게요.
+  qwen3-32b           : 조금만 스폰지 파일을 써 볼게요.
+  exaone-3.5-7.8b     : 잠깐만요, 스폰지 파일로 살짝 뿌려볼까요?
+  qwen2.5-7b-baseline : 약간만 스포지 파일을 걸쳐볼까요.
+  llama-3-8b-instruct : 조금씩 스폰지보이 파일을 붙이려면 되겠습니다.
+  seed-x-instruct-7b  : 저를 조금 더 좋아해 주실래요?
+  nllb-200-3.3b       : 이 모든 것을 다룰 수 있는
+  exaone-4.0-32b      : 「ちょっとだけスポンジファイルをかけていきましょうか」という表現は、文脈によってさまざまな意味を持つ可能性があります。以下に幾つかの解釈と対応を提案します：
+
+### 1. **プログラミング/データ処理の文脈**  
+   - **意味**: スポンジファイル（例：テキストファイル、データファイル）に少しの処理を加えることを提案する場合。  
+   - **対応**:  
+     ```python
+     # Example: Read a file and apply minimal processing
+     with open('sponge_file.txt', 'r') as file:
+         content = file.read()
+  madlad400-3b-mt     : n jssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+### [113] 7266_28097_214.48_220.84  (패션,뷰티 / normal)
+JA_REF : 粘着の部分もあったけど、粘着を取ってもやっぱりちょっと持っていかれてますね。
+KO_REF : 접착 부분도 있었는데 접착을 떼도 역시 좀 가져가네요.
+  gemma-3-12b-it      : 粘着の部分もあったけど、粘着を取ってもやっぱりちょっと持っていかれるんですよね.
+  qwen3-14b           : 붙는 부분도 있었지만, 붙는 걸 떼어도 결국 약간 끌려가네요.
+  qwen3-32b           : 점착 부분도 있었지만, 점착제를 제거하려고 해도 결국 약간은 끌려가 버리네요.
+  exaone-3.5-7.8b     : 끈기가 있었지만, 끈기도 떼어내도 여전히 조금은 남아있네요.
+  qwen2.5-7b-baseline : 접착제를 떼어도 그래도 살짝 빼앗기는 느낌이네요.
+  llama-3-8b-instruct : 문장의 흐름을 고려하여 번역합니다.
+
+그냥 조금씩 가지고 가겠어요.
+  seed-x-instruct-7b  : 접착도 있었지만, 접착을 제거하더라도 아직 조금 더 가져가고 있습니다.
+  nllb-200-3.3b       : 그리고, 이 점들은 약간 끈적거리고,
+  exaone-4.0-32b      : 粘着の部分を取り除いても、物が持っていかれる現象は、いくつかの可能な原因が考えられます。以下に詳細な分析と対策を提案します:
+
+---
+
+### **1. 原因分析**
+#### **(1) residual adhesion (残留粘着)**
+- 粘着剤が完全に除去されていない場合、物体の表面に微量の粘着剤が残り、持っていかれる原因となる可能性があります。
+- **対策**:  
+  -粘着剤を繰り返し除去し、表面をアルコールや専用クリーナーで洗います。
+  madlad400-3b-mt     : pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy pyy
+
+### [114] 7266_28097_226.12_229.52  (패션,뷰티 / normal)
+JA_REF : 他の指もいきたいと思います。
+KO_REF : 다른 손가락도 가보도록 하겠습니다.
+  gemma-3-12b-it      : 다른 손가락도 해 볼게요.
+  qwen3-14b           : 다른 손가락도 하고 싶어요.
+  qwen3-32b           : 다른 손가락도 하고 싶어요.
+  exaone-3.5-7.8b     : 다른 손가락도 만져보고 싶어요.
+  qwen2.5-7b-baseline : 다른 손가락도 싶습니다.
+  llama-3-8b-instruct : 다른 지점도 가보고 싶습니다.
+  seed-x-instruct-7b  : 다른 손가락도 따라가고 싶다.
+  nllb-200-3.3b       : 다른 손가락도 갖고 싶네요.
+  exaone-4.0-32b      : 「他の指もいきたいと思います」라는 표현은 일본어로 자연스럽지 않습니다. 올바른 표현은 다음과 같습니다:  
+
+**「他の指も入れてください。」**  
+또는  
+**「他の指も使いたいです。」**  
+
+### 의미 설명:
+- **「指を入れる」**는 직역하면 "손가락을 넣다"이지만, 여기서는 **"손가락으로 추가로 작업하다"** 또는 **"다른 손가락도 사용하고 싶다"**는 뜻으로 해석됩니다.  
+- 예를 들어, 음악 연주에서 다른 손가락으로 연주해 달라고 요청할 때 사용할 수 있습니다.  
+
+### 다른 예시:
+- **「この曲は右手の指も入れて弾いてください。」**  
+  (이 곡은
+  madlad400-3b-mt     : 1999-2000: 2000-2001: 2001-2002: 2003-2004: 2004-2005: 2006-2007: 2008-2009: 2010-2011: 2011-2012: 2013-2014: 2015-2016: 2017-2018: 2018-2019: 2019-2020: 2021-2022: 2023-2024: 2024-2025: 2025-2026: 2
+
+### [115] 7266_28097_229.52_236.04  (패션,뷰티 / normal)
+JA_REF : ここでもう1回プレップ入れて、
+KO_REF : 여기서 한 번 더 플렙 넣고
+  gemma-3-12b-it      : 여기서 또 한 번 준비 넣고,
+  qwen3-14b           : 여기서도 한 번 더 프렙을 넣어줘.
+  qwen3-32b           : 여기서도 한 번 더 프렙을 넣어.
+  exaone-3.5-7.8b     : 다시 한번епп 넣어야지。
+  qwen2.5-7b-baseline : 여기서 다시 한 번 프렙을 넣어볼게.
+  llama-3-8b-instruct : [TEXT TO TRANSLATE]
+
+이제 다시 한 번 준비해 보자.
+  seed-x-instruct-7b  : 여기서도 한 번 더 프레프를 넣어주세요.
+  nllb-200-3.3b       : 그리고 이 모든 것을 다룰 수 있습니다.
+  exaone-4.0-32b      : 「ここでもう1回プレップ入れて」という表現は、主に野球で使われる用語です。  
+
+### Meaning:  
+- **プレップ**(Prepare) = ** 준비투**  
+  - 투수가 경기 시작 전에 연습으로 던지는 공을 의미합니다.  
+  - 주로 투수의 컨디션 확인이나 게임 전 워밍업 목적으로 사용됩니다.  
+
+### Example in Baseball Context:  
+> *"投手がここでもう1回プレップ入れて、本番の投球に備える。"*  
+(투수가 여기서도 1회 준비투를 던져 본 경기에 대비한다.)  
+
+### Key Points:  
+1. **1回プレップ** = 1회 준비투 (보통 10~15球 정도).  
+2. 주로 **先発投
+  madlad400-3b-mt     : วue วue วue วue วue วue วue วue วue วue วue วue วue วue วue วue วue วue วue วue วue วue วue วue วue วue วue วue วue วue วue วssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+### [116] 7266_28097_236.04_242.00  (패션,뷰티 / normal)
+JA_REF : もう1回追加するとより取れやすい。
+KO_REF : 한 번 더 추가하면 더 잘 빠진다.
+  gemma-3-12b-it      : 하나 더 추가하면 더 잘 잡히는 것 같아.
+  qwen3-14b           : 한 번 더 추가하면 더 쉽게 얻을 수 있어.
+  qwen3-32b           : 다시 한 번 추가하면 더 잘 잡을 수 있어.
+  exaone-3.5-7.8b     : 한 번 더 추가하면 더 잘 잡을 수 있어.
+  qwen2.5-7b-baseline : 한 번 더 하면 더 쉽게 떨어진다.
+  llama-3-8b-instruct : [TEXT TO TRANSLATE]
+
+다음에 추가하면 더 쉽게 얻을 수 있습니다.
+  seed-x-instruct-7b  : 한 번 더 추가하면 더 쉽게 제거할 수 있다.
+  nllb-200-3.3b       : 그리고 이 두개의 선은
+  exaone-4.0-32b      : 「もう1回追加するとより取れやすい」という表現は、何かを追加することで状況が 개선されることを指しています。この文脈では、例えば以下のような意味で使われることがあります：
+
+1. **物理的な作業**:  
+   - 例: 「この部分にもう1回追加すると、より取れやすい。」  
+   →追加することで、取り除きや分解が容易になる場合。
+
+2. **ソフトウェア/データ処理**:  
+   - 例: 「この処理にもう1回追加すると、データが取り出しやすくなる。」  
+   →追加
+  madlad400-3b-mt     : uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uy uyssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+### [117] 7266_28097_24.96_35.64  (패션,뷰티 / normal)
+JA_REF : 私のネイルは、いつも塗る時にも説明していますが、剥がせるベースジェルを使用しているので、今回も剥がしていきます。
+KO_REF : 제 네일은 항상 바를 때도 설명하고 있지만 떼어낼 수 있는 베이스 젤을 사용하고 있기 때문에 이번에도 떼어 가겠습니다.
+  gemma-3-12b-it      : 私のネイルは、いつも塗る時にも説明していますが、剥がせるベースジェルを使用しているので、今回も剥がしていきます。
+  qwen3-14b           : 저의 네일은 항상 바를 때 설명했지만요, 벗겨지는 베이스 젤을 사용해서 이번에도 벗겨볼게요.
+  qwen3-32b           : 제가 네일을 항상 바를 때마다 설명드리지만, 제가 사용하는 베이스 젤은 제거 가능한 종류라서, 이번에도 떼어내려고 합니다.
+  exaone-3.5-7.8b     : 제 손톱은 항상 칠할 때 설명하지만, 벗겨지는 베이스 젤을 사용해서 이번에도 벗겨질 거예요.
+  qwen2.5-7b-baseline : 내 네일은 항상 바르는 때에도 설명하지만, 벗길 수 있는 베이스 제일을 사용하고 있으므로 이번에도 벗기겠습니다.
+  llama-3-8b-instruct : 나의 네일은 항상塗칠할 때에도 설명하고 있지만, 벗겨지는 베이스 젤을 사용하고 있으므로 이번에도 벗겨질 것입니다.
+  seed-x-instruct-7b  : 저의 네일러는 항상 바르는 시에도 설명을 하고 있지만, 저는 벗기는 베이스 제러를 사용하고 있기 때문에, 저도 이번에도 벗기겠습니다.
+  nllb-200-3.3b       : 제 손톱은, 제가 항상 다듬을 때 설명하는 바와 같이, 아지는 베이스 젤을 사용해서, 아지는 것입니다.
+  exaone-4.0-32b      : ネイルのベースジェルを剥がす際には、以下の手順を参考にしてください。  
+
+### **ベースジェル剥がしの手順**  
+1. **アルコールなどで手を清潔に**  
+   -指先やネイル周りをアルコールやクリーナーできちんと洗います。  
+
+2. **剥がし剤を使用**  
+   -専用のネイルremover(剥がし剤)を使うか、アルコールを含んだクリーナーを使います。  
+   -ベースジェルが久しぶりに剥がす場合は、アルコールを細かく吹きかけます
+  madlad400-3b-mt     : ysssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+
+### [118] 7266_28097_242.00_246.80  (패션,뷰티 / normal)
+JA_REF : ちょうど千恵子先生の前回のネイルチェンジアーカイブで見てました。
+KO_REF : 마침 치에코 선생님의 지난 번 네일 체인지 아카이브에서 보고 있었습니다.
+  gemma-3-12b-it      : ちょうど 치에코 선생님 지난 네일 체인지 아카이브 보고 있었어.
+  qwen3-14b           : 정확히 천혜코 선생님의 이전 네일 체인지 아카이브에서 봤어요.
+  qwen3-32b           : 바로 츠기모토 씨의 지난번 네일 아트 변경 아카이브를 봤어요.
+  exaone-3.5-7.8b     : 정확히 천예자 선생님의 지난번 네일 체인지 아카이브를 봤어요.
+  qwen2.5-7b-baseline : 천화코 선생님의 이전 네일 체인지 아카이브에서 봤어요.
+  llama-3-8b-instruct : 저는千恵子 선생님의 전 회의 네일 체인지 아카이브를 봤습니다.
+  seed-x-instruct-7b  : 저는 방금 천히े 선생의 지난번 네이러 철종 아이브 공연을 보았어요.
+  nllb-200-3.3b       : 키코 선생님이 예전에 네일 체인지아 카이브를 봤어요
+  exaone-4.0-32b      : 千恵子先生のネイルチェンジアーカ이브についてのご質問ですが、現在、私たちは千恵子先生のネイルチェンジアーカイブに関する情報を提供できません。もし、千恵子先生のネイルチェンジアーカイブについての詳細を知りたいのであれば、直接千恵子先生の公式サイトや所層のソーシャルメディアアカウントを通じてお問い合わせください。  
+
+もし、千恵子先生のネイルチェンジアーカイブ以外のネイリストやネイルチェンジに関する情報が必要であれば、お
+  madlad400-3b-mt     : v jjž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v jž j v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v
+
+### [119] 7266_28097_249.44_253.80  (패션,뷰티 / normal)
+JA_REF : ぜひ何回でも見ていただけるととても嬉しいです。
+KO_REF : 꼭 몇 번이라도 봐주시면 너무 감사하겠습니다.
+  gemma-3-12b-it      : 여러 번이라도 봐주시면 정말 기쁠 거예요.
+  qwen3-14b           : 정말로 몇 번이나 보시면 제가 매우 기쁠 거예요.
+  qwen3-32b           : 정말로 여러 번 보여 주시면 매우 기쁠 것입니다.
+  exaone-3.5-7.8b     : 언제든 다시 볼 수 있다면 정말 기쁩니다.
+  qwen2.5-7b-baseline : 여러 번 보실 수 있으면 정말 기쁩니다.
+  llama-3-8b-instruct : 가끔씩 보는 것이 좋겠다고 생각하면 정말 기쁠 것입니다.
+  seed-x-instruct-7b  : 만일 여러분이 몇 번이고 볼 수 있다면 저는 매우 행복하겠습니다.
+  nllb-200-3.3b       : 그리고 저는 여러분들이 이 영화를 몇 번이나 보셨으면 좋겠습니다.
+  exaone-4.0-32b      : ありがとうございます！そう言っていただけると、私も大変嬉しく思います。  
+
+何回でも質問や疑問を抱えている場合は、いつでもここに来てください。私はいつでも皆さんのためにここにいるつもりです。  
+
+何でも 좋은 talk（話）になりますように、お待ちしています！ 😊
+  madlad400-3b-mt     : ěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěěě
+
+### [120] 7266_28097_255.04_260.20  (패션,뷰티 / normal)
+JA_REF : ちょうどマシン、マイネイルのオフしてました。
+KO_REF : 마침 머신, 마이네일을 끄고 있었어요.
+  gemma-3-12b-it      : ちょうど 마인크래프트, 끄고 있었어요.
+  qwen3-14b           : 정확히 말하면, 저는 머신과 마이네일을 떼고 있었습니다.
+  qwen3-32b           : 기다리고 계세요, 내 네일을 제거하고 있었어요.
+  exaone-3.5-7.8b     : 정확히 컴퓨터 끄려고 했어. 마이이메일도 끄려고 했거든.
+  qwen2.5-7b-baseline : 정확히 말하면, 마인 Nail의 오프가 진행 중이었습니다.
+  llama-3-8b-instruct : 저는 마신을 마치고 마이네일을 오프했었습니다.
+  seed-x-instruct-7b  : 저는 마이네이루 오르는 중이었어요.
+  nllb-200-3.3b       : 방금 기계와 마이너를 꺼냈어요
+  exaone-4.0-32b      : 「ちょうどマシン、マイネイルのオフしてました」という表現は、日本語で「ちょうどマシン（機械）とマイネイル（マイネイル）のオフ（休暈）をしていました」という意味になりますが、文脈によっては少し不自然な表現かもあります。  
+
+### 가능한 해석 및 수정 제안:
+1. **「ちょうどマシンとマイネイルのオフをしていました」**  
+   - 기계와 마닐의 오프라인(休暈)을 의미하는 것으로 해석할 수 있습니다.  
+   - 예: *"システムのメンテナンスで、ちょうどマシンとマイネイルのオフ
+  madlad400-3b-mt     : r jjš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš jš

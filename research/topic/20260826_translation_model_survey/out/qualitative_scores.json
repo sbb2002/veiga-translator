@@ -1,0 +1,6242 @@
+{
+ "7112_25921_45.76_52.76": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 3,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 1,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25921_52.76_59.76": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 5,
+   "flu": 4,
+   "nua": 4
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25921_78.40_85.02": {
+  "gemma-3-12b-it": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25921_85.66_94.10": {
+  "gemma-3-12b-it": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-14b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "qwen3-32b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25921_94.90_101.24": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 4,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 1,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_10.00_12.00": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "nllb-200-3.3b": {
+   "fid": 5,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_108.00_110.00": {
+  "gemma-3-12b-it": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 1,
+   "flu": 5,
+   "nua": 1
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 1,
+   "flu": 4,
+   "nua": 1
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 4,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_110.00_113.00": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 2,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_120.00_121.00": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 2,
+   "nua": 2
+  },
+  "qwen3-32b": {
+   "fid": 3,
+   "flu": 2,
+   "nua": 2
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 2,
+   "flu": 5,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 2,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_123.00_124.00": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_127.00_129.00": {
+  "gemma-3-12b-it": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 3,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_135.00_136.00": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 3,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 2,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_146.00_148.00": {
+  "gemma-3-12b-it": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 3,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_152.00_154.00": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-32b": {
+   "fid": 3,
+   "flu": 1,
+   "nua": 2
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 4,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_156.00_157.00": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 2,
+   "nua": 2
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 1,
+   "flu": 4,
+   "nua": 1
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_16.00_18.00": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 3,
+   "nua": 3
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 1,
+   "flu": 5,
+   "nua": 1
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 1,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 1,
+   "nua": 1
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_161.00_162.00": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 1,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_163.00_164.00": {
+  "gemma-3-12b-it": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_170.00_172.00": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_175.00_176.00": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 2,
+   "nua": 2
+  },
+  "qwen3-32b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_180.00_181.00": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_186.00_188.00": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 2,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_194.00_195.00": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_198.00_203.00": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_2.00_4.00": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "qwen3-32b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_204.00_206.00": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 4,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_206.00_208.00": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_208.00_210.00": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 4,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 3,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_221.00_222.00": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "nllb-200-3.3b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7112_25922_222.00_223.00": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_0.00_15.28": {
+  "gemma-3-12b-it": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_106.28_108.28": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_108.28_114.28": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_116.28_119.28": {
+  "gemma-3-12b-it": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "qwen3-32b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 1
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_120.28_122.28": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_129.28_138.28": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 2,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_171.28_178.28": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 1,
+   "flu": 2,
+   "nua": 1
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 3,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_178.28_181.28": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_185.28_194.28": {
+  "gemma-3-12b-it": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_212.28_219.28": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 3,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_231.28_237.28": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_259.28_267.28": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_267.28_271.28": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_285.28_291.28": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_297.28_301.28": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 5,
+   "flu": 4,
+   "nua": 4
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_304.28_308.28": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 5,
+   "flu": 4,
+   "nua": 4
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 2,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_322.28_325.28": {
+  "gemma-3-12b-it": {
+   "fid": 3,
+   "flu": 2,
+   "nua": 3
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 1,
+   "flu": 5,
+   "nua": 1
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_325.28_330.28": {
+  "gemma-3-12b-it": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 3,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 2,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 3,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_330.28_333.28": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "seed-x-instruct-7b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-4.0-32b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_355.28_359.28": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_377.28_382.28": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 2,
+   "flu": 5,
+   "nua": 2
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "seed-x-instruct-7b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-4.0-32b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_382.28_386.28": {
+  "gemma-3-12b-it": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "qwen3-32b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 4,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_386.28_389.28": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_398.28_401.28": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 5,
+   "flu": 4,
+   "nua": 4
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 5,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_401.28_412.28": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "qwen3-32b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 1,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_430.28_435.28": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_456.28_460.28": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 2,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_460.28_465.28": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_470.28_474.28": {
+  "gemma-3-12b-it": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 1,
+   "flu": 2,
+   "nua": 1
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "8407_40837_482.28_487.28": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 4,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_102.40_111.99": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_111.99_121.85": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 2,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_122.00_126.63": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_127.20_133.94": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_134.90_138.76": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 2,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_138.91_146.61": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_146.80_151.59": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_157.50_159.63": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 3,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_165.64_178.08": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 3,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_178.20_183.93": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_18.39_22.40": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 2,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_184.24_186.56": {
+  "gemma-3-12b-it": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_188.57_197.98": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_200.19_203.88": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 1,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_204.40_205.66": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "seed-x-instruct-7b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_205.71_208.64": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_208.66_220.91": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 3,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 2,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_220.97_222.58": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 4,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_223.70_227.42": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_23.75_26.94": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_231.50_238.03": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_240.87_242.99": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_243.38_247.53": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 2,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_250.74_256.32": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 2,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_256.68_259.22": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_272.00_275.53": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_276.00_280.71": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 1,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_28.24_33.58": {
+  "gemma-3-12b-it": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 2,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_281.33_284.11": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "1373_5567_291.15_296.32": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_0.00_8.64": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 1,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_102.40_106.04": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_106.04_111.56": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_111.56_118.04": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 1,
+   "flu": 4,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_118.04_124.44": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_124.44_131.80": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 3,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_131.80_134.56": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_134.56_139.96": {
+  "gemma-3-12b-it": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_139.96_145.28": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 1,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 2,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_145.28_151.00": {
+  "gemma-3-12b-it": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 1,
+   "flu": 4,
+   "nua": 1
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 1,
+   "flu": 4,
+   "nua": 1
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 4,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 4,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_151.00_157.68": {
+  "gemma-3-12b-it": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "qwen3-32b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_157.68_162.00": {
+  "gemma-3-12b-it": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "qwen3-32b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 1,
+   "flu": 2,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 2,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_162.00_167.16": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_167.16_172.84": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "llama-3-8b-instruct": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_17.24_24.96": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 1,
+   "nua": 1
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 2,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_172.84_177.56": {
+  "gemma-3-12b-it": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 2,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_177.56_184.16": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 1
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_184.16_188.72": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-32b": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_188.72_193.12": {
+  "gemma-3-12b-it": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "qwen3-14b": {
+   "fid": 2,
+   "flu": 5,
+   "nua": 2
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 5,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 5,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_195.16_204.16": {
+  "gemma-3-12b-it": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_204.16_210.20": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_210.20_214.48": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 4,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_214.48_220.84": {
+  "gemma-3-12b-it": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 1,
+   "flu": 2,
+   "nua": 1
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_226.12_229.52": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_229.52_236.04": {
+  "gemma-3-12b-it": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 1
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_236.04_242.00": {
+  "gemma-3-12b-it": {
+   "fid": 3,
+   "flu": 5,
+   "nua": 3
+  },
+  "qwen3-14b": {
+   "fid": 2,
+   "flu": 5,
+   "nua": 2
+  },
+  "qwen3-32b": {
+   "fid": 2,
+   "flu": 5,
+   "nua": 2
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 2,
+   "flu": 5,
+   "nua": 2
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "nllb-200-3.3b": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_24.96_35.64": {
+  "gemma-3-12b-it": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "qwen3-14b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_242.00_246.80": {
+  "gemma-3-12b-it": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "seed-x-instruct-7b": {
+   "fid": 2,
+   "flu": 2,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_249.44_253.80": {
+  "gemma-3-12b-it": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 5
+  },
+  "qwen3-14b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen3-32b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 4
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 4,
+   "flu": 5,
+   "nua": 4
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 5,
+   "flu": 5,
+   "nua": 4
+  },
+  "llama-3-8b-instruct": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 4,
+   "flu": 4,
+   "nua": 3
+  },
+  "nllb-200-3.3b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ },
+ "7266_28097_255.04_260.20": {
+  "gemma-3-12b-it": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "qwen3-14b": {
+   "fid": 3,
+   "flu": 4,
+   "nua": 3
+  },
+  "qwen3-32b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "exaone-3.5-7.8b": {
+   "fid": 2,
+   "flu": 4,
+   "nua": 2
+  },
+  "qwen2.5-7b-baseline": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "llama-3-8b-instruct": {
+   "fid": 3,
+   "flu": 3,
+   "nua": 2
+  },
+  "seed-x-instruct-7b": {
+   "fid": 1,
+   "flu": 3,
+   "nua": 1
+  },
+  "nllb-200-3.3b": {
+   "fid": 2,
+   "flu": 3,
+   "nua": 2
+  },
+  "exaone-4.0-32b": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  },
+  "madlad400-3b-mt": {
+   "fid": 1,
+   "flu": 1,
+   "nua": 1
+  }
+ }
+}

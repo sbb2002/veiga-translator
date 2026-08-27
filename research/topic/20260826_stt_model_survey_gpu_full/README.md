@@ -38,8 +38,11 @@ CPU 파일럿과 별개 토픽으로 분리한 이유: 디바이스(CPU→GPU)�
   동일한 방식).
 - 5개 방법 모두 같은 150개 세그먼트(같은 seg_id 순서)로 측정 — 페어드 비교 성립.
 - RTF는 순차 측정(동시 실행 없음, CPU 파일럿과 동일 원칙).
-- 정성(LLM judge) 패스는 이번에도 생략 — llama-server(:8080) 미기동. 필요하면
-  `judge_qualitative.py --method <name>`으로 추가 가능(사용자 확인 후).
+- 정성 평가는 LLM judge(`judge_qualitative.py`) 대신 **사람 수동 채점**으로 진행
+  (2026-08-27, 사용자 요청) — 50세그먼트 페어드, 자연스러움/의미 충실도 각 1~5.
+  결과는 [`report/02-qualitative-eval.md`](report/02-qualitative-eval.md),
+  스크립트는 `src/qualitative_eval.py`. llama-server 기동 후 `judge_qualitative.py`를
+  1~5 루브릭으로 개조해 교차검증하는 것이 다음 후보.
 
 ### 겪은 이슈
 
@@ -82,6 +85,10 @@ CI가 겹치지 않는 유일한 후보 — turbo보다 통계적으로 유의�
 ## 산출물
 
 - `report/01-full-results.md` — 정량 결과, 카테고리별 CER, 해석, 결론.
+- `report/02-qualitative-eval.md` — 사람 수동 정성 채점(50세그먼트, 자연스러움/
+  의미 충실도 1~5), 카테고리별 표, 실패 방식 분석.
+- `src/qualitative_eval.py` — 정성 표본 추출/집계/자체검증.
+- `out/qualitative_sample.txt`, `out/qualitative_scores.json` — 정성 대조표 + 점수.
 - `src/common.py` — 데이터셋 로더(전체 150쌍 고정) + 정규화.
 - `src/transcribe_turbo.py`, `src/transcribe_granite.py`,
   `src/transcribe_qwen3_asr.py`, `src/transcribe_reazonspeech.py` — GPU 전사

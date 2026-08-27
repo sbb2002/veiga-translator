@@ -1,0 +1,1102 @@
+{
+ "7112_25922_127.00_129.00": {
+  "turbo": {
+   "nat": 5,
+   "fid": 4
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 5,
+   "fid": 5
+  }
+ },
+ "7112_25921_94.90_101.24": {
+  "turbo": {
+   "nat": 5,
+   "fid": 1
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 2,
+   "fid": 1
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 3,
+   "fid": 1
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 3,
+   "fid": 1
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 3,
+   "fid": 1
+  }
+ },
+ "7112_25922_146.00_148.00": {
+  "turbo": {
+   "nat": 4,
+   "fid": 2
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 2
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 2,
+   "fid": 2
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 2,
+   "fid": 2
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 1,
+   "fid": 1
+  }
+ },
+ "7112_25922_180.00_181.00": {
+  "turbo": {
+   "nat": 2,
+   "fid": 1
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 2,
+   "fid": 2
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 3,
+   "fid": 2
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 3,
+   "fid": 2
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 2,
+   "fid": 2
+  }
+ },
+ "7112_25921_52.76_59.76": {
+  "turbo": {
+   "nat": 5,
+   "fid": 1
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 2,
+   "fid": 1
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 3,
+   "fid": 1
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 5,
+   "fid": 1
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 2,
+   "fid": 1
+  }
+ },
+ "7112_25921_78.40_85.02": {
+  "turbo": {
+   "nat": 5,
+   "fid": 1
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 2,
+   "fid": 1
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 3,
+   "fid": 1
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 2,
+   "fid": 1
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 1,
+   "fid": 1
+  }
+ },
+ "7112_25922_163.00_164.00": {
+  "turbo": {
+   "nat": 4,
+   "fid": 2
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 2
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 4,
+   "fid": 2
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 4,
+   "fid": 2
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 2,
+   "fid": 1
+  }
+ },
+ "7112_25921_85.66_94.10": {
+  "turbo": {
+   "nat": 5,
+   "fid": 1
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 2,
+   "fid": 1
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 3,
+   "fid": 1
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 3,
+   "fid": 1
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 1,
+   "fid": 1
+  }
+ },
+ "7112_25922_135.00_136.00": {
+  "turbo": {
+   "nat": 4,
+   "fid": 3
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 2,
+   "fid": 1
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 4,
+   "fid": 3
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 3,
+   "fid": 2
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 4,
+   "fid": 2
+  }
+ },
+ "7112_25922_170.00_172.00": {
+  "turbo": {
+   "nat": 4,
+   "fid": 3
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 5,
+   "fid": 4
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 3,
+   "fid": 2
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 2,
+   "fid": 2
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 4,
+   "fid": 3
+  }
+ },
+ "1352_5491_107.00_109.00": {
+  "turbo": {
+   "nat": 4,
+   "fid": 3
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 3
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 3,
+   "fid": 3
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 3,
+   "fid": 3
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 3,
+   "fid": 2
+  }
+ },
+ "1352_5491_17.01_21.00": {
+  "turbo": {
+   "nat": 3,
+   "fid": 2
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 3,
+   "fid": 3
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 2,
+   "fid": 2
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 3,
+   "fid": 3
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 3,
+   "fid": 3
+  }
+ },
+ "1352_5491_124.99_132.28": {
+  "turbo": {
+   "nat": 5,
+   "fid": 1
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 3,
+   "fid": 2
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 4,
+   "fid": 3
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 4,
+   "fid": 3
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 4,
+   "fid": 3
+  }
+ },
+ "1352_5491_279.00_282.99": {
+  "turbo": {
+   "nat": 4,
+   "fid": 3
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 3,
+   "fid": 3
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 3,
+   "fid": 3
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 3,
+   "fid": 3
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 3,
+   "fid": 2
+  }
+ },
+ "1352_5491_113.00_115.00": {
+  "turbo": {
+   "nat": 1,
+   "fid": 2
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 2,
+   "fid": 2
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 2,
+   "fid": 2
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 2,
+   "fid": 2
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 3,
+   "fid": 3
+  }
+ },
+ "1352_5491_156.49_159.00": {
+  "turbo": {
+   "nat": 2,
+   "fid": 2
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 2,
+   "fid": 1
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 3,
+   "fid": 4
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 4,
+   "fid": 4
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 2,
+   "fid": 1
+  }
+ },
+ "1352_5491_216.72_221.94": {
+  "turbo": {
+   "nat": 1,
+   "fid": 1
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 1,
+   "fid": 1
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 2,
+   "fid": 2
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 2,
+   "fid": 1
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 3,
+   "fid": 2
+  }
+ },
+ "1352_5491_227.52_229.89": {
+  "turbo": {
+   "nat": 3,
+   "fid": 2
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 3
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 3,
+   "fid": 2
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 3,
+   "fid": 2
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 3,
+   "fid": 2
+  }
+ },
+ "1352_5491_132.27_135.94": {
+  "turbo": {
+   "nat": 4,
+   "fid": 2
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 2
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 4,
+   "fid": 2
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 4,
+   "fid": 2
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 4,
+   "fid": 2
+  }
+ },
+ "1352_5491_21.00_31.33": {
+  "turbo": {
+   "nat": 3,
+   "fid": 4
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 3
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 2,
+   "fid": 2
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 4,
+   "fid": 4
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 3,
+   "fid": 3
+  }
+ },
+ "8407_40837_325.28_330.28": {
+  "turbo": {
+   "nat": 5,
+   "fid": 5
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 3,
+   "fid": 4
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 4,
+   "fid": 5
+  }
+ },
+ "8407_40837_285.28_291.28": {
+  "turbo": {
+   "nat": 3,
+   "fid": 3
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 4
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 2,
+   "fid": 3
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 3,
+   "fid": 3
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 3,
+   "fid": 3
+  }
+ },
+ "8407_40837_106.28_108.28": {
+  "turbo": {
+   "nat": 2,
+   "fid": 2
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 2,
+   "fid": 2
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 2,
+   "fid": 2
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 4,
+   "fid": 5
+  }
+ },
+ "8407_40837_456.28_460.28": {
+  "turbo": {
+   "nat": 5,
+   "fid": 5
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 3,
+   "fid": 2
+  }
+ },
+ "8407_40837_330.28_333.28": {
+  "turbo": {
+   "nat": 3,
+   "fid": 4
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 3,
+   "fid": 4
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 2,
+   "fid": 3
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 3,
+   "fid": 4
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 5,
+   "fid": 4
+  }
+ },
+ "8407_40837_116.28_119.28": {
+  "turbo": {
+   "nat": 3,
+   "fid": 3
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 2,
+   "fid": 3
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 1,
+   "fid": 2
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 4,
+   "fid": 4
+  }
+ },
+ "8407_40837_178.28_181.28": {
+  "turbo": {
+   "nat": 5,
+   "fid": 5
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 4
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 2,
+   "fid": 3
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 3,
+   "fid": 3
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 5,
+   "fid": 5
+  }
+ },
+ "8407_40837_377.28_382.28": {
+  "turbo": {
+   "nat": 5,
+   "fid": 5
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 5,
+   "fid": 5
+  }
+ },
+ "8407_40837_386.28_389.28": {
+  "turbo": {
+   "nat": 4,
+   "fid": 4
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 4
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 4,
+   "fid": 4
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 3,
+   "fid": 4
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 3,
+   "fid": 2
+  }
+ },
+ "8407_40837_430.28_435.28": {
+  "turbo": {
+   "nat": 4,
+   "fid": 3
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 3,
+   "fid": 3
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 4,
+   "fid": 3
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 4,
+   "fid": 3
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 5,
+   "fid": 5
+  }
+ },
+ "1373_5567_111.99_121.85": {
+  "turbo": {
+   "nat": 5,
+   "fid": 4
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 5,
+   "fid": 4
+  }
+ },
+ "1373_5567_223.70_227.42": {
+  "turbo": {
+   "nat": 3,
+   "fid": 3
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 2,
+   "fid": 2
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 3,
+   "fid": 4
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 4,
+   "fid": 4
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 2,
+   "fid": 1
+  }
+ },
+ "1373_5567_281.33_284.11": {
+  "turbo": {
+   "nat": 5,
+   "fid": 4
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 3
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 4,
+   "fid": 4
+  }
+ },
+ "1373_5567_188.57_197.98": {
+  "turbo": {
+   "nat": 5,
+   "fid": 5
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 4,
+   "fid": 5
+  }
+ },
+ "1373_5567_291.15_296.32": {
+  "turbo": {
+   "nat": 4,
+   "fid": 4
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 4
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 3,
+   "fid": 3
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 3,
+   "fid": 2
+  }
+ },
+ "1373_5567_157.50_159.63": {
+  "turbo": {
+   "nat": 5,
+   "fid": 5
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 3,
+   "fid": 4
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 3,
+   "fid": 4
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 5,
+   "fid": 4
+  }
+ },
+ "1373_5567_272.00_275.53": {
+  "turbo": {
+   "nat": 5,
+   "fid": 5
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 4
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 4,
+   "fid": 4
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 4,
+   "fid": 4
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 5,
+   "fid": 5
+  }
+ },
+ "1373_5567_220.97_222.58": {
+  "turbo": {
+   "nat": 5,
+   "fid": 5
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 4,
+   "fid": 3
+  }
+ },
+ "1373_5567_134.90_138.76": {
+  "turbo": {
+   "nat": 5,
+   "fid": 4
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 4
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 2,
+   "fid": 3
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 3,
+   "fid": 3
+  }
+ },
+ "1373_5567_178.20_183.93": {
+  "turbo": {
+   "nat": 5,
+   "fid": 5
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 4,
+   "fid": 4
+  }
+ },
+ "7266_28097_167.16_172.84": {
+  "turbo": {
+   "nat": 5,
+   "fid": 5
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 3,
+   "fid": 4
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 4,
+   "fid": 4
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 5,
+   "fid": 4
+  }
+ },
+ "7266_28097_118.04_124.44": {
+  "turbo": {
+   "nat": 4,
+   "fid": 5
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 4,
+   "fid": 5
+  }
+ },
+ "7266_28097_184.16_188.72": {
+  "turbo": {
+   "nat": 5,
+   "fid": 5
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 3,
+   "fid": 4
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 3,
+   "fid": 4
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 3,
+   "fid": 4
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 3,
+   "fid": 2
+  }
+ },
+ "7266_28097_111.56_118.04": {
+  "turbo": {
+   "nat": 5,
+   "fid": 5
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 4,
+   "fid": 3
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 4,
+   "fid": 3
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 4,
+   "fid": 5
+  }
+ },
+ "7266_28097_188.72_193.12": {
+  "turbo": {
+   "nat": 5,
+   "fid": 5
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 4,
+   "fid": 5
+  }
+ },
+ "7266_28097_145.28_151.00": {
+  "turbo": {
+   "nat": 5,
+   "fid": 5
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 4,
+   "fid": 5
+  }
+ },
+ "7266_28097_242.00_246.80": {
+  "turbo": {
+   "nat": 4,
+   "fid": 3
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 4,
+   "fid": 3
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 3,
+   "fid": 3
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 4,
+   "fid": 3
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 4,
+   "fid": 4
+  }
+ },
+ "7266_28097_210.20_214.48": {
+  "turbo": {
+   "nat": 5,
+   "fid": 5
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 5,
+   "fid": 5
+  }
+ },
+ "7266_28097_124.44_131.80": {
+  "turbo": {
+   "nat": 5,
+   "fid": 5
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 5,
+   "fid": 5
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 5,
+   "fid": 5
+  }
+ },
+ "7266_28097_24.96_35.64": {
+  "turbo": {
+   "nat": 5,
+   "fid": 5
+  },
+  "granite-speech-4.1-2b": {
+   "nat": 3,
+   "fid": 4
+  },
+  "qwen3-asr-0.6b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "qwen3-asr-1.7b": {
+   "nat": 4,
+   "fid": 5
+  },
+  "reazonspeech-nemo-v2": {
+   "nat": 4,
+   "fid": 5
+  }
+ }
+}

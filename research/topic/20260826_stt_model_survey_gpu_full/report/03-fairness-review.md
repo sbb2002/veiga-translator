@@ -25,22 +25,17 @@
 - ReazonSpeech를 다시 보는 이유는 순위 정정보다 **스트리밍 네이티브 후보로 살아났기
   때문**(`docs/planning/TUNING_PLAN.md` TS-1e/TS-2e/TC-2c, `report` §5).
 
-### 실행 순서
+### 실행 순서 — 완료 (2026-08-28)
 
-1. **ReazonSpeech 공정 재전사** — `reazonspeech` 공식 패키지 래퍼(VAD + 롱폼
-   세그먼테이션 내장). **CPU에서 실행**(사용자 결정 2026-08-28 — 품질은 디바이스
-   무관, 속도만 느림 ~20–60분). 산출은 `out/reazonspeech-nemo-v2_fair/`(기존 것 안
-   건드림).
-2. **채점 + 이 문서에 결과 추가** — `score_quantitative.py --method reazonspeech-nemo-v2_fair`,
-   기존 vs fair 나란히 표. turbo/Qwen 대비 CI 겹침 여부 재판정(**품질 지표만** —
-   CER/chrF++/BLEU/ROUGE-L). RTF는 §4 한계대로 별도 처리. `report/01`·`README`의
-   provisional 배너를 확정 문구로 교체(또는 여전히 밀리면 "공정 조건에서도 밀림"으로).
-3. **결과 검토 후 판단** — ReazonSpeech가 공정 조건에서 상위권과 겹치면,
-   `20260827_vad_stt_survey`의 파이프라인 통과 엔진 목록에 **reazonspeech를 3번째로
-   추가**할지 결정한다. 밀리면 turbo/Qwen 2개 그대로.
-4. **그다음** `20260827_vad_stt_survey` 진행 — 위 3의 엔진 목록 확정 후.
-
-즉 `20260827_vad_stt_survey`는 이 ReazonSpeech 재평가 결과를 보고 착수한다.
+1. ~~ReazonSpeech 공정 재전사~~ **완료** — `src/transcribe_reazonspeech_fair.py`
+   (공식 `reazonspeech.nemo.asr` 래퍼, CPU) → `out/reazonspeech-nemo-v2_fair/`.
+2. ~~채점 + CI + 결과 기록~~ **완료** — `score_quantitative.py` + `src/analyze_fair.py`.
+   결과·해석은 **§2.5** 참고.
+3. ~~결과 검토 후 판단~~ **완료** — fair는 bare보다 유의미하게 개선됐으나 turbo/Qwen보다
+   4개 지표 전부 유의미하게 뒤짐(§2.5). → **`20260827_vad_stt_survey` 엔진 목록은
+   turbo / Qwen3-ASR-1.7B 2개 유지**. (게임 외 카테고리 대등 + 스트리밍 이점 →
+   `20260827` 1차 후 파이프라인 3번째 엔진 재검토 여지는 있음.)
+4. **`20260827_vad_stt_survey` 착수 가능** — 엔진 목록 2개로 확정.
 
 ---
 
@@ -131,6 +126,85 @@ python .../src/score_quantitative.py --method reazonspeech-nemo-v2_fair
 
 ---
 
+## 2.5 결과 — CPU 공정 재실행 (2026-08-28, 완료)
+
+`src/transcribe_reazonspeech_fair.py`(공식 `reazonspeech.nemo.asr` 래퍼: VAD +
+롱폼 세그먼테이션, beam search. CPU, `PYTHONUTF8=1 TORCHDYNAMO_DISABLE=1` — Windows
+cp949 로케일에서 torch inductor 템플릿 로딩이 `UnicodeDecodeError`로 죽는 것 회피)
+→ `out/reazonspeech-nemo-v2_fair/` (150쌍, 빈 출력 0건, CPU 7.5분).
+채점 `score_quantitative.py --method reazonspeech-nemo-v2_fair`,
+CI `src/analyze_fair.py`(paired bootstrap 500회, SEED=42 — `report/01`과 동일
+방법론이라 turbo/Qwen CI가 그대로 재현됨).
+
+### 전체 (150쌍, 95% CI = paired bootstrap 500회)
+
+| 방법 | CER↓ | chrF++↑ | BLEU-char↑ | ROUGE-L F1↑ | RTF↓ |
+|---|---|---|---|---|---|
+| large-v3-turbo (GPU) | 0.287 ± 0.048 | 51.14 ± 6.71 | 68.27 ± 4.86 | 0.764 ± 0.043 | 0.033 ± 0.005 |
+| Qwen3-ASR-1.7B (GPU) | 0.293 ± 0.054 | 57.04 ± 4.99 | 68.73 ± 5.33 | 0.747 ± 0.047 | 0.106 ± 0.018 |
+| ReazonSpeech bare (GPU, 원래) | 0.397 ± 0.048 | 41.67 ± 5.88 | 55.20 ± 5.62 | 0.664 ± 0.044 | 0.067 ± 0.003 |
+| **ReazonSpeech fair/wrapper (CPU)** | **0.345 ± 0.058** | **46.76 ± 6.31** | **64.47 ± 4.91** | **0.724 ± 0.045** | 0.651 ± 0.033 \*(CPU)\* |
+
+\* fair RTF는 **CPU 측정** — `report/01`의 GPU RTF와 비교 불가(§4 한계).
+
+### 페어드 차이 (A − B), 95% CI — CI가 0을 포함하면 "차이 없음"
+
+| 비교 (A − B) | CER | chrF++ | BLEU-char | ROUGE-L F1 |
+|---|---|---|---|---|
+| fair − bare | −0.052 [−0.094, −0.002] | +5.09 [3.12, 7.86] | +9.27 [6.35, 12.69] | +0.061 [0.035, 0.090] |
+| fair − turbo | +0.058 [0.022, 0.102] | −4.38 [−7.52, −1.58] | −3.80 [−6.69, −0.89] | −0.040 [−0.064, −0.018] |
+| fair − Qwen3-ASR-1.7B | +0.052 [0.019, 0.103] | −10.28 [−13.02, −2.29] | −4.27 [−7.17, −1.50] | −0.023 [−0.045, −0.003] |
+
+**4개 지표 전부, 세 비교 전부 CI가 0을 제외한다.**
+
+### 카테고리별 CER (95% CI, n=30)
+
+| 카테고리 | turbo (GPU) | Qwen3-ASR-1.7B (GPU) | ReazonSpeech bare (GPU) | ReazonSpeech fair (CPU) |
+|---|---|---|---|---|
+| 게임 | 0.588 ± 0.107 | 0.631 ± 0.100 | 0.717 ± 0.094 | **0.737 ± 0.257** |
+| 여행 | 0.462 ± 0.094 | 0.442 ± 0.088 | 0.546 ± 0.057 | **0.458 ± 0.072** |
+| 음식,요리 | 0.253 ± 0.117 | 0.313 ± 0.129 | 0.358 ± 0.111 | 0.349 ± 0.129 |
+| 일상,소통 | 0.159 ± 0.048 | 0.048 ± 0.018 | 0.296 ± 0.071 | **0.166 ± 0.042** |
+| 패션,뷰티 | 0.120 ± 0.043 | 0.230 ± 0.058 | 0.212 ± 0.051 | 0.212 ± 0.053 |
+
+그림: `fig/fair_reazonspeech.png`(4지표 × 4방법, 95% CI 오차막대),
+`fig/fair_reazonspeech_category_cer.png`(카테고리별 CER, 4방법).
+
+### 해석
+
+1. **공식 래퍼가 파편 붕괴를 실제로 고쳤다.** `fair − bare` 페어드 차가 4개 지표
+   전부 CI가 0을 제외(CER −0.052, chrF++ +5.09, BLEU +9.27, ROUGE-L +0.061).
+   특히 `일상,소통` CER 0.296 → 0.166 — bare가 문두를 통째로 버리던 것을 래퍼의
+   VAD/롱폼이 회복. **bare NeMo `transcribe()`가 ReazonSpeech를 과소평가했다는
+   §1의 지적이 정량으로 확인됨.**
+2. **그래도 fair는 turbo/Qwen보다 여전히 유의미하게 나쁘다.** `fair − turbo`,
+   `fair − Qwen` 모두 4개 지표 CI가 0을 제외(CER +0.05~0.06). **"turbo 교체 근거
+   없음"은 유지.**
+3. **단, "5개 카테고리 전부 밀림"은 더 이상 아니다.** 공정 조건에서 fair는
+   `여행`(0.458 ≈ turbo 0.462), `일상,소통`(0.166 ≈ turbo 0.159),
+   `패션,뷰티`(0.212 < Qwen 0.230)에서 turbo/Qwen과 대등하다. 전체 격차는
+   **`게임` 카테고리에 집중**된다(fair CER 0.737, CI ±0.257 — BGM/효과음 위주로
+   발화가 거의 없는 클립에서 beam search가 반복 루프 환각: `ピンポンピンポン…`,
+   `キョキョキョ…`). `음식,요리`(0.349)도 turbo(0.253)보다 뒤짐.
+4. 종합: `report/01`의 "ReazonSpeech가 유의미하게 나쁘다"는 **부분은 셋업 편향,
+   부분은 실재**. 파편 붕괴가 격차의 절반가량을 설명하고(turbo와의 CER 격차
+   0.11 → 0.058), 나머지는 게임 카테고리 음악 구간 취약성 + 도메인 불일치(TV 방송
+   vs 잡담체 스트리머)로 추정.
+
+### `20260827_vad_stt_survey` 엔진 결정 (§0 순서 3)
+
+fair가 전체 4개 지표에서 turbo/Qwen보다 **유의미하게 뒤짐(§해석 2)** →
+엄격 기준 미달. **`20260827_vad_stt_survey` 엔진 목록은 turbo / Qwen3-ASR-1.7B
+2개 유지**하고 그대로 진행한다.
+
+단서(별도 후속 여지, 이번 착수는 막지 않음): 게임 외 카테고리에서 대등하고,
+실제 파이프라인의 VAD + RMS 게이트 + HallucinationGate가 게임 반복 루프를 걸러낼
+여지가 있으며, 스트리밍 네이티브 + 토큰 신뢰도 노출 이점(`docs/planning/TUNING_PLAN.md`
+TS-1e/TS-2e/TC-2c)이 있으므로 — `20260827` 1차 결과 후 "reazonspeech를 파이프라인
+3번째 엔진으로" 재검토할 가치는 있다.
+
+---
+
 ## 3. `src/vad_trim.py` 명세 (§2.3 보류분 — 지금은 불필요)
 
 ReazonSpeech-only 재평가엔 안 쓴다(공식 래퍼가 자체 VAD). 나중에 5개 전면 재비교를
@@ -151,16 +225,18 @@ ReazonSpeech-only 재평가엔 안 쓴다(공식 래퍼가 자체 VAD). 나중�
 
 ---
 
-## 4. 재실행이 바꿀 것 / 안 바꿀 것 (예상)
+## 4. 재실행 전 예상 vs 실측
 
-- **바뀔 가능성 큼**: ReazonSpeech CER — 파편 붕괴가 공식 래퍼로 상당 부분 해소되면 turbo와의
-  격차가 좁혀지거나 CI가 겹칠 수 있음. granite의 반복 루프 이상치 제거 → CI 폭 축소.
-- **안 바뀔 가능성 큼**: **"turbo 교체 근거 없음"** 최종 판단. turbo는 속도 1위가 확고하고,
-  품질도 Qwen 계열과 통계적 동급. 공정 재실행에서 다른 후보가 turbo를 **유의미하게 앞서지**
-  않는 한 결론은 그대로다.
-- **여전히 미해결**: TV 방송 코퍼스(ReazonSpeech) vs 잡담체 스트리머 발화라는 도메인 차이는
-  공정 재실행으로도 안 없어진다. "ReazonSpeech가 이 도메인에 맞다"는 사전 기대의 검증은
-  별개 문제.
+실측 결과·해석은 **§2.5**. 재실행 전 예상은 대체로 맞았다:
+
+- **예상: "래퍼로 파편 붕괴 해소, turbo와 격차 좁혀짐"** → **맞음.** `fair − bare`
+  4개 지표 CI 전부 0 제외, CER 격차 0.11 → 0.058.
+- **예상: "turbo 교체 근거 없음은 유지"** → **맞음.** `fair − turbo` 4개 지표 CI
+  전부 0 제외(fair가 유의미하게 나쁨).
+- **예상 밖(부분)**: "5개 카테고리 전부 밀림"이 아니게 됨 — 공정 조건에서 게임 외
+  3개 카테고리는 turbo/Qwen과 대등. 격차가 게임 카테고리(BGM 반복 루프)에 집중.
+- **여전히 미해결**: TV 방송 코퍼스 vs 잡담체 스트리머 도메인 차이는 재실행으로도
+  안 없어진다.
 
 ### 한계 — RTF는 CPU 측정 (2026-08-28)
 
@@ -178,21 +254,16 @@ CPU/GPU 차이는 부동소수점 축약 순서 수준.
 
 ---
 
-## 5. 후속 연결 — `20260827_vad_stt_survey`와의 순서
+## 5. 후속 연결 — `20260827_vad_stt_survey`
 
-**`20260827_vad_stt_survey`는 이 ReazonSpeech 재평가 결과를 본 뒤 착수한다** (사용자
-결정, §0). 흐름:
+**결정 완료(§2.5)**: fair가 공정 조건에서도 turbo/Qwen보다 4개 지표 전부 유의미하게
+뒤짐 → `20260827_vad_stt_survey` 엔진 목록은 **turbo / Qwen3-ASR-1.7B 2개 유지**.
+`20260827`은 이제 착수 가능(엔진 목록 변경 없음).
 
-1. 이 문서 §2 — ReazonSpeech 공정 재전사 + 채점 + 결과 기록.
-2. 결과 판단:
-   - ReazonSpeech가 공정 조건에서 turbo/Qwen과 CI가 겹치면 → `20260827_vad_stt_survey`의
-     파이프라인 통과 엔진 목록에 **reazonspeech를 3번째로 추가**. `20260827` 쪽
-     `DESIGN.md` §4 / `RUNBOOK.md` / `src/run_pipeline.py`의 엔진 목록·`qualitative_eval.py`의
-     `RUNS` 갱신 필요.
-   - 여전히 밀리면 → 엔진 목록은 turbo/Qwen 2개 그대로, `20260827` 그대로 진행.
-3. 엔진 목록 확정 후 `20260827_vad_stt_survey` 진행.
-
-`20260827_vad_stt_survey`가 **실제 파이프라인(앞단 VAD 있음)** 을 태우므로, 거기에
-ReazonSpeech를 넣으면 이 문서가 지적한 파편 붕괴 조건 없이 — 스트리밍 네이티브 +
-토큰 신뢰도 노출 이점(`docs/planning/TUNING_PLAN.md` TS-1e/TS-2e/TC-2c)까지 —
-평가된다.
+**별도 후속 여지 (막지 않음)**: `20260827_vad_stt_survey`는 **실제 파이프라인
+(앞단 VAD + RMS 게이트 + HallucinationGate)** 을 태운다. 이번 실패의 주원인인 게임
+카테고리 반복 루프는 그 게이트들이 걸러낼 여지가 있고, 게임 외 카테고리는 이미 대등하며,
+스트리밍 네이티브 + 토큰 신뢰도 노출 이점(`docs/planning/TUNING_PLAN.md` TS-1e/TS-2e/
+TC-2c)이 있다. → `20260827` 1차 결과가 나온 뒤 "reazonspeech를 파이프라인 3번째 엔진으로"
+재검토할 가치가 있다. 그때 `20260827`의 `DESIGN.md` §4 / `RUNBOOK.md` / `src/run_pipeline.py`
+엔진 목록 + `qualitative_eval.py`의 `RUNS`를 갱신한다.

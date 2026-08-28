@@ -47,7 +47,7 @@ python research/topic/20260827_vad_stt_survey/src/qualitative_eval.py agg
 
 | 항목 | 확인/조치 |
 |---|---|
-| **선행** | `research/topic/20260826_stt_model_survey_gpu_full/report/03-fairness-review.md` §2의 ReazonSpeech 공정 재평가가 끝났고 결과를 봤는가. 그 결과로 이 실험의 엔진 목록(§S2·DESIGN §4)이 2개(turbo/qwen)인지 3개(+reazonspeech)인지 **확정**한 뒤 시작. |
+| **선행** | 해소됨 (2026-08-28) — `20260826_.../report/03-fairness-review.md` §2.5 ReazonSpeech 공정 재평가 완료, fair가 turbo/Qwen보다 유의미하게 뒤져 **엔진 목록 = turbo / qwen3-asr-1.7b 2개로 확정**. 그대로 진행. |
 | 리포 | 이 리포지토리 루트. 브랜치 **`vanilla`** (`git branch --show-current`). 프로덕션 config(`backend/config.py`) 기본값 그대로 사용 — 건드리지 말 것. |
 | GPU | NVIDIA + CUDA. `python -c "import torch; print(torch.cuda.is_available())"` → `True`. |
 | STT 환경 | 프로젝트 STT용 conda env 활성화. `docs/log/HANDOFF.md` / `CLAUDE.md` 참고 (관례상 `live-translator`, torch cu121). `backend/requirements.txt` 설치돼 있어야 함. |

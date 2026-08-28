@@ -82,10 +82,11 @@
 → 각각 150클립 통과 = **A_qwen, A_turbo, 총 300건.**
 두 엔진의 파이프라인 내 환각 필터가 다르다(비대칭)는 점은 결과 해석에 명시.
 
-**추가 검토 (2026-08-28)**: `20260826_stt_model_survey_gpu_full/report/03-fairness-review.md`의
-ReazonSpeech 공정 재평가 결과가 좋으면 **`reazonspeech`를 3번째 엔진으로 추가** — 그 경우
-`src/run_pipeline.py`의 `build_engine`, `qualitative_eval.py`의 `RUNS`, `score_*` / `analyze_stats`의
-run 목록, RUNBOOK 명령을 모두 갱신하고 총 450건이 된다. 이 실험 착수 전에 확정할 것.
+**추가 검토 (2026-08-28, 해소)**: `20260826_stt_model_survey_gpu_full/report/03-fairness-review.md`
+§2.5 ReazonSpeech 공정 재평가 완료 — 공식 래퍼로도 turbo/Qwen보다 4개 지표 전부 유의미하게
+뒤져 **엔진 목록은 위 2개로 확정**. (별도 후속 여지: `20260827` 1차 후 파이프라인 3번째
+엔진으로 재검토 시 `src/run_pipeline.py`의 `build_engine`, `qualitative_eval.py`의 `RUNS`,
+`score_*`/`analyze_stats` run 목록, RUNBOOK 명령을 갱신하고 총 450건이 된다.)
 
 ---
 

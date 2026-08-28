@@ -20,12 +20,13 @@ CPU 파일럿과 별개 토픽으로 분리한 이유: 디바이스(CPU→GPU)�
 `report/01-full-results.md` 참고 — 사전 기대와 달리 이번 데이터에서는 5개 카테고리
 전부에서 turbo보다 나빴다.
 
-**[2026-08-28 공정성 검토]** 이 ReazonSpeech 결과는 셋업 편향이 확인됨 — bare NeMo
-`transcribe()`(공식 추론 래퍼 아님, VAD/롱폼 처리 없음)로 돌려 노이즈 클립에서 파편
-붕괴. Qwen3-ASR greedy vs turbo beam=5, granite 반복 억제 없음도 함께. 감사 결과와
-공정 재실행 프로토콜은 [`report/03-fairness-review.md`](report/03-fairness-review.md).
-개별 순위 주장은 재실행 전까지 잠정. "turbo 교체 근거 없음" 최종 판단은 유지 가능성 높음.
-방법론 규칙은 `docs/eval/EVAL.md` §6에 반영.
+**[2026-08-28 공정성 검토 + 재실행 완료]** 이 ReazonSpeech 결과는 셋업 편향이 확인됨 —
+bare NeMo `transcribe()`(공식 래퍼 아님, VAD/롱폼 없음)로 돌려 파편 붕괴. 공식
+`reazonspeech` 래퍼로 재실행 결과([`report/03-fairness-review.md`](report/03-fairness-review.md)
+§2.5): 래퍼가 파편 붕괴를 유의미하게 해소(fair−bare CER −0.052)했으나 **fair도 turbo/Qwen
+보다 4개 지표 전부 유의미하게 뒤짐**(fair−turbo CER +0.058). "5개 카테고리 전부 밀림"은
+아니게 됨(게임 외 3개는 대등, 격차는 게임 BGM 구간에 집중). **"turbo 교체 근거 없음"
+유지.** Qwen/granite parity 재실행은 결론 불변이라 보류. 방법론 규칙은 `docs/eval/EVAL.md` §6.
 
 ## 방법
 
@@ -95,7 +96,14 @@ CI가 겹치지 않는 유일한 후보 — turbo보다 통계적으로 유의�
 - `report/02-qualitative-eval.md` — 사람 수동 정성 채점(50세그먼트, 자연스러움/
   의미 충실도 1~5), 카테고리별 표, 실패 방식 분석.
 - `report/03-fairness-review.md` — (2026-08-28) 후보별 공정성 감사(추론 경로/디코딩
-  패리티/강건성 처리) + 공정 재실행 프로토콜. ReazonSpeech 파편 붕괴 증거.
+  패리티/강건성 처리) + ReazonSpeech CPU 공정 재실행 결과(§2.5): fair vs bare/turbo/Qwen
+  페어드 CI, 카테고리별, 그림.
+- `src/transcribe_reazonspeech_fair.py` — ReazonSpeech 공정 재전사(공식
+  `reazonspeech.nemo.asr` 래퍼, VAD+롱폼, CPU. `reazonspeech-cpu` conda env).
+- `src/analyze_fair.py` — fair vs bare/turbo/Qwen 페어드 부트스트랩 CI + 페어드 차
+  + `fig/fair_reazonspeech*.png`.
+- `out/reazonspeech-nemo-v2_fair/` — 공정 재전사·채점 결과. `out/fair_summary.json` — CI.
+- `fig/fair_reazonspeech.png`, `fig/fair_reazonspeech_category_cer.png`.
 - `src/qualitative_eval.py` — 정성 표본 추출/집계/자체검증.
 - `out/qualitative_sample.txt`, `out/qualitative_scores.json` — 정성 대조표 + 점수.
 - `src/common.py` — 데이터셋 로더(전체 150쌍 고정) + 정규화.

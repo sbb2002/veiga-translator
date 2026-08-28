@@ -1,10 +1,11 @@
 > 확정된 연구설계는 [`DESIGN.md`](DESIGN.md) 참고 (2026-08-27 인터뷰로 확정).
 > 실제 실행·평가 절차(다른 세션용 매뉴얼)는 [`RUNBOOK.md`](RUNBOOK.md). 아래는 초안 메모.
 >
-> **선행 조건 (2026-08-28)**: 착수 전에 `research/topic/20260826_stt_model_survey_gpu_full/report/03-fairness-review.md`
-> §2의 **ReazonSpeech 공정 재평가**를 끝내고 결과를 본다. 공정 조건에서 ReazonSpeech가
-> 상위권(turbo/Qwen)과 CI가 겹치면, 이 실험의 파이프라인 엔진 목록(현재 `qwen3-asr-1.7b`,
-> `turbo`)에 `reazonspeech`를 3번째로 추가할지 먼저 정한 뒤 시작한다. 밀리면 2개 그대로 진행.
+> **선행 조건 해소 (2026-08-28)**: `20260826_stt_model_survey_gpu_full/report/03-fairness-review.md`
+> §2.5의 **ReazonSpeech 공정 재평가 완료** — fair(공식 래퍼)가 bare보다 개선됐으나
+> turbo/Qwen보다 4개 지표 전부 유의미하게 뒤짐. → **엔진 목록은 `qwen3-asr-1.7b`, `turbo`
+> 2개로 확정**, 그대로 착수한다. (게임 외 카테고리는 대등 → `20260827` 1차 후 파이프라인
+> 3번째 엔진 재검토 여지는 있음, 착수는 막지 않음.)
 
 # 배경
 지난 실험인 전사모델 평가실험(research\topic\20260826_stt_model_survey_gpu_full), 번역 평가실험(research\topic\20260826_translation_model_survey)에서 바닐라 상태의 STT, 번역작업 모델의 성능을 정량적, 정성적으로 평가하였다. 그런데 해당 전사모델 평가실험에서는 각각 오디오 클립에 대해 전구간을 모두 청취한 후 그것을 전사하는 방식이었다. 따라서 실제 환경과 비슷하게 전사되었을 때와 기존 전사 평가실험 결과와 비교대조하여 어떤 차이가 있는지 파악하고 1차 목표로 VAD-STT 평가결과의 품질이 단순 STT 평가결과의 품질에 도달하도록 하고자 한다.

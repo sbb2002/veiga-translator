@@ -61,6 +61,15 @@ FIG_ROOT = TOPIC_ROOT / "fig"
 N_BOOT = 2000
 SEED = 20260827
 
+# 3 engines through the pipeline (report/03-fairness-review.md §5): reazonspeech
+# added 2026-08-28. B_reazonspeech = the fair GPU whole-clip re-run.
+ENGINE_RUNS = [
+    ("qwen3-asr-1.7b", "A_qwen3-asr-1.7b", "B_qwen3-asr-1.7b"),
+    ("turbo", "A_turbo", "B_turbo"),
+    ("reazonspeech", "A_reazonspeech", "B_reazonspeech"),
+]
+RUNS_ALL = [r for _e, a, b in ENGINE_RUNS for r in (a, b)]
+
 
 def load_per_segment(run: str) -> list[dict]:
     """Load quant_per_segment.jsonl for a run. Return list of dicts with seg_id, ref_norm, hyp_norm, metrics, stt_elapsed_s."""
@@ -549,7 +558,7 @@ def run_check() -> None:
         out_path.mkdir()
 
         # Create fake runs
-        runs = ["A_qwen3-asr-1.7b", "B_qwen3-asr-1.7b", "A_turbo", "B_turbo"]
+        runs = RUNS_ALL
         for run in runs:
             run_dir = out_path / run
             run_dir.mkdir()
@@ -600,10 +609,7 @@ def run_check() -> None:
             rtf_data = {}
             cer_by_cat_per_engine = {}
 
-            for engine, run_a, run_b in [
-                ("qwen3-asr-1.7b", "A_qwen3-asr-1.7b", "B_qwen3-asr-1.7b"),
-                ("turbo", "A_turbo", "B_turbo"),
-            ]:
+            for engine, run_a, run_b in ENGINE_RUNS:
                 rows_a, rows_b, embed_a, embed_b = join_runs(run_a, run_b)
                 has_embed = embed_a is not None and embed_b is not None
                 stats = bootstrap_paired(rows_a, rows_b, embed_a, embed_b, has_embed)
@@ -667,10 +673,7 @@ def main() -> None:
     rtf_data = {}
     cer_by_cat_per_engine = {}
 
-    for engine, run_a, run_b in [
-        ("qwen3-asr-1.7b", "A_qwen3-asr-1.7b", "B_qwen3-asr-1.7b"),
-        ("turbo", "A_turbo", "B_turbo"),
-    ]:
+    for engine, run_a, run_b in ENGINE_RUNS:
         rows_a, rows_b, embed_a, embed_b = join_runs(run_a, run_b)
         has_embed = embed_a is not None and embed_b is not None
         stats = bootstrap_paired(rows_a, rows_b, embed_a, embed_b, has_embed)
@@ -689,7 +692,7 @@ def main() -> None:
 
     # Generate figures
     plot_gap_quality(stats_by_engine)
-    all_rtf = {run: load_summary(run)["rtf"] for run in ["A_qwen3-asr-1.7b", "B_qwen3-asr-1.7b", "A_turbo", "B_turbo"]}
+    all_rtf = {run: load_summary(run)["rtf"] for run in RUNS_ALL}
     plot_rtf(all_rtf)
     plot_cer_by_category(cer_by_cat_per_engine)
 

@@ -9,34 +9,47 @@
 ## 0. 한눈에 (전체 순서)
 
 ```bash
-# 리포 루트, 브랜치 vanilla, STT용 conda env 활성화(아래 §1) 전제
+# 리포 루트, 브랜치 vanilla. 엔진별 conda env 다름(§1):
+#   turbo / qwen3-asr-1.7b -> live-translator 계열 env
+#   reazonspeech           -> reazonspeech env (nemo_toolkit + reazonspeech)
+T=research/topic/20260827_vad_stt_survey
+S=research/topic/20260826_stt_model_survey_gpu_full
 
-# S1. 가상 클럭 검증 (PASS해야 나머지 신뢰 가능)
-python research/topic/20260827_vad_stt_survey/src/run_pipeline.py --compare-clocks --limit 10
+# S0. B_reazonspeech = GPU 통청취 전량 (reazonspeech env). 커밋된 CPU _fair 는 안 건드림.
+python $S/src/transcribe_reazonspeech_fair.py --device cuda --out-suffix _gpu
+python $S/src/score_quantitative.py --method reazonspeech-nemo-v2_fair_gpu   # (선택, 참고용)
 
-# S2. 파이프라인 통과 → 전사결과 A (엔진 2개, 각 ~150클립)
-python research/topic/20260827_vad_stt_survey/src/run_pipeline.py --engine qwen3-asr-1.7b
-python research/topic/20260827_vad_stt_survey/src/run_pipeline.py --engine turbo
+# S1. 가상 클럭 검증 (PASS해야 나머지 신뢰 가능) — live-translator env
+python $T/src/run_pipeline.py --compare-clocks --limit 10
 
-# S3. 정량 채점 4회
-python research/topic/20260827_vad_stt_survey/src/score_quantitative.py --run A_qwen3-asr-1.7b --transcripts research/topic/20260827_vad_stt_survey/out/qwen3-asr-1.7b/pipeline_transcripts.jsonl
-python research/topic/20260827_vad_stt_survey/src/score_quantitative.py --run A_turbo          --transcripts research/topic/20260827_vad_stt_survey/out/turbo/pipeline_transcripts.jsonl
-python research/topic/20260827_vad_stt_survey/src/score_quantitative.py --run B_qwen3-asr-1.7b --transcripts research/topic/20260826_stt_model_survey_gpu_full/out/qwen3-asr-1.7b/transcripts.jsonl
-python research/topic/20260827_vad_stt_survey/src/score_quantitative.py --run B_turbo          --transcripts research/topic/20260826_stt_model_survey_gpu_full/out/turbo/transcripts.jsonl
+# S2. 파이프라인 통과 → 전사결과 A (엔진 3개, 각 ~150클립, 매칭 env에서 1엔진씩)
+python $T/src/run_pipeline.py --engine qwen3-asr-1.7b     # live-translator env
+python $T/src/run_pipeline.py --engine turbo              # live-translator env
+python $T/src/run_pipeline.py --engine reazonspeech       # reazonspeech env
 
-# S4. 임베딩 채점 4회 (S3와 같은 --run/--transcripts 조합)
-python research/topic/20260827_vad_stt_survey/src/score_embedding.py --run A_qwen3-asr-1.7b --transcripts research/topic/20260827_vad_stt_survey/out/qwen3-asr-1.7b/pipeline_transcripts.jsonl
-python research/topic/20260827_vad_stt_survey/src/score_embedding.py --run A_turbo          --transcripts research/topic/20260827_vad_stt_survey/out/turbo/pipeline_transcripts.jsonl
-python research/topic/20260827_vad_stt_survey/src/score_embedding.py --run B_qwen3-asr-1.7b --transcripts research/topic/20260826_stt_model_survey_gpu_full/out/qwen3-asr-1.7b/transcripts.jsonl
-python research/topic/20260827_vad_stt_survey/src/score_embedding.py --run B_turbo          --transcripts research/topic/20260826_stt_model_survey_gpu_full/out/turbo/transcripts.jsonl
+# S3. 정량 채점 6회
+python $T/src/score_quantitative.py --run A_qwen3-asr-1.7b --transcripts $T/out/qwen3-asr-1.7b/pipeline_transcripts.jsonl
+python $T/src/score_quantitative.py --run A_turbo          --transcripts $T/out/turbo/pipeline_transcripts.jsonl
+python $T/src/score_quantitative.py --run A_reazonspeech   --transcripts $T/out/reazonspeech/pipeline_transcripts.jsonl
+python $T/src/score_quantitative.py --run B_qwen3-asr-1.7b --transcripts $S/out/qwen3-asr-1.7b/transcripts.jsonl
+python $T/src/score_quantitative.py --run B_turbo          --transcripts $S/out/turbo/transcripts.jsonl
+python $T/src/score_quantitative.py --run B_reazonspeech   --transcripts $S/out/reazonspeech-nemo-v2_fair_gpu/transcripts.jsonl
 
-# S5. 통계 + 그림
-python research/topic/20260827_vad_stt_survey/src/analyze_stats.py
+# S4. 임베딩 채점 6회 (S3와 같은 --run/--transcripts 조합)
+python $T/src/score_embedding.py --run A_qwen3-asr-1.7b --transcripts $T/out/qwen3-asr-1.7b/pipeline_transcripts.jsonl
+python $T/src/score_embedding.py --run A_turbo          --transcripts $T/out/turbo/pipeline_transcripts.jsonl
+python $T/src/score_embedding.py --run A_reazonspeech   --transcripts $T/out/reazonspeech/pipeline_transcripts.jsonl
+python $T/src/score_embedding.py --run B_qwen3-asr-1.7b --transcripts $S/out/qwen3-asr-1.7b/transcripts.jsonl
+python $T/src/score_embedding.py --run B_turbo          --transcripts $S/out/turbo/transcripts.jsonl
+python $T/src/score_embedding.py --run B_reazonspeech   --transcripts $S/out/reazonspeech-nemo-v2_fair_gpu/transcripts.jsonl
 
-# S6. 정성 채점
-python research/topic/20260827_vad_stt_survey/src/qualitative_eval.py sample
+# S5. 통계 + 그림 (3엔진, RUNS_ALL/ENGINE_RUNS 자동)
+python $T/src/analyze_stats.py
+
+# S6. 정성 채점 (6-run 대조표)
+python $T/src/qualitative_eval.py sample
 #   → out/qualitative_sample.txt 를 읽고 out/qualitative_scores.json 을 손으로 채운다 (§6)
-python research/topic/20260827_vad_stt_survey/src/qualitative_eval.py agg
+python $T/src/qualitative_eval.py agg
 
 # S7. 보고서 작성 (§7)
 ```
@@ -47,7 +60,7 @@ python research/topic/20260827_vad_stt_survey/src/qualitative_eval.py agg
 
 | 항목 | 확인/조치 |
 |---|---|
-| **선행** | 해소됨 (2026-08-28) — `20260826_.../report/03-fairness-review.md` §2.5 ReazonSpeech 공정 재평가 완료, fair가 turbo/Qwen보다 유의미하게 뒤져 **엔진 목록 = turbo / qwen3-asr-1.7b 2개로 확정**. 그대로 진행. |
+| **선행** | 엔진 확정 (2026-08-28) — `20260826_.../report/03-fairness-review.md` §2.5: ReazonSpeech 정성(의미 충실도)이 turbo보다 유의미하게 높아 교체 후보 승격. **파이프라인 엔진 = turbo / qwen3-asr-1.7b / reazonspeech 3개**. `reazonspeech`는 전용 conda env(nemo_toolkit + reazonspeech) 필요 — 1엔진/1실행, 매칭 env에서. B_reazonspeech는 S0에서 GPU 통청취로 생성. |
 | 리포 | 이 리포지토리 루트. 브랜치 **`vanilla`** (`git branch --show-current`). 프로덕션 config(`backend/config.py`) 기본값 그대로 사용 — 건드리지 말 것. |
 | GPU | NVIDIA + CUDA. `python -c "import torch; print(torch.cuda.is_available())"` → `True`. |
 | STT 환경 | 프로젝트 STT용 conda env 활성화. `docs/log/HANDOFF.md` / `CLAUDE.md` 참고 (관례상 `live-translator`, torch cu121). `backend/requirements.txt` 설치돼 있어야 함. |
@@ -79,6 +92,7 @@ for f in common virtual_clock run_pipeline score_quantitative score_embedding an
 done
 ```
 전부 `ok` 여야 한다 (`qualitative_eval`은 전사 파일 생기기 전엔 "ok (… skipping …)").
+`reazonspeech_engine.py`는 `--check`가 없다(GPU env 전용 어댑터, S2에서 검증됨).
 
 ---
 
@@ -106,8 +120,9 @@ research/topic/20260827_vad_stt_survey/
   fig/                   (S5가 생성) gap_quality.png, rtf.png, cer_by_category.png
   report/                (직접 작성) 01-gap-results.md, 02-qualitative-eval.md
 
-<engine> ∈ {qwen3-asr-1.7b, turbo}
-<run>    ∈ {A_qwen3-asr-1.7b, B_qwen3-asr-1.7b, A_turbo, B_turbo}
+<engine> ∈ {qwen3-asr-1.7b, turbo, reazonspeech}
+<run>    ∈ {A_,B_}×{qwen3-asr-1.7b, turbo, reazonspeech} (6개)
+B_reazonspeech 통청취 원천 = 20260826_.../out/reazonspeech-nemo-v2_fair_gpu/
 ```
 
 ---
@@ -121,7 +136,7 @@ research/topic/20260827_vad_stt_survey/
 
 - **합격**: `pass: true` (`max_cer <= 0.01`). → S2로.
 - **불합격**: 가상 클럭이 파이프라인 타이밍을 왜곡한다는 뜻. 이후 전체 실행을
-  `--realtime`으로 돌리는 것을 검토(150클립 × 2엔진 = 실제 오디오 길이 총합만큼
+  `--realtime`으로 돌리는 것을 검토(150클립 × 3엔진 = 실제 오디오 길이 총합만큼
   소요, 대략 30–60분/엔진). 원인·수치를 보고서 한계 절에 기록.
 - 소요: ~10클립 × (가상 즉시 + 실시간 클립길이) ≈ 수 분.
 
@@ -141,10 +156,13 @@ research/topic/20260827_vad_stt_survey/
   grace_expired, silence_complete, strong_boundary}`
 - **점검**: 줄 수 == 150. `n_finals == 0`인 클립 수를 세어 둔다(전부 RMS/환각 게이트
   드롭 → 빈 A). `finalize_reason_counts` 합이 0이 아닌지(로깅이 잡히는지) 확인.
-- 소요: 엔진별로 다름. qwen3-asr가 turbo보다 느림(RTF ~0.1 vs ~0.03). partial
-  재전사가 클립당 여러 번 일어나므로 서베이보다 총 STT 시간이 많다.
+- 소요: turbo가 가장 빠르고(RTF ~0.03) qwen3-asr(~0.1)·reazonspeech가 느리다.
+  partial 재전사가 클립당 여러 번이라 서베이보다 총 STT 시간이 많다.
+- `reazonspeech`는 `reazonspeech` env에서 실행 — `run_pipeline.py`가 `backend.*`도
+  import하므로 그 env에 numpy/soundfile/scipy/torch + silero-vad(torch.hub 1회)
+  필요. `build_engine`이 `src/reazonspeech_engine.py`(공식 래퍼 어댑터)를 쓴다.
 
-### S3. 정량 채점 — `score_quantitative.py --run <run> --transcripts <path>` ×4
+### S3. 정량 채점 — `score_quantitative.py --run <run> --transcripts <path>` ×6
 
 `normalize_ja`(NFKC + 구두점/공백 제거) 후 CER·chrF++(word_order=2)·BLEU-char·
 ROUGE-L F1. 20260826 서베이와 **동일 지표·동일 정규화**.
@@ -157,7 +175,7 @@ ROUGE-L F1. 20260826 서베이와 **동일 지표·동일 정규화**.
   정규화나 입력 경로 문제.
 - 소요: 분 단위.
 
-### S4. 임베딩 채점 — `score_embedding.py --run <run> --transcripts <path>` ×4
+### S4. 임베딩 채점 — `score_embedding.py --run <run> --transcripts <path>` ×6
 
 `multilingual-e5-large`로 `hyp`(A 또는 B)와 `ja_ref`(C)의 코사인 유사도.
 양쪽에 `"query: "` 프리픽스(대칭). 빈 `hyp` → `cos_sim = 0.0`.
@@ -315,7 +333,7 @@ stdout 마크다운:
    (S1이 PASS면 현재 조건에선 동등 가정 가능).
 3. A−B 디코딩 파라미터 교란요인: B는 통청취 1회 전사, A의 final은 beam=5.
    완전 동일하진 않을 수 있음 → 갭의 일부로 간주하고 언급.
-4. turbo는 no_speech_prob/avg_logprob 환각 필터가 활성, qwen3-asr는 inert (비대칭).
+4. turbo는 no_speech_prob/avg_logprob 환각 필터가 활성, qwen3-asr / reazonspeech는 inert (비대칭 3-way).
 5. Claude 단독 정성 채점. 1~5는 순서형이라 t-검정 대신 Wilcoxon.
 
 ---
@@ -341,7 +359,7 @@ stdout 마크다운:
 | 단계 | 대략 |
 |---|---|
 | S1 클럭 검증 (10클립) | 수 분 |
-| S2 파이프라인 (엔진 2개, 150클립) | turbo 빠름, qwen3-asr 느림. 가상 클럭이라 벽시계 대기는 없고 STT 연산 시간이 지배적. 수십 분 규모. |
+| S2 파이프라인 (엔진 3개, 150클립) | turbo 빠름, qwen3-asr / reazonspeech 느림. 가상 클럭이라 벽시계 대기는 없고 STT 연산 시간이 지배적. 엔진당 수십 분. |
 | S3 정량 (4 run) | 분 단위 |
 | S4 임베딩 (4 run) | 분 단위 (+ 모델 최초 다운로드) |
 | S5 통계 | 1–3분 (bootstrap 2000 × 2엔진 × corpus 재계산) |

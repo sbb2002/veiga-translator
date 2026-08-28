@@ -12,8 +12,9 @@
 > turbo/Qwen과 대등. **정성(50세그먼트)은 반대로 fair가 의미 충실도에서 turbo보다
 > 유의미하게 높고 Qwen과 동급**(CER이 게임 루프·표기 차이를 크게 벌하는 반면 사람은
 > 의미 전달·문두 회복을 크게 침). **"turbo 교체 근거 없음" 결론은 유지**(정량 기준).
-> ReazonSpeech를 `20260827_vad_stt_survey` 파이프라인 3번째 엔진으로 재검토하는 건
-> 우선 후속(`report/03` §5). Qwen/granite parity 재실행은 결론 불변이라 보류.
+> 정성 결과로 **ReazonSpeech fair를 교체 후보로 승격**(사용자 2026-08-28) — `20260827_vad_stt_survey`는
+> turbo/qwen3-asr-1.7b/reazonspeech **3개 엔진**을 모두 파이프라인에 태운다(`report/03` §5).
+> Qwen/granite parity 재실행은 결론 불변이라 보류.
 
 ## 배경
 

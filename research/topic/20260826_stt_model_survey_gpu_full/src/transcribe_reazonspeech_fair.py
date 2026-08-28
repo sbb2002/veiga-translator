@@ -13,11 +13,15 @@ this fp32 deterministic inference; only speed differs. stt_elapsed_s here is
 CPU-measured and NOT comparable to report/01's GPU RTF table.
 
 Output schema matches transcribe_turbo.py so score_quantitative.py works
-unmodified. Writes to out/reazonspeech-nemo-v2_fair/.
+unmodified. Writes to out/reazonspeech-nemo-v2_fair<suffix>/.
 
 Usage:
-  python transcribe_reazonspeech_fair.py [--device cpu] [--limit N]
-Run in the `reazonspeech-cpu` conda env (nemo_toolkit[asr] + reazonspeech).
+  python transcribe_reazonspeech_fair.py [--device cpu] [--limit N] [--out-suffix ""]
+  # committed run: --device cpu (default), out/reazonspeech-nemo-v2_fair/
+  # for a GPU-RTF-comparable B in 20260827_vad_stt_survey:
+  #   --device cuda --out-suffix _gpu  -> out/reazonspeech-nemo-v2_fair_gpu/
+Run in the `reazonspeech` / `reazonspeech-cpu` conda env (nemo_toolkit[asr] +
+reazonspeech).
 """
 
 from __future__ import annotations
@@ -64,7 +68,9 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--limit", type=int, default=None)
+    parser.add_argument("--out-suffix", default="", help='e.g. _gpu -> out/reazonspeech-nemo-v2_fair_gpu/')
     args = parser.parse_args()
+    out_dir = OUT_DIR.parent / (OUT_DIR.name + args.out_suffix)
 
     segments = load_dataset()
     if args.limit:
@@ -73,8 +79,8 @@ def main() -> None:
     print(f"loading reazon-research/reazonspeech-nemo-v2 via wrapper (device={args.device})...")
     model = _load(args.device)
 
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
-    out_path = OUT_DIR / "transcripts.jsonl"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / "transcripts.jsonl"
     t0 = time.monotonic()
     with out_path.open("w", encoding="utf-8") as out_f:
         for i, seg in enumerate(segments, 1):

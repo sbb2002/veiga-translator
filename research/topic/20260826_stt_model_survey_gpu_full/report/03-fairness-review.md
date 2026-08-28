@@ -237,15 +237,20 @@ CI `src/analyze_fair.py`(paired bootstrap 500회, SEED=42 — `report/01`과 동
 - **정량**: fair가 4개 지표 전부 turbo/Qwen보다 유의미하게 뒤짐(§해석 2).
 - **정성**: fair가 의미 충실도에서 turbo보다 유의미하게 높고 Qwen과 동급.
 
-두 결과가 갈린다. 엄격하게 정량 기준을 적용해 **`20260827_vad_stt_survey` 엔진
-목록은 turbo / Qwen3-ASR-1.7B 2개 유지**하고 그대로 진행한다 — 정성 우위가
-게임 카테고리를 뺀 것이고, 코퍼스 지표가 여전히 뒤지므로.
+**결정 (사용자, 2026-08-28): ReazonSpeech fair를 교체 후보로 승격.**
+정성에서 의미 충실도가 turbo보다 유의미하게 높은 점, 정량 격차가 사실상 게임
+카테고리 하나(BGM 반복 루프)에 몰려 있고 실제 파이프라인의 VAD + RMS 게이트 +
+HallucinationGate가 그걸 걸러낼 여지가 있는 점, 스트리밍 네이티브 + 토큰 신뢰도
+노출 이점(`docs/planning/TUNING_PLAN.md` TS-1e/TS-2e/TC-2c)을 근거로 —
+**`20260827_vad_stt_survey`는 turbo / qwen3-asr-1.7b / reazonspeech 3개 엔진을 모두
+파이프라인에 태운다** (프로덕션은 Qwen3-ASR지만 3개 비교). 총 450건.
 
-**단, 재검토 근거는 이번 정성 결과로 오히려 강해졌다.** 게임 외 카테고리에서
-정성적으로 대등~우위이고, 실제 파이프라인의 VAD + RMS 게이트 + HallucinationGate가
-게임 반복 루프를 걸러낼 여지가 있으며, 스트리밍 네이티브 + 토큰 신뢰도 노출
-이점(`docs/planning/TUNING_PLAN.md` TS-1e/TS-2e/TC-2c)이 있다. → `20260827` 1차
-결과 후 **"reazonspeech를 파이프라인 3번째 엔진으로"를 우선 후속으로** 검토.
+반영 완료: `20260827_vad_stt_survey`의 `DESIGN.md` §4 / `RUNBOOK.md` /
+`src/run_pipeline.py`(`build_engine` + 신규 `src/reazonspeech_engine.py`) /
+`src/analyze_stats.py`(`ENGINE_RUNS`) / `src/qualitative_eval.py`(`RUNS`,`ENGINES`).
+B_reazonspeech 통청취 비교군은
+`transcribe_reazonspeech_fair.py --device cuda --out-suffix _gpu`로 GPU에서 전량
+재생성(품질은 CPU `_fair`와 동일, RTF만 비교 가능).
 
 ---
 
@@ -300,16 +305,18 @@ CPU/GPU 차이는 부동소수점 축약 순서 수준.
 
 ## 5. 후속 연결 — `20260827_vad_stt_survey`
 
-**결정 완료(§2.5)**: 정량에서는 fair가 turbo/Qwen보다 4개 지표 전부 유의미하게 뒤지나,
-**정성(의미 충실도)에서는 fair가 turbo보다 유의미하게 높고 Qwen과 동급**. 두 결과가
-갈리므로 정량 기준을 적용해 `20260827_vad_stt_survey` 엔진 목록은
-**turbo / Qwen3-ASR-1.7B 2개 유지**. `20260827`은 이제 착수 가능(엔진 목록 변경 없음).
+**결정 완료(§2.5, 사용자 2026-08-28)**: 정량은 fair가 turbo/Qwen보다 뒤지나
+**정성(의미 충실도)에서 fair가 turbo보다 유의미하게 높고 Qwen과 동급** →
+**ReazonSpeech fair를 교체 후보로 승격**. `20260827_vad_stt_survey`는
+**turbo / qwen3-asr-1.7b / reazonspeech 3개 엔진을 모두 파이프라인에 태운다**(총 450건).
 
-**우선 후속 (막지 않음)**: `20260827_vad_stt_survey`는 **실제 파이프라인(앞단 VAD +
-RMS 게이트 + HallucinationGate)** 을 태운다. 정량 실패의 주원인인 게임 카테고리 반복
-루프는 그 게이트들이 걸러낼 여지가 있고, 게임 외 카테고리는 정량·정성 모두 대등~우위이며,
-스트리밍 네이티브 + 토큰 신뢰도 노출 이점(`docs/planning/TUNING_PLAN.md` TS-1e/TS-2e/
-TC-2c)이 있다. 정성 결과로 재검토 근거가 강해졌다 → `20260827` 1차 결과 후
-"reazonspeech를 파이프라인 3번째 엔진으로"를 **우선 후속**으로 검토. 그때 `20260827`의
-`DESIGN.md` §4 / `RUNBOOK.md` / `src/run_pipeline.py` 엔진 목록 + `qualitative_eval.py`의
-`RUNS`를 갱신한다.
+**반영 완료** (`20260827_vad_stt_survey/`):
+- `DESIGN.md` §4, `RUNBOOK.md` §0/§1/§2 — 3엔진, env 매핑, B_reazonspeech GPU 재생성
+- `src/run_pipeline.py` — `build_engine`에 `reazonspeech` 분기, `--engine` choices
+- `src/reazonspeech_engine.py` (신규) — 공식 `reazonspeech.nemo.asr` 래퍼 어댑터
+  (confidence 없음 = Qwen과 동일, `reazonspeech` conda env 전용)
+- `src/analyze_stats.py` — `ENGINE_RUNS` / `RUNS_ALL` 상수화
+- `src/qualitative_eval.py` — `RUNS` 6개, `ENGINES` 3개, `_B_SIBLING_DIR` 매핑
+
+B_reazonspeech 통청취 비교군: `transcribe_reazonspeech_fair.py --device cuda
+--out-suffix _gpu` (커밋된 CPU `_fair`는 그대로).

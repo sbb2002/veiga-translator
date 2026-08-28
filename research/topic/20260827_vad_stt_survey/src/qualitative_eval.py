@@ -3,11 +3,12 @@
 punctuation, hallucination flag), then this script aggregates with Wilcoxon
 + Holm correction + paired bootstrap.
 
-Four runs (2 engines × 2 paths: A=VAD pipeline, B=direct):
-  - A_qwen3-asr-1.7b: vad_std_survey/out/qwen3-asr-1.7b/pipeline_transcripts.jsonl
-  - B_qwen3-asr-1.7b: stt_model_survey_gpu_full/out/qwen3-asr-1.7b/transcripts.jsonl
-  - A_turbo: vad_std_survey/out/turbo/pipeline_transcripts.jsonl
-  - B_turbo: stt_model_survey_gpu_full/out/turbo/transcripts.jsonl
+Six runs (3 engines × 2 paths: A=VAD pipeline, B=whole-clip):
+  - A_<eng>: 20260827_vad_stt_survey/out/<eng>/pipeline_transcripts.jsonl
+  - B_<eng>: 20260826_stt_model_survey_gpu_full/out/<dir>/transcripts.jsonl
+  eng in {qwen3-asr-1.7b, turbo, reazonspeech}; for reazonspeech the B dir is
+  reazonspeech-nemo-v2_fair_gpu (see _B_SIBLING_DIR). reazonspeech added
+  2026-08-28 (report/03 §5).
 
 Three axes, each 1 (전혀 그렇지 않음) .. 5 (아주 그러함):
   - naturalness: 자연스러움·가독성 (표기, 읽기 흐름)
@@ -16,7 +17,7 @@ Three axes, each 1 (전혀 그렇지 않음) .. 5 (아주 그러함):
 
 Stats per DESIGN.md §8.3:
   - Wilcoxon signed-rank on naturalness + punctuation (A vs B, per engine)
-  - Holm correction (α=0.05, m=4: 2 axes × 2 engines)
+  - Holm correction (α=0.05, m = 2 axes × N engines)
   - Paired bootstrap 2000 on hallucination-rate difference
 
 Usage:
@@ -45,21 +46,34 @@ SIBLING_TOPIC = TOPIC_ROOT.parent / "20260826_stt_model_survey_gpu_full" / "out"
 sys.path.insert(0, str(TOPIC_ROOT / "src"))
 from common import CATEGORIES
 
-RUNS = ["A_qwen3-asr-1.7b", "B_qwen3-asr-1.7b", "A_turbo", "B_turbo"]
+RUNS = [
+    "A_qwen3-asr-1.7b", "B_qwen3-asr-1.7b",
+    "A_turbo", "B_turbo",
+    "A_reazonspeech", "B_reazonspeech",
+]
 SAMPLE_TXT = OUT_ROOT / "qualitative_sample.txt"
 SCORES_JSON = OUT_ROOT / "qualitative_scores.json"
 AXES = ["naturalness", "punctuation"]
 RATE_AXIS = "hallucination"
+ENGINES = ["qwen3-asr-1.7b", "turbo", "reazonspeech"]
+
+# B-side whole-clip transcripts live in the 20260826 survey's out/. The dir
+# name != the engine token for reazonspeech (its fair GPU whole-clip re-run,
+# report/03 §2.5 / RUNBOOK). A-side pipeline output uses the bare engine token.
+_B_SIBLING_DIR = {
+    "qwen3-asr-1.7b": "qwen3-asr-1.7b",
+    "turbo": "turbo",
+    "reazonspeech": "reazonspeech-nemo-v2_fair_gpu",
+}
 
 
 def _load_transcripts(run: str) -> dict[str, dict]:
     """Load transcripts.jsonl for a run (A or B variant)."""
+    engine = run.split("_", 1)[1]
     if run.startswith("A_"):
-        engine = run.split("_", 1)[1]
         path = OUT_ROOT / engine / "pipeline_transcripts.jsonl"
     else:  # B_
-        engine = run.split("_", 1)[1]
-        path = SIBLING_TOPIC / engine / "transcripts.jsonl"
+        path = SIBLING_TOPIC / _B_SIBLING_DIR[engine] / "transcripts.jsonl"
 
     rows = [json.loads(line) for line in path.open(encoding="utf-8")]
     return {r["seg_id"]: r for r in rows}
@@ -171,7 +185,7 @@ def cmd_agg() -> None:
 
     # Collect all p-values for Holm correction: (engine, axis, W, p_raw, a_mean, b_mean)
     comparisons = []
-    for engine in ["qwen3-asr-1.7b", "turbo"]:
+    for engine in ENGINES:
         for ax in AXES:
             a_run = f"A_{engine}"
             b_run = f"B_{engine}"
@@ -222,7 +236,7 @@ def cmd_agg() -> None:
     print("|---|---|---|---|")
 
     rng = np.random.default_rng(20260827)
-    for engine in ["qwen3-asr-1.7b", "turbo"]:
+    for engine in ENGINES:
         a_run = f"A_{engine}"
         b_run = f"B_{engine}"
 
@@ -301,7 +315,7 @@ def _check() -> None:
             }
 
     # Wilcoxon should run without error
-    for engine in ["qwen3-asr-1.7b", "turbo"]:
+    for engine in ENGINES:
         for ax in AXES:
             a_run = f"A_{engine}"
             b_run = f"B_{engine}"

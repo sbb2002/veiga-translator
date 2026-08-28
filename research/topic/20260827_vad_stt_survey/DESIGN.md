@@ -72,21 +72,25 @@
 
 ---
 
-## 4. 엔진 (둘 다 파이프라인 통과)
+## 4. 엔진 (3개 다 파이프라인 통과)
 
-| 엔진 | 클래스 | 비고 |
-|---|---|---|
-| Qwen3-ASR-1.7B-hf | `backend/stt/qwen3_asr_engine.py` | 현 프로덕션. per-segment confidence 없음 → logprob 필터 inert, HallucinationGate만 적용 |
-| large-v3-turbo | `backend/stt/faster_whisper_engine.py` (int8_float16) | 폴백. no_speech_prob / avg_logprob 필터 **활성** |
+2026-08-28 결정 — `20260826_.../report/03-fairness-review.md` §2.5의 ReazonSpeech
+공정 재평가에서 정성(의미 충실도)이 turbo보다 유의미하게 높고 Qwen과 동급으로 나와
+**교체 후보로 승격**. 프로덕션은 Qwen3-ASR지만 3개를 모두 파이프라인에 태워 비교한다.
 
-→ 각각 150클립 통과 = **A_qwen, A_turbo, 총 300건.**
-두 엔진의 파이프라인 내 환각 필터가 다르다(비대칭)는 점은 결과 해석에 명시.
+| 엔진 (토큰) | 클래스 | conda env | 비고 |
+|---|---|---|---|
+| `qwen3-asr-1.7b` | `backend/stt/qwen3_asr_engine.py` | live-translator | 현 프로덕션. per-segment confidence 없음 → logprob 필터 inert, HallucinationGate만 |
+| `turbo` | `backend/stt/faster_whisper_engine.py` (int8_float16) | live-translator | no_speech_prob / avg_logprob 필터 **활성** |
+| `reazonspeech` | `src/reazonspeech_engine.py` (공식 `reazonspeech.nemo.asr` 래퍼) | **reazonspeech** (nemo_toolkit + reazonspeech) | confidence 없음(Qwen과 동일). 엔진별로 env가 달라 **1엔진/1실행**, 매칭 env에서 |
 
-**추가 검토 (2026-08-28, 해소)**: `20260826_stt_model_survey_gpu_full/report/03-fairness-review.md`
-§2.5 ReazonSpeech 공정 재평가 완료 — 공식 래퍼로도 turbo/Qwen보다 4개 지표 전부 유의미하게
-뒤져 **엔진 목록은 위 2개로 확정**. (별도 후속 여지: `20260827` 1차 후 파이프라인 3번째
-엔진으로 재검토 시 `src/run_pipeline.py`의 `build_engine`, `qualitative_eval.py`의 `RUNS`,
-`score_*`/`analyze_stats` run 목록, RUNBOOK 명령을 갱신하고 총 450건이 된다.)
+→ 각각 150클립 통과 = **A_qwen / A_turbo / A_reazonspeech, 총 450건.**
+3개 엔진의 파이프라인 내 환각 필터가 서로 다르다(비대칭)는 점은 결과 해석에 명시.
+
+**B_reazonspeech**: 통청취 비교군은 `20260826_.../out/reazonspeech-nemo-v2_fair_gpu/`
+= `transcribe_reazonspeech_fair.py --device cuda --out-suffix _gpu`로 GPU에서 새로 뽑은
+전량(품질은 CPU `_fair`와 동일, RTF만 GPU라 비교 가능). 커밋된 CPU `_fair`(report/03
+§2.5 근거)는 그대로 둔다.
 
 ---
 

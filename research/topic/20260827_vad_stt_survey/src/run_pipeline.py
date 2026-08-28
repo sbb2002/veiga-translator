@@ -13,7 +13,7 @@ the repo root and its own src/ dir onto sys.path as a fallback):
 
 CLI:
   python research/topic/20260827_vad_stt_survey/src/run_pipeline.py \\
-    --engine {qwen3-asr-1.7b|turbo} [--limit N] [--realtime] \\
+    --engine {qwen3-asr-1.7b|turbo|reazonspeech} [--limit N] [--realtime] \\
     [--compare-clocks] [--check]
 
   --engine: STT model (required unless --check).
@@ -323,13 +323,17 @@ async def process_clip(
 
 
 def build_engine(name: str) -> Any:
-    """Construct the STT engine by name, lazy-importing backend.stt.
+    """Construct the STT engine by name, lazy-importing the concrete engine.
 
     Args:
-        name: 'qwen3-asr-1.7b' or 'turbo'
+        name: 'qwen3-asr-1.7b' | 'turbo' | 'reazonspeech'
 
     Returns:
         The engine instance (not wrapped in TimingSTT yet).
+
+    Note: 'reazonspeech' needs the `reazonspeech` conda env (nemo_toolkit +
+    reazonspeech); the other two need the live-translator env. Run one engine
+    per invocation in the matching env — see RUNBOOK §1.
     """
     if name == "qwen3-asr-1.7b":
         from backend.stt.qwen3_asr_engine import Qwen3ASREngine
@@ -339,6 +343,10 @@ def build_engine(name: str) -> Any:
         from backend.stt.faster_whisper_engine import FasterWhisperEngine
 
         return FasterWhisperEngine()
+    elif name == "reazonspeech":
+        from reazonspeech_engine import ReazonSpeechEngine
+
+        return ReazonSpeechEngine()
     else:
         raise ValueError(f"unknown engine: {name}")
 
@@ -594,9 +602,9 @@ async def async_main() -> None:
     parser.add_argument(
         "--engine",
         type=str,
-        choices=["qwen3-asr-1.7b", "turbo"],
+        choices=["qwen3-asr-1.7b", "turbo", "reazonspeech"],
         default=None,
-        help="STT engine to use",
+        help="STT engine to use (reazonspeech needs the reazonspeech conda env)",
     )
     parser.add_argument(
         "--limit", type=int, default=None, help="Process first N clips only"

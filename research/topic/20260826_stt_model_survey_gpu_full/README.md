@@ -26,9 +26,10 @@ bare NeMo `transcribe()`(공식 래퍼 아님, VAD/롱폼 없음)로 돌려 파�
 §2.5): 래퍼가 파편 붕괴를 유의미하게 해소(fair−bare CER −0.052).
 **정량**은 fair도 turbo/Qwen보다 4개 지표 전부 유의미하게 뒤짐(격차는 게임 BGM 구간에
 집중, 게임 외는 대등). **정성(50세그먼트)**은 반대로 fair가 의미 충실도에서 turbo보다
-유의미하게 높고 Qwen과 동급. **"turbo 교체 근거 없음" 유지**(정량 기준). ReazonSpeech를
-`20260827_vad_stt_survey` 파이프라인 3번째 엔진으로 재검토는 우선 후속. Qwen/granite
-parity 재실행은 결론 불변이라 보류. 방법론 규칙은 `docs/eval/EVAL.md` §6.
+유의미하게 높고 Qwen과 동급. **"turbo 교체 근거 없음" 유지**(정량 기준). 정성 결과로 **ReazonSpeech fair를 교체 후보로
+승격**(2026-08-28) → `20260827_vad_stt_survey`는 turbo/qwen3-asr-1.7b/reazonspeech **3개 엔진**을
+모두 태운다(`report/03` §5). Qwen/granite parity 재실행은 결론 불변이라 보류. 방법론 규칙은
+`docs/eval/EVAL.md` §6.
 
 ## 방법
 

@@ -28,9 +28,12 @@
 ### 실행 순서
 
 1. **ReazonSpeech 공정 재전사** — `reazonspeech` 공식 패키지 래퍼(VAD + 롱폼
-   세그먼테이션 내장). 산출은 `out/reazonspeech-nemo-v2_fair/`(기존 것 안 건드림).
+   세그먼테이션 내장). **CPU에서 실행**(사용자 결정 2026-08-28 — 품질은 디바이스
+   무관, 속도만 느림 ~20–60분). 산출은 `out/reazonspeech-nemo-v2_fair/`(기존 것 안
+   건드림).
 2. **채점 + 이 문서에 결과 추가** — `score_quantitative.py --method reazonspeech-nemo-v2_fair`,
-   기존 vs fair 나란히 표. turbo/Qwen 대비 CI 겹침 여부 재판정. `report/01`·`README`의
+   기존 vs fair 나란히 표. turbo/Qwen 대비 CI 겹침 여부 재판정(**품질 지표만** —
+   CER/chrF++/BLEU/ROUGE-L). RTF는 §4 한계대로 별도 처리. `report/01`·`README`의
    provisional 배너를 확정 문구로 교체(또는 여전히 밀리면 "공정 조건에서도 밀림"으로).
 3. **결과 검토 후 판단** — ReazonSpeech가 공정 조건에서 상위권과 겹치면,
    `20260827_vad_stt_survey`의 파이프라인 통과 엔진 목록에 **reazonspeech를 3번째로
@@ -87,29 +90,33 @@
 - `from reazonspeech.nemo.asr import load_model, transcribe, audio_from_path`
   (VAD + 롱폼 세그먼테이션 내장). 패키지 미설치 시 `pip install reazonspeech`
   (또는 GitHub `reazon-research/ReazonSpeech`의 `pkg/nemo-asr`).
+- **`load_model(device="cpu")`** — 이번 재평가는 CPU에서 돈다(§0). NeMo는 기본 fp32라
+  CPU/GPU 수치 차는 부동소수점 축약 순서 수준(집계 CER 노이즈 안).
 - 오디오는 `audio_from_path(seg.wav_path)`로 로드(패키지가 리샘플/모노 처리). bare
   NeMo `transcribe([path])` 호출부를 `transcribe(model, audio)`로 교체.
 - 래퍼가 자체 VAD를 하므로 별도 `vad_trim`은 **미적용**(이중 트림 방지).
+- `stt_elapsed_s`는 계속 기록하되 **CPU 측정임을 필드/파일명에 남긴다**(§4 한계).
 - 산출은 **기존 것을 덮지 않는다** — `out/reazonspeech-nemo-v2_fair/transcripts.jsonl`.
   스키마 동일(`score_quantitative.py` 무수정 재사용).
 - 원본 `transcribe_reazonspeech.py`는 남겨두고 `transcribe_reazonspeech_fair.py`
   신규 파일로, 또는 `--fair` 플래그 + `--out-suffix _fair`로. (구현 판단에 맡김.)
 
-### 2.2 실행 순서 (GPU 박스, `reazonspeech` conda env)
+### 2.2 실행 순서 (CPU, `reazonspeech` conda env)
 
 ```
-# 1. 공정 재전사
+# 1. 공정 재전사 (CPU, ~20-60분)
 python research/topic/20260826_stt_model_survey_gpu_full/src/transcribe_reazonspeech_fair.py
 #    -> out/reazonspeech-nemo-v2_fair/transcripts.jsonl
 
-# 2. 채점 (기존 스크립트 재사용)
+# 2. 채점 (기존 스크립트 재사용) — 품질 지표만 유효
 python .../src/score_quantitative.py --method reazonspeech-nemo-v2_fair
 
-# 3. turbo/Qwen과 CI 겹침 재판정
+# 3. turbo/Qwen과 CI 겹침 재판정 (CER/chrF++/BLEU/ROUGE-L)
 #    - 기존 out/turbo/ , out/qwen3-asr-1.7b/ 의 per-seg 결과와 페어드 부트스트랩
 #    - analyze_ci_and_plot.py 에 reazonspeech-nemo-v2_fair 추가하거나 소규모 스크립트
+#    - RTF 컬럼은 "CPU, report/01 GPU 수치와 비교 불가"로 표기 (§4)
 
-# 4. 이 문서(report/03)에 "fair vs 기존" 표 + 해석 추가.
+# 4. 이 문서(report/03)에 "fair vs 기존" 품질 표 + 해석 추가.
 #    report/01·README 의 provisional 배너를 결과에 맞게 확정 문구로 교체.
 ```
 
@@ -154,6 +161,20 @@ ReazonSpeech-only 재평가엔 안 쓴다(공식 래퍼가 자체 VAD). 나중�
 - **여전히 미해결**: TV 방송 코퍼스(ReazonSpeech) vs 잡담체 스트리머 발화라는 도메인 차이는
   공정 재실행으로도 안 없어진다. "ReazonSpeech가 이 도메인에 맞다"는 사전 기대의 검증은
   별개 문제.
+
+### 한계 — RTF는 CPU 측정 (2026-08-28)
+
+이번 ReazonSpeech 공정 재전사는 **CPU에서 실행**하므로 (사용자 결정), `stt_elapsed_s` /
+RTF는 `report/01`의 **GPU RTF 표(turbo 0.033, ReazonSpeech GPU 0.067 등)와 비교 불가**.
+품질 지표(CER/chrF++/BLEU/ROUGE-L)는 디바이스 무관하게 유효하다 — NeMo 기본 fp32,
+CPU/GPU 차이는 부동소수점 축약 순서 수준.
+
+- ReazonSpeech의 **GPU RTF는 `report/01`에 이미 있음**(0.067, bare NeMo). 공식 래퍼는
+  silero-VAD + 롱폼 세그먼테이션 오버헤드가 추가되지만 그 증분은 작을 것으로 예상
+  (silero는 경량). 정확한 GPU RTF는 ReazonSpeech가 품질에서 경쟁력이 확인돼
+  파이프라인 엔진 후보로 넘어갈 때 GPU 스팟체크로 확정한다.
+- `report/01`에서 5개 후보 전부 GPU RTF < 0.16 (실시간 처리 여유)임은 이미 확인됨 —
+  속도는 이번 재평가의 판단 대상이 아니다(품질/파편 붕괴가 대상).
 
 ---
 

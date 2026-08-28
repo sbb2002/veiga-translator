@@ -12,31 +12,31 @@
 # 리포 루트, 브랜치 vanilla, STT용 conda env 활성화(아래 §1) 전제
 
 # S1. 가상 클럭 검증 (PASS해야 나머지 신뢰 가능)
-python research/topic/20260827_vad_std_survey/src/run_pipeline.py --compare-clocks --limit 10
+python research/topic/20260827_vad_stt_survey/src/run_pipeline.py --compare-clocks --limit 10
 
 # S2. 파이프라인 통과 → 전사결과 A (엔진 2개, 각 ~150클립)
-python research/topic/20260827_vad_std_survey/src/run_pipeline.py --engine qwen3-asr-1.7b
-python research/topic/20260827_vad_std_survey/src/run_pipeline.py --engine turbo
+python research/topic/20260827_vad_stt_survey/src/run_pipeline.py --engine qwen3-asr-1.7b
+python research/topic/20260827_vad_stt_survey/src/run_pipeline.py --engine turbo
 
 # S3. 정량 채점 4회
-python research/topic/20260827_vad_std_survey/src/score_quantitative.py --run A_qwen3-asr-1.7b --transcripts research/topic/20260827_vad_std_survey/out/qwen3-asr-1.7b/pipeline_transcripts.jsonl
-python research/topic/20260827_vad_std_survey/src/score_quantitative.py --run A_turbo          --transcripts research/topic/20260827_vad_std_survey/out/turbo/pipeline_transcripts.jsonl
-python research/topic/20260827_vad_std_survey/src/score_quantitative.py --run B_qwen3-asr-1.7b --transcripts research/topic/20260826_stt_model_survey_gpu_full/out/qwen3-asr-1.7b/transcripts.jsonl
-python research/topic/20260827_vad_std_survey/src/score_quantitative.py --run B_turbo          --transcripts research/topic/20260826_stt_model_survey_gpu_full/out/turbo/transcripts.jsonl
+python research/topic/20260827_vad_stt_survey/src/score_quantitative.py --run A_qwen3-asr-1.7b --transcripts research/topic/20260827_vad_stt_survey/out/qwen3-asr-1.7b/pipeline_transcripts.jsonl
+python research/topic/20260827_vad_stt_survey/src/score_quantitative.py --run A_turbo          --transcripts research/topic/20260827_vad_stt_survey/out/turbo/pipeline_transcripts.jsonl
+python research/topic/20260827_vad_stt_survey/src/score_quantitative.py --run B_qwen3-asr-1.7b --transcripts research/topic/20260826_stt_model_survey_gpu_full/out/qwen3-asr-1.7b/transcripts.jsonl
+python research/topic/20260827_vad_stt_survey/src/score_quantitative.py --run B_turbo          --transcripts research/topic/20260826_stt_model_survey_gpu_full/out/turbo/transcripts.jsonl
 
 # S4. 임베딩 채점 4회 (S3와 같은 --run/--transcripts 조합)
-python research/topic/20260827_vad_std_survey/src/score_embedding.py --run A_qwen3-asr-1.7b --transcripts research/topic/20260827_vad_std_survey/out/qwen3-asr-1.7b/pipeline_transcripts.jsonl
-python research/topic/20260827_vad_std_survey/src/score_embedding.py --run A_turbo          --transcripts research/topic/20260827_vad_std_survey/out/turbo/pipeline_transcripts.jsonl
-python research/topic/20260827_vad_std_survey/src/score_embedding.py --run B_qwen3-asr-1.7b --transcripts research/topic/20260826_stt_model_survey_gpu_full/out/qwen3-asr-1.7b/transcripts.jsonl
-python research/topic/20260827_vad_std_survey/src/score_embedding.py --run B_turbo          --transcripts research/topic/20260826_stt_model_survey_gpu_full/out/turbo/transcripts.jsonl
+python research/topic/20260827_vad_stt_survey/src/score_embedding.py --run A_qwen3-asr-1.7b --transcripts research/topic/20260827_vad_stt_survey/out/qwen3-asr-1.7b/pipeline_transcripts.jsonl
+python research/topic/20260827_vad_stt_survey/src/score_embedding.py --run A_turbo          --transcripts research/topic/20260827_vad_stt_survey/out/turbo/pipeline_transcripts.jsonl
+python research/topic/20260827_vad_stt_survey/src/score_embedding.py --run B_qwen3-asr-1.7b --transcripts research/topic/20260826_stt_model_survey_gpu_full/out/qwen3-asr-1.7b/transcripts.jsonl
+python research/topic/20260827_vad_stt_survey/src/score_embedding.py --run B_turbo          --transcripts research/topic/20260826_stt_model_survey_gpu_full/out/turbo/transcripts.jsonl
 
 # S5. 통계 + 그림
-python research/topic/20260827_vad_std_survey/src/analyze_stats.py
+python research/topic/20260827_vad_stt_survey/src/analyze_stats.py
 
 # S6. 정성 채점
-python research/topic/20260827_vad_std_survey/src/qualitative_eval.py sample
+python research/topic/20260827_vad_stt_survey/src/qualitative_eval.py sample
 #   → out/qualitative_sample.txt 를 읽고 out/qualitative_scores.json 을 손으로 채운다 (§6)
-python research/topic/20260827_vad_std_survey/src/qualitative_eval.py agg
+python research/topic/20260827_vad_stt_survey/src/qualitative_eval.py agg
 
 # S7. 보고서 작성 (§7)
 ```
@@ -47,6 +47,7 @@ python research/topic/20260827_vad_std_survey/src/qualitative_eval.py agg
 
 | 항목 | 확인/조치 |
 |---|---|
+| **선행** | `research/topic/20260826_stt_model_survey_gpu_full/report/03-fairness-review.md` §2의 ReazonSpeech 공정 재평가가 끝났고 결과를 봤는가. 그 결과로 이 실험의 엔진 목록(§S2·DESIGN §4)이 2개(turbo/qwen)인지 3개(+reazonspeech)인지 **확정**한 뒤 시작. |
 | 리포 | 이 리포지토리 루트. 브랜치 **`vanilla`** (`git branch --show-current`). 프로덕션 config(`backend/config.py`) 기본값 그대로 사용 — 건드리지 말 것. |
 | GPU | NVIDIA + CUDA. `python -c "import torch; print(torch.cuda.is_available())"` → `True`. |
 | STT 환경 | 프로젝트 STT용 conda env 활성화. `docs/log/HANDOFF.md` / `CLAUDE.md` 참고 (관례상 `live-translator`, torch cu121). `backend/requirements.txt` 설치돼 있어야 함. |
@@ -58,7 +59,7 @@ python research/topic/20260827_vad_std_survey/src/qualitative_eval.py agg
 
 ```bash
 # 데이터셋 150쌍
-python research/topic/20260827_vad_std_survey/src/common.py
+python research/topic/20260827_vad_stt_survey/src/common.py
 #   → "loaded 150 segments, {... 30 each}" + "ok"
 
 # 비교 대상 B (20260826 서베이 산출물, git에 커밋돼 있음 — 150줄 × 2)
@@ -74,7 +75,7 @@ B 파일이 없으면 그 토픽의 전사 단계를 먼저 돌려야 한다
 
 ```bash
 for f in common virtual_clock run_pipeline score_quantitative score_embedding analyze_stats qualitative_eval; do
-  python research/topic/20260827_vad_std_survey/src/$f.py --check 2>&1 | tail -1
+  python research/topic/20260827_vad_stt_survey/src/$f.py --check 2>&1 | tail -1
 done
 ```
 전부 `ok` 여야 한다 (`qualitative_eval`은 전사 파일 생기기 전엔 "ok (… skipping …)").
@@ -84,7 +85,7 @@ done
 ## 2. 디렉터리 지도
 
 ```
-research/topic/20260827_vad_std_survey/
+research/topic/20260827_vad_stt_survey/
   DESIGN.md, README.md, RUNBOOK.md(이 파일)
   src/
     common.py            데이터셋 로더 + normalize_ja

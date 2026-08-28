@@ -38,6 +38,14 @@ USER_PROMPT = "<|audio|>can you transcribe the speech into a written format?"
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--limit", type=int, default=None)
+    # report/03-fairness-review.md: the original pass ran greedy with no
+    # repetition control, which is why seg 1373_5567... looped ("あ" x N,
+    # CER 5.087) and blew out the 일상,소통 CI. Defaults reproduce that pass
+    # exactly (committed out/granite-speech-4.1-2b/). For the fair re-run:
+    # --repetition-penalty 1.15 --no-repeat-ngram-size 3 --out-suffix _fair
+    parser.add_argument("--repetition-penalty", type=float, default=1.0)
+    parser.add_argument("--no-repeat-ngram-size", type=int, default=0)
+    parser.add_argument("--out-suffix", default="", help="e.g. _fair -> out/<model><suffix>/")
     args = parser.parse_args()
 
     segments = load_dataset()
@@ -53,8 +61,9 @@ def main() -> None:
     chat = [{"role": "user", "content": USER_PROMPT}]
     prompt = tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True)
 
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
-    out_path = OUT_DIR / "transcripts.jsonl"
+    out_dir = OUT_DIR.parent / (OUT_DIR.name + args.out_suffix)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / "transcripts.jsonl"
     t0 = time.monotonic()
     with out_path.open("w", encoding="utf-8") as out_f:
         for i, seg in enumerate(segments, 1):
@@ -67,8 +76,13 @@ def main() -> None:
 
             t_start = time.monotonic()
             model_inputs = processor(prompt, wav, device=DEVICE, return_tensors="pt").to(DEVICE)
+            gen_kwargs = {"max_new_tokens": 256, "do_sample": False}
+            if args.repetition_penalty != 1.0:
+                gen_kwargs["repetition_penalty"] = args.repetition_penalty
+            if args.no_repeat_ngram_size > 0:
+                gen_kwargs["no_repeat_ngram_size"] = args.no_repeat_ngram_size
             with torch.no_grad():
-                output = model.generate(**model_inputs, max_new_tokens=256, do_sample=False)
+                output = model.generate(**model_inputs, **gen_kwargs)
             n_in = model_inputs["input_ids"].shape[-1]
             new_tokens = output[0, n_in:].unsqueeze(0)
             hyp = tokenizer.batch_decode(new_tokens, add_special_tokens=False, skip_special_tokens=True)[0]

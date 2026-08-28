@@ -12,7 +12,7 @@ Run from the repo root (so `backend.*` resolves — the script also inserts
 the repo root and its own src/ dir onto sys.path as a fallback):
 
 CLI:
-  python research/topic/20260827_vad_std_survey/src/run_pipeline.py \\
+  python research/topic/20260827_vad_stt_survey/src/run_pipeline.py \\
     --engine {qwen3-asr-1.7b|turbo} [--limit N] [--realtime] \\
     [--compare-clocks] [--check]
 

@@ -82,6 +82,11 @@
 → 각각 150클립 통과 = **A_qwen, A_turbo, 총 300건.**
 두 엔진의 파이프라인 내 환각 필터가 다르다(비대칭)는 점은 결과 해석에 명시.
 
+**추가 검토 (2026-08-28)**: `20260826_stt_model_survey_gpu_full/report/03-fairness-review.md`의
+ReazonSpeech 공정 재평가 결과가 좋으면 **`reazonspeech`를 3번째 엔진으로 추가** — 그 경우
+`src/run_pipeline.py`의 `build_engine`, `qualitative_eval.py`의 `RUNS`, `score_*` / `analyze_stats`의
+run 목록, RUNBOOK 명령을 모두 갱신하고 총 450건이 된다. 이 실험 착수 전에 확정할 것.
+
 ---
 
 ## 5. 오프라인 하네스 (`src/run_pipeline.py`)
@@ -90,7 +95,7 @@
 - **`backend.audio_session.AudioSession`을 직접 import한다.** 이 토픽의 **의도적 관례 예외** —
   STT 서베이 3종이 지킨 "no `backend.*` imports"를 여기선 깨야 실제 파이프라인 코드를
   테스트한다(재구현하면 사본을 테스트하는 꼴). 리포 루트에서 실행
-  (`python -m research.topic.20260827_vad_std_survey.src.run_pipeline` 또는 `PYTHONPATH=.`)
+  (`python -m research.topic.20260827_vad_stt_survey.src.run_pipeline` 또는 `PYTHONPATH=.`)
   하여 `backend.*` 절대 import 해결.
 - 엔진 + `SileroVAD`(1회 로드) + 이벤트 수집 싱크(`on_event`)를 `AudioSession`에 주입.
 - 클립을 0.3초 청크로 잘라 순차 `await session.feed_audio(chunk)`, 마지막에
@@ -226,7 +231,7 @@ EMA)을 오디오 시간으로 대체한다. `silence_ms`는 이미 `frame_ms` �
 ## 11. 산출물 레이아웃 (계획)
 
 ```
-20260827_vad_std_survey/
+20260827_vad_stt_survey/
   README.md              # 짧은 요약 + 이 DESIGN.md 가리킴
   DESIGN.md              # 이 문서
   src/

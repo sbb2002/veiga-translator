@@ -18,7 +18,14 @@ CPU 파일럿과 별개 토픽으로 분리한 이유: 디바이스(CPU→GPU)�
 `reazon-research/reazonspeech-nemo-v2`(Fast Conformer + RNN-T, 일본어 TV 방송
 오디오로 직접 학습 — 도메인이 가장 가까워 보이는 후보)를 추가로 요청했다. 결과는
 `report/01-full-results.md` 참고 — 사전 기대와 달리 이번 데이터에서는 5개 카테고리
-전부에서 turbo보다 유의미하게 나빴다.
+전부에서 turbo보다 나빴다.
+
+**[2026-08-28 공정성 검토]** 이 ReazonSpeech 결과는 셋업 편향이 확인됨 — bare NeMo
+`transcribe()`(공식 추론 래퍼 아님, VAD/롱폼 처리 없음)로 돌려 노이즈 클립에서 파편
+붕괴. Qwen3-ASR greedy vs turbo beam=5, granite 반복 억제 없음도 함께. 감사 결과와
+공정 재실행 프로토콜은 [`report/03-fairness-review.md`](report/03-fairness-review.md).
+개별 순위 주장은 재실행 전까지 잠정. "turbo 교체 근거 없음" 최종 판단은 유지 가능성 높음.
+방법론 규칙은 `docs/eval/EVAL.md` §6에 반영.
 
 ## 방법
 
@@ -87,6 +94,8 @@ CI가 겹치지 않는 유일한 후보 — turbo보다 통계적으로 유의�
 - `report/01-full-results.md` — 정량 결과, 카테고리별 CER, 해석, 결론.
 - `report/02-qualitative-eval.md` — 사람 수동 정성 채점(50세그먼트, 자연스러움/
   의미 충실도 1~5), 카테고리별 표, 실패 방식 분석.
+- `report/03-fairness-review.md` — (2026-08-28) 후보별 공정성 감사(추론 경로/디코딩
+  패리티/강건성 처리) + 공정 재실행 프로토콜. ReazonSpeech 파편 붕괴 증거.
 - `src/qualitative_eval.py` — 정성 표본 추출/집계/자체검증.
 - `out/qualitative_sample.txt`, `out/qualitative_scores.json` — 정성 대조표 + 점수.
 - `src/common.py` — 데이터셋 로더(전체 150쌍 고정) + 정규화.

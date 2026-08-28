@@ -39,16 +39,24 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--size", choices=list(MODEL_IDS), required=True)
     parser.add_argument("--limit", type=int, default=None)
+    # Decoding parity (report/03-fairness-review.md): production runs this
+    # engine at QWEN3_ASR_FINAL_NUM_BEAMS=5, but the original survey pass left
+    # it at greedy while turbo ran beam=5. Default stays 1 to reproduce the
+    # committed out/qwen3-asr-*/ baseline exactly (report/01 numbers + the
+    # 20260827_vad_stt_survey B baseline depend on it). For the fair re-run
+    # pass --num-beams 5 --out-suffix _fair so the original is not clobbered.
+    parser.add_argument("--num-beams", type=int, default=1)
+    parser.add_argument("--out-suffix", default="", help="e.g. _fair -> out/<model><suffix>/")
     args = parser.parse_args()
 
     model_id = MODEL_IDS[args.size]
-    out_dir = Path(__file__).resolve().parents[1] / "out" / OUT_DIR_NAMES[args.size]
+    out_dir = Path(__file__).resolve().parents[1] / "out" / (OUT_DIR_NAMES[args.size] + args.out_suffix)
 
     segments = load_dataset()
     if args.limit:
         segments = segments[: args.limit]
 
-    print(f"loading {model_id} ({DEVICE}, {DTYPE})...")
+    print(f"loading {model_id} ({DEVICE}, {DTYPE}), num_beams={args.num_beams}...")
     processor = AutoProcessor.from_pretrained(model_id)
     model = AutoModelForMultimodalLM.from_pretrained(model_id, torch_dtype=DTYPE).to(DEVICE)
     model.eval()
@@ -65,7 +73,7 @@ def main() -> None:
                 for k, v in inputs.items()
             }
             with torch.no_grad():
-                output_ids = model.generate(**inputs, max_new_tokens=256)
+                output_ids = model.generate(**inputs, max_new_tokens=256, num_beams=args.num_beams)
             generated_ids = output_ids[:, inputs["input_ids"].shape[1] :]
             hyp = processor.decode(generated_ids, return_format="transcription_only")[0]
             torch.cuda.synchronize()

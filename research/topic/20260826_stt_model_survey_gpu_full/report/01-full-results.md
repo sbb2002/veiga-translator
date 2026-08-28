@@ -1,5 +1,12 @@
 # 01. GPU 전체 150쌍 결과 — large-v3-turbo vs granite-speech-4.1-2b vs Qwen3-ASR-0.6B/1.7B-hf vs ReazonSpeech-NeMo-v2
 
+> **[2026-08-28 공정성 검토]** 이 리포트의 전사 단계에 셋업 편향이 있었다 — ReazonSpeech를
+> 공식 추론 래퍼가 아닌 bare NeMo `transcribe()`로 돌려 노이즈 클립에서 파편 붕괴, Qwen3-ASR는
+> greedy인데 turbo는 beam=5, granite는 반복 억제 없음. **"ReazonSpeech가 유의미하게 나쁘다"는
+> 개별 주장은 재실행 전까지 잠정(provisional)** 으로 강등한다. `report/03-fairness-review.md`의
+> 감사 결과와 공정 재실행 프로토콜 참고. **"turbo 교체 근거 없음"이라는 최종 판단은 유지될
+> 가능성이 높다**(§결론).
+
 ## 배경
 
 `20260826_stt_model_survey/report/02-pilot-results.md`(CPU, 25쌍)에서 Qwen3-ASR-0.6B-hf가

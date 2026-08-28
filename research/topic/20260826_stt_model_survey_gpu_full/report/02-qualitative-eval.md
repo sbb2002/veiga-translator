@@ -1,5 +1,12 @@
 # 02. 정성 평가 — 상황별 자연스러움 / 의미 충실도 (수동 채점, 50세그먼트)
 
+> **[2026-08-28]** 아래 표는 원래 5개 방법 패스다. `report/03-fairness-review.md`의
+> 공정성 검토 이후 **`reazonspeech-nemo-v2_fair`(공식 래퍼 재실행)를 같은 50세그먼트로
+> 추가 채점**했다 — 결과·CI·해석은 `report/03-fairness-review.md` §2.5의 "정성 평가"
+> 절 참고 (fair: 자연스러움 4.00, 의미 충실도 3.64, 유창한 환각률 8%; fair가 의미
+> 충실도에서 turbo보다 유의미하게 높음). `src/qualitative_eval.py`의 `METHODS`에 fair가
+> 포함돼 `agg`는 이제 6개 방법을 낸다.
+
 ## 배경
 
 `report/01-full-results.md`의 정량 결과(CER/chrF++/BLEU/ROUGE-L)는 turbo/Qwen3-ASR

@@ -7,11 +7,13 @@
 >
 > ReazonSpeech를 공식 `reazonspeech` 래퍼(VAD + 롱폼)로 **재실행 완료**
 > (`report/03` §2.5): 래퍼가 파편 붕괴를 유의미하게 해소(fair−bare CER −0.052, 4개 지표
-> 전부 CI가 0 제외)했으나, **fair도 turbo/Qwen보다 4개 지표 전부 유의미하게 뒤진다**
-> (fair−turbo CER +0.058). 단 "5개 카테고리 전부 밀림"은 더 이상 아님 — 게임 외
-> 3개 카테고리는 turbo/Qwen과 대등, 격차는 게임(BGM 반복 루프)에 집중. **"turbo 교체
-> 근거 없음" 결론은 유지.** Qwen/granite parity 재실행은 결론을 안 바꾸므로 보류(스크립트
-> 플래그만 준비, `report/03` §2.3).
+> 전부 CI가 0 제외)했으나, **정량은 fair도 turbo/Qwen보다 4개 지표 전부 유의미하게 뒤진다**
+> (fair−turbo CER +0.058) — 격차는 게임(BGM 반복 루프)에 집중, 게임 외 3개 카테고리는
+> turbo/Qwen과 대등. **정성(50세그먼트)은 반대로 fair가 의미 충실도에서 turbo보다
+> 유의미하게 높고 Qwen과 동급**(CER이 게임 루프·표기 차이를 크게 벌하는 반면 사람은
+> 의미 전달·문두 회복을 크게 침). **"turbo 교체 근거 없음" 결론은 유지**(정량 기준).
+> ReazonSpeech를 `20260827_vad_stt_survey` 파이프라인 3번째 엔진으로 재검토하는 건
+> 우선 후속(`report/03` §5). Qwen/granite parity 재실행은 결론 불변이라 보류.
 
 ## 배경
 

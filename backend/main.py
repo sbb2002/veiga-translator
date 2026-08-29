@@ -284,6 +284,22 @@ async def ws_audio(websocket: WebSocket) -> None:
                             "translation": translation,
                         }
                     )
+                if control.get("type") == "translate_title":
+                    # One-shot JA->KO translation of the video title for the
+                    # overlay header — see audio_session.py::translate_title.
+                    request_id = control.get("request_id")
+                    text = control.get("text", "")
+                    translation = (
+                        await session.translate_title(text) if text.strip() else ""
+                    )
+                    await send_event(
+                        {
+                            "type": "title_translation",
+                            "request_id": request_id,
+                            "text": text,
+                            "translation": translation,
+                        }
+                    )
     finally:
         await session.close()
         session_log.close()

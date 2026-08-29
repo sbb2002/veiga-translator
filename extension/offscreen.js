@@ -145,6 +145,8 @@ function connectWebSocket(tabId, session) {
       const data = JSON.parse(event.data);
       if (data.type === "chat_translation") {
         chrome.runtime.sendMessage({ type: "CHAT_TRANSLATION", tabId, data }).catch(() => {});
+      } else if (data.type === "title_translation") {
+        chrome.runtime.sendMessage({ type: "TITLE_TRANSLATION", tabId, data }).catch(() => {});
       } else if (data.type === "context_summary") {
         chrome.runtime.sendMessage({ type: "CONTEXT_SUMMARY", tabId, data }).catch(() => {});
       } else {
@@ -382,6 +384,20 @@ chrome.runtime.onMessage.addListener((message) => {
       session.ws.send(
         JSON.stringify({
           type: "translate_chat",
+          request_id: message.requestId,
+          text: message.text,
+        })
+      );
+    }
+  } else if (message?.type === "TRANSLATE_TITLE") {
+    // One-shot JA->KO translation of the video title for the overlay header
+    // — see popup.js and backend/audio_session.py::translate_title. Needs
+    // the capture WS open, same as TRANSLATE_CHAT.
+    const session = sessions.get(message.tabId);
+    if (session?.ws && session.ws.readyState === WebSocket.OPEN) {
+      session.ws.send(
+        JSON.stringify({
+          type: "translate_title",
           request_id: message.requestId,
           text: message.text,
         })

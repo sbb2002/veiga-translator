@@ -434,6 +434,17 @@ class AudioSession:
             return ""
         return result.text
 
+    async def translate_title(self, text: str) -> str:
+        """One-shot JA->KO translation of the stream's own video title, for
+        the overlay header. Standalone — a title isn't part of the utterance
+        flow, so no speech context is passed; just the natural forward path."""
+        try:
+            result = await self._translate.translate(text, fast=False)
+        except Exception:
+            logger.exception("title translation (JA->KO) failed")
+            return ""
+        return result.text
+
     def _maybe_update_context_summary(self, final_text: str, translation_text: str) -> None:
         """Fire-and-forget: every config.CONTEXT_CHECK_EVERY_N_FINALS finals,
         check whether the topic actually changed (2026-08-25 redesign) before

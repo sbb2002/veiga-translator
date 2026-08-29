@@ -73,6 +73,14 @@ let captureActive = false;
 let transcriptSeen = false;
 let contextSummaryText = "";
 
+// Header 방송 제목: shown as "[한글 번역]\t[원문]" once the backend returns a
+// JA→KO translation of the title, just the original until then. titleReqFor
+// dedupes the one-shot request against the current title string.
+let titleOriginal = "";
+let titleTranslation = "";
+let titleReqFor = "";
+let titleReqAt = 0;
+
 // 디버그 지표 라인용: ISO 8601 절대시각(streamStartedAt, content_script.js가
 // ytInitialPlayerResponse에서 긁음) -> "X분 전"/"X시간 Y분 전" 표시. 렌더링
 // 화면의 상대시간 배지를 다시 파싱하는 대신 절대시각 기준으로 매번 새로
@@ -123,6 +131,100 @@ function renderMaybeMarquee(el, text) {
 
 // 채널명(1행, 길면 marquee) / 방송 시작 경과시간(2행). 2026-08-29부터 디버그
 // 모드와 무관하게 항상 노출 — 채널·시간이 모두 없을 때만 [hidden].
+function clearChannelAvatar() {
+  videoMetaEl.classList.remove("has-avatar");
+  delete videoMetaEl.dataset.avatarUrl;
+  videoMetaEl.style.removeProperty("--channel-avatar");
+  videoMetaEl.style.removeProperty("--channel-avatar-tint");
+}
+
+// Sample an average colour from the avatar for the left-side gradient bleed
+// (.video-meta::before). Needs the image CORS-readable — googleusercontent
+// serves Access-Control-Allow-Origin:*, but if a draw ever taints the canvas
+// the gradient just falls back to the row background (an invisible bleed).
+function sampleAvatarTint(url) {
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.onload = () => {
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = canvas.height = 16;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, 16, 16);
+      const data = ctx.getImageData(0, 0, 16, 16).data;
+      let r = 0, g = 0, b = 0, n = 0;
+      for (let i = 0; i < data.length; i += 4) {
+        r += data[i]; g += data[i + 1]; b += data[i + 2]; n++;
+      }
+      if (videoMetaEl.dataset.avatarUrl === url) {
+        videoMetaEl.style.setProperty(
+          "--channel-avatar-tint",
+          `rgb(${(r / n) | 0} ${(g / n) | 0} ${(b / n) | 0})`
+        );
+      }
+    } catch {
+      videoMetaEl.style.removeProperty("--channel-avatar-tint");
+    }
+  };
+  img.onerror = () => videoMetaEl.style.removeProperty("--channel-avatar-tint");
+  img.src = url;
+}
+
+function renderHeaderTitle() {
+  if (!titleOriginal) {
+    renderMaybeMarquee(statusDetail, "");
+    return;
+  }
+  renderMaybeMarquee(
+    statusDetail,
+    titleTranslation ? `${titleTranslation}\t${titleOriginal}` : titleOriginal
+  );
+}
+
+// Ask the backend to translate the current title JA→KO. offscreen.js drops
+// the request when the capture WS isn't OPEN yet (common right after start)
+// and there's no ack, so it's retried. Timing:
+//   - panel/page (re)load, video change: fires from refreshState /
+//     VIDEO_META_UPDATED (fresh iframe ⇒ no translation yet ⇒ sends).
+//   - backend just came up: every transcript event retries until the first
+//     translation lands (transcript flowing = WS live).
+//   - every 3 min after that: the setInterval below calls this with
+//     force=true to refresh a possibly-better translation.
+// force bypasses the "already have one" guard; the 4s gate still prevents
+// overlapping in-flight requests.
+function requestTitleTranslation(force = false) {
+  if (!titleOriginal || !captureActive) return;
+  if (titleReqFor !== titleOriginal) {
+    titleReqFor = titleOriginal;
+    titleTranslation = "";
+    titleReqAt = 0;
+  }
+  if (!force && titleTranslation) return; // already have it
+  if (Date.now() - titleReqAt < 4000) return; // a request is still in flight
+  titleReqAt = Date.now();
+  chrome.runtime
+    .sendMessage({
+      type: "TRANSLATE_TITLE",
+      tabId,
+      text: titleOriginal,
+      requestId: titleOriginal,
+    })
+    .catch(() => {});
+}
+
+// Periodic refresh (no-op while idle — requestTitleTranslation guards on
+// captureActive). One short gemma call every 3 min is negligible.
+setInterval(() => requestTitleTranslation(true), 180000);
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message?.type !== "TITLE_TRANSLATION") return;
+  if (message.tabId !== tabId) return;
+  const { text, translation } = message.data ?? {};
+  if (!translation || text !== titleOriginal) return; // empty or stale
+  titleTranslation = translation;
+  renderHeaderTitle();
+});
+
 function renderVideoMeta(meta) {
   const channel = meta?.channelName ?? "";
   const elapsed = formatElapsedSince(meta?.streamStartedAt);
@@ -130,11 +232,27 @@ function renderVideoMeta(meta) {
     videoMetaEl.hidden = true;
     renderMaybeMarquee(videoMetaChannelEl, "");
     videoMetaTimeEl.textContent = "";
+    clearChannelAvatar();
     return;
   }
   videoMetaEl.hidden = false;
   renderMaybeMarquee(videoMetaChannelEl, channel);
   videoMetaTimeEl.textContent = elapsed ? `방송 시작 ${elapsed}` : "";
+
+  // Channel avatar (right, fully visible) + its left-side colour bleed. The
+  // URL is scraped page markup — only feed it into url() after checking it's
+  // a plain https URL with nothing that could break out of the quotes.
+  const avatar = meta?.channelAvatarUrl ?? "";
+  const safeAvatar = /^https:\/\/[^\s"')]+$/.test(avatar) ? avatar : "";
+  if (!safeAvatar) {
+    clearChannelAvatar();
+  } else if (videoMetaEl.dataset.avatarUrl !== safeAvatar) {
+    videoMetaEl.dataset.avatarUrl = safeAvatar;
+    videoMetaEl.classList.add("has-avatar");
+    videoMetaEl.style.setProperty("--channel-avatar", `url("${safeAvatar}")`);
+    videoMetaEl.style.removeProperty("--channel-avatar-tint");
+    sampleAvatarTint(safeAvatar);
+  }
 }
 
 async function refreshState() {
@@ -142,6 +260,7 @@ async function refreshState() {
   const isActive = state?.active ?? false;
   const isPaused = state?.paused ?? false;
   const isRecording = isActive && !isPaused; // has a live session AND is actively sending audio
+  captureActive = isActive;
 
   // Update toggle button: toggle "recording" class (record vs pause icon —
   // see popup.html) and set label text via captureLabel. Three real states:
@@ -164,22 +283,21 @@ async function refreshState() {
     statusState.textContent = "대기 중";
   }
 
-  // Update status detail line
+  // Update status detail line (방송 제목, header top line)
   if (isActive) {
     lastCaptureTitle = state?.title ?? `탭 #${tabId}`;
-    renderMaybeMarquee(statusDetail, lastCaptureTitle);
     lastVideoMeta = {
       channelName: state?.channelName ?? null,
+      channelAvatarUrl: state?.channelAvatarUrl ?? null,
       videoTitle: state?.videoTitle ?? null,
       streamStartedAt: state?.streamStartedAt ?? null,
     };
-  } else {
-    // While idle, show the tab title if we have one from a prior active session
-    renderMaybeMarquee(statusDetail, lastCaptureTitle || "");
   }
+  titleOriginal = isActive ? lastCaptureTitle : lastCaptureTitle || "";
+  renderHeaderTitle();
+  requestTitleTranslation();
   renderVideoMeta(lastVideoMeta);
 
-  captureActive = isActive;
   renderContextSummaryArea();
 
   // Update live dot
@@ -313,6 +431,9 @@ function renderEvent(data) {
     transcriptSeen = true;
     renderContextSummaryArea();
   }
+  // A transcript event means the capture WS is live — retry the title
+  // translation if it hasn't landed yet (time-gated inside).
+  requestTitleTranslation();
 
   let entry = segmentEls.get(segmentId);
   if (!entry) {
@@ -497,10 +618,17 @@ chrome.runtime.onMessage.addListener((message) => {
   if (message.tabId !== tabId) return;
   lastVideoMeta = {
     channelName: message.channelName ?? null,
+    channelAvatarUrl: message.channelAvatarUrl ?? null,
     videoTitle: message.videoTitle ?? null,
     streamStartedAt: message.streamStartedAt ?? null,
   };
   renderVideoMeta(lastVideoMeta);
+  if (message.videoTitle) {
+    lastCaptureTitle = message.videoTitle;
+    titleOriginal = message.videoTitle;
+    renderHeaderTitle();
+    requestTitleTranslation();
+  }
 });
 
 chrome.runtime.onMessage.addListener((message) => {

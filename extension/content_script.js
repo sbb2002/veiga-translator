@@ -339,7 +339,48 @@
   // live 2026-08-25 against an actual stream; the DOM-selector fallback
   // below, by contrast, did NOT match anything on that same page, so treat
   // it as a last resort only.
+  // Channel avatar (2026-08-29): not in ytInitialPlayerResponse — the owner
+  // avatar <img> on the watch page is the reliable primary source; the
+  // ytInitialData renderer blob is the fallback (deeper renderer nesting, so
+  // more fragile). Returns the highest-res URL available or null.
+  function getChannelAvatarUrl() {
+    // ytInitialData first — it's inlined in the page's initial HTML, so it's
+    // reliably present at scrape time, whereas the owner-avatar <img>'s src
+    // is lazy-loaded and usually still "" when we look (verified live
+    // 2026-08-29). Take the highest-res thumbnail entry.
+    try {
+      for (const script of document.querySelectorAll("script")) {
+        const text = script.textContent;
+        if (!text || !text.includes('"videoOwnerRenderer"')) continue;
+        const match = text.match(/ytInitialData\s*=\s*(\{.+\})\s*;/s);
+        if (!match) continue;
+        const data = JSON.parse(match[1]);
+        const items =
+          data?.contents?.twoColumnWatchNextResults?.results?.results?.contents ?? [];
+        for (const item of items) {
+          const thumbs =
+            item?.videoSecondaryInfoRenderer?.owner?.videoOwnerRenderer?.thumbnail
+              ?.thumbnails;
+          if (thumbs?.length) return thumbs[thumbs.length - 1].url;
+        }
+      }
+    } catch (err) {
+      console.warn("[content_script] ytInitialData avatar parse failed", err);
+    }
+    // DOM fallback (only useful once the avatar has actually loaded).
+    for (const sel of [
+      "#owner #avatar img",
+      "ytd-video-owner-renderer #avatar img",
+      "#avatar-btn img",
+    ]) {
+      const src = document.querySelector(sel)?.src;
+      if (src && src.startsWith("http")) return src;
+    }
+    return null;
+  }
+
   function scrapeVideoMetadata() {
+    const channelAvatarUrl = getChannelAvatarUrl();
     try {
       for (const script of document.querySelectorAll("script")) {
         const text = script.textContent;
@@ -353,6 +394,7 @@
           data?.microformat?.playerMicroformatRenderer?.liveBroadcastDetails;
         return {
           channelName: vd.author,
+          channelAvatarUrl,
           url: location.href,
           videoTitle: vd.title ?? null,
           videoId: vd.videoId ?? null,
@@ -380,6 +422,7 @@
       if (text) {
         return {
           channelName: text,
+          channelAvatarUrl,
           url: location.href,
           videoTitle: document.title.replace(/\s*-\s*YouTube$/, ""),
           videoId: null,
@@ -392,6 +435,7 @@
     }
     return {
       channelName: null,
+      channelAvatarUrl,
       videoTitle: null,
       videoId: null,
       isLive: null,

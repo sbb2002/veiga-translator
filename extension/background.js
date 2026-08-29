@@ -110,6 +110,7 @@ async function updateVideoMetadata(tabId, metadata) {
     title: metadata.videoTitle ?? current.title,
     url: metadata.url ?? current.url,
     channelName: metadata.channelName ?? null,
+    channelAvatarUrl: metadata.channelAvatarUrl ?? null,
     videoTitle: metadata.videoTitle ?? null,
     streamStartedAt: metadata.streamStartedAt ?? null,
   };
@@ -138,6 +139,7 @@ async function updateVideoMetadata(tabId, metadata) {
       type: "VIDEO_META_UPDATED",
       tabId,
       channelName: metadata.channelName ?? null,
+      channelAvatarUrl: metadata.channelAvatarUrl ?? null,
       videoTitle: metadata.videoTitle ?? null,
       streamStartedAt: metadata.streamStartedAt ?? null,
     })
@@ -189,6 +191,7 @@ async function startCapture(tabId, tab) {
     url,
     startedAt,
     channelName: meta.channelName ?? null,
+    channelAvatarUrl: meta.channelAvatarUrl ?? null,
     videoTitle: meta.videoTitle ?? null,
     videoId: meta.videoId ?? null,
     isLive: meta.isLive ?? null,
@@ -205,6 +208,7 @@ async function startCapture(tabId, tab) {
     favIconUrl: tab?.favIconUrl ?? null,
     startedAt,
     channelName: meta.channelName ?? null,
+    channelAvatarUrl: meta.channelAvatarUrl ?? null,
     videoTitle: meta.videoTitle ?? null,
     streamStartedAt: meta.streamStartedAt ?? null,
   };

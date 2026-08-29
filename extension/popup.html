@@ -13,6 +13,7 @@
       --text: #1b1f27;
       --text-muted: #667085;
       --text-faint: #9aa2b1;
+      --avatar-frame: #667085;
       --accent: #b9750f;
       --accent-soft: #f2e3cd;
       --ok: #2f8f5f;
@@ -35,6 +36,7 @@
         --text: #eef0f3;
         --text-muted: #8b93a3;
         --text-faint: #5b6270;
+        --avatar-frame: #8b93a3;
         --accent: #e8a33d;
         --accent-soft: #3a2f1c;
         --ok: #4caf7d;
@@ -51,6 +53,7 @@
       --text: #eef0f3;
       --text-muted: #8b93a3;
       --text-faint: #5b6270;
+      --avatar-frame: #8b93a3;
       --accent: #e8a33d;
       --accent-soft: #3a2f1c;
       --ok: #4caf7d;
@@ -139,7 +142,9 @@
       font-size: 14px;
       font-weight: 700;
       color: var(--text);
-      white-space: nowrap;
+      /* pre (not nowrap) so the \t between 번역 and 원문 renders as a gap */
+      white-space: pre;
+      tab-size: 4;
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -498,16 +503,73 @@
        2026-08-29: 디버그 모드 전용에서 일반 모드에도 항상 노출로 변경. 채널·
        시간이 모두 없을 때만 popup.js가 [hidden]을 건다. */
     .video-meta {
+      position: relative;
+      overflow: hidden;
       flex: none;
       display: flex;
       flex-direction: column;
+      justify-content: center;
       gap: 1px;
+      min-height: 46px;
       padding: 6px 14px;
       border-bottom: 1px solid var(--border);
       background: var(--surface-2);
       font-family: var(--mono);
     }
     .video-meta[hidden] { display: none; }
+    /* Channel avatar. ::after is the image itself — right-anchored, fully
+       opaque, the whole avatar visible. ::before is a colour bleed filling
+       the space to its left: transparent on the far left, fading to
+       --channel-avatar-tint (sampled from the image by popup.js) exactly
+       where the image begins, so it melts into the row with no hard edge.
+       popup.js sets --channel-avatar (url) and --channel-avatar-tint (rgb). */
+    .video-meta.has-avatar::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: 6px;
+      transform: translateY(-50%);
+      width: var(--channel-avatar-w, 42px);
+      height: var(--channel-avatar-w, 42px);
+      box-sizing: border-box;
+      pointer-events: none;
+      /* Thick, slightly-rounded rectangle. The avatar fills the frame edge to
+         edge (cover, no padding); border-radius clips it to the rounded shape.
+         Solid fill shows only through a transparent-cornered (circular) avatar.
+         --avatar-frame / --surface are theme tokens (light + both dark blocks),
+         so the frame follows the active theme. The 6px right inset keeps the
+         2px border clear of .video-meta's overflow:hidden clip; the row's
+         min-height:46px keeps the top/bottom corners from being clipped. */
+      background-color: var(--surface);
+      background-image: var(--channel-avatar);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      border: 2px solid var(--avatar-frame);
+      border-radius: 6px;
+    }
+    /* Tint bleed spans the whole right side of the row — it runs BEHIND the
+       avatar frame and its 6px gap, not just up to the frame's left edge, so
+       the frame sits on a colour glow rather than against a hard cut. ::after
+       (the frame) paints after ::before, so it stays crisp on top. */
+    .video-meta.has-avatar::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 200px;
+      pointer-events: none;
+      background: linear-gradient(
+        to right,
+        transparent,
+        var(--channel-avatar-tint, var(--surface-2))
+      );
+    }
+    .video-meta.has-avatar .video-meta-channel,
+    .video-meta.has-avatar .video-meta-time {
+      padding-right: 60px;
+    }
     .video-meta-channel {
       font-size: 11px;
       font-weight: 600;
@@ -535,7 +597,8 @@
     }
     .marquee-track span {
       padding-right: 40px;
-      white-space: nowrap;
+      white-space: pre;
+      tab-size: 4;
     }
     .marquee {
       text-overflow: clip;

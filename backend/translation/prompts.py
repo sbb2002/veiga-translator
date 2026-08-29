@@ -54,6 +54,7 @@ FAST_SYSTEM_PROMPT = _assemble(
 FINAL_SYSTEM_PROMPT = _assemble(
     _data["final_system_prompt_intro"],
     "continuity",
+    "topic_context",
     *_FORWARD_NOTE_KEYS,
     outro=_data["final_system_prompt_outro"],
 )

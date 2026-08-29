@@ -32,24 +32,50 @@ const HISTORY_WARMUP_FINALS = 3;
 let finalsSeenCount = 0;
 const countedFinalSegments = new Set(); // guards against double-counting a re-sent final for the same segment
 
-// Scroll-to-bottom affordance (2026-08-20): visible only while scrolled up
-// from the very bottom, hidden once back at the bottom. Also drives whether
-// new events auto-stick to the bottom (a chat-log convention: keep
-// following live text unless the user has deliberately scrolled up to read
-// something older, in which case new arrivals must NOT yank them back down).
+// Scroll-to-bottom affordance (2026-08-20, upgraded to continuous tracking
+// 2026-08-29): the button used to just jump to the bottom once. Now clicking
+// it re-arms `autoTrack`, which keeps the log stuck to the bottom through
+// every subsequent arrival (a chat-log "follow" convention) until the viewer
+// scrolls away from the bottom themselves, at which point tracking
+// disengages and the button reappears. Distinguishing "our own scroll" from
+// "the user scrolled" doesn't need a separate guard flag: every programmatic
+// scroll here (scrollLogToBottom, restoreHistory's initial jump) sets
+// scrollTop directly to scrollHeight, so it always lands AT the bottom —
+// only a manual scroll can leave the log's scroll position short of it.
 const SCROLL_BOTTOM_THRESHOLD_PX = 16;
+let autoTrack = true;
 
 function isScrolledToBottom() {
   return logEl.scrollHeight - logEl.scrollTop - logEl.clientHeight <= SCROLL_BOTTOM_THRESHOLD_PX;
 }
 
+function scrollLogToBottom() {
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+// Visibility is driven by the actual scroll position (isScrolledToBottom()),
+// not by the `autoTrack` intent flag — the two normally agree, but they can
+// diverge when the log's scrollable area changes size without a "scroll"
+// event firing (e.g. dragging the overlay panel's resize handle in
+// content_script.js shrinks logEl's clientHeight while scrollTop stays put:
+// no scroll event, but the log is now visibly short of the bottom). Checking
+// the real position directly means the button is always correct regardless
+// of what caused the position to change.
 function updateScrollToBottomButton() {
-  scrollToBottomBtn.classList.toggle("visible", !isScrolledToBottom());
+  const atBottom = isScrolledToBottom();
+  autoTrack = atBottom; // resync intent to match reality (see comment above)
+  scrollToBottomBtn.classList.toggle("visible", !atBottom);
 }
 
 logEl.addEventListener("scroll", updateScrollToBottomButton);
+// Panel resize (content_script.js's drag handles) changes logEl's
+// clientHeight without a "scroll" event — re-check on every resize so the
+// button never goes stale.
+new ResizeObserver(updateScrollToBottomButton).observe(logEl);
 scrollToBottomBtn.addEventListener("click", () => {
-  logEl.scrollTo({ top: logEl.scrollHeight, behavior: "smooth" });
+  autoTrack = true;
+  scrollLogToBottom();
+  updateScrollToBottomButton();
 });
 
 // restoreHistory() below awaits an async round-trip to fetch the persisted
@@ -559,14 +585,13 @@ chrome.runtime.onMessage.addListener((message) => {
     pendingEvents.push(message.data);
     return;
   }
-  const wasAtBottom = isScrolledToBottom();
   renderEvent(message.data);
-  // Only auto-follow if the user was already at the bottom — otherwise a
-  // live arrival would yank them away from history they scrolled up to
-  // read. updateScrollToBottomButton() surfaces the button instead so they
-  // can jump down manually when ready.
-  if (wasAtBottom) {
-    logEl.scrollTop = logEl.scrollHeight;
+  // Only auto-follow while tracking is engaged — otherwise a live arrival
+  // would yank the viewer away from history they deliberately scrolled up
+  // to read. updateScrollToBottomButton() surfaces the button instead so
+  // they can jump back down (and re-arm tracking) manually when ready.
+  if (autoTrack) {
+    scrollLogToBottom();
   }
   updateScrollToBottomButton();
 });
@@ -699,7 +724,7 @@ async function restoreHistory() {
     renderEvent(event);
   }
   pendingEvents.length = 0;
-  logEl.scrollTop = logEl.scrollHeight;
+  scrollLogToBottom();
   updateScrollToBottomButton();
 }
 
@@ -721,9 +746,53 @@ const chatStatusEl = document.getElementById("chatStatus");
 
 let pendingChatRequestId = null;
 
+// Hidden context-injection commands (2026-08-29, debug metrics only —
+// see popup.html's debugToggle): typed into the same chat-reply box above,
+// these don't translate at all — they steer the running context summary
+// (contextSummaryEl / backend/audio_session.py's _current_summary) instead.
+// Gated on debug mode so an ordinary chat message that happens to start
+// with "(summary)" or read exactly "(init)" is never swallowed for a normal
+// viewer who has no reason to know this syntax exists. The tag is checked
+// FIRST, before anything resembling a translate request is sent — matching
+// either form must never fall through to TRANSLATE_CHAT below.
+//   (summary)텍스트     -> inject "텍스트" as a note the summary must
+//   (summary)[텍스트]      account for, and regenerate the summary right
+//                          away. Brackets are accepted but optional — a
+//                          bare "(summary)텍스트" works the same way.
+//   (init)              -> drop all accumulated context and restart the
+//                          summary from just the current video title.
+const SUMMARY_BRACKET_RE = /^\(summary\)\s*\[([\s\S]*)\]$/;
+const SUMMARY_PLAIN_RE = /^\(summary\)\s*([\s\S]+)$/;
+
 async function sendChatTranslateRequest() {
-  const text = chatInputEl.value.trim();
-  if (!text) return;
+  const raw = chatInputEl.value.trim();
+  if (!raw) return;
+
+  if (document.getElementById("debugToggle").checked) {
+    const summaryMatch = raw.match(SUMMARY_BRACKET_RE) ?? raw.match(SUMMARY_PLAIN_RE);
+    if (summaryMatch || raw === "(init)") {
+      chatInputEl.value = "";
+      chatOutputEl.textContent = "";
+      chatOutputEl.classList.remove("copied");
+      // Confirmation only — no translation happens for either tag, and no
+      // "in progress" -> "done" two-step; the injection/reset itself is
+      // fire-and-forget from the UI's perspective.
+      chatStatusEl.textContent = summaryMatch ? "요약 참고할게요!" : "맥락 초기화할게요!";
+      chrome.runtime
+        .sendMessage(
+          summaryMatch
+            ? { type: "INJECT_CONTEXT_SUMMARY", tabId, text: summaryMatch[1] }
+            : { type: "RESET_CONTEXT_SUMMARY", tabId }
+        )
+        .catch((err) => {
+          console.error("[popup] context-injection command failed:", err);
+          chatStatusEl.textContent = `error: ${err?.message ?? err}`;
+        });
+      return;
+    }
+  }
+
+  const text = raw;
   // One in flight at a time — a second click before the first reply lands
   // just supersedes it (pendingChatRequestId check below drops the stale
   // reply rather than showing an out-of-order result).
@@ -798,6 +867,16 @@ chrome.runtime.onMessage.addListener((message) => {
 // Debug toggle
 document.getElementById("debugToggle").addEventListener("change", (e) => {
   document.body.classList.toggle("show-debug", e.target.checked);
+  // Toggling reveals/hides confidence bars and warmup segments (see
+  // popup.html's .show-debug rules), which can grow/shrink logEl's content
+  // height with no "scroll" event and no logEl box-size change (so the
+  // ResizeObserver above doesn't fire either — it watches logEl's own
+  // border box, not its scrollHeight). If tracking was engaged, follow the
+  // shifted bottom instead of leaving the view stranded mid-log; reading
+  // scrollHeight here is already after the class change applied, forcing
+  // the layout to settle so it reflects the new (post-toggle) height.
+  if (autoTrack) scrollLogToBottom();
+  updateScrollToBottomButton();
 });
 
 // Theme toggle (manual override on top of the prefers-color-scheme default —

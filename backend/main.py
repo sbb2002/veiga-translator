@@ -245,6 +245,7 @@ async def ws_audio(websocket: WebSocket) -> None:
                 if control.get("type") == "start_session":
                     session_log.start(control)
                     session.set_broadcaster_hint(control.get("channel_name"))
+                    session.set_video_title(control.get("video_title"))
                 if control.get("type") == "metadata_update":
                     # Mid-session video switch (2026-08-25) — extension's
                     # content_script.js detected a YouTube SPA navigation to
@@ -286,6 +287,7 @@ async def ws_audio(websocket: WebSocket) -> None:
                             }
                         )
                     session.set_broadcaster_hint(control.get("channel_name"))
+                    session.set_video_title(control.get("video_title"))
                 if control.get("type") == "stop_session":
                     logger.info("Client requested stop_session")
                     break
@@ -314,6 +316,15 @@ async def ws_audio(websocket: WebSocket) -> None:
                             "translation": translation,
                         }
                     )
+                if control.get("type") == "inject_context_summary":
+                    # Debug hidden feature (2026-08-29): overlay chat box,
+                    # '(summary)[...]' — see audio_session.py::inject_context_summary
+                    # and popup.js's SUMMARY_INJECT_RE gating (debug mode only).
+                    await session.inject_context_summary(control.get("text", ""))
+                if control.get("type") == "reset_context_summary":
+                    # Debug hidden feature (2026-08-29): overlay chat box,
+                    # literal '(init)' — see audio_session.py::reset_context_summary.
+                    await session.reset_context_summary()
                 if control.get("type") == "translate_title":
                     # One-shot JA->KO translation of the video title for the
                     # overlay header — see audio_session.py::translate_title.

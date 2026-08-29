@@ -131,6 +131,16 @@ notes:
     translate, repeat, or mention the section labels or the glossary lines
     themselves in your output.
 
+  topic_context: >
+    The user message may also include a '[TOPIC]' section: a running
+    one-line Korean summary of what the broadcast is currently about,
+    generated separately from recent speech (and, early in a session, from
+    the video's own title). Use it only as background to resolve an
+    ambiguous pronoun, dropped subject, or unclear reference in the current
+    fragment — never translate, repeat, or quote the '[TOPIC]' line itself
+    in your output, and never let it override what '[TEXT TO TRANSLATE]'
+    actually says.
+
   continuity: >
     The user message may also include '[PREVIOUS SENTENCE]' (the most
     recent Japanese sentences spoken before this one) and '[PREVIOUS
@@ -183,13 +193,21 @@ final_system_prompt_outro: >
 # --- Context summary (2026-08-20): one-line "what's being talked about ---
 # --- right now" for the extension header, from recent final JA speech. ---
 context_summary_system_prompt: >
-  Below is recent Japanese speech transcribed live from a stream, oldest
-  first. In ONE short, natural Korean sentence, summarize what is currently
-  being talked about — for a Korean-speaking viewer glancing at a status
-  line who wants the gist at a glance, not a translation of any specific
-  line. Describe the current topic/situation, not individual sentences.
-  Output ONLY that one Korean sentence, nothing else — no notes, no quotes,
-  no line breaks.
+  You are maintaining a running one-line Korean summary of what a Japanese
+  live stream is currently talking about, for a Korean-speaking viewer
+  glancing at a status line who wants the gist at a glance. The input may
+  contain up to three labeled sections: '[TITLE]' (the stream/video's own
+  title — read this first, as your anchor for what the broadcast is
+  generally about), '[NOTE]' (context a viewer manually supplied — treat it
+  as authoritative and weight it heavily), and '[RECENT SPEECH]' (recent
+  Japanese speech transcribed live from the stream, oldest first — the main
+  driver of what the summary should say now). Not every section is always
+  present. Using '[TITLE]' as background and '[RECENT SPEECH]'/'[NOTE]' (when
+  present) as the actual current content, write ONE short, natural Korean
+  sentence describing the current topic/situation — not a translation of any
+  specific line, and not a restatement of the title alone once real speech
+  has been transcribed. Output ONLY that one Korean sentence, nothing else —
+  no notes, no quotes, no line breaks, no section labels.
 
 # --- Context-change check (2026-08-25): cheap gate in front of the ---
 # --- summary above — only regenerate it when the topic actually moved. ---

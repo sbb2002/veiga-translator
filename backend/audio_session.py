@@ -137,6 +137,12 @@ class AudioSession:
         self._context_summary_task: asyncio.Task | None = None
         self._current_summary = ""
         self._pending_since_check: list[tuple[str, str]] = []
+        # Viewer-supplied notes injected via the overlay's debug-only
+        # '(summary)[...]' chat-box command (see main.py's
+        # "inject_context_summary" handling / popup.js) — folded into every
+        # subsequent summary regeneration as authoritative context until the
+        # next reset_context()/'(init)'.
+        self._injected_notes: list[str] = []
         # Channel name scraped from the video page (2026-08-25, see main.py's
         # start_session handling) — passed to the final translation call as
         # a [BROADCASTER] hint so the model can render the speaker's
@@ -144,18 +150,31 @@ class AudioSession:
         # transliteration each time. None until start_session arrives (or on
         # a non-YouTube tab where the scrape never succeeds).
         self._broadcaster_hint: str | None = None
+        # Scraped video/livestream title (2026-08-29, see main.py's
+        # start_session/metadata_update handling) — read first when
+        # (re)generating the context summary, so a session with little or no
+        # speech yet still gets a topic-shaped summary instead of a bare
+        # placeholder. See _format_summary_history.
+        self._video_title: str | None = None
 
     def set_broadcaster_hint(self, channel_name: str | None) -> None:
         self._broadcaster_hint = channel_name or None
 
+    def set_video_title(self, title: str | None) -> None:
+        self._video_title = title or None
+
     def reset_context(self) -> None:
         """Drop accumulated translation context — called from main.py when the
         captured tab switches to a different video, so the new content doesn't
-        inherit the previous streamer's sentence history / running summary."""
+        inherit the previous streamer's sentence history / running summary.
+        Also the guts of the debug-only '(init)' chat-box command (see
+        reset_context_summary below), which calls this directly."""
         self._final_history.clear()
         self._summary_history.clear()
         self._finals_since_check = 0
         self._current_summary = ""
+        self._pending_since_check = []
+        self._injected_notes.clear()
         if self._context_summary_task is not None and not self._context_summary_task.done():
             self._context_summary_task.cancel()
         self._context_summary_task = None
@@ -415,10 +434,21 @@ class AudioSession:
         return self._format_pairs(self._final_history)
 
     def _format_summary_history(self) -> str | None:
-        """Numbered, oldest-first JA-only string from self._summary_history
-        (the wider window), or None when empty — feeds summarize_context."""
+        """[TITLE]/[NOTE]/[RECENT SPEECH] sections feeding summarize_context
+        (see prompts.yaml's context_summary_system_prompt) — title first
+        (read as the summary's anchor), then any viewer-injected notes, then
+        the numbered oldest-first JA speech from self._summary_history (the
+        wider window). Any section can be absent; None only when all three
+        are (nothing at all to summarize yet)."""
+        parts = []
+        if self._video_title:
+            parts.append(f"[TITLE]\n{self._video_title}")
+        if self._injected_notes:
+            parts.append("[NOTE]\n" + "\n".join(self._injected_notes))
         ja, _ko = self._format_pairs(self._summary_history)
-        return ja
+        if ja:
+            parts.append(f"[RECENT SPEECH]\n{ja}")
+        return "\n\n".join(parts) if parts else None
 
     @staticmethod
     def _format_pairs(pairs: "deque[tuple[str, str]] | list[tuple[str, str]]") -> tuple[str | None, str | None]:
@@ -488,6 +518,16 @@ class AudioSession:
             changed = True
         if not changed:
             return
+        await self._regenerate_context_summary_now()
+
+    async def _regenerate_context_summary_now(self) -> None:
+        """Shared tail of the periodic path above and the two debug-only
+        chat-box commands below: build the [TITLE]/[NOTE]/[RECENT SPEECH]
+        context, ask the LLM for a fresh one-line summary, and emit it if it
+        produced one. Unlike _check_and_update_context_summary, this skips
+        the context_changed gate entirely — callers here already decided a
+        regeneration is warranted (a viewer's explicit injection, or a fresh
+        '(init)')."""
         ja_context = self._format_summary_history()
         if not ja_context:
             return
@@ -499,6 +539,38 @@ class AudioSession:
         if summary:
             self._current_summary = summary
             await self._emit_safe({"type": "context_summary", "text": summary})
+
+    async def inject_context_summary(self, text: str) -> None:
+        """Debug hidden feature (2026-08-29): typing '(summary)[...]' into
+        the overlay's chat-reply box (debug metrics must be on — gated in
+        popup.js) doesn't translate the text as chat — it's read as a note
+        for the running topic summary instead, e.g. to correct a
+        misunderstanding or hand-feed context the model couldn't infer from
+        speech alone. Appended to _injected_notes (kept for the rest of the
+        session, or until reset_context_summary()) and folded into an
+        immediate regeneration so the effect is visible right away rather
+        than waiting for the next periodic check."""
+        text = text.strip()
+        if not text:
+            return
+        self._injected_notes.append(text)
+        # Bounded like the other rolling windows above — an unbounded list
+        # would grow the summary prompt without limit over a long session.
+        if len(self._injected_notes) > config.CONTEXT_SUMMARY_HISTORY_SIZE:
+            self._injected_notes = self._injected_notes[-config.CONTEXT_SUMMARY_HISTORY_SIZE :]
+        if self._context_summary_task is not None and not self._context_summary_task.done():
+            self._context_summary_task.cancel()
+        self._context_summary_task = asyncio.create_task(self._regenerate_context_summary_now())
+
+    async def reset_context_summary(self) -> None:
+        """Debug hidden feature (2026-08-29): typing '(init)' into the same
+        chat box drops all accumulated translation/summary context — same
+        wipe as a video-switch reset_context() — and immediately restarts
+        the running summary from just the video title (mirrors a brand-new
+        session's starting point), rather than leaving the bar blank until
+        enough new speech accumulates to trigger the next periodic update."""
+        self.reset_context()  # also clears _context_summary_task (-> None)
+        self._context_summary_task = asyncio.create_task(self._regenerate_context_summary_now())
 
     async def _emit_safe(self, event: dict) -> None:
         """Send an event to the client, swallowing transport errors — the
@@ -725,6 +797,10 @@ class AudioSession:
                 context_translation=context_translation,
                 glossary_hint=glossary_hint,
                 broadcaster_hint=self._broadcaster_hint,
+                # The running topic summary (see _regenerate_context_summary_now)
+                # as disambiguation background for this sentence — CLAUDE.md
+                # item 2026-08-29: "업데이트된 맥락으로 현재 전사/번역에 참고".
+                topic_hint=self._current_summary or None,
                 allowed_literals=self._glossary.latin_targets(final_text),
             )
             llm_s = time.monotonic() - llm_start

@@ -26,6 +26,7 @@ class TranslationEngine(Protocol):
         fast: bool = False,  # True => partial pass: literal/quick is fine
         context: str | None = None,
         glossary_hint: str | None = None,
+        topic_hint: str | None = None,  # running topic summary, see audio_session.py
     ) -> TranslationResult: ...
 
     async def translate_ko_to_ja(

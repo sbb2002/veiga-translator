@@ -235,6 +235,7 @@ class LlamaServerEngine:
         context_translation: str | None = None,
         glossary_hint: str | None = None,
         broadcaster_hint: str | None = None,
+        topic_hint: str | None = None,
         use_grammar: bool = True,
         use_repeat_penalty: bool = True,
         allowed_literals: tuple[str, ...] = (),
@@ -252,6 +253,11 @@ class LlamaServerEngine:
             sections.append(f"[GLOSSARY]\n{glossary_hint}")
         if broadcaster_hint:
             sections.append(f"[BROADCASTER]\n{broadcaster_hint}")
+        # Running topic summary (see audio_session.py::_current_summary) —
+        # only meaningful to the FINAL prompt (prompts.topic_context isn't
+        # spliced into FAST_SYSTEM_PROMPT), so it's silently ignored there.
+        if topic_hint:
+            sections.append(f"[TOPIC]\n{topic_hint}")
         if context:
             sections.append(f"[PREVIOUS SENTENCE]\n{context}")
             if context_translation:

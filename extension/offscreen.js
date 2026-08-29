@@ -389,6 +389,23 @@ chrome.runtime.onMessage.addListener((message) => {
         })
       );
     }
+  } else if (message?.type === "INJECT_CONTEXT_SUMMARY") {
+    // Debug hidden feature (2026-08-29): overlay chat box, '(summary)[...]'
+    // — see popup.js and backend/audio_session.py::inject_context_summary.
+    // Same "capture WS must be open" precondition as TRANSLATE_CHAT above.
+    const session = sessions.get(message.tabId);
+    if (session?.ws && session.ws.readyState === WebSocket.OPEN) {
+      session.ws.send(
+        JSON.stringify({ type: "inject_context_summary", text: message.text })
+      );
+    }
+  } else if (message?.type === "RESET_CONTEXT_SUMMARY") {
+    // Debug hidden feature (2026-08-29): overlay chat box, literal '(init)'
+    // — see popup.js and backend/audio_session.py::reset_context_summary.
+    const session = sessions.get(message.tabId);
+    if (session?.ws && session.ws.readyState === WebSocket.OPEN) {
+      session.ws.send(JSON.stringify({ type: "reset_context_summary" }));
+    }
   } else if (message?.type === "TRANSLATE_TITLE") {
     // One-shot JA->KO translation of the video title for the overlay header
     // — see popup.js and backend/audio_session.py::translate_title. Needs

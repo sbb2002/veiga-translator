@@ -324,30 +324,37 @@
     });
   }
 
-  // Video/channel metadata scrape (2026-08-25): who's actually streaming
-  // plus the video's own title/description/live-start time, so the backend
-  // can (a) log richer session metadata and (b) use the channel name as a
-  // translation hint for self-reference (see IMPROVEMENT_BACKLOG.md). One-
-  // shot at capture start, requested by background.js — no re-scrape on
-  // in-page navigation yet (deliberately deferred, see backlog note).
+  // Video/channel metadata scrape (2026-08-25): who's actually streaming plus
+  // the video's own title/description/live-start time, so the backend can
+  // (a) log richer session metadata and (b) use the channel name as a
+  // translation hint for self-reference. Run at capture start AND on every
+  // in-page navigation (maybeReportMetadataChange below).
   //
-  // Primary source: ytInitialPlayerResponse, a JSON blob YouTube's own
-  // player embeds in a <script> tag on every watch page. Preferred over any
-  // CSS selector because it's the page's own internal data contract (Google
-  // has much more reason to keep this shape stable than any particular
-  // rendered DOM structure, which changes with every UI redesign) — verified
-  // live 2026-08-25 against an actual stream; the DOM-selector fallback
-  // below, by contrast, did NOT match anything on that same page, so treat
-  // it as a last resort only.
-  // Channel avatar (2026-08-29): not in ytInitialPlayerResponse — the owner
-  // avatar <img> on the watch page is the reliable primary source; the
-  // ytInitialData renderer blob is the fallback (deeper renderer nesting, so
-  // more fragile). Returns the highest-res URL available or null.
+  // Source priority (2026-08-29 rework): the live DOM + URL first. YouTube's
+  // ytInitialPlayerResponse / ytInitialData <script> blobs are the page's own
+  // data contract and nice and stable in shape, BUT they are frozen at the
+  // initial page load and NOT rewritten when YouTube swaps videos client-
+  // side — so after an SPA navigation they still describe the first video.
+  // The rendered DOM (title h1, #channel-name link, #avatar img, ?v= param)
+  // does follow the current video, so it leads; the frozen blob is consulted
+  // only for fields the DOM doesn't expose (streamStartedAt / isLive /
+  // description) and only when its videoId still matches the current URL.
   function getChannelAvatarUrl() {
-    // ytInitialData first — it's inlined in the page's initial HTML, so it's
-    // reliably present at scrape time, whereas the owner-avatar <img>'s src
-    // is lazy-loaded and usually still "" when we look (verified live
-    // 2026-08-29). Take the highest-res thumbnail entry.
+    // DOM first: it reflects the CURRENT video (updates on SPA navigation),
+    // and by the time we re-scrape after a nav the owner-avatar <img> already
+    // has a real src.
+    for (const sel of [
+      "#owner #avatar img",
+      "ytd-video-owner-renderer #avatar img",
+      "#avatar-btn img",
+    ]) {
+      const src = document.querySelector(sel)?.src;
+      if (src && src.startsWith("http")) return src;
+    }
+    // ytInitialData <script>: inlined in the initial HTML and FROZEN there —
+    // never rewritten on in-page navigation. So this is the cold-load path
+    // only (on a fresh load the <img> src above is still lazy/empty); after
+    // an SPA nav it holds the first video's data and must not be trusted.
     try {
       for (const script of document.querySelectorAll("script")) {
         const text = script.textContent;
@@ -367,20 +374,35 @@
     } catch (err) {
       console.warn("[content_script] ytInitialData avatar parse failed", err);
     }
-    // DOM fallback (only useful once the avatar has actually loaded).
-    for (const sel of [
-      "#owner #avatar img",
-      "ytd-video-owner-renderer #avatar img",
-      "#avatar-btn img",
-    ]) {
-      const src = document.querySelector(sel)?.src;
-      if (src && src.startsWith("http")) return src;
-    }
     return null;
   }
 
   function scrapeVideoMetadata() {
+    const videoId = new URLSearchParams(location.search).get("v") || null;
     const channelAvatarUrl = getChannelAvatarUrl();
+
+    // Live DOM / URL — these track the CURRENT video across in-page (SPA)
+    // navigation. The ytInitialPlayerResponse <script> below does NOT: it is
+    // frozen at the initial page load and never rewritten when YouTube swaps
+    // videos client-side, so relying on it made the overlay keep showing the
+    // first video's title/channel/avatar forever (2026-08-29).
+    const domTitle = (
+      document.querySelector("ytd-watch-metadata h1, h1.ytd-watch-metadata")?.textContent ||
+      document.title.replace(/\s*-\s*YouTube$/, "")
+    )
+      .replace(/^\(\d+\)\s*/, "")
+      .trim();
+    const domChannel =
+      document
+        .querySelector(
+          "ytd-watch-metadata #channel-name a, #owner #channel-name a, ytd-video-owner-renderer ytd-channel-name a"
+        )
+        ?.textContent?.trim() || null;
+
+    // Parse ytInitialPlayerResponse, but only trust it when its own videoId
+    // still matches the current URL (i.e. no SPA nav since page load) — it's
+    // the only source for streamStartedAt / isLive / description.
+    let frozen = null;
     try {
       for (const script of document.querySelectorAll("script")) {
         const text = script.textContent;
@@ -388,62 +410,34 @@
         const match = text.match(/ytInitialPlayerResponse\s*=\s*(\{.*?\});/s);
         if (!match) continue;
         const data = JSON.parse(match[1]);
-        const vd = data?.videoDetails;
-        if (!vd?.author) continue;
-        const liveBroadcastDetails =
-          data?.microformat?.playerMicroformatRenderer?.liveBroadcastDetails;
-        return {
-          channelName: vd.author,
-          channelAvatarUrl,
-          url: location.href,
-          videoTitle: vd.title ?? null,
-          videoId: vd.videoId ?? null,
-          isLive: vd.isLiveContent ?? null,
-          // ISO 8601 absolute time — precise and locale-independent, unlike
-          // the rendered "streaming started Xm ago" badge text (whose DOM
-          // location we couldn't even find a stable selector for).
-          streamStartedAt: liveBroadcastDetails?.startTimestamp ?? null,
-          description: (vd.shortDescription || "").slice(0, 1000),
-          source: "ytInitialPlayerResponse",
-        };
+        if (data?.videoDetails?.videoId) {
+          frozen = data;
+          break;
+        }
       }
     } catch (err) {
       console.warn("[content_script] ytInitialPlayerResponse parse failed", err);
     }
+    const vd = frozen && frozen.videoDetails.videoId === videoId ? frozen.videoDetails : null;
+    const lbd = vd
+      ? frozen.microformat?.playerMicroformatRenderer?.liveBroadcastDetails
+      : null;
 
-    // Fallback: DOM selectors — brittle to YouTube markup changes, last resort only.
-    const selectors = [
-      "ytd-watch-metadata #channel-name a",
-      "#owner #channel-name a",
-      "ytd-video-owner-renderer ytd-channel-name a",
-    ];
-    for (const sel of selectors) {
-      const text = document.querySelector(sel)?.textContent?.trim();
-      if (text) {
-        return {
-          channelName: text,
-          channelAvatarUrl,
-          url: location.href,
-          videoTitle: document.title
-            .replace(/\s*-\s*YouTube$/, "")
-            .replace(/^\(\d+\)\s*/, ""),
-          videoId: null,
-          isLive: null,
-          streamStartedAt: null,
-          description: null,
-          source: "dom",
-        };
-      }
-    }
+    const channelName = domChannel || vd?.author || null;
+    const videoTitle = domTitle || vd?.title || null;
+
     return {
-      channelName: null,
+      channelName,
       channelAvatarUrl,
-      videoTitle: null,
-      videoId: null,
-      isLive: null,
-      streamStartedAt: null,
-      description: null,
-      source: "none",
+      url: location.href,
+      videoTitle,
+      videoId,
+      isLive: vd?.isLiveContent ?? null,
+      // ISO 8601 absolute time — precise and locale-independent, unlike the
+      // rendered "streaming started Xm ago" badge text.
+      streamStartedAt: lbd?.startTimestamp ?? null,
+      description: vd ? (vd.shortDescription || "").slice(0, 1000) : null,
+      source: domChannel || domTitle ? "dom" : vd ? "ytInitialPlayerResponse" : "none",
     };
   }
 

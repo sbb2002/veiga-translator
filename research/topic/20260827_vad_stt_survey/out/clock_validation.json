@@ -1,0 +1,67 @@
+{
+  "per_seg": [
+    {
+      "seg_id": "7112_25921_45.76_52.76",
+      "cer": 0.0,
+      "hyp_virtual": "",
+      "hyp_realtime": ""
+    },
+    {
+      "seg_id": "7112_25921_52.76_59.76",
+      "cer": 0.0,
+      "hyp_virtual": "",
+      "hyp_realtime": ""
+    },
+    {
+      "seg_id": "7112_25921_78.40_85.02",
+      "cer": 0.0,
+      "hyp_virtual": "",
+      "hyp_realtime": ""
+    },
+    {
+      "seg_id": "7112_25921_85.66_94.10",
+      "cer": 0.0,
+      "hyp_virtual": "",
+      "hyp_realtime": ""
+    },
+    {
+      "seg_id": "7112_25921_94.90_101.24",
+      "cer": 0.0,
+      "hyp_virtual": "",
+      "hyp_realtime": ""
+    },
+    {
+      "seg_id": "7112_25922_10.00_12.00",
+      "cer": 0.0,
+      "hyp_virtual": "いやわかんないでも見ちゃう",
+      "hyp_realtime": "いやわかんないでも見ちゃう"
+    },
+    {
+      "seg_id": "7112_25922_108.00_110.00",
+      "cer": 0.0,
+      "hyp_virtual": "バッキング",
+      "hyp_realtime": "バッキング"
+    },
+    {
+      "seg_id": "7112_25922_110.00_113.00",
+      "cer": 0.0,
+      "hyp_virtual": "本当に夜の学校はホラーの",
+      "hyp_realtime": "本当に夜の学校はホラーの"
+    },
+    {
+      "seg_id": "7112_25922_120.00_121.00",
+      "cer": 0.0,
+      "hyp_virtual": "ローストクゲージ見てある",
+      "hyp_realtime": "ローストクゲージ見てある"
+    },
+    {
+      "seg_id": "7112_25922_123.00_124.00",
+      "cer": 0.0,
+      "hyp_virtual": "ロウソクがあんの?",
+      "hyp_realtime": "ロウソクがあんの?"
+    }
+  ],
+  "max_cer": 0.0,
+  "mean_cer": 0.0,
+  "pass": true
+}

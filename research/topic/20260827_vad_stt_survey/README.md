@@ -1,11 +1,19 @@
 > 확정된 연구설계는 [`DESIGN.md`](DESIGN.md) 참고 (2026-08-27 인터뷰로 확정).
-> 실제 실행·평가 절차(다른 세션용 매뉴얼)는 [`RUNBOOK.md`](RUNBOOK.md). 아래는 초안 메모.
+> 실제 실행·평가 절차(다른 세션용 매뉴얼)는 [`RUNBOOK.md`](RUNBOOK.md).
 >
 > **선행 조건 해소 + 엔진 확정 (2026-08-28)**: `20260826_.../report/03-fairness-review.md`
 > §2.5의 **ReazonSpeech 공정 재평가** — 정량은 fair가 turbo/Qwen보다 뒤지나 **정성(의미
 > 충실도)은 turbo보다 유의미하게 높고 Qwen과 동급** → 교체 후보로 승격. **파이프라인
 > 엔진 = `qwen3-asr-1.7b`, `turbo`, `reazonspeech` 3개**(총 450건). DESIGN §4 / RUNBOOK
 > 참고. 프로덕션은 Qwen3-ASR지만 3개를 모두 본다.
+>
+> **[2026-08-28 실행 완료]** S1(가상 클럭 검증) PASS. **3개 엔진 모두 1차 목표
+> 미달성** — VAD-STT 파이프라인(A) 품질이 통청취 STT(B)에 통계적으로 도달하지 못했다
+> (정량 5지표 중 turbo의 chrF++ 1개만 `reached`, 나머지 전부 `gap`; 정성 자연스러움도
+> 3엔진 전부 A가 유의미하게 낮음). 원인은 게이트 과다 드롭이 아니라 **선제 분할
+> (`strong_boundary`) 과다 발동으로 인한 과분절**로 추정 — qwen3-asr-1.7b(현
+> 프로덕션)에서 가장 심함(발동 386회, turbo의 5.9배). 상세: `report/01-gap-results.md`,
+> `report/02-qualitative-eval.md`.
 
 # 배경
 지난 실험인 전사모델 평가실험(research\topic\20260826_stt_model_survey_gpu_full), 번역 평가실험(research\topic\20260826_translation_model_survey)에서 바닐라 상태의 STT, 번역작업 모델의 성능을 정량적, 정성적으로 평가하였다. 그런데 해당 전사모델 평가실험에서는 각각 오디오 클립에 대해 전구간을 모두 청취한 후 그것을 전사하는 방식이었다. 따라서 실제 환경과 비슷하게 전사되었을 때와 기존 전사 평가실험 결과와 비교대조하여 어떤 차이가 있는지 파악하고 1차 목표로 VAD-STT 평가결과의 품질이 단순 STT 평가결과의 품질에 도달하도록 하고자 한다.
@@ -30,3 +38,32 @@ CER, WER, 의미 임베딩 평가
 * 결과는 표로 작성하고, 표에 대한 간략한 설명을 함께 적을 것.
 * 표를 적절한 그래프로 그려서 png로 저장할 것.
 * 보고서 작성 시 결과 표, 그림을 반드시 활용할 것.
+
+# 결과 요약 (2026-08-28)
+
+**1차 목표 미달성.** 3개 엔진(turbo, qwen3-asr-1.7b, reazonspeech) 모두 VAD-STT
+파이프라인(A) 품질이 통청취 STT(B)에 통계적으로 도달하지 못했다. 정량 5지표(CER,
+chrF++, BLEU-char, ROUGE-L, 임베딩 코사인) 중 turbo의 chrF++ 1개만 `reached`, 나머지
+14개 조합 전부 `gap`. 정성 자연스러움도 3엔진 전부 A가 유의미하게 낮다(Wilcoxon,
+Holm 보정). 원인은 게이트 과다 드롭이 아니라 **선제 분할(`strong_boundary`) 과다
+발동으로 인한 과분절**로 추정 — qwen3-asr-1.7b(현 프로덕션)에서 가장 심함(발동
+386회, turbo의 5.9배 — turbo는 65회). 상세 해석은 `report/01-gap-results.md`
+(정량) · `report/02-qualitative-eval.md`(정성) 참고. 후속 ablation 우선순위는
+`report/01` §7.
+
+## 산출물
+
+- `report/01-gap-results.md` — 정량 갭(A-B), 카테고리별 CER, RTF, 파이프라인 내부
+  원인 분석(`finalize_reason_counts`), 결론.
+- `report/02-qualitative-eval.md` — 정성 3축(자연스러움/문장부호/환각) 전수 150×6run,
+  카테고리별, Wilcoxon+Holm, 환각률 bootstrap, 대표 사례.
+- `out/clock_validation.json` — S1 가상 클럭 검증(PASS, max CER 0.0000).
+- `out/<engine>/pipeline_transcripts.jsonl` — 엔진별 파이프라인 전사결과 A(150클립).
+- `out/{A,B}_<engine>/quant_summary.json`, `embedding_summary.json` — 정량/임베딩
+  채점(6 run).
+- `out/stats_summary.json` — paired bootstrap CI + Wilcoxon + Holm 통계.
+- `out/qualitative_sample.txt`, `qualitative_scores.json` — 정성 채점 대조표·점수
+  (150블록 × 6run × 3축, 전수).
+- `fig/gap_quality.png`, `fig/rtf.png`, `fig/cer_by_category.png` — 정량 결과 그림.
+- `20260826_.../out/reazonspeech-nemo-v2_fair_gpu/` — B_reazonspeech(GPU 통청취
+  재생성, `transcribe_reazonspeech_fair.py --device cuda --out-suffix _gpu`).

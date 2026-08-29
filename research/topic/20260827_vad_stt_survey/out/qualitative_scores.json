@@ -1,0 +1,4514 @@
+{
+  "A_qwen3-asr-1.7b": {
+    "7112_25921_45.76_52.76": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25921_52.76_59.76": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25921_78.40_85.02": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25921_85.66_94.10": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25921_94.90_101.24": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_10.00_12.00": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_108.00_110.00": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_110.00_113.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_120.00_121.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_123.00_124.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_127.00_129.00": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_135.00_136.00": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_146.00_148.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_152.00_154.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_156.00_157.00": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_16.00_18.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_161.00_162.00": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_163.00_164.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_170.00_172.00": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_175.00_176.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_180.00_181.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_186.00_188.00": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_194.00_195.00": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_198.00_203.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_2.00_4.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_204.00_206.00": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_206.00_208.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_208.00_210.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_221.00_222.00": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_222.00_223.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_0.03_4.10": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_107.00_109.00": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_113.00_115.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_117.00_119.00": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_119.00_121.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_121.00_123.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_124.99_132.28": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_132.27_135.94": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_135.94_141.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "1352_5491_139.00_141.00": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_141.00_147.00": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_148.13_150.10": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_150.59_153.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "1352_5491_156.49_159.00": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_161.00_163.50": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "1352_5491_164.81_171.40": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_17.01_21.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_173.32_175.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_184.48_187.35": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "1352_5491_187.34_188.67": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_189.32_194.45": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_203.03_206.73": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "1352_5491_21.00_31.33": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_212.90_216.99": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_216.72_221.94": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "1352_5491_227.52_229.89": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_229.89_232.22": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_231.90_238.33": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_243.00_248.36": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_279.00_282.99": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_0.00_15.28": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_106.28_108.28": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_108.28_114.28": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_116.28_119.28": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_120.28_122.28": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_129.28_138.28": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_171.28_178.28": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_178.28_181.28": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_185.28_194.28": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_212.28_219.28": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_231.28_237.28": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_259.28_267.28": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_267.28_271.28": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_285.28_291.28": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_297.28_301.28": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_304.28_308.28": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_322.28_325.28": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_325.28_330.28": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_330.28_333.28": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_355.28_359.28": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_377.28_382.28": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_382.28_386.28": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "8407_40837_386.28_389.28": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_398.28_401.28": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_401.28_412.28": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_430.28_435.28": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_456.28_460.28": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_460.28_465.28": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_470.28_474.28": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_482.28_487.28": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_102.40_111.99": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_111.99_121.85": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_122.00_126.63": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_127.20_133.94": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_134.90_138.76": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_138.91_146.61": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_146.80_151.59": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_157.50_159.63": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_165.64_178.08": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_178.20_183.93": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_18.39_22.40": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_184.24_186.56": {
+      "naturalness": 2,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_188.57_197.98": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_200.19_203.88": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_204.40_205.66": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_205.71_208.64": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_208.66_220.91": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_220.97_222.58": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_223.70_227.42": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_23.75_26.94": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_231.50_238.03": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_240.87_242.99": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_243.38_247.53": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_250.74_256.32": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_256.68_259.22": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_272.00_275.53": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_276.00_280.71": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_28.24_33.58": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_281.33_284.11": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_291.15_296.32": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_0.00_8.64": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_102.40_106.04": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_106.04_111.56": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_111.56_118.04": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_118.04_124.44": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_124.44_131.80": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_131.80_134.56": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_134.56_139.96": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_139.96_145.28": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_145.28_151.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_151.00_157.68": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_157.68_162.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_162.00_167.16": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_167.16_172.84": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "7266_28097_17.24_24.96": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_172.84_177.56": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_177.56_184.16": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_184.16_188.72": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_188.72_193.12": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_195.16_204.16": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_204.16_210.20": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_210.20_214.48": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_214.48_220.84": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_226.12_229.52": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_229.52_236.04": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_236.04_242.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_24.96_35.64": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_242.00_246.80": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_249.44_253.80": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_255.04_260.20": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    }
+  },
+  "B_qwen3-asr-1.7b": {
+    "7112_25921_45.76_52.76": {
+      "naturalness": 5,
+      "punctuation": 5,
+      "hallucination": 1
+    },
+    "7112_25921_52.76_59.76": {
+      "naturalness": 5,
+      "punctuation": 5,
+      "hallucination": 1
+    },
+    "7112_25921_78.40_85.02": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25921_85.66_94.10": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7112_25921_94.90_101.24": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7112_25922_10.00_12.00": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7112_25922_108.00_110.00": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7112_25922_110.00_113.00": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_120.00_121.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_123.00_124.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_127.00_129.00": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_135.00_136.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_146.00_148.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_152.00_154.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_156.00_157.00": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_16.00_18.00": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_161.00_162.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_163.00_164.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_170.00_172.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_175.00_176.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_180.00_181.00": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_186.00_188.00": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_194.00_195.00": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_198.00_203.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_2.00_4.00": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_204.00_206.00": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_206.00_208.00": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_208.00_210.00": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_221.00_222.00": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_222.00_223.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_0.03_4.10": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_107.00_109.00": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_113.00_115.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_117.00_119.00": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_119.00_121.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_121.00_123.00": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_124.99_132.28": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_132.27_135.94": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_135.94_141.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_139.00_141.00": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_141.00_147.00": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_148.13_150.10": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_150.59_153.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "1352_5491_156.49_159.00": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_161.00_163.50": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "1352_5491_164.81_171.40": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_17.01_21.00": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_173.32_175.00": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_184.48_187.35": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_187.34_188.67": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_189.32_194.45": {
+      "naturalness": 3,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_203.03_206.73": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_21.00_31.33": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_212.90_216.99": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_216.72_221.94": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_227.52_229.89": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_229.89_232.22": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_231.90_238.33": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_243.00_248.36": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_279.00_282.99": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_0.00_15.28": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "8407_40837_106.28_108.28": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_108.28_114.28": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "8407_40837_116.28_119.28": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_120.28_122.28": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_129.28_138.28": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_171.28_178.28": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_178.28_181.28": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_185.28_194.28": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "8407_40837_212.28_219.28": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "8407_40837_231.28_237.28": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_259.28_267.28": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_267.28_271.28": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "8407_40837_285.28_291.28": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_297.28_301.28": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_304.28_308.28": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "8407_40837_322.28_325.28": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_325.28_330.28": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "8407_40837_330.28_333.28": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_355.28_359.28": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_377.28_382.28": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_382.28_386.28": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_386.28_389.28": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_398.28_401.28": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_401.28_412.28": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "8407_40837_430.28_435.28": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "8407_40837_456.28_460.28": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_460.28_465.28": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_470.28_474.28": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_482.28_487.28": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_102.40_111.99": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_111.99_121.85": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_122.00_126.63": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_127.20_133.94": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_134.90_138.76": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_138.91_146.61": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_146.80_151.59": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_157.50_159.63": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_165.64_178.08": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_178.20_183.93": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_18.39_22.40": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_184.24_186.56": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_188.57_197.98": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_200.19_203.88": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_204.40_205.66": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_205.71_208.64": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_208.66_220.91": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_220.97_222.58": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_223.70_227.42": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_23.75_26.94": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_231.50_238.03": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_240.87_242.99": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_243.38_247.53": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_250.74_256.32": {
+      "naturalness": 5,
+      "punctuation": 5,
+      "hallucination": 0
+    },
+    "1373_5567_256.68_259.22": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_272.00_275.53": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_276.00_280.71": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_28.24_33.58": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_281.33_284.11": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_291.15_296.32": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7266_28097_0.00_8.64": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_102.40_106.04": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_106.04_111.56": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_111.56_118.04": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_118.04_124.44": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_124.44_131.80": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_131.80_134.56": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_134.56_139.96": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_139.96_145.28": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_145.28_151.00": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_151.00_157.68": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_157.68_162.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_162.00_167.16": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_167.16_172.84": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_17.24_24.96": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_172.84_177.56": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_177.56_184.16": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_184.16_188.72": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_188.72_193.12": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_195.16_204.16": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_204.16_210.20": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_210.20_214.48": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_214.48_220.84": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_226.12_229.52": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_229.52_236.04": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_236.04_242.00": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_24.96_35.64": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_242.00_246.80": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_249.44_253.80": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_255.04_260.20": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    }
+  },
+  "A_turbo": {
+    "7112_25921_45.76_52.76": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25921_52.76_59.76": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25921_78.40_85.02": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25921_85.66_94.10": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25921_94.90_101.24": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_10.00_12.00": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_108.00_110.00": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_110.00_113.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_120.00_121.00": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_123.00_124.00": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7112_25922_127.00_129.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_135.00_136.00": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_146.00_148.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_152.00_154.00": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7112_25922_156.00_157.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_16.00_18.00": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_161.00_162.00": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_163.00_164.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_170.00_172.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_175.00_176.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_180.00_181.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_186.00_188.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_194.00_195.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_198.00_203.00": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7112_25922_2.00_4.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_204.00_206.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_206.00_208.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_208.00_210.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_221.00_222.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_222.00_223.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_0.03_4.10": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_107.00_109.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_113.00_115.00": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_117.00_119.00": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_119.00_121.00": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_121.00_123.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_124.99_132.28": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_132.27_135.94": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_135.94_141.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_139.00_141.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_141.00_147.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_148.13_150.10": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_150.59_153.00": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_156.49_159.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_161.00_163.50": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 1
+    },
+    "1352_5491_164.81_171.40": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_17.01_21.00": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_173.32_175.00": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_184.48_187.35": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_187.34_188.67": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_189.32_194.45": {
+      "naturalness": 3,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_203.03_206.73": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_21.00_31.33": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_212.90_216.99": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_216.72_221.94": {
+      "naturalness": 3,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_227.52_229.89": {
+      "naturalness": 5,
+      "punctuation": 5,
+      "hallucination": 0
+    },
+    "1352_5491_229.89_232.22": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_231.90_238.33": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "1352_5491_243.00_248.36": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_279.00_282.99": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_0.00_15.28": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_106.28_108.28": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_108.28_114.28": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "8407_40837_116.28_119.28": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_120.28_122.28": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_129.28_138.28": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_171.28_178.28": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "8407_40837_178.28_181.28": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_185.28_194.28": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_212.28_219.28": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "8407_40837_231.28_237.28": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_259.28_267.28": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_267.28_271.28": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_285.28_291.28": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_297.28_301.28": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_304.28_308.28": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_322.28_325.28": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_325.28_330.28": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_330.28_333.28": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_355.28_359.28": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_377.28_382.28": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_382.28_386.28": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_386.28_389.28": {
+      "naturalness": 5,
+      "punctuation": 5,
+      "hallucination": 0
+    },
+    "8407_40837_398.28_401.28": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_401.28_412.28": {
+      "naturalness": 3,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "8407_40837_430.28_435.28": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "8407_40837_456.28_460.28": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_460.28_465.28": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_470.28_474.28": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_482.28_487.28": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_102.40_111.99": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_111.99_121.85": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_122.00_126.63": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 1
+    },
+    "1373_5567_127.20_133.94": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_134.90_138.76": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_138.91_146.61": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_146.80_151.59": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_157.50_159.63": {
+      "naturalness": 5,
+      "punctuation": 5,
+      "hallucination": 0
+    },
+    "1373_5567_165.64_178.08": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_178.20_183.93": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "1373_5567_18.39_22.40": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_184.24_186.56": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_188.57_197.98": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "1373_5567_200.19_203.88": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_204.40_205.66": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_205.71_208.64": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_208.66_220.91": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_220.97_222.58": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_223.70_227.42": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_23.75_26.94": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_231.50_238.03": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_240.87_242.99": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_243.38_247.53": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_250.74_256.32": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_256.68_259.22": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_272.00_275.53": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_276.00_280.71": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_28.24_33.58": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_281.33_284.11": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_291.15_296.32": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_0.00_8.64": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_102.40_106.04": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_106.04_111.56": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_111.56_118.04": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_118.04_124.44": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_124.44_131.80": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_131.80_134.56": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_134.56_139.96": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_139.96_145.28": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_145.28_151.00": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_151.00_157.68": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_157.68_162.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_162.00_167.16": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_167.16_172.84": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 1
+    },
+    "7266_28097_17.24_24.96": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_172.84_177.56": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_177.56_184.16": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 1
+    },
+    "7266_28097_184.16_188.72": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_188.72_193.12": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_195.16_204.16": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_204.16_210.20": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_210.20_214.48": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_214.48_220.84": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_226.12_229.52": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "7266_28097_229.52_236.04": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_236.04_242.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_24.96_35.64": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_242.00_246.80": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_249.44_253.80": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_255.04_260.20": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    }
+  },
+  "B_turbo": {
+    "7112_25921_45.76_52.76": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 1
+    },
+    "7112_25921_52.76_59.76": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "7112_25921_78.40_85.02": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "7112_25921_85.66_94.10": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "7112_25921_94.90_101.24": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "7112_25922_10.00_12.00": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_108.00_110.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_110.00_113.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_120.00_121.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_123.00_124.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_127.00_129.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_135.00_136.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_146.00_148.00": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_152.00_154.00": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7112_25922_156.00_157.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_16.00_18.00": {
+      "naturalness": 2,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7112_25922_161.00_162.00": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_163.00_164.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_170.00_172.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_175.00_176.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_180.00_181.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_186.00_188.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_194.00_195.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_198.00_203.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_2.00_4.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_204.00_206.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_206.00_208.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_208.00_210.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_221.00_222.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_222.00_223.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_0.03_4.10": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_107.00_109.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_113.00_115.00": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_117.00_119.00": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_119.00_121.00": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_121.00_123.00": {
+      "naturalness": 5,
+      "punctuation": 5,
+      "hallucination": 0
+    },
+    "1352_5491_124.99_132.28": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "1352_5491_132.27_135.94": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_135.94_141.00": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_139.00_141.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_141.00_147.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_148.13_150.10": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_150.59_153.00": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 1
+    },
+    "1352_5491_156.49_159.00": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_161.00_163.50": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 1
+    },
+    "1352_5491_164.81_171.40": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_17.01_21.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_173.32_175.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_184.48_187.35": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_187.34_188.67": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_189.32_194.45": {
+      "naturalness": 5,
+      "punctuation": 5,
+      "hallucination": 0
+    },
+    "1352_5491_203.03_206.73": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_21.00_31.33": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_212.90_216.99": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_216.72_221.94": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_227.52_229.89": {
+      "naturalness": 5,
+      "punctuation": 5,
+      "hallucination": 0
+    },
+    "1352_5491_229.89_232.22": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_231.90_238.33": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_243.00_248.36": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_279.00_282.99": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_0.00_15.28": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 1
+    },
+    "8407_40837_106.28_108.28": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_108.28_114.28": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_116.28_119.28": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_120.28_122.28": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_129.28_138.28": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_171.28_178.28": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_178.28_181.28": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_185.28_194.28": {
+      "naturalness": 3,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "8407_40837_212.28_219.28": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_231.28_237.28": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_259.28_267.28": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_267.28_271.28": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_285.28_291.28": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_297.28_301.28": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_304.28_308.28": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_322.28_325.28": {
+      "naturalness": 2,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_325.28_330.28": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_330.28_333.28": {
+      "naturalness": 3,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "8407_40837_355.28_359.28": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_377.28_382.28": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_382.28_386.28": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_386.28_389.28": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_398.28_401.28": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_401.28_412.28": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_430.28_435.28": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_456.28_460.28": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_460.28_465.28": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_470.28_474.28": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_482.28_487.28": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_102.40_111.99": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_111.99_121.85": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_122.00_126.63": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_127.20_133.94": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_134.90_138.76": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_138.91_146.61": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_146.80_151.59": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_157.50_159.63": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_165.64_178.08": {
+      "naturalness": 5,
+      "punctuation": 5,
+      "hallucination": 0
+    },
+    "1373_5567_178.20_183.93": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_18.39_22.40": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_184.24_186.56": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_188.57_197.98": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_200.19_203.88": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_204.40_205.66": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_205.71_208.64": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_208.66_220.91": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_220.97_222.58": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_223.70_227.42": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_23.75_26.94": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_231.50_238.03": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_240.87_242.99": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_243.38_247.53": {
+      "naturalness": 5,
+      "punctuation": 5,
+      "hallucination": 0
+    },
+    "1373_5567_250.74_256.32": {
+      "naturalness": 5,
+      "punctuation": 5,
+      "hallucination": 0
+    },
+    "1373_5567_256.68_259.22": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_272.00_275.53": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_276.00_280.71": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_28.24_33.58": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_281.33_284.11": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1373_5567_291.15_296.32": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_0.00_8.64": {
+      "naturalness": 5,
+      "punctuation": 5,
+      "hallucination": 0
+    },
+    "7266_28097_102.40_106.04": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_106.04_111.56": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_111.56_118.04": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_118.04_124.44": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_124.44_131.80": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7266_28097_131.80_134.56": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_134.56_139.96": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_139.96_145.28": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_145.28_151.00": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_151.00_157.68": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_157.68_162.00": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_162.00_167.16": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_167.16_172.84": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_17.24_24.96": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_172.84_177.56": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_177.56_184.16": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_184.16_188.72": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_188.72_193.12": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_195.16_204.16": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_204.16_210.20": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_210.20_214.48": {
+      "naturalness": 3,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_214.48_220.84": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_226.12_229.52": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_229.52_236.04": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_236.04_242.00": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_24.96_35.64": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_242.00_246.80": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_249.44_253.80": {
+      "naturalness": 5,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7266_28097_255.04_260.20": {
+      "naturalness": 4,
+      "punctuation": 1,
+      "hallucination": 0
+    }
+  },
+  "A_reazonspeech": {
+    "7112_25921_45.76_52.76": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25921_52.76_59.76": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25921_78.40_85.02": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25921_85.66_94.10": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25921_94.90_101.24": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "7112_25922_10.00_12.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_108.00_110.00": {
+      "naturalness": 3,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7112_25922_110.00_113.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_120.00_121.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_123.00_124.00": {
+      "naturalness": 3,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7112_25922_127.00_129.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_135.00_136.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_146.00_148.00": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_152.00_154.00": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_156.00_157.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_16.00_18.00": {
+      "naturalness": 2,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7112_25922_161.00_162.00": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_163.00_164.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_170.00_172.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_175.00_176.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_180.00_181.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_186.00_188.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_194.00_195.00": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_198.00_203.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_2.00_4.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_204.00_206.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_206.00_208.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_208.00_210.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_221.00_222.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_222.00_223.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_0.03_4.10": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_107.00_109.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_113.00_115.00": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_117.00_119.00": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_119.00_121.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_121.00_123.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_124.99_132.28": {
+      "naturalness": 2,
+      "punctuation": 4,
+      "hallucination": 1
+    },
+    "1352_5491_132.27_135.94": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_135.94_141.00": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 1
+    },
+    "1352_5491_139.00_141.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_141.00_147.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_148.13_150.10": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_150.59_153.00": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "1352_5491_156.49_159.00": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_161.00_163.50": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_164.81_171.40": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_17.01_21.00": {
+      "naturalness": 1,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_173.32_175.00": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_184.48_187.35": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_187.34_188.67": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_189.32_194.45": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_203.03_206.73": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_21.00_31.33": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_212.90_216.99": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_216.72_221.94": {
+      "naturalness": 1,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_227.52_229.89": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_229.89_232.22": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_231.90_238.33": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_243.00_248.36": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "1352_5491_279.00_282.99": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_0.00_15.28": {
+      "naturalness": 1,
+      "punctuation": 1,
+      "hallucination": 0
+    },
+    "8407_40837_106.28_108.28": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_108.28_114.28": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_116.28_119.28": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_120.28_122.28": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_129.28_138.28": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_171.28_178.28": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_178.28_181.28": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_185.28_194.28": {
+      "naturalness": 1,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_212.28_219.28": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_231.28_237.28": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_259.28_267.28": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "8407_40837_267.28_271.28": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_285.28_291.28": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_297.28_301.28": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_304.28_308.28": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_322.28_325.28": {
+      "naturalness": 1,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_325.28_330.28": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_330.28_333.28": {
+      "naturalness": 1,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_355.28_359.28": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_377.28_382.28": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_382.28_386.28": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_386.28_389.28": {
+      "naturalness": 1,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_398.28_401.28": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_401.28_412.28": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_430.28_435.28": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_456.28_460.28": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_460.28_465.28": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "8407_40837_470.28_474.28": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_482.28_487.28": {
+      "naturalness": 1,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_102.40_111.99": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_111.99_121.85": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_122.00_126.63": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_127.20_133.94": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_134.90_138.76": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_138.91_146.61": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_146.80_151.59": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_157.50_159.63": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_165.64_178.08": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_178.20_183.93": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_18.39_22.40": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_184.24_186.56": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_188.57_197.98": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_200.19_203.88": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_204.40_205.66": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_205.71_208.64": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_208.66_220.91": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_220.97_222.58": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_223.70_227.42": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_23.75_26.94": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_231.50_238.03": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_240.87_242.99": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_243.38_247.53": {
+      "naturalness": 3,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_250.74_256.32": {
+      "naturalness": 1,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_256.68_259.22": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_272.00_275.53": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_276.00_280.71": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_28.24_33.58": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_281.33_284.11": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_291.15_296.32": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_0.00_8.64": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_102.40_106.04": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_106.04_111.56": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_111.56_118.04": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_118.04_124.44": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_124.44_131.80": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_131.80_134.56": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_134.56_139.96": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_139.96_145.28": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_145.28_151.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_151.00_157.68": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_157.68_162.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_162.00_167.16": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_167.16_172.84": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_17.24_24.96": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_172.84_177.56": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_177.56_184.16": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_184.16_188.72": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_188.72_193.12": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_195.16_204.16": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_204.16_210.20": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_210.20_214.48": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_214.48_220.84": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_226.12_229.52": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_229.52_236.04": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_236.04_242.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_24.96_35.64": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_242.00_246.80": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_249.44_253.80": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_255.04_260.20": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    }
+  },
+  "B_reazonspeech": {
+    "7112_25921_45.76_52.76": {
+      "naturalness": 2,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7112_25921_52.76_59.76": {
+      "naturalness": 1,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25921_78.40_85.02": {
+      "naturalness": 2,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7112_25921_85.66_94.10": {
+      "naturalness": 2,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7112_25921_94.90_101.24": {
+      "naturalness": 2,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7112_25922_10.00_12.00": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7112_25922_108.00_110.00": {
+      "naturalness": 5,
+      "punctuation": 5,
+      "hallucination": 0
+    },
+    "7112_25922_110.00_113.00": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_120.00_121.00": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_123.00_124.00": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7112_25922_127.00_129.00": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_135.00_136.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_146.00_148.00": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_152.00_154.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_156.00_157.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_16.00_18.00": {
+      "naturalness": 2,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7112_25922_161.00_162.00": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_163.00_164.00": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_170.00_172.00": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_175.00_176.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_180.00_181.00": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_186.00_188.00": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_194.00_195.00": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_198.00_203.00": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_2.00_4.00": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_204.00_206.00": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_206.00_208.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7112_25922_208.00_210.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_221.00_222.00": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7112_25922_222.00_223.00": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_0.03_4.10": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_107.00_109.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_113.00_115.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_117.00_119.00": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_119.00_121.00": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1352_5491_121.00_123.00": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_124.99_132.28": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_132.27_135.94": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_135.94_141.00": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_139.00_141.00": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_141.00_147.00": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_148.13_150.10": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_150.59_153.00": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "1352_5491_156.49_159.00": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_161.00_163.50": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_164.81_171.40": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_17.01_21.00": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_173.32_175.00": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_184.48_187.35": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_187.34_188.67": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_189.32_194.45": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_203.03_206.73": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_21.00_31.33": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_212.90_216.99": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_216.72_221.94": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1352_5491_227.52_229.89": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_229.89_232.22": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_231.90_238.33": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_243.00_248.36": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1352_5491_279.00_282.99": {
+      "naturalness": 4,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "8407_40837_0.00_15.28": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_106.28_108.28": {
+      "naturalness": 3,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_108.28_114.28": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_116.28_119.28": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_120.28_122.28": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_129.28_138.28": {
+      "naturalness": 2,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_171.28_178.28": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_178.28_181.28": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_185.28_194.28": {
+      "naturalness": 3,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "8407_40837_212.28_219.28": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_231.28_237.28": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_259.28_267.28": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_267.28_271.28": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_285.28_291.28": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_297.28_301.28": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_304.28_308.28": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_322.28_325.28": {
+      "naturalness": 2,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_325.28_330.28": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_330.28_333.28": {
+      "naturalness": 3,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "8407_40837_355.28_359.28": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_377.28_382.28": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_382.28_386.28": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_386.28_389.28": {
+      "naturalness": 3,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "8407_40837_398.28_401.28": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "8407_40837_401.28_412.28": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_430.28_435.28": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_456.28_460.28": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_460.28_465.28": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_470.28_474.28": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "8407_40837_482.28_487.28": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 1
+    },
+    "1373_5567_102.40_111.99": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_111.99_121.85": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_122.00_126.63": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_127.20_133.94": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_134.90_138.76": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_138.91_146.61": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_146.80_151.59": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_157.50_159.63": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_165.64_178.08": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_178.20_183.93": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_18.39_22.40": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_184.24_186.56": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_188.57_197.98": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_200.19_203.88": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_204.40_205.66": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_205.71_208.64": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_208.66_220.91": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_220.97_222.58": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_223.70_227.42": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_23.75_26.94": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_231.50_238.03": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_240.87_242.99": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_243.38_247.53": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_250.74_256.32": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_256.68_259.22": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_272.00_275.53": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "1373_5567_276.00_280.71": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "1373_5567_28.24_33.58": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_281.33_284.11": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "1373_5567_291.15_296.32": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_0.00_8.64": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_102.40_106.04": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_106.04_111.56": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_111.56_118.04": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_118.04_124.44": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_124.44_131.80": {
+      "naturalness": 5,
+      "punctuation": 4,
+      "hallucination": 0
+    },
+    "7266_28097_131.80_134.56": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_134.56_139.96": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_139.96_145.28": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_145.28_151.00": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_151.00_157.68": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_157.68_162.00": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_162.00_167.16": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_167.16_172.84": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_17.24_24.96": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_172.84_177.56": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_177.56_184.16": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_184.16_188.72": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_188.72_193.12": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_195.16_204.16": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_204.16_210.20": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_210.20_214.48": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_214.48_220.84": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_226.12_229.52": {
+      "naturalness": 4,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_229.52_236.04": {
+      "naturalness": 5,
+      "punctuation": 3,
+      "hallucination": 0
+    },
+    "7266_28097_236.04_242.00": {
+      "naturalness": 3,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_24.96_35.64": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_242.00_246.80": {
+      "naturalness": 4,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_249.44_253.80": {
+      "naturalness": 5,
+      "punctuation": 2,
+      "hallucination": 0
+    },
+    "7266_28097_255.04_260.20": {
+      "naturalness": 1,
+      "punctuation": 2,
+      "hallucination": 0
+    }
+  }
+}

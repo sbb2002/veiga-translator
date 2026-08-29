@@ -18,8 +18,32 @@ $backendErrLog = Join-Path $root "backend_run.err.log"
 $llamaLog = Join-Path $root "llama_server.log"
 $llamaErrLog = Join-Path $root "llama_server.err.log"
 
+# Single-instance guard. Exactly one llama-server (translation) and one backend
+# may run for this repo at a time — a second gemma-3-12b instance alone is
+# ~7GB of VRAM and on a 16GB GPU it starved the real one until every
+# translation call timed out (2026-08-29). A stale tray or a double-clicked
+# start.cmd used to leave duplicates behind; now re-running start.cmd is a
+# clean restart. Match only processes belonging to THIS repo path.
+$rootNorm = $root.TrimEnd('\')
+Get-CimInstance Win32_Process -Filter "Name = 'llama-server.exe'" |
+    Where-Object { $_.CommandLine -and $_.CommandLine -like "*$rootNorm*" } |
+    ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }
+Get-CimInstance Win32_Process -Filter "Name = 'python.exe' OR Name = 'uvicorn.exe'" |
+    Where-Object { $_.CommandLine -and $_.CommandLine -like '*backend.main:app*' } |
+    ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }
+foreach ($port in 8080, 8000) {
+    for ($i = 0; $i -lt 20; $i++) {
+        if (-not (Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue)) { break }
+        Start-Sleep -Milliseconds 250
+    }
+}
+
+# -np 1: the backend only ever issues one translation request at a time
+# (partial translation is deprecated, finals are awaited sequentially), so the
+# default 4 parallel slots just reserve 4x the KV cache. One slot keeps VRAM
+# headroom for the STT engine sharing the GPU.
 $llamaProc = Start-Process -FilePath $llamaExe `
-    -ArgumentList "-m", "`"$modelPath`"", "--port", "8080", "-ngl", "999", "-c", "8192" `
+    -ArgumentList "-m", "`"$modelPath`"", "--port", "8080", "-ngl", "999", "-c", "8192", "-np", "1" `
     -WorkingDirectory $root -WindowStyle Hidden -PassThru `
     -RedirectStandardOutput $llamaLog -RedirectStandardError $llamaErrLog
 

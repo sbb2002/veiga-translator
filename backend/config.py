@@ -49,6 +49,12 @@ WHISPER_FINAL_BEAM_SIZE = 5
 # layer below is inert for this engine (see stt/qwen3_asr_engine.py's
 # docstring) — only the embedding-similarity HallucinationGate still applies.
 # Revert to "faster-whisper" if live capture shows regressions.
+# 2026-08-29: briefly reverted after a no-translation incident, then restored —
+# root cause was a duplicate llama-server (two gemma-3-12b instances on a 16GB
+# GPU); tray_launcher.ps1 now enforces a single translation server + `-np 1`,
+# leaving VRAM headroom for this engine. If translation still times out with
+# only one llama-server running, the GPU genuinely can't hold both models and
+# "faster-whisper" is the fallback.
 STT_ENGINE = "qwen3-asr"
 
 # Qwen3-ASR-1.7B-hf (transformers, CUDA) — see stt/qwen3_asr_engine.py.
@@ -118,6 +124,17 @@ VAD_SILENCE_MS = 600  # pause length that triggers "final" (utterance-end candid
 VAD_FRAME_SAMPLES = 512  # silero-vad requires fixed frame sizes at 16kHz; 512 samples = 32ms
 VAD_SPEECH_THRESHOLD = 0.5  # speech-probability cutoff
 MAX_UTTERANCE_SECONDS = 10  # hard cap: force-finalize even without silence (run-on speech safety net)
+
+# Proactive mid-utterance split (has_strong_sentence_boundary, audio_session.py)
+# only engages once the utterance is at least this long. Its only job is to
+# pre-empt a no-pause run-on speaker before MAX_UTTERANCE_SECONDS forces an
+# arbitrary cut — there is nothing to pre-empt on a 1-2s utterance. Without
+# this floor, Qwen3-ASR's habit of emitting 。 after every clause made this
+# fire at a median 1.2s (73% of all finalizations, ~6-char fragments,
+# incoherent fragment translations) — diagnosed from data/sessions/ logs
+# 2026-08-29, see research/topic/20260827_vad_stt_survey. Normal sentences
+# finalize on silence well before this; only genuine long monologue reaches it.
+STRONG_BOUNDARY_MIN_SECONDS = 4.0
 
 # vanilla (backend branch reset, 2026-08-26): singing detector disabled and
 # call sites commented out (backend/audio_session.py, backend/main.py) — see

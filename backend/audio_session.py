@@ -237,6 +237,7 @@ class AudioSession:
             if (
                 self._utterance is not None
                 and self._utterance.silence_ms == 0.0
+                and self._utterance.duration_s() >= config.STRONG_BOUNDARY_MIN_SECONDS
                 and has_strong_sentence_boundary(partial_text)
             ):
                 logger.info(

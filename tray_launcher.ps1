@@ -17,6 +17,10 @@ $backendLog = Join-Path $root "backend_run.log"
 $backendErrLog = Join-Path $root "backend_run.err.log"
 $llamaLog = Join-Path $root "llama_server.log"
 $llamaErrLog = Join-Path $root "llama_server.err.log"
+# Child PIDs are written here the moment both processes start, so stop.cmd
+# (tray_stop.ps1) can always kill the stack even if this tray script dies
+# before — or after — the icon exists. Removed on clean exit.
+$pidFile = Join-Path $root ".live-translator-pids"
 
 # Single-instance guard. Exactly one llama-server (translation) and one backend
 # may run for this repo at a time — a second gemma-3-12b instance alone is
@@ -52,6 +56,9 @@ $backendProc = Start-Process -FilePath $backendExe `
     -WorkingDirectory $root -WindowStyle Hidden -PassThru `
     -RedirectStandardOutput $backendLog -RedirectStandardError $backendErrLog
 
+# Recovery path #1: record the PIDs before doing anything that can throw.
+Set-Content -Path $pidFile -Value @($llamaProc.Id, $backendProc.Id) -Encoding ascii
+
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
@@ -76,6 +83,7 @@ $stopAll = {
             Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
         }
     }
+    Remove-Item $pidFile -Force -ErrorAction SilentlyContinue
     $notifyIcon.Visible = $false
     $notifyIcon.Dispose()
     [System.Windows.Forms.Application]::Exit()
@@ -93,5 +101,14 @@ $notifyIcon.ShowBalloonTip(
 } catch {
     $_ | Out-File -FilePath $errorLog -Encoding utf8
     $_.ScriptStackTrace | Out-File -FilePath $errorLog -Encoding utf8 -Append
+    # Never leave orphaned servers with no icon to stop them: if the icon
+    # setup (or anything else after the two Start-Process calls) throws, kill
+    # whatever we already started before exiting.
+    foreach ($p in @($backendProc, $llamaProc)) {
+        if ($p -and -not $p.HasExited) {
+            Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
+        }
+    }
+    Remove-Item $pidFile -Force -ErrorAction SilentlyContinue
     exit 1
 }

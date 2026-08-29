@@ -36,5 +36,8 @@ data/sessions/
 # Run logs (transient, not reproducible artifacts)
 *.log
 
+# Tray launcher's child-PID recovery file (see tray_stop.ps1)
+.live-translator-pids
+
 # Local screen recordings used for manual debugging review (large binaries)
 ref/

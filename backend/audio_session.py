@@ -148,6 +148,18 @@ class AudioSession:
     def set_broadcaster_hint(self, channel_name: str | None) -> None:
         self._broadcaster_hint = channel_name or None
 
+    def reset_context(self) -> None:
+        """Drop accumulated translation context — called from main.py when the
+        captured tab switches to a different video, so the new content doesn't
+        inherit the previous streamer's sentence history / running summary."""
+        self._final_history.clear()
+        self._summary_history.clear()
+        self._finals_since_check = 0
+        self._current_summary = ""
+        if self._context_summary_task is not None and not self._context_summary_task.done():
+            self._context_summary_task.cancel()
+        self._context_summary_task = None
+
     async def feed_audio(self, pcm16_bytes: bytes) -> None:
         chunk = np.frombuffer(pcm16_bytes, dtype=np.int16).astype(np.float32) / 32768.0
         self._frame_buffer = np.concatenate([self._frame_buffer, chunk])

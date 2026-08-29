@@ -328,6 +328,34 @@ chrome.tabs.onRemoved.addListener(async (tabId) => {
   await clearCaptureState(tabId);
 });
 
+// Auto-stop when a captured tab navigates OFF YouTube (2026-08-29). The
+// tabCapture stream survives navigation, so without this the same backend
+// session log would keep filling with whatever unrelated audio the tab plays
+// next — a different site's content in one file makes the per-session logs
+// unusable. Same-tab SPA navigation within YouTube (video -> video) also
+// fires this, but with a youtube.com URL, so it's left running; the backend
+// rolls its log to a fresh file on the video change instead (see main.py's
+// metadata_update handling). Restarting after leaving requires the toolbar
+// click again — tabCapture needs that user gesture and can't self-start.
+function isYouTubeUrl(url) {
+  try {
+    const u = new URL(url);
+    if (u.protocol !== "http:" && u.protocol !== "https:") return true; // about:blank etc. — not "a site"
+    return u.hostname === "youtube.com" || u.hostname.endsWith(".youtube.com");
+  } catch {
+    return true; // unparseable — don't tear down a session on a transient
+  }
+}
+
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
+  if (!changeInfo.url || isYouTubeUrl(changeInfo.url)) return;
+  const state = await getCaptureState(tabId);
+  if (!state.active) return;
+  console.log("[background] captured tab left YouTube (%s) — stopping capture", changeInfo.url);
+  await stopCapture(tabId);
+  await clearCaptureState(tabId);
+});
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message?.type === "VIDEO_METADATA_UPDATED") {
     // From content_script.js's 'yt-navigate-finish' listener — sender.tab.id

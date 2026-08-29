@@ -64,12 +64,24 @@ class SessionLogger:
 
     def __init__(self) -> None:
         self._file = None  # type: ignore[assignment]
+        # Tracked so main.py can roll to a fresh log file when the captured
+        # tab switches to a different video (different content/speaker in one
+        # file makes the per-session logs hard to use). tab_id/sample_rate
+        # carry across a roll — the metadata_update control doesn't resend them.
+        self.video_id = None
+        self._tab_id = None
+        self._sample_rate = None
 
     def start(self, control: dict) -> None:
         SESSION_LOGS_DIR.mkdir(parents=True, exist_ok=True)
         now = time.time()
         stamp = time.strftime("%Y%m%d_%H%M%S", time.localtime(now))
-        tab_id = control.get("tab_id")
+        if control.get("tab_id") is not None:
+            self._tab_id = control.get("tab_id")
+        if control.get("sample_rate") is not None:
+            self._sample_rate = control.get("sample_rate")
+        self.video_id = control.get("video_id")
+        tab_id = self._tab_id
         suffix = uuid.uuid4().hex[:6]
         tab_part = f"tab{tab_id}" if tab_id is not None else "tab"
         path = SESSION_LOGS_DIR / f"{stamp}_{tab_part}_{suffix}.jsonl"
@@ -85,7 +97,10 @@ class SessionLogger:
                 # from `timestamp` above, which is when this log file/backend
                 # session actually opened (can lag slightly behind).
                 "client_started_at_ms": control.get("started_at"),
-                "sample_rate": control.get("sample_rate"),
+                "sample_rate": control.get("sample_rate", self._sample_rate),
+                # True on a session that was rolled mid-capture because the
+                # tab navigated to a different video (see metadata_update).
+                "rolled": control.get("rolled", False),
                 # Scraped by extension/content_script.js from the YouTube
                 # page's own ytInitialPlayerResponse (2026-08-25) — richer
                 # than title/url alone, and channel_name doubles as the
@@ -243,18 +258,33 @@ async def ws_audio(websocket: WebSocket) -> None:
                         control.get("channel_name"),
                         control.get("video_title"),
                     )
-                    session_log.log_event(
-                        {
-                            "type": "metadata_update",
-                            "title": control.get("title"),
-                            "url": control.get("url"),
-                            "channel_name": control.get("channel_name"),
-                            "video_title": control.get("video_title"),
-                            "video_id": control.get("video_id"),
-                            "is_live": control.get("is_live"),
-                            "stream_started_at": control.get("stream_started_at"),
-                        }
-                    )
+                    new_video_id = control.get("video_id")
+                    if new_video_id and new_video_id != session_log.video_id:
+                        # Different video in the same tab: close this log file
+                        # and open a fresh one, and drop the previous video's
+                        # translation context so it doesn't bleed into the new
+                        # content. Audio capture itself never stops.
+                        logger.info(
+                            "video changed (%s -> %s) — rolling session log",
+                            session_log.video_id,
+                            new_video_id,
+                        )
+                        session_log.close()
+                        session_log.start({**control, "rolled": True})
+                        session.reset_context()
+                    else:
+                        session_log.log_event(
+                            {
+                                "type": "metadata_update",
+                                "title": control.get("title"),
+                                "url": control.get("url"),
+                                "channel_name": control.get("channel_name"),
+                                "video_title": control.get("video_title"),
+                                "video_id": control.get("video_id"),
+                                "is_live": control.get("is_live"),
+                                "stream_started_at": control.get("stream_started_at"),
+                            }
+                        )
                     session.set_broadcaster_hint(control.get("channel_name"))
                 if control.get("type") == "stop_session":
                     logger.info("Client requested stop_session")

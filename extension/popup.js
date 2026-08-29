@@ -18,6 +18,25 @@ const videoMetaTimeEl = document.getElementById("videoMetaTime");
 
 const segmentEls = new Map(); // segment_id -> <div> element, so a "final" can replace its "partial"
 
+// Live DOM cap (2026-08-30): background.js already caps the *persisted* log
+// at MAX_LOG_ENTRIES (200), but nothing capped what actually stays rendered
+// in this iframe — every segment ever seen kept its <div> in logEl and its
+// entry in segmentEls forever, so a long-running session's node count (and
+// the layout/scroll/ResizeObserver work done per frame) grew unbounded and
+// the panel visibly started to stutter. Insertion order in a Map matches DOM
+// order here (every new segment is appended, never reordered), so the
+// oldest entry is always segmentEls' first key — pruning from there keeps
+// the on-screen log a rolling window instead of an ever-growing one.
+const MAX_LIVE_SEGMENTS = 50;
+
+function pruneOldSegments() {
+  while (segmentEls.size > MAX_LIVE_SEGMENTS) {
+    const oldestId = segmentEls.keys().next().value;
+    segmentEls.get(oldestId).container.remove();
+    segmentEls.delete(oldestId);
+  }
+}
+
 // Mirrors backend/config.py's FINAL_CONTEXT_HISTORY_SIZE (kept in sync
 // manually, same reason as AUDIO_RMS_SILENCE_FLOOR etc. below — the
 // extension can't import the Python config). AudioSession's _final_history
@@ -498,6 +517,7 @@ function renderEvent(data) {
     entry = { container, jaLine, koLine, confLine, flagged: false, confidence: null, warmup };
     segmentEls.set(segmentId, entry);
     logEl.appendChild(container);
+    pruneOldSegments();
 
     // Manual mislabel tagging while watching a live capture: click a
     // sentence to mark it wrong (pink), click again to undo. Reads whatever
@@ -689,13 +709,32 @@ async function restoreContextSummary() {
 // loop runs continuously (cheap — one multiply/compare/style-write per
 // frame, and rAF itself already pauses while the tab is hidden).
 const volumeBarFill = document.getElementById("volumeBarFill");
+// volumeTargetPct: the real, level-driven target from the latest message.
+// volumeAnimTarget: the waypoint the easing loop below is currently chasing
+// — usually equal to volumeTargetPct, but briefly a bounce point beyond it
+// (2026-08-30) whenever the level moves: rising energy overshoots up to
+// +VOLUME_OVERSHOOT_MAX_PCT past the new target before settling back down to
+// it, falling energy undershoots the same amount below it before rising back
+// up — a little spring/rubber-band feel instead of a flat ease-in. Direction
+// is decided by comparing the newly arrived target against the previous one
+// (the actual trend of the signal), not against wherever the bar is
+// currently mid-animation.
 let volumeTargetPct = 0;
+let volumeAnimTarget = 0;
 let volumeDisplayedPct = 0;
+let volumeBouncing = false;
+const VOLUME_OVERSHOOT_MAX_PCT = 3;
 
 function tickVolumeAnimation() {
-  volumeDisplayedPct += (volumeTargetPct - volumeDisplayedPct) * 0.2;
-  if (Math.abs(volumeTargetPct - volumeDisplayedPct) < 0.15) {
-    volumeDisplayedPct = volumeTargetPct;
+  volumeDisplayedPct += (volumeAnimTarget - volumeDisplayedPct) * 0.2;
+  if (Math.abs(volumeAnimTarget - volumeDisplayedPct) < 0.15) {
+    volumeDisplayedPct = volumeAnimTarget;
+    if (volumeBouncing) {
+      // Reached the overshoot/undershoot waypoint — ease back to the real
+      // target next.
+      volumeBouncing = false;
+      volumeAnimTarget = volumeTargetPct;
+    }
   }
   volumeBarFill.style.width = `${volumeDisplayedPct}%`;
   requestAnimationFrame(tickVolumeAnimation);
@@ -705,7 +744,19 @@ requestAnimationFrame(tickVolumeAnimation);
 chrome.runtime.onMessage.addListener((message) => {
   if (message?.type !== "VOLUME_LEVEL") return;
   if (message.tabId !== tabId) return; // Ignore messages from other tabs
-  volumeTargetPct = clampPct(message.level / 0.05);
+  const newTargetPct = clampPct(message.level / 0.05);
+  const bounce = Math.random() * VOLUME_OVERSHOOT_MAX_PCT;
+  if (newTargetPct > volumeTargetPct) {
+    volumeAnimTarget = Math.min(100, newTargetPct + bounce); // never past the bar's own max
+    volumeBouncing = true;
+  } else if (newTargetPct < volumeTargetPct) {
+    volumeAnimTarget = Math.max(0, newTargetPct - bounce);
+    volumeBouncing = true;
+  } else {
+    volumeAnimTarget = newTargetPct;
+    volumeBouncing = false;
+  }
+  volumeTargetPct = newTargetPct;
 });
 
 // This iframe's own DOM/state is destroyed every time the overlay panel is

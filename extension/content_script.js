@@ -146,19 +146,31 @@
     root.style.position = "fixed"; // (kept explicit; resize handles need root to stay the positioned ancestor)
     root.appendChild(header);
     root.appendChild(iframe);
-    // Five handles: right/left edges (width only), bottom/top edges (height
-    // only), and the bottom-right corner (both) — plain horizontal/vertical
-    // resize from either side, plus one diagonal corner.
+    // Eight handles: right/left edges (width only), bottom/top edges (height
+    // only), and all four corners (both axes at once, diagonal resize) —
+    // plain horizontal/vertical resize from either side, plus a diagonal
+    // grip at every corner (2026-08-30: only the bottom-right corner existed
+    // before — the other three edges could each resize one axis, but no
+    // handle let a diagonal drag from top-left/top-right/bottom-left resize
+    // both axes together the way the bottom-right corner already did).
     const edgeRight = makeResizeHandle({ right: "0", top: "0", bottom: "0", width: "6px", cursor: "ew-resize" });
     const edgeLeft = makeResizeHandle({ left: "0", top: "0", bottom: "0", width: "6px", cursor: "ew-resize" });
     const edgeBottom = makeResizeHandle({ left: "0", right: "0", bottom: "0", height: "6px", cursor: "ns-resize" });
     const edgeTop = makeResizeHandle({ left: "0", right: "0", top: "0", height: "6px", cursor: "ns-resize" });
-    const corner = makeResizeHandle({ right: "0", bottom: "0", width: "16px", height: "16px", cursor: "nwse-resize" });
+    // nwse-resize: the NW<->SE diagonal (top-left / bottom-right corners).
+    // nesw-resize: the NE<->SW diagonal (top-right / bottom-left corners).
+    const cornerBR = makeResizeHandle({ right: "0", bottom: "0", width: "16px", height: "16px", cursor: "nwse-resize" });
+    const cornerBL = makeResizeHandle({ left: "0", bottom: "0", width: "16px", height: "16px", cursor: "nesw-resize" });
+    const cornerTR = makeResizeHandle({ right: "0", top: "0", width: "16px", height: "16px", cursor: "nesw-resize" });
+    const cornerTL = makeResizeHandle({ left: "0", top: "0", width: "16px", height: "16px", cursor: "nwse-resize" });
     root.appendChild(edgeRight);
     root.appendChild(edgeLeft);
     root.appendChild(edgeBottom);
     root.appendChild(edgeTop);
-    root.appendChild(corner);
+    root.appendChild(cornerBR);
+    root.appendChild(cornerBL);
+    root.appendChild(cornerTR);
+    root.appendChild(cornerTL);
     document.documentElement.appendChild(root);
 
     rootEl = root;
@@ -173,7 +185,10 @@
     makeResizable(edgeLeft, root, { x: "left", y: null });
     makeResizable(edgeBottom, root, { x: null, y: "bottom" });
     makeResizable(edgeTop, root, { x: null, y: "top" });
-    makeResizable(corner, root, { x: "right", y: "bottom" });
+    makeResizable(cornerBR, root, { x: "right", y: "bottom" });
+    makeResizable(cornerBL, root, { x: "left", y: "bottom" });
+    makeResizable(cornerTR, root, { x: "right", y: "top" });
+    makeResizable(cornerTL, root, { x: "left", y: "top" });
     followFullscreen(root);
 
     // Minimize (2026-08-20): collapses the panel down to just the header
@@ -181,7 +196,7 @@
     // message to background.js at all; it's purely a local display change).
     // Distinct from ✕: this is for "get it out of the way for a moment",
     // ✕ is for "I'm done, stop capturing".
-    const resizeHandles = [edgeRight, edgeLeft, edgeBottom, edgeTop, corner];
+    const resizeHandles = [edgeRight, edgeLeft, edgeBottom, edgeTop, cornerBR, cornerBL, cornerTR, cornerTL];
     let minimized = false;
     let expandedHeight = root.style.height;
     minimizeBtn.addEventListener("click", () => {

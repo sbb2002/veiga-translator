@@ -51,6 +51,20 @@ $llamaProc = Start-Process -FilePath $llamaExe `
     -WorkingDirectory $root -WindowStyle Hidden -PassThru `
     -RedirectStandardOutput $llamaLog -RedirectStandardError $llamaErrLog
 
+# PyTorch's CUDA caching allocator never returns reserved blocks to the
+# driver on its own, and the STT engine (Qwen3-ASR, backend/stt/qwen3_asr_engine.py)
+# feeds it a different tensor shape on nearly every call (variable-length
+# partial/final audio buffers) — over a long capture session that reserves
+# more and more distinct-sized blocks instead of reusing one, so VRAM used by
+# this process climbs for as long as it stays up even with no true leak
+# (2026-08-30, confirmed live: ~95% of a 16GB card after a few hours,
+# starting well below that right after launch). expandable_segments grows
+# one resizable segment instead of hoarding many fixed-size ones, which is
+# the actual fix for this shape-varying workload (torch>=2.1; this repo runs
+# 2.6). Set only for the backend — llama-server is a separate C++ binary
+# that doesn't read this var.
+$env:PYTORCH_CUDA_ALLOC_CONF = "expandable_segments:True"
+
 $backendProc = Start-Process -FilePath $backendExe `
     -ArgumentList "backend.main:app", "--port", "8000" `
     -WorkingDirectory $root -WindowStyle Hidden -PassThru `

@@ -13,6 +13,8 @@ const statusDetail = document.getElementById("statusDetail");
 const logEl = document.getElementById("log");
 const scrollToBottomBtn = document.getElementById("scrollToBottomBtn");
 const videoMetaEl = document.getElementById("videoMeta");
+const videoMetaChannelEl = document.getElementById("videoMetaChannel");
+const videoMetaTimeEl = document.getElementById("videoMetaTime");
 
 const segmentEls = new Map(); // segment_id -> <div> element, so a "final" can replace its "partial"
 
@@ -64,6 +66,13 @@ const pendingEvents = [];
 let lastCaptureTitle = null; // Remember the tab title across state changes
 let lastVideoMeta = null; // { channelName, videoTitle, streamStartedAt } — same "keep showing while idle" behavior as lastCaptureTitle
 
+// Summary-bar state machine inputs (see renderContextSummaryArea): whether a
+// capture session is live, whether any transcript has been rendered yet
+// (live or restored), and the last real backend summary text.
+let captureActive = false;
+let transcriptSeen = false;
+let contextSummaryText = "";
+
 // 디버그 지표 라인용: ISO 8601 절대시각(streamStartedAt, content_script.js가
 // ytInitialPlayerResponse에서 긁음) -> "X분 전"/"X시간 Y분 전" 표시. 렌더링
 // 화면의 상대시간 배지를 다시 파싱하는 대신 절대시각 기준으로 매번 새로
@@ -79,19 +88,53 @@ function formatElapsedSince(isoTimestamp) {
   return `${hours}시간 ${mins}분 전`;
 }
 
+// Shared marquee helper: if `text` overflows `el`, swap in a .marquee-track
+// with two back-to-back copies and let CSS scroll it seamlessly; otherwise
+// plain text + ellipsis. Skips rebuilding when the text is unchanged so the
+// 30s videoMeta refresh (and repeated refreshState calls) don't restart the
+// scroll mid-loop. `el` needs the shared .marquee CSS (see popup.html).
+const MARQUEE_PX_PER_SECOND = 40;
+function renderMaybeMarquee(el, text) {
+  const value = text ?? "";
+  if (el.dataset.marqueeText === value) return;
+  el.dataset.marqueeText = value;
+  el.classList.remove("marquee");
+  el.textContent = value;
+  el.title = value;
+  if (!value) return;
+  requestAnimationFrame(() => {
+    if (el.dataset.marqueeText !== value) return; // superseded while waiting
+    if (el.scrollWidth - el.clientWidth <= 0) return; // fits — leave plain
+    const textWidth = el.scrollWidth;
+    el.textContent = "";
+    const track = document.createElement("div");
+    track.className = "marquee-track";
+    const original = document.createElement("span");
+    original.textContent = value;
+    const loopCopy = document.createElement("span");
+    loopCopy.textContent = value;
+    loopCopy.setAttribute("aria-hidden", "true");
+    track.append(original, loopCopy);
+    el.append(track);
+    el.classList.add("marquee");
+    track.style.animationDuration = `${textWidth / MARQUEE_PX_PER_SECOND}s`;
+  });
+}
+
+// 채널명(1행, 길면 marquee) / 방송 시작 경과시간(2행). 2026-08-29부터 디버그
+// 모드와 무관하게 항상 노출 — 채널·시간이 모두 없을 때만 [hidden].
 function renderVideoMeta(meta) {
-  if (!meta || (!meta.channelName && !meta.videoTitle)) {
-    videoMetaEl.textContent = "";
-    videoMetaEl.title = "";
+  const channel = meta?.channelName ?? "";
+  const elapsed = formatElapsedSince(meta?.streamStartedAt);
+  if (!channel && !elapsed) {
+    videoMetaEl.hidden = true;
+    renderMaybeMarquee(videoMetaChannelEl, "");
+    videoMetaTimeEl.textContent = "";
     return;
   }
-  const parts = [];
-  if (meta.channelName) parts.push(`채널: ${meta.channelName}`);
-  const elapsed = formatElapsedSince(meta.streamStartedAt);
-  if (elapsed) parts.push(`방송 시작 ${elapsed}`);
-  const line = parts.join(" · ");
-  videoMetaEl.textContent = line;
-  videoMetaEl.title = meta.videoTitle ? `${meta.videoTitle}\n${line}` : line;
+  videoMetaEl.hidden = false;
+  renderMaybeMarquee(videoMetaChannelEl, channel);
+  videoMetaTimeEl.textContent = elapsed ? `방송 시작 ${elapsed}` : "";
 }
 
 async function refreshState() {
@@ -124,7 +167,7 @@ async function refreshState() {
   // Update status detail line
   if (isActive) {
     lastCaptureTitle = state?.title ?? `탭 #${tabId}`;
-    statusDetail.textContent = lastCaptureTitle;
+    renderMaybeMarquee(statusDetail, lastCaptureTitle);
     lastVideoMeta = {
       channelName: state?.channelName ?? null,
       videoTitle: state?.videoTitle ?? null,
@@ -132,9 +175,12 @@ async function refreshState() {
     };
   } else {
     // While idle, show the tab title if we have one from a prior active session
-    statusDetail.textContent = lastCaptureTitle ? lastCaptureTitle : "";
+    renderMaybeMarquee(statusDetail, lastCaptureTitle || "");
   }
   renderVideoMeta(lastVideoMeta);
+
+  captureActive = isActive;
+  renderContextSummaryArea();
 
   // Update live dot
   liveDot.classList.toggle("off", !isRecording);
@@ -187,12 +233,12 @@ toggleBtn.addEventListener("click", async () => {
     // (see comment above). A quiet text change here was easy to miss and
     // read as "the button doesn't work" — the pulsing accent-colored hint
     // makes the actual required action obvious.
-    statusDetail.textContent = "↑ 브라우저 툴바의 확장 아이콘을 클릭하세요";
+    renderMaybeMarquee(statusDetail, "↑ 브라우저 툴바의 확장 아이콘을 클릭하세요");
     statusDetail.classList.add("hint");
     setTimeout(() => statusDetail.classList.remove("hint"), 4000);
   } catch (err) {
     console.error("[popup] toggle failed:", err);
-    statusDetail.textContent = `error: ${err?.message ?? err}`;
+    renderMaybeMarquee(statusDetail, `error: ${err?.message ?? err}`);
   }
 });
 
@@ -262,6 +308,11 @@ function renderConfidenceBars(confLine, data) {
 function renderEvent(data) {
   const { type, text, translation, segment_id: segmentId } = data ?? {};
   if (!segmentId) return;
+
+  if (!transcriptSeen) {
+    transcriptSeen = true;
+    renderContextSummaryArea();
+  }
 
   let entry = segmentEls.get(segmentId);
   if (!entry) {
@@ -413,35 +464,29 @@ function updateMusicIndicator(active) {
   musicIndicatorEl.title = active ? "노래·배경음악 감지됨" : "노래·배경음악 감지 안 됨";
 }
 
-const CONTEXT_SUMMARY_MARQUEE_PX_PER_SECOND = 40;
-
 function renderContextSummary(text) {
-  const value = text ?? "";
-  contextSummaryEl.title = value;
-  contextSummaryEl.classList.remove("marquee");
-  contextSummaryEl.textContent = value;
-  if (!value) return;
+  contextSummaryText = text ?? "";
+  renderContextSummaryArea();
+}
 
-  // Measure natural overflow with the plain (non-marquee) text first — only
-  // build the scrolling track if it's actually too long for the header.
-  requestAnimationFrame(() => {
-    const overflowPx = contextSummaryEl.scrollWidth - contextSummaryEl.clientWidth;
-    if (overflowPx <= 0) return;
-
-    const textWidth = contextSummaryEl.scrollWidth;
-    contextSummaryEl.textContent = "";
-    const track = document.createElement("div");
-    track.className = "context-summary-track";
-    const original = document.createElement("span");
-    original.textContent = value;
-    const loopCopy = document.createElement("span");
-    loopCopy.textContent = value;
-    loopCopy.setAttribute("aria-hidden", "true");
-    track.append(original, loopCopy);
-    contextSummaryEl.append(track);
-    contextSummaryEl.classList.add("marquee");
-    track.style.animationDuration = `${textWidth / CONTEXT_SUMMARY_MARQUEE_PX_PER_SECOND}s`;
-  });
+// Priority: real backend summary > placeholder > nothing. Placeholder is
+// "지금 무슨 내용인지 파악 중이에요." once transcription is flowing,
+// "전사/번역 준비 중입니다." while the backend is still starting up (capture
+// active but no transcript yet). Idle with no summary shows an empty bar.
+function renderContextSummaryArea() {
+  let text = "";
+  let placeholder = false;
+  if (contextSummaryText) {
+    text = contextSummaryText;
+  } else if (captureActive && transcriptSeen) {
+    text = "지금 무슨 내용인지 파악 중이에요.";
+    placeholder = true;
+  } else if (captureActive) {
+    text = "전사/번역 준비 중입니다.";
+    placeholder = true;
+  }
+  contextSummaryEl.classList.toggle("placeholder", placeholder);
+  renderMaybeMarquee(contextSummaryEl, text);
 }
 
 // Mid-session video switch (2026-08-25) — background.js's updateVideoMetadata

@@ -436,10 +436,10 @@ class AudioSession:
 
     async def translate_title(self, text: str) -> str:
         """One-shot JA->KO translation of the stream's own video title, for
-        the overlay header. Standalone — a title isn't part of the utterance
-        flow, so no speech context is passed; just the natural forward path."""
+        the overlay header — delegates to the engine's dedicated grammar-free
+        title path (see LlamaServerEngine.translate_title)."""
         try:
-            result = await self._translate.translate(text, fast=False)
+            result = await self._translate.translate_title(text)
         except Exception:
             logger.exception("title translation (JA->KO) failed")
             return ""

@@ -61,3 +61,4 @@ FINAL_SYSTEM_PROMPT = _assemble(
 CONTEXT_SUMMARY_SYSTEM_PROMPT = _data["context_summary_system_prompt"].strip()
 CONTEXT_CHANGE_SYSTEM_PROMPT = _data["context_change_system_prompt"].strip()
 KO_JA_SYSTEM_PROMPT = _data["ko_ja_system_prompt"]
+TITLE_SYSTEM_PROMPT = _data["title_system_prompt"].strip()

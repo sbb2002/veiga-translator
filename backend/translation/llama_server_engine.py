@@ -316,6 +316,32 @@ class LlamaServerEngine:
         translated = data["choices"][0]["message"]["content"].strip()
         return TranslationResult(text=translated)
 
+    async def translate_title(self, text: str) -> TranslationResult:
+        """One-shot JA->KO translation of a video/livestream title for the
+        overlay header. Standalone: no grammar (a title is mostly names,
+        Latin text, brackets and symbols — the Korean-only mask collapses
+        those into jamo gibberish like 'ㄽ…ㅟ…'), no repeat_penalty, no
+        broadcast context, dedicated title prompt (prompts.yaml)."""
+        if not text.strip():
+            return TranslationResult(text="")
+        request_json = {
+            "model": config.LLAMA_SERVER_MODEL,
+            "messages": [
+                {"role": "system", "content": prompts.TITLE_SYSTEM_PROMPT},
+                {"role": "user", "content": f"[TEXT TO TRANSLATE]\n{text}"},
+            ],
+            "max_tokens": config.LLAMA_FINAL_MAX_TOKENS,
+            "temperature": 0.0,
+        }
+        response = await self._client.post(
+            "/v1/chat/completions",
+            json=request_json,
+            timeout=config.LLAMA_SERVER_TIMEOUT_S,
+        )
+        response.raise_for_status()
+        data = response.json()
+        return TranslationResult(text=data["choices"][0]["message"]["content"].strip())
+
     async def translate_ko_to_ja(
         self,
         text: str,

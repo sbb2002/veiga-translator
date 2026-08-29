@@ -42,6 +42,12 @@ class TranslationEngine(Protocol):
         can be phrased to fit what's currently happening on stream."""
         ...
 
+    async def translate_title(self, text: str) -> TranslationResult:
+        """One-shot JA->KO translation of a video/livestream title for the
+        overlay header (2026-08-29). Standalone and grammar-free — a title is
+        mostly names, Latin text and symbols, not a Korean-only sentence."""
+        ...
+
     async def summarize_context(self, ja_history: str) -> str:
         """One-line Korean summary of what's currently being talked about on
         stream, from recent final JA speech (same text as translate()'s

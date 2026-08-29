@@ -424,7 +424,9 @@
           channelName: text,
           channelAvatarUrl,
           url: location.href,
-          videoTitle: document.title.replace(/\s*-\s*YouTube$/, ""),
+          videoTitle: document.title
+            .replace(/\s*-\s*YouTube$/, "")
+            .replace(/^\(\d+\)\s*/, ""),
           videoId: null,
           isLive: null,
           streamStartedAt: null,

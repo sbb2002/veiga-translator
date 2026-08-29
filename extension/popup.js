@@ -293,7 +293,12 @@ async function refreshState() {
       streamStartedAt: state?.streamStartedAt ?? null,
     };
   }
-  titleOriginal = isActive ? lastCaptureTitle : lastCaptureTitle || "";
+  // Prefer the scraped video title (clean) over the browser tab title, which
+  // carries a "(N) " unread-count prefix and a " - YouTube" suffix — the "(1) "
+  // in particular makes the title translator continue "(2) (3) ..." instead of
+  // translating.
+  titleOriginal =
+    (isActive && lastVideoMeta && lastVideoMeta.videoTitle) || lastCaptureTitle || "";
   renderHeaderTitle();
   requestTitleTranslation();
   renderVideoMeta(lastVideoMeta);

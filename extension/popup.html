@@ -517,17 +517,16 @@
       font-family: var(--mono);
     }
     .video-meta[hidden] { display: none; }
-    /* Channel avatar. ::after is the image itself — right-anchored, fully
-       opaque, the whole avatar visible. ::before is a colour bleed filling
-       the space to its left: transparent on the far left, fading to
-       --channel-avatar-tint (sampled from the image by popup.js) exactly
-       where the image begins, so it melts into the row with no hard edge.
+    /* Channel avatar. ::after is the image itself — left-anchored, fully
+       opaque, the whole avatar visible. ::before is a colour bleed spanning
+       the left side of the row and running behind the frame, fading out
+       toward the right, so the frame sits on a colour glow with no hard edge.
        popup.js sets --channel-avatar (url) and --channel-avatar-tint (rgb). */
     .video-meta.has-avatar::after {
       content: "";
       position: absolute;
       top: 50%;
-      right: 6px;
+      left: 6px;
       transform: translateY(-50%);
       width: var(--channel-avatar-w, 42px);
       height: var(--channel-avatar-w, 42px);
@@ -537,7 +536,7 @@
          edge (cover, no padding); border-radius clips it to the rounded shape.
          Solid fill shows only through a transparent-cornered (circular) avatar.
          --avatar-frame / --surface are theme tokens (light + both dark blocks),
-         so the frame follows the active theme. The 6px right inset keeps the
+         so the frame follows the active theme. The 6px left inset keeps the
          2px border clear of .video-meta's overflow:hidden clip; the row's
          min-height:46px keeps the top/bottom corners from being clipped. */
       background-color: var(--surface);
@@ -548,8 +547,8 @@
       border: 2px solid var(--avatar-frame);
       border-radius: 6px;
     }
-    /* Tint bleed spans the whole right side of the row — it runs BEHIND the
-       avatar frame and its 6px gap, not just up to the frame's left edge, so
+    /* Tint bleed spans the whole left side of the row — it runs BEHIND the
+       avatar frame and its 6px gap, not just up to the frame's right edge, so
        the frame sits on a colour glow rather than against a hard cut. ::after
        (the frame) paints after ::before, so it stays crisp on top. */
     .video-meta.has-avatar::before {
@@ -557,18 +556,18 @@
       position: absolute;
       top: 0;
       bottom: 0;
-      right: 0;
+      left: 0;
       width: 200px;
       pointer-events: none;
       background: linear-gradient(
-        to right,
+        to left,
         transparent,
         var(--channel-avatar-tint, var(--surface-2))
       );
     }
     .video-meta.has-avatar .video-meta-channel,
     .video-meta.has-avatar .video-meta-time {
-      padding-right: 60px;
+      padding-left: 44px;
     }
     .video-meta-channel {
       font-size: 11px;

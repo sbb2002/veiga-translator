@@ -377,6 +377,28 @@
     return null;
   }
 
+  let _frozenPR; // parsed once — the ytInitialPlayerResponse <script> never changes after load
+  function getFrozenPlayerResponse() {
+    if (_frozenPR !== undefined) return _frozenPR;
+    _frozenPR = null;
+    try {
+      for (const script of document.querySelectorAll("script")) {
+        const text = script.textContent;
+        if (!text || !text.includes("ytInitialPlayerResponse")) continue;
+        const match = text.match(/ytInitialPlayerResponse\s*=\s*(\{.*?\});/s);
+        if (!match) continue;
+        const data = JSON.parse(match[1]);
+        if (data?.videoDetails?.videoId) {
+          _frozenPR = data;
+          break;
+        }
+      }
+    } catch (err) {
+      console.warn("[content_script] ytInitialPlayerResponse parse failed", err);
+    }
+    return _frozenPR;
+  }
+
   function scrapeVideoMetadata() {
     const videoId = new URLSearchParams(location.search).get("v") || null;
     const channelAvatarUrl = getChannelAvatarUrl();
@@ -399,25 +421,11 @@
         )
         ?.textContent?.trim() || null;
 
-    // Parse ytInitialPlayerResponse, but only trust it when its own videoId
-    // still matches the current URL (i.e. no SPA nav since page load) — it's
-    // the only source for streamStartedAt / isLive / description.
-    let frozen = null;
-    try {
-      for (const script of document.querySelectorAll("script")) {
-        const text = script.textContent;
-        if (!text || !text.includes("ytInitialPlayerResponse")) continue;
-        const match = text.match(/ytInitialPlayerResponse\s*=\s*(\{.*?\});/s);
-        if (!match) continue;
-        const data = JSON.parse(match[1]);
-        if (data?.videoDetails?.videoId) {
-          frozen = data;
-          break;
-        }
-      }
-    } catch (err) {
-      console.warn("[content_script] ytInitialPlayerResponse parse failed", err);
-    }
+    // ytInitialPlayerResponse — parsed once and cached (the <script> is frozen
+    // at page load, so re-parsing on every nav re-check is wasted work). Only
+    // trusted when its own videoId still matches the current URL (no SPA nav
+    // since load) — it's the only source for streamStartedAt/isLive/description.
+    const frozen = getFrozenPlayerResponse();
     const vd = frozen && frozen.videoDetails.videoId === videoId ? frozen.videoDetails : null;
     const lbd = vd
       ? frozen.microformat?.playerMicroformatRenderer?.liveBroadcastDetails
@@ -441,39 +449,53 @@
     };
   }
 
-  // Re-scrape on in-page navigation (2026-08-25): YouTube is an SPA, so
-  // switching to the next video/live in the same tab never reloads this
-  // content script — the one-shot scrape at capture start would otherwise
-  // keep reporting the *previous* video's channel/title forever (deferred
-  // at the time metadata scraping was first built; now addressed). YouTube
-  // fires 'yt-navigate-finish' on `document` after its client-side route
-  // change completes (the player's own data, e.g. ytInitialPlayerResponse,
-  // is guaranteed updated by then — unlike a generic mutation observer
-  // racing the update). background.js relays this to offscreen.js and the
-  // backend only while a capture session is actually running for this tab;
-  // otherwise it's a harmless no-op message with nothing listening.
-  let lastMetadataVideoId = null;
+  // Re-scrape on in-page navigation: YouTube is an SPA, so switching to the
+  // next video in the same tab never reloads this content script. YouTube
+  // fires 'yt-navigate-finish' on `document` after the route change — but the
+  // metadata DOM (title h1, #channel-name link, #avatar img) often lags that
+  // event by a beat, and the URL's ?v= flips first. So dedup on the full
+  // content signature (not just videoId — a videoId-only key let a stale-DOM
+  // first read "claim" the new id and suppress the fresh read that followed),
+  // and re-check a few times after each nav to catch the DOM once it settles.
+  let lastMetaSig = null;
+
+  function metaSig(m) {
+    return [m.videoId, m.channelName, m.videoTitle, m.channelAvatarUrl].join("");
+  }
 
   function maybeReportMetadataChange() {
     const metadata = scrapeVideoMetadata();
-    // Don't clobber a good known state with nulls — a transient navigation
-    // to a non-video page (channel page, homepage) or a same-page mutation
-    // that doesn't actually change video shouldn't overwrite what capture
-    // is actually hearing right now.
+    // Require a channel name — a transient nav to a non-video page, or a
+    // half-rendered DOM mid-navigation, shouldn't clobber known-good state.
     if (!metadata.channelName) return;
-    if (metadata.videoId && metadata.videoId === lastMetadataVideoId) return;
-    if (metadata.videoId) lastMetadataVideoId = metadata.videoId;
+    const sig = metaSig(metadata);
+    if (sig === lastMetaSig) return;
+    lastMetaSig = sig;
     chrome.runtime.sendMessage({ type: "VIDEO_METADATA_UPDATED", metadata }).catch(() => {});
   }
 
-  document.addEventListener("yt-navigate-finish", maybeReportMetadataChange);
+  // yt-navigate-finish marks the route change; yt-page-data-updated fires when
+  // YouTube's page-data store refreshes (often the moment the new metadata is
+  // actually ready). Listen to both, debounced, plus a few delayed re-checks
+  // after a real navigation to catch the metadata DOM once it settles — the
+  // signature dedup in maybeReportMetadataChange makes the extra calls free.
+  let _navCheckTimer = null;
+  function scheduleMetaCheck() {
+    clearTimeout(_navCheckTimer);
+    _navCheckTimer = setTimeout(maybeReportMetadataChange, 120);
+  }
+  document.addEventListener("yt-page-data-updated", scheduleMetaCheck);
+  document.addEventListener("yt-navigate-finish", () => {
+    scheduleMetaCheck();
+    for (const ms of [500, 1500, 3500]) setTimeout(maybeReportMetadataChange, ms);
+  });
 
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (message?.type === "SHOW_OVERLAY" && message.tabId != null) {
       buildPanel(message.tabId);
     } else if (message?.type === "SCRAPE_METADATA") {
       const metadata = scrapeVideoMetadata();
-      if (metadata.videoId) lastMetadataVideoId = metadata.videoId;
+      lastMetaSig = metaSig(metadata);
       sendResponse(metadata);
     }
   });

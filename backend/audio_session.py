@@ -68,12 +68,22 @@ class AudioSession:
         on_event: EventSink,
         vad: SileroVAD,
         # music_gate: MusicGate,  # vanilla: singing detection disabled, see import above
+        gpu_lock: asyncio.Lock,
         glossary: Glossary | None = None,
     ) -> None:
         self._stt = stt_engine
         self._translate = translation_engine
         self._on_event = on_event
         self._glossary = glossary or Glossary({})
+        # Process-wide, shared across every concurrent AudioSession (see
+        # main.py's _gpu_lock) — held around every call that touches the
+        # GPU, whether in-process (STT, via asyncio.to_thread) or out of
+        # process (translation, via HTTP to llama-server), so the two never
+        # run at the same wall-clock time. See main.py's _gpu_lock comment
+        # for why: overlapping CUDA kernels from both processes was tripping
+        # Windows' driver-hang recovery (TDR) under WDDM, not just slowing
+        # things down.
+        self._gpu_lock = gpu_lock
         # Shared instance loaded once at startup (constructing SileroVAD here
         # meant a torch.hub model load on every websocket connection). The
         # model is a stateful RNN, so clear the previous session's state.
@@ -375,10 +385,11 @@ class AudioSession:
             return utterance.last_partial_text
         stt_start = time.monotonic()
         try:
-            stt_result = await asyncio.wait_for(
-                asyncio.to_thread(self._stt.transcribe, audio, fast=True),
-                timeout=config.STT_FAST_TIMEOUT_S,
-            )
+            async with self._gpu_lock:
+                stt_result = await asyncio.wait_for(
+                    asyncio.to_thread(self._stt.transcribe, audio, fast=True),
+                    timeout=config.STT_FAST_TIMEOUT_S,
+                )
         except asyncio.TimeoutError:
             logger.warning(
                 "partial STT timed out after %.1fs — skipping this cycle (buf=%.1fs)",
@@ -480,7 +491,8 @@ class AudioSession:
         translate_ko_to_ja docstring."""
         context, _context_translation = self._format_history()
         try:
-            result = await self._translate.translate_ko_to_ja(text, context=context)
+            async with self._gpu_lock:
+                result = await self._translate.translate_ko_to_ja(text, context=context)
         except Exception:
             logger.exception("chat translation (KO->JA) failed")
             return ""
@@ -491,7 +503,8 @@ class AudioSession:
         the overlay header — delegates to the engine's dedicated grammar-free
         title path (see LlamaServerEngine.translate_title)."""
         try:
-            result = await self._translate.translate_title(text)
+            async with self._gpu_lock:
+                result = await self._translate.translate_title(text)
         except Exception:
             logger.exception("title translation (JA->KO) failed")
             return ""
@@ -522,7 +535,8 @@ class AudioSession:
         if not recent_ja:
             return
         try:
-            changed = await self._translate.context_changed(self._current_summary, recent_ja)
+            async with self._gpu_lock:
+                changed = await self._translate.context_changed(self._current_summary, recent_ja)
         except Exception:
             logger.exception("context-change check failed — regenerating summary to be safe")
             changed = True
@@ -542,7 +556,8 @@ class AudioSession:
         if not ja_context:
             return
         try:
-            summary = await self._translate.summarize_context(ja_context)
+            async with self._gpu_lock:
+                summary = await self._translate.summarize_context(ja_context)
         except Exception:
             logger.exception("context summary generation failed")
             return
@@ -714,10 +729,11 @@ class AudioSession:
         if audio.size > 0 and audio_rms >= config.AUDIO_RMS_SILENCE_FLOOR:
             stt_start = time.monotonic()
             try:
-                stt_result = await asyncio.wait_for(
-                    asyncio.to_thread(self._stt.transcribe, audio, fast=False),
-                    timeout=config.STT_FINAL_TIMEOUT_S,
-                )
+                async with self._gpu_lock:
+                    stt_result = await asyncio.wait_for(
+                        asyncio.to_thread(self._stt.transcribe, audio, fast=False),
+                        timeout=config.STT_FINAL_TIMEOUT_S,
+                    )
                 stt_s = time.monotonic() - stt_start
                 final_text = stt_result.text
                 no_speech_prob = stt_result.no_speech_prob
@@ -811,19 +827,20 @@ class AudioSession:
         context, context_translation = self._format_history()
         llm_start = time.monotonic()
         try:
-            translation = await self._translate.translate(
-                final_text,
-                fast=False,
-                context=context,
-                context_translation=context_translation,
-                glossary_hint=glossary_hint,
-                broadcaster_hint=self._broadcaster_hint,
-                # The running topic summary (see _regenerate_context_summary_now)
-                # as disambiguation background for this sentence — CLAUDE.md
-                # item 2026-08-29: "업데이트된 맥락으로 현재 전사/번역에 참고".
-                topic_hint=self._current_summary or None,
-                allowed_literals=self._glossary.latin_targets(final_text),
-            )
+            async with self._gpu_lock:
+                translation = await self._translate.translate(
+                    final_text,
+                    fast=False,
+                    context=context,
+                    context_translation=context_translation,
+                    glossary_hint=glossary_hint,
+                    broadcaster_hint=self._broadcaster_hint,
+                    # The running topic summary (see _regenerate_context_summary_now)
+                    # as disambiguation background for this sentence — CLAUDE.md
+                    # item 2026-08-29: "업데이트된 맥락으로 현재 전사/번역에 참고".
+                    topic_hint=self._current_summary or None,
+                    allowed_literals=self._glossary.latin_targets(final_text),
+                )
             llm_s = time.monotonic() - llm_start
             # Don't let a music/BGM-flagged final (likely a hallucinated or
             # mistranscribed lyric — see music_gate.py) poison later

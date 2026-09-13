@@ -14,6 +14,7 @@ not honor GBNF grammar.
 
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 import time
@@ -153,11 +154,24 @@ _translation_engine: LlamaServerEngine | None = None
 _glossary: Glossary | None = None
 _vad: SileroVAD | None = None
 # _music_gate: MusicGate | None = None  # vanilla: singing detection disabled
+# Process-wide (not per-session): STT and translation share one physical GPU
+# across a Windows WDDM driver, which does not preempt long CUDA kernels
+# cleanly — two heavy kernels (STT's torch call + llama-server's own CUDA
+# work, itself a separate process) overlapping in wall-clock time was
+# observed live 2026-09-13 to repeatedly trip Windows' driver-hang recovery
+# (TDR, event id 13 from nvlddmkm — dozens of resets in a few minutes),
+# during which STT/translation calls timed out almost continuously. A single
+# shared lock forces every GPU-touching call (across ALL concurrent
+# AudioSession connections — multi-tab capture shares these same engine
+# singletons) to run one at a time, so the two workloads' CUDA kernels never
+# overlap. See AudioSession's _gpu_lock usage.
+_gpu_lock: asyncio.Lock | None = None
 
 
 @app.on_event("startup")
 async def startup() -> None:
-    global _stt_engine, _translation_engine, _glossary, _vad
+    global _stt_engine, _translation_engine, _glossary, _vad, _gpu_lock
+    _gpu_lock = asyncio.Lock()
     _glossary = Glossary.load()
     logger.info("Glossary loaded (%d entries) from backend/glossary.json", len(_glossary))
 
@@ -217,6 +231,7 @@ async def ws_audio(websocket: WebSocket) -> None:
     assert _stt_engine is not None, "STT engine not initialized — startup event didn't run?"
     assert _translation_engine is not None, "Translation engine not initialized — startup event didn't run?"
     assert _vad is not None, "VAD not initialized — startup event didn't run?"
+    assert _gpu_lock is not None, "GPU lock not initialized — startup event didn't run?"
     # assert _music_gate is not None, "MusicGate not initialized — startup event didn't run?"  # vanilla
     session = AudioSession(
         stt_engine=_stt_engine,
@@ -225,6 +240,7 @@ async def ws_audio(websocket: WebSocket) -> None:
         vad=_vad,
         # music_gate=_music_gate,  # vanilla: singing detection disabled
         glossary=_glossary,
+        gpu_lock=_gpu_lock,
     )
 
     try:

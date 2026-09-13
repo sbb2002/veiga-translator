@@ -46,7 +46,7 @@ const MAX_LOG_ENTRIES = 200;
 // needs — no extra permission required.
 async function getCaptureState(tabId) {
   const { captureSessions = {} } = await chrome.storage.session.get("captureSessions");
-  return captureSessions[tabId] ?? { active: false, paused: false, tabId };
+  return captureSessions[tabId] ?? { active: false, paused: false, adPaused: false, tabId };
 }
 
 async function setCaptureState(tabId, state) {
@@ -202,6 +202,7 @@ async function startCapture(tabId, tab) {
   const next = {
     active: true,
     paused: false,
+    adPaused: false,
     tabId,
     title,
     url,
@@ -225,7 +226,7 @@ async function startCapture(tabId, tab) {
 // state instead of reusing stop for it.
 async function stopCapture(tabId) {
   await chrome.runtime.sendMessage({ type: "STOP_CAPTURE", tabId }).catch(() => {});
-  const next = { active: false, paused: false, tabId };
+  const next = { active: false, paused: false, adPaused: false, tabId };
   await setCaptureState(tabId, next);
   return next;
 }
@@ -248,6 +249,30 @@ async function resumeCapture(tabId) {
   await chrome.runtime.sendMessage({ type: "RESUME_CAPTURE", tabId }).catch(() => {});
   const current = await getCaptureState(tabId);
   const next = { ...current, paused: false };
+  await setCaptureState(tabId, next);
+  return next;
+}
+
+// Auto ad-mute (2026-09-13): content_script.js's DOM-based ad detection
+// drives this pair, mirroring pause/resume above but writing a separate
+// `adPaused` field rather than `paused` — an ad ending must not resume a
+// session the user deliberately paused, and a manual pause during an ad
+// must survive past the ad's end (see offscreen.js's SessionState.adPaused
+// comment). Keeps the same gate mechanism (offscreen.js just checks both
+// flags before forwarding audio to the backend) so ad audio never reaches
+// the STT/translation pipeline and pollutes its context.
+async function adPauseCapture(tabId) {
+  await chrome.runtime.sendMessage({ type: "AD_PAUSE_CAPTURE", tabId }).catch(() => {});
+  const current = await getCaptureState(tabId);
+  const next = { ...current, adPaused: true };
+  await setCaptureState(tabId, next);
+  return next;
+}
+
+async function adResumeCapture(tabId) {
+  await chrome.runtime.sendMessage({ type: "AD_RESUME_CAPTURE", tabId }).catch(() => {});
+  const current = await getCaptureState(tabId);
+  const next = { ...current, adPaused: false };
   await setCaptureState(tabId, next);
   return next;
 }
@@ -357,6 +382,25 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message?.type === "AD_STATE_CHANGED") {
+    // From content_script.js's DOM-based ad-showing poll — sender.tab.id is
+    // this tab's own id, same pattern as VIDEO_METADATA_UPDATED below. Only
+    // acts while this tab actually has a capture session; a tab the user
+    // never started capturing on has nothing to pause.
+    const tabId = sender?.tab?.id;
+    if (tabId != null) {
+      getCaptureState(tabId).then((state) => {
+        if (!state.active) return;
+        if (message.isAd) {
+          adPauseCapture(tabId).catch(() => {});
+        } else {
+          adResumeCapture(tabId).catch(() => {});
+        }
+      });
+    }
+    return false;
+  }
+
   if (message?.type === "VIDEO_METADATA_UPDATED") {
     // From content_script.js's 'yt-navigate-finish' listener — sender.tab.id
     // is this tab's own id, so the content script never needs to embed one.

@@ -304,14 +304,22 @@ async function refreshState() {
   const state = await chrome.runtime.sendMessage({ type: "GET_CAPTURE_STATE", tabId });
   const isActive = state?.active ?? false;
   const isPaused = state?.paused ?? false;
-  const isRecording = isActive && !isPaused; // has a live session AND is actively sending audio
+  // Ad auto-mute (2026-09-13): audio is also withheld while an ad is
+  // detected, independently of the user's own manual pause — see
+  // background.js's adPauseCapture/adResumeCapture. Kept as its own flag
+  // (rather than folded into `paused`) so the toggle button below keeps
+  // reflecting the user's manual intent, not a transient ad-driven state.
+  const isAdPaused = state?.adPaused ?? false;
+  const isRecording = isActive && !isPaused && !isAdPaused; // has a live session AND is actively sending audio
   captureActive = isActive;
 
   // Update toggle button: toggle "recording" class (record vs pause icon —
-  // see popup.html) and set label text via captureLabel. Three real states:
-  // no session at all / actively capturing / paused-with-session-alive.
+  // see popup.html) and set label text via captureLabel. Button semantics
+  // stay keyed on the user's own `paused` flag, not `adPaused` — clicking it
+  // during an ad still queues a manual pause/resume that takes effect once
+  // the ad ends, rather than fighting the auto-mute.
   toggleBtn.classList.toggle("recording", isRecording);
-  if (isRecording) {
+  if (isActive && !isPaused) {
     captureLabel.textContent = "일시정지";
   } else if (isActive) {
     captureLabel.textContent = "재개";
@@ -320,7 +328,9 @@ async function refreshState() {
   }
 
   // Update status state label
-  if (isRecording) {
+  if (isAdPaused && isActive && !isPaused) {
+    statusState.textContent = "광고 재생 중 (음소거)";
+  } else if (isRecording) {
     statusState.textContent = "캡처 중";
   } else if (isActive) {
     statusState.textContent = "일시정지됨";

@@ -68,6 +68,26 @@ QWEN3_ASR_FAST_MAX_NEW_TOKENS = 128
 QWEN3_ASR_FINAL_MAX_NEW_TOKENS = 256
 QWEN3_ASR_FINAL_NUM_BEAMS = 5
 
+# STT call timeouts (audio_session.py's asyncio.to_thread wraps the actual
+# transcribe() call in wait_for with these) — added after a live incident
+# where GPU contention with a busy llama-server (see STT_ENGINE's 2026-08-29
+# note above) made a single transcribe() call take 80+ seconds. Unlike the
+# LLAMA_*_TIMEOUT_S calls above, a stuck STT call has no fallback at all
+# today: _emit_partial's transcribe() sits directly on feed_audio()'s await
+# chain, which is itself awaited inline in main.py's websocket receive loop —
+# so a hung transcribe() call doesn't just delay one partial, it stops the
+# session from reading any further audio off the socket until it returns.
+# wait_for can't kill the underlying thread (transformers/CTranslate2 calls
+# aren't cooperatively cancellable), but it does stop *awaiting* it, which is
+# enough to unblock the receive loop; the abandoned thread finishes on its
+# own later and its result is simply discarded.
+# Fast/partial mirrors LLAMA_FAST_TIMEOUT_S's reasoning (inline with audio
+# ingestion, must give up quickly since the next cycle retries anyway); final
+# mirrors LLAMA_SERVER_TIMEOUT_S's (background queue, can afford to wait
+# longer for a quality re-transcribe).
+STT_FAST_TIMEOUT_S = 3.0
+STT_FINAL_TIMEOUT_S = 15.0
+
 # Drop a Whisper segment only when BOTH no_speech_prob is >= this AND
 # avg_logprob is <= WHISPER_AVG_LOGPROB_THRESHOLD (see
 # stt/faster_whisper_engine.py) — no_speech_prob alone was measurably

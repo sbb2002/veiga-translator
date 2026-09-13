@@ -375,7 +375,17 @@ class AudioSession:
             return utterance.last_partial_text
         stt_start = time.monotonic()
         try:
-            stt_result = await asyncio.to_thread(self._stt.transcribe, audio, fast=True)
+            stt_result = await asyncio.wait_for(
+                asyncio.to_thread(self._stt.transcribe, audio, fast=True),
+                timeout=config.STT_FAST_TIMEOUT_S,
+            )
+        except asyncio.TimeoutError:
+            logger.warning(
+                "partial STT timed out after %.1fs — skipping this cycle (buf=%.1fs)",
+                config.STT_FAST_TIMEOUT_S,
+                utterance.duration_s(),
+            )
+            return utterance.last_partial_text
         except Exception:
             logger.exception("partial STT failed — skipping this cycle")
             return utterance.last_partial_text
@@ -704,12 +714,23 @@ class AudioSession:
         if audio.size > 0 and audio_rms >= config.AUDIO_RMS_SILENCE_FLOOR:
             stt_start = time.monotonic()
             try:
-                stt_result = await asyncio.to_thread(self._stt.transcribe, audio, fast=False)
+                stt_result = await asyncio.wait_for(
+                    asyncio.to_thread(self._stt.transcribe, audio, fast=False),
+                    timeout=config.STT_FINAL_TIMEOUT_S,
+                )
                 stt_s = time.monotonic() - stt_start
                 final_text = stt_result.text
                 no_speech_prob = stt_result.no_speech_prob
                 avg_logprob = stt_result.avg_logprob
                 dropped_low_confidence = stt_result.dropped_low_confidence
+            except asyncio.TimeoutError:
+                logger.warning(
+                    "final STT timed out after %.1fs — falling back to last partial text (seg=%s)",
+                    config.STT_FINAL_TIMEOUT_S,
+                    utterance.segment_id,
+                )
+                stt_s = time.monotonic() - stt_start
+                final_text = ""
             except Exception:
                 logger.exception("final STT failed — falling back to last partial text")
                 stt_s = time.monotonic() - stt_start

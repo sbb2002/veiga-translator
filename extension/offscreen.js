@@ -21,6 +21,7 @@ const TARGET_SAMPLE_RATE = 16000;
  *   ws: WebSocket | null,
  *   captureActive: boolean,
  *   paused: boolean,
+ *   adPaused: boolean,
  *   reconnectDelayMs: number,
  *   reconnectTimer: number | null,
  *   wsForceCloseTimer: number | null,
@@ -51,6 +52,15 @@ function newSessionState() {
     // can read as a seamless continuation rather than a real gap — accepted
     // as a minor edge case rather than adding cross-pause flush logic.
     paused: false,
+    // Auto ad-mute (2026-09-13): separate from `paused` above so it can't
+    // clobber (or be clobbered by) the user's own manual pause — an ad
+    // ending must not silently resume a session the user deliberately
+    // paused, and a manual pause during an ad must survive past the ad's
+    // end. Set by content_script.js's DOM-based ad detection, relayed
+    // through background.js's AD_PAUSE_CAPTURE/AD_RESUME_CAPTURE. Gated the
+    // same way as `paused` below — ad audio must never reach the backend
+    // and pollute the transcript/translation context.
+    adPaused: false,
     reconnectDelayMs: 1000,
     reconnectTimer: null,
     wsForceCloseTimer: null,
@@ -236,11 +246,11 @@ async function startCapture(tabId, streamId, meta) {
     const now = performance.now();
     if (now - session.lastVolumeSentAt >= VOLUME_SEND_INTERVAL_MS) {
       session.lastVolumeSentAt = now;
-      const level = session.paused ? 0 : rms(chunk);
+      const level = session.paused || session.adPaused ? 0 : rms(chunk);
       chrome.runtime.sendMessage({ type: "VOLUME_LEVEL", tabId, level }).catch(() => {});
     }
 
-    if (session.paused) return;
+    if (session.paused || session.adPaused) return;
     if (!session.ws || session.ws.readyState !== WebSocket.OPEN) return;
     session.ws.send(floatTo16BitPCM(chunk).buffer);
   };
@@ -325,6 +335,13 @@ chrome.runtime.onMessage.addListener((message) => {
   } else if (message?.type === "RESUME_CAPTURE") {
     const session = sessions.get(message.tabId);
     if (session) session.paused = false;
+  } else if (message?.type === "AD_PAUSE_CAPTURE") {
+    const session = sessions.get(message.tabId);
+    if (session) session.adPaused = true;
+    chrome.runtime.sendMessage({ type: "VOLUME_LEVEL", tabId: message.tabId, level: 0 }).catch(() => {});
+  } else if (message?.type === "AD_RESUME_CAPTURE") {
+    const session = sessions.get(message.tabId);
+    if (session) session.adPaused = false;
   } else if (message?.type === "METADATA_UPDATE") {
     // Mid-session video switch (2026-08-25) — background.js relays this
     // from content_script.js's 'yt-navigate-finish' listener. Update the

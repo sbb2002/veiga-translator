@@ -505,6 +505,28 @@
     for (const ms of [500, 1500, 3500]) setTimeout(maybeReportMetadataChange, ms);
   });
 
+  // Ad auto-mute (2026-09-13): YouTube ad audio was bleeding into the
+  // captured stream, polluting the transcript/translation context with ad
+  // content (and occasionally hallucinated garbage from music-heavy ads).
+  // YouTube's own player marks the ad state on the player element's class
+  // list (`ad-showing` while an instream/video ad is playing), which is the
+  // same signal long-standing ad-block/companion extensions key off — no
+  // official API exists for this. Plain polling instead of a
+  // MutationObserver: the player element doesn't exist yet at content-script
+  // load time on a fresh SPA navigation, and re-attaching an observer every
+  // time it's recreated is more moving parts than a cheap classList check on
+  // an interval. 300ms keeps the mute reaction fast enough that only a
+  // fraction of a second of ad audio ever reaches the backend either way.
+  let lastAdState = false;
+  function checkAdState() {
+    const player = document.querySelector("#movie_player, .html5-video-player");
+    const isAd = !!player && player.classList.contains("ad-showing");
+    if (isAd === lastAdState) return;
+    lastAdState = isAd;
+    chrome.runtime.sendMessage({ type: "AD_STATE_CHANGED", isAd }).catch(() => {});
+  }
+  setInterval(checkAdState, 300);
+
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (message?.type === "SHOW_OVERLAY" && message.tabId != null) {
       buildPanel(message.tabId);

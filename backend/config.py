@@ -143,6 +143,8 @@ AUDIO_RMS_SILENCE_FLOOR = 0.006
 VAD_SILENCE_MS = 600  # pause length that triggers "final" (utterance-end candidate)
 VAD_FRAME_SAMPLES = 512  # silero-vad requires fixed frame sizes at 16kHz; 512 samples = 32ms
 VAD_SPEECH_THRESHOLD = 0.5  # speech-probability cutoff
+VAD_BACKEND = "torch"  # "torch" (default, torch.hub silero-vad) | "onnx" (onnxruntime CPU, no torch import)
+VAD_ONNX_MODEL_PATH = "backend/models/silero_vad.onnx"  # onnx backend model file; auto-downloaded once if missing
 MAX_UTTERANCE_SECONDS = 10  # hard cap: force-finalize even without silence (run-on speech safety net)
 
 # Proactive mid-utterance split (has_strong_sentence_boundary, audio_session.py)

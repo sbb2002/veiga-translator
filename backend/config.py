@@ -374,3 +374,9 @@ CONTEXT_CHECK_EVERY_N_FINALS = 4
 # so the summary reflects the actual current topic rather than just the last
 # couple of sentences.
 CONTEXT_SUMMARY_HISTORY_SIZE = 10
+
+# Hardware profile overlay (profiles/<name>.yaml, opt-in via LT_PROFILE).
+# No-op when LT_PROFILE is unset. Must stay the last statement in this file.
+from backend.profile import apply_profile  # noqa: E402
+ACTIVE_PROFILE = None
+apply_profile(globals())

@@ -1,13 +1,16 @@
-# torch-free 의존성 세트 (profiles/ 의 lite 프로파일용).
-# torch / transformers / sentence-transformers 를 설치하지 않는다.
+# torch-free dependency set for the lite hardware profiles (profiles/p3, p25, p2, p1).
+# Does NOT install torch / transformers / sentence-transformers.
 #
-# 전제 (이 조합에서만 동작):
+# Use ONLY with this combination:
 #   - VAD_BACKEND=onnx
 #   - HALLUCINATION_GATE_BACKEND=onnx
-#   - STT_ENGINE 이 faster-whisper 또는 whisper-cpp 일 때만 사용
-# STT_ENGINE=qwen3-asr 은 transformers/torch 가 필요하므로 requirements.txt 를 쓴다.
+#   - STT_ENGINE=faster-whisper or whisper-cpp
+# STT_ENGINE=qwen3-asr needs transformers/torch -> use backend/requirements.txt instead.
 #
-# 설치: pip install -r backend/requirements-lite.txt
+# Keep this file ASCII-only: pip decodes it with the OS locale (cp949 on Korean
+# Windows) and fails on UTF-8 multibyte comments.
+#
+# Install: pip install -r backend/requirements-lite.txt
 fastapi
 uvicorn[standard]
 faster-whisper
@@ -17,3 +20,7 @@ pyyaml
 onnxruntime
 tokenizers
 huggingface_hub
+# CUDA runtime DLLs for CTranslate2 without torch (see backend/cuda_dll_path.py).
+# NVIDIA GPUs only; harmless to skip on CPU-only / Vulkan profiles.
+nvidia-cublas-cu12
+nvidia-cudnn-cu12

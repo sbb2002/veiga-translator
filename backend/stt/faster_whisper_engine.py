@@ -12,7 +12,11 @@ from __future__ import annotations
 import logging
 
 import numpy as np
-from faster_whisper import WhisperModel
+
+from backend.cuda_dll_path import add_nvidia_wheel_dll_dirs
+
+add_nvidia_wheel_dll_dirs()  # torch-free envs: cuBLAS/cuDNN come from pip wheels (no-op otherwise)
+from faster_whisper import WhisperModel  # noqa: E402
 
 from backend import config
 from backend.hallucination_gate import HallucinationGate

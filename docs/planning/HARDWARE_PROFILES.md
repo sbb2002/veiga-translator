@@ -225,6 +225,53 @@ faster-whisper 경로는 이미 torch 불필요.
 "실시간 지속 불가"로 표기 — 타깃은 더 느리므로 확정 탈락 근거가 된다. ③ 개발기 통과는 "개발기 기준 통과 / 실기 미검증"으로만 표기하고,
 지연 기준은 이 표를 보고 사용자가 사후에 정한다.
 
+## 9. 구현 현황 (2026-10-11) — 코드 구성 완료, 구동·평가 대기
+
+### 9.1 브랜치 구성 (origin 푸시 완료, main 에는 미병합)
+
+| 브랜치 | 내용 |
+|---|---|
+| `profile/base` | 공통 구성요소 — 프로파일 로더(`backend/profile.py`, `LT_PROFILE`/`LT_PROFILE_OVERLAYS`, `profiles/_measure.yaml`), ONNX VAD(`VAD_BACKEND`), ONNX 환각 게이트(`HALLUCINATION_GATE_BACKEND`), whisper.cpp STT 엔진(`STT_ENGINE=whisper-cpp`), 런처의 whisper-server 기동, `backend/requirements-lite.txt` (torch-free 의존성) |
+| `profile/p4-16gb` | 기준선 고정값(Qwen3-ASR 1.7B + gemma-3-12b Q4_K_M) |
+| `profile/p3-10gb` | faster-whisper turbo int8_float16 + 12B 전부 GPU(`-c 4096`, KV q8_0), torch-free |
+| `profile/p2.5-8gb` | P3 와 같은 STT + 12B 부분 오프로드(`-ngl 34` 가설), torch-free |
+| `profile/p2-4gb` | whisper.cpp(turbo q5_0) + gemma-3-4b-it Q4_K_M(`-ngl 26` 가설), torch-free |
+| `profile/p1-igpu` | whisper.cpp·llama.cpp Vulkan 빌드 + gemma-3-4b-it Q4_K_M, torch-free |
+
+- 프로파일 브랜치는 `profile/base` 위에서 `profiles/<name>.yaml` + `profiles/<name>.md` 두 파일만 추가한다(이름: p4, p3, p25, p2, p1).
+- 사용: `$env:LT_PROFILE='p3'` 후 `start.cmd`(런처가 yaml 의 llama/whisper 인자로 기동) 또는 `uvicorn`. 지연 실측 시 `$env:LT_PROFILE_OVERLAYS='_measure'` 로 타임아웃 폴백 해제.
+- **프로파일 yaml 의 모든 수치(`-ngl`, `-c`, 모델 선택, `PARTIAL_UPDATE_INTERVAL_S` 등)는 초기 가설**이다. 평가 세션에서 확정한다.
+
+### 9.2 구현 단계에서 확인된 것
+
+- 기본 동작 불변: `LT_PROFILE` 미설정 시 `backend/config.py` 대문자 상수 전체가 변경 전과 동일. P4 적용 시에도 동일(전체 상수 덤프 비교).
+- ONNX VAD ↔ torch silero: 20클립·3,755프레임 최대 절대 오차 7.3e-06, 판정 일치 100% (L1c 기준 충족).
+- ONNX 환각 게이트 ↔ sentence-transformers: 77개 텍스트 코사인 최솟값 1.000000, 판정 불일치 0건 (L1c 기준 충족).
+- torch-free 구성(VAD/게이트 onnx + faster-whisper 또는 whisper-cpp)에서 `backend.main` import 시 torch/transformers/sentence_transformers 미로드.
+- whisper.cpp 엔진은 가짜 서버로 18건 검증(WAV 형식, fast/final 라우팅, 응답 파싱, 연결 실패 메시지). **실제 whisper-server 로는 미검증.**
+
+### 9.3 알려진 미검증·미해결 (평가 세션에서 해소)
+
+1. whisper-server 가 요청별 `beam_size`/`language` 를 지원하는가 — 미지원이면 시작 시 `-bs` 가 fast/final 에 모두 적용됨(필요하면 `WHISPER_CPP_FINAL_URL` 에 beam=5 서버 추가).
+2. whisper-server `verbose_json` 이 `no_speech_prob`/`avg_logprob` 를 주는가 — 없으면 임계값 필터층 inert(Qwen3-ASR 경로와 동일 상태), 임베딩 게이트만 동작.
+3. Pascal(sm_61)용 llama.cpp/whisper.cpp 빌드(CUDA 12.x 또는 Vulkan) 가용성. 저장소의 `llama-server/` 빌드가 sm_61 을 포함하는지 미확인.
+4. Vulkan 빌드 디렉터리(`llama-server-vulkan/`, `whisper-server-vulkan/`)는 저장소에 없음. 모델 파일(`gemma-3-4b-it` GGUF, `ggml-large-v3-turbo-q5_0.bin`)도 미준비.
+5. `requirements-lite.txt` 를 깨끗한 venv 에 설치해 실제 기동하는 검증은 하지 않음.
+6. 런처(`tray_launcher.ps1`) 변경은 PowerShell 문법 검사만 했고 실행 검증 전. 트레이/종료/PID 정리는 미실행.
+7. 4B 번역 품질(P2·P1), 12B `-c 4096`/KV q8_0 의 품질 영향, turbo 대 Qwen3-ASR 의 파이프라인 통과 시 환각 방어 구성 차이(faster-whisper 는 확률 필터 + 임베딩 게이트, Qwen3-ASR 은 임베딩 게이트만).
+8. `README.md` 수동 실행 예시는 `-c 4096` 이지만 런처 기본값·P4 는 `-c 8192` (기준선은 런처 값). README 정정은 미반영.
+
+### 9.4 남은 작업 (구동 및 평가) — 순서
+
+구동·평가 외에 평가를 돌리기 위한 **선행 준비**가 있다.
+
+1. **준비**: 프로파일별 바이너리(llama-server CUDA/Vulkan, whisper-server)·모델 파일 확보(§9.3-3,4). 모델 파일명은 각 `profiles/<name>.md` 참고.
+2. **측정 도구 작성**: §8 의 L2(VRAM 피크 샘플러, llama-bench 래퍼)·L3(문장별 지연·드리프트 기록기, 가상 시계 하네스 실시간 모드)는 **계획만 있고 구현되지 않았다**. 평가 전에 만들어야 한다.
+3. **기준선 고정**: P4 를 `baseline-2026-10` 으로 재측정(§8.2). 이때 비열등 마진 δ 확정(§6).
+4. **L1 품질**: 프로파일별 번들(turbo, 4B 등)을 150쌍/120클립에 통과 → 비열등성 판정. 탈락 번들은 대안 후보(TranslateGemma 등)로 교체.
+5. **L2/L3**: 각 프로파일 번들을 개발기에서 순차 실행(§8.4 규칙), 지연·드리프트 기록. `-ngl` 스윕으로 P2.5·P2 의 오프로드 값 확정.
+6. **L4 + 판정표(§8.6) 작성**, 지연 기준은 이 결과를 보고 사용자가 결정. 타깃급 실기 검증은 후속.
+
 ## 출처
 
 1. https://computingforgeeks.com/how-much-vram-to-run-llm/

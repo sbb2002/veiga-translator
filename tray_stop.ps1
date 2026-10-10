@@ -32,6 +32,7 @@ if (Test-Path $pidFile) {
 Get-CimInstance Win32_Process | Where-Object {
     $_.CommandLine -and (
         ($_.Name -eq 'llama-server.exe' -and $_.CommandLine.Contains($root)) -or
+        ($_.Name -eq 'whisper-server.exe' -and $_.CommandLine.Contains($root)) -or
         ($_.Name -in 'python.exe', 'uvicorn.exe', 'nohup.exe' -and $_.CommandLine.Contains('backend.main:app')) -or
         ($_.Name -eq 'powershell.exe' -and $_.CommandLine.Contains('tray_launcher.ps1'))
     )

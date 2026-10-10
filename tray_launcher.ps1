@@ -17,10 +17,44 @@ $backendLog = Join-Path $root "backend_run.log"
 $backendErrLog = Join-Path $root "backend_run.err.log"
 $llamaLog = Join-Path $root "llama_server.log"
 $llamaErrLog = Join-Path $root "llama_server.err.log"
+$whisperLog = Join-Path $root "whisper_server.log"
+$whisperErrLog = Join-Path $root "whisper_server.err.log"
 # Child PIDs are written here the moment both processes start, so stop.cmd
 # (tray_stop.ps1) can always kill the stack even if this tray script dies
 # before — or after — the icon exists. Removed on clean exit.
 $pidFile = Join-Path $root ".live-translator-pids"
+
+# Hardware profile (profiles/README.md): when $env:LT_PROFILE is set, the
+# llama-server exe / model / port / args come from that profile, and a
+# whisper_server section (if present) also starts whisper-server. Unset = the
+# defaults below, which are the same command line as before profiles existed.
+# This runs before the single-instance guard so the profile's ports are known.
+# -np 1: the backend only ever issues one translation request at a time
+# (partial translation is deprecated, finals are awaited sequentially), so the
+# default 4 parallel slots just reserve 4x the KV cache. One slot keeps VRAM
+# headroom for the STT engine sharing the GPU.
+$llamaPort = "8080"
+$llamaArgs = @("-ngl", "999", "-c", "8192", "-np", "1")
+$whisperLaunch = $null
+$whisperProc = $null
+if ($env:LT_PROFILE) {
+    $pythonExe = Join-Path (Split-Path -Parent (Split-Path -Parent $backendExe)) "python.exe"
+    Push-Location $root
+    try {
+        $launchJson = & $pythonExe -m backend.profile launch-args llama $env:LT_PROFILE
+        if ($LASTEXITCODE -ne 0) { throw "profile '$env:LT_PROFILE': launch-args llama failed" }
+        # whisper_server is optional: a non-zero exit just means the profile has no such section.
+        $whisperJson = & $pythonExe -m backend.profile launch-args whisper $env:LT_PROFILE
+        if ($LASTEXITCODE -eq 0) { $whisperLaunch = (@($whisperJson) -join "") | ConvertFrom-Json }
+    } finally {
+        Pop-Location
+    }
+    $launch = (@($launchJson) -join "") | ConvertFrom-Json
+    if ([System.IO.Path]::IsPathRooted($launch.exe)) { $llamaExe = $launch.exe } else { $llamaExe = Join-Path $root $launch.exe }
+    if ([System.IO.Path]::IsPathRooted($launch.model)) { $modelPath = $launch.model } else { $modelPath = Join-Path $root $launch.model }
+    $llamaPort = "$($launch.port)"
+    $llamaArgs = @($launch.args)
+}
 
 # Single-instance guard. Exactly one llama-server (translation) and one backend
 # may run for this repo at a time — a second gemma-3-12b instance alone is
@@ -35,36 +69,35 @@ Get-CimInstance Win32_Process -Filter "Name = 'llama-server.exe'" |
 Get-CimInstance Win32_Process -Filter "Name = 'python.exe' OR Name = 'uvicorn.exe'" |
     Where-Object { $_.CommandLine -and $_.CommandLine -like '*backend.main:app*' } |
     ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }
-foreach ($port in 8080, 8000) {
+if ($whisperLaunch) {
+    # whisper-server only exists when a profile asks for it, so only sweep it then.
+    Get-CimInstance Win32_Process -Filter "Name = 'whisper-server.exe'" |
+        Where-Object { $_.CommandLine -and $_.CommandLine -like "*$rootNorm*" } |
+        ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }
+}
+# Default ports are 8080 (llama) and 8000 (backend). A profile adds its own
+# llama and whisper ports; without a profile this is exactly 8080, 8000.
+$cleanupPorts = @(8080, 8000)
+if ($env:LT_PROFILE) { $cleanupPorts += [int]$llamaPort }
+if ($whisperLaunch) { $cleanupPorts += [int]$whisperLaunch.port }
+foreach ($port in ($cleanupPorts | Select-Object -Unique)) {
     for ($i = 0; $i -lt 20; $i++) {
         if (-not (Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue)) { break }
         Start-Sleep -Milliseconds 250
     }
 }
 
-# -np 1: the backend only ever issues one translation request at a time
-# (partial translation is deprecated, finals are awaited sequentially), so the
-# default 4 parallel slots just reserve 4x the KV cache. One slot keeps VRAM
-# headroom for the STT engine sharing the GPU.
-# Hardware profile (profiles/README.md): when $env:LT_PROFILE is set, the
-# llama-server exe / model / port / args come from that profile. Unset = the
-# defaults below, which are the same command line as before profiles existed.
-$llamaPort = "8080"
-$llamaArgs = @("-ngl", "999", "-c", "8192", "-np", "1")
-if ($env:LT_PROFILE) {
-    $pythonExe = Join-Path (Split-Path -Parent (Split-Path -Parent $backendExe)) "python.exe"
-    Push-Location $root
-    try {
-        $launchJson = & $pythonExe -m backend.profile launch-args llama $env:LT_PROFILE
-        if ($LASTEXITCODE -ne 0) { throw "profile '$env:LT_PROFILE': launch-args llama failed" }
-    } finally {
-        Pop-Location
-    }
-    $launch = (@($launchJson) -join "") | ConvertFrom-Json
-    if ([System.IO.Path]::IsPathRooted($launch.exe)) { $llamaExe = $launch.exe } else { $llamaExe = Join-Path $root $launch.exe }
-    if ([System.IO.Path]::IsPathRooted($launch.model)) { $modelPath = $launch.model } else { $modelPath = Join-Path $root $launch.model }
-    $llamaPort = "$($launch.port)"
-    $llamaArgs = @($launch.args)
+# whisper-server (only when the profile has whisper_server) starts before
+# llama-server, hidden and logged to whisper_server*.log like the others.
+if ($whisperLaunch) {
+    if ([System.IO.Path]::IsPathRooted($whisperLaunch.exe)) { $whisperExe = $whisperLaunch.exe } else { $whisperExe = Join-Path $root $whisperLaunch.exe }
+    if ([System.IO.Path]::IsPathRooted($whisperLaunch.model)) { $whisperModel = $whisperLaunch.model } else { $whisperModel = Join-Path $root $whisperLaunch.model }
+    $whisperArgs = @()
+    if ($whisperLaunch.args) { $whisperArgs = @($whisperLaunch.args) }
+    $whisperProc = Start-Process -FilePath $whisperExe `
+        -ArgumentList (@("-m", "`"$whisperModel`"", "--port", "$($whisperLaunch.port)") + $whisperArgs) `
+        -WorkingDirectory $root -WindowStyle Hidden -PassThru `
+        -RedirectStandardOutput $whisperLog -RedirectStandardError $whisperErrLog
 }
 
 $llamaProc = Start-Process -FilePath $llamaExe `
@@ -92,7 +125,9 @@ $backendProc = Start-Process -FilePath $backendExe `
     -RedirectStandardOutput $backendLog -RedirectStandardError $backendErrLog
 
 # Recovery path #1: record the PIDs before doing anything that can throw.
-Set-Content -Path $pidFile -Value @($llamaProc.Id, $backendProc.Id) -Encoding ascii
+$pidLines = @($llamaProc.Id, $backendProc.Id)
+if ($whisperProc) { $pidLines += $whisperProc.Id }
+Set-Content -Path $pidFile -Value $pidLines -Encoding ascii
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
@@ -105,15 +140,19 @@ $notifyIcon.Visible = $true
 $menu = New-Object System.Windows.Forms.ContextMenuStrip
 $itemBackendLog = $menu.Items.Add("백엔드 로그 열기")
 $itemLlamaLog = $menu.Items.Add("llama-server 로그 열기")
+# Only offered when whisper-server was actually started.
+$itemWhisperLog = $null
+if ($whisperProc) { $itemWhisperLog = $menu.Items.Add("whisper-server 로그 열기") }
 $menu.Items.Add("-") | Out-Null
 $itemExit = $menu.Items.Add("종료 (두 서버 모두 정지)")
 $notifyIcon.ContextMenuStrip = $menu
 
 $itemBackendLog.Add_Click({ Start-Process notepad.exe $backendErrLog })
 $itemLlamaLog.Add_Click({ Start-Process notepad.exe $llamaErrLog })
+if ($itemWhisperLog) { $itemWhisperLog.Add_Click({ Start-Process notepad.exe $whisperErrLog }) }
 
 $stopAll = {
-    foreach ($p in @($backendProc, $llamaProc)) {
+    foreach ($p in @($backendProc, $llamaProc, $whisperProc)) {
         if ($p -and -not $p.HasExited) {
             Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
         }
@@ -139,7 +178,7 @@ $notifyIcon.ShowBalloonTip(
     # Never leave orphaned servers with no icon to stop them: if the icon
     # setup (or anything else after the two Start-Process calls) throws, kill
     # whatever we already started before exiting.
-    foreach ($p in @($backendProc, $llamaProc)) {
+    foreach ($p in @($backendProc, $llamaProc, $whisperProc)) {
         if ($p -and -not $p.HasExited) {
             Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
         }

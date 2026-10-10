@@ -42,6 +42,53 @@ from backend import config
 logger = logging.getLogger("live-translator.backend")
 
 _PHRASES_PATH = Path(__file__).parent / "known_hallucinations.json"
+_ONNX_MAX_LENGTH = 128  # matches the ST model's max_seq_length
+
+
+class _OnnxEmbedder:
+    """Torch-free replacement for SentenceTransformer.encode, for the
+    paraphrase-multilingual-MiniLM-L12-v2 ONNX export. Mirrors the ST
+    pipeline: tokenize (truncate 128, pad) -> last_hidden_state -> attention-
+    mask-weighted mean pooling -> L2 normalize. Only onnxruntime, tokenizers,
+    huggingface_hub and numpy are imported here."""
+
+    def __init__(self, repo: str) -> None:
+        import onnxruntime as ort
+        from huggingface_hub import hf_hub_download
+        from tokenizers import Tokenizer
+
+        model_path = hf_hub_download(repo, "onnx/model.onnx")
+        tokenizer_path = hf_hub_download(repo, "tokenizer.json")
+        tok = Tokenizer.from_file(tokenizer_path)
+        pad_id = tok.token_to_id("<pad>")
+        if pad_id is None:
+            pad_id = 0
+        tok.enable_truncation(max_length=_ONNX_MAX_LENGTH)
+        tok.enable_padding(pad_id=pad_id, pad_token="<pad>")
+        self._tok = tok
+        self._sess = ort.InferenceSession(
+            model_path, providers=["CPUExecutionProvider"]
+        )
+        self._input_names = {i.name for i in self._sess.get_inputs()}
+        self._output_name = self._sess.get_outputs()[0].name
+
+    def encode(self, texts: list[str], normalize_embeddings: bool = True) -> np.ndarray:
+        encs = self._tok.encode_batch(texts)
+        input_ids = np.array([e.ids for e in encs], dtype=np.int64)
+        attention_mask = np.array([e.attention_mask for e in encs], dtype=np.int64)
+        feeds = {"input_ids": input_ids, "attention_mask": attention_mask}
+        if "token_type_ids" in self._input_names:
+            feeds["token_type_ids"] = np.zeros_like(input_ids)
+        feeds = {k: v for k, v in feeds.items() if k in self._input_names}
+        hidden = self._sess.run([self._output_name], feeds)[0]
+        mask = attention_mask[..., None].astype(np.float32)
+        summed = (hidden * mask).sum(axis=1)
+        pooled = summed / np.clip(mask.sum(axis=1), 1e-9, None)
+        if normalize_embeddings:
+            pooled = pooled / np.clip(
+                np.linalg.norm(pooled, axis=1, keepdims=True), 1e-12, None
+            )
+        return pooled.astype(np.float32)
 
 
 class HallucinationGate:
@@ -58,18 +105,25 @@ class HallucinationGate:
         if not self._ref_phrases:
             self._enabled = False
             return
-        # Imported lazily: sentence-transformers pulls in transformers/torch
-        # machinery not otherwise needed if this gate is disabled.
-        from sentence_transformers import SentenceTransformer
+        if config.HALLUCINATION_GATE_BACKEND == "onnx":
+            self._model = _OnnxEmbedder(config.HALLUCINATION_GATE_ONNX_REPO)
+            model_name = config.HALLUCINATION_GATE_ONNX_REPO
+        else:
+            # Imported lazily: sentence-transformers pulls in transformers/torch
+            # machinery not otherwise needed if this gate is disabled (or if
+            # the onnx backend is selected).
+            from sentence_transformers import SentenceTransformer
 
-        self._model = SentenceTransformer(config.HALLUCINATION_GATE_MODEL)
+            self._model = SentenceTransformer(config.HALLUCINATION_GATE_MODEL)
+            model_name = config.HALLUCINATION_GATE_MODEL
         self._ref_embeddings = self._model.encode(
             self._ref_phrases, normalize_embeddings=True
         )
         logger.info(
-            "Hallucination gate ready (%d known phrases, model=%s)",
+            "Hallucination gate ready (%d known phrases, backend=%s, model=%s)",
             len(self._ref_phrases),
-            config.HALLUCINATION_GATE_MODEL,
+            config.HALLUCINATION_GATE_BACKEND,
+            model_name,
         )
 
     def is_known_hallucination(self, text: str) -> str | None:

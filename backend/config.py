@@ -133,6 +133,10 @@ WHISPER_NO_SPEECH_HARD_THRESHOLD = 0.6
 HALLUCINATION_GATE_ENABLED = True
 HALLUCINATION_GATE_MODEL = "paraphrase-multilingual-MiniLM-L12-v2"
 HALLUCINATION_GATE_SIM_THRESHOLD = 0.78
+# "sentence-transformers" (default, original behavior) | "onnx" (torch-free,
+# onnxruntime on CPU; same model weights via HF Hub Xenova ONNX export).
+HALLUCINATION_GATE_BACKEND = "sentence-transformers"
+HALLUCINATION_GATE_ONNX_REPO = "Xenova/paraphrase-multilingual-MiniLM-L12-v2"
 # Whisper's own average per-token log-probability for a segment; -1.0
 # mirrors OpenAI Whisper's reference decoding heuristic for "low
 # confidence" output. Genuine speech, even short exclamations, tends to

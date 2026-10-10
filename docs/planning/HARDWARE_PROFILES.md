@@ -231,7 +231,7 @@ faster-whisper 경로는 이미 torch 불필요.
 
 | 브랜치 | 내용 |
 |---|---|
-| `profile/base` | 공통 구성요소 — 프로파일 로더(`backend/profile.py`, `LT_PROFILE`/`LT_PROFILE_OVERLAYS`, `profiles/_measure.yaml`), ONNX VAD(`VAD_BACKEND`), ONNX 환각 게이트(`HALLUCINATION_GATE_BACKEND`), whisper.cpp STT 엔진(`STT_ENGINE=whisper-cpp`), 런처의 whisper-server 기동, `backend/requirements-lite.txt` (torch-free 의존성) |
+| `profile/base` | 공통 구성요소 — 프로파일 로더(`backend/profile.py`, `LT_PROFILE`/`LT_PROFILE_OVERLAYS`, `profiles/_measure.yaml`), ONNX VAD(`VAD_BACKEND`), ONNX 환각 게이트(`HALLUCINATION_GATE_BACKEND`), whisper.cpp STT 엔진(`STT_ENGINE=whisper-cpp`), 런처의 whisper-server 기동, `backend/requirements-lite.txt` (torch-free 의존성, ASCII 전용 + NVIDIA 런타임 휠), `backend/cuda_dll_path.py` (Windows 에서 pip 휠의 cuBLAS/cuDNN DLL 경로 추가) |
 | `profile/p4-16gb` | 기준선 고정값(Qwen3-ASR 1.7B + gemma-3-12b Q4_K_M) |
 | `profile/p3-10gb` | faster-whisper turbo int8_float16 + 12B 전부 GPU(`-c 4096`, KV q8_0), torch-free |
 | `profile/p2.5-8gb` | P3 와 같은 STT + 12B 부분 오프로드(`-ngl 34` 가설), torch-free |
@@ -256,7 +256,7 @@ faster-whisper 경로는 이미 torch 불필요.
 2. whisper-server `verbose_json` 이 `no_speech_prob`/`avg_logprob` 를 주는가 — 없으면 임계값 필터층 inert(Qwen3-ASR 경로와 동일 상태), 임베딩 게이트만 동작.
 3. Pascal(sm_61)용 llama.cpp/whisper.cpp 빌드(CUDA 12.x 또는 Vulkan) 가용성. 저장소의 `llama-server/` 빌드가 sm_61 을 포함하는지 미확인.
 4. Vulkan 빌드 디렉터리(`llama-server-vulkan/`, `whisper-server-vulkan/`)는 저장소에 없음. 모델 파일(`gemma-3-4b-it` GGUF, `ggml-large-v3-turbo-q5_0.bin`)도 미준비.
-5. `requirements-lite.txt` 를 깨끗한 venv 에 설치해 실제 기동하는 검증은 하지 않음.
+5. ~~`requirements-lite.txt` 설치 검증 없음~~ → **2026-10-11 격리 venv 에서 검증, 결함 2건 수정 후 `profile/base` 에 반영.** (a) 파일의 한글 주석 때문에 한국어 Windows(cp949)에서 pip 가 읽지 못함 → ASCII 주석으로 교체. (b) torch 없는 환경에서 faster-whisper GPU 추론이 `cublas64_12.dll is not found` 로 실패 → `nvidia-cublas-cu12`/`nvidia-cudnn-cu12` 추가 + `backend/cuda_dll_path.py`(pip 휠의 DLL 디렉터리를 Windows DLL 검색 경로에 추가, 해당 디렉터리가 없으면 no-op)를 `faster_whisper_engine.py` 가 호출. 수정 후 torch 없는 venv 에서 tiny 모델 `int8_float16` GPU 추론 통과, torch 환경(`live-translator` conda env)에서는 import 정상(no-op). 프로파일 5개 브랜치에 `profile/base` 병합 완료.
 6. 런처(`tray_launcher.ps1`) 변경은 PowerShell 문법 검사만 했고 실행 검증 전. 트레이/종료/PID 정리는 미실행.
 7. 4B 번역 품질(P2·P1), 12B `-c 4096`/KV q8_0 의 품질 영향, turbo 대 Qwen3-ASR 의 파이프라인 통과 시 환각 방어 구성 차이(faster-whisper 는 확률 필터 + 임베딩 게이트, Qwen3-ASR 은 임베딩 게이트만).
 8. `README.md` 수동 실행 예시는 `-c 4096` 이지만 런처 기본값·P4 는 `-c 8192` (기준선은 런처 값). README 정정은 미반영.
@@ -271,6 +271,211 @@ faster-whisper 경로는 이미 torch 불필요.
 4. **L1 품질**: 프로파일별 번들(turbo, 4B 등)을 150쌍/120클립에 통과 → 비열등성 판정. 탈락 번들은 대안 후보(TranslateGemma 등)로 교체.
 5. **L2/L3**: 각 프로파일 번들을 개발기에서 순차 실행(§8.4 규칙), 지연·드리프트 기록. `-ngl` 스윕으로 P2.5·P2 의 오프로드 값 확정.
 6. **L4 + 판정표(§8.6) 작성**, 지연 기준은 이 결과를 보고 사용자가 결정. 타깃급 실기 검증은 후속.
+
+## 10. 환경 준비 (다른 세션이 이 절만 보고 따라 할 수 있도록)
+
+> **이 계획서의 최신본은 `main` 브랜치의 `docs/planning/HARDWARE_PROFILES.md` 이다.** `profile/*` 브랜치는 이 문서가 갱신되기 전의 `main` 에서 갈라졌으므로 그 안의 사본은 낡았을 수 있다. 세션은 `$MAIN`(main 체크아웃)에서 이 문서를 읽고, 작업은 `$EVAL` worktree 에서 한다.
+
+**실행 기기는 현재 로컬 개발기 하나다**: Windows 11 Home, RTX 4080 SUPER 16GB(드라이버 591.86), PowerShell, conda 설치 경로 `C:\Users\User\miniconda3`. 컨테이너·WSL·원격 기기는 쓰지 않는다(§8.4: 다른 프로파일은 이 기기에서 그 번들을 실행해 평가). 아래 변수는 이후 모든 명령에서 공통으로 쓴다.
+
+```powershell
+$R    = "C:\Users\User\Documents\pyworks"
+$MAIN = "$R\live-translator"          # 기존 체크아웃(main). 건드리지 않는다
+$EVAL = "$R\lt-wt\eval"                # 평가 전용 worktree (§10.1)
+$ENVS = "$R\lt-envs"                   # 평가용 venv 보관
+```
+
+### 10.0 지켜야 할 규칙 (현재 환경에 간섭하지 않기)
+
+- 기존 conda env(`live-translator`, `reazonspeech`) 에 **패키지를 설치/업그레이드하지 않는다.** (과거 `nemo_toolkit` 설치로 torch 가 CPU 전용으로 바뀌어 CUDA 가 깨진 사례 — `research/topic/20260826_stt_model_survey_gpu_full/README.md`.) 새 패키지는 §10.2 의 새 venv 에만 설치.
+- `$MAIN` 에서 브랜치를 전환하지 않는다. `$MAIN` 에는 커밋되지 않은 `data/flagged_segments.jsonl` 수정이 있다. 모든 작업은 `$EVAL` worktree 에서.
+- 모델·바이너리 다운로드는 용량이 크다(§10.4 표). **사용자 승인 후** 받는다.
+- 서버(llama 8080, backend 8000, whisper 8081)는 **한 번에 한 프로파일만** 띄운다. 프로파일을 바꿀 때마다 전부 종료하고 `nvidia-smi` 로 VRAM 이 비었는지(기준 약 0.9GB, 데스크톱 점유분) 확인한다. 다른 GPU 사용(게임 등)이 있으면 측정하지 않는다.
+- Windows 콘솔 인코딩: 모든 파이썬 실행 전에 `$env:PYTHONUTF8 = "1"`.
+- `tray_launcher.ps1`/`start.cmd` 는 평가에 쓰지 않는다 — 백엔드 실행 파일 경로가 conda env 의 `uvicorn.exe` 로 하드코딩돼 있어 venv 를 못 쓴다. §11 의 수동 기동 명령을 사용한다.
+
+### 10.1 코드: 평가 전용 worktree (`profile/eval`)
+
+프로파일 5개 브랜치는 `profile/base` 와 비교해 **`profiles/<이름>.yaml`·`.md` 만 다르다**(2026-10-11 확인, 서로 충돌 없이 병합됨). 그래서 브랜치마다 worktree/환경을 따로 만들 필요 없이, 5개를 모두 병합한 통합 브랜치 하나에서 `LT_PROFILE` 만 바꿔 모든 프로파일을 돌린다. 평가용 도구(§12.3)와 결과물도 이 브랜치에 쌓는다.
+
+```powershell
+git -C $MAIN fetch origin
+# 로컬에 브랜치가 없는 세션이면 먼저: git -C $MAIN branch profile/p3-10gb origin/profile/p3-10gb  (5개 + base 모두)
+New-Item -ItemType Directory -Force "$R\lt-wt", $ENVS | Out-Null
+git -C $MAIN worktree add -b profile/eval "$R\lt-wt\eval" profile/base
+git -C $EVAL merge --no-ff -m "eval line: all profile bundles" profile/p4-16gb profile/p3-10gb profile/p2.5-8gb profile/p2-4gb profile/p1-igpu
+& "C:\Users\User\miniconda3\envs\live-translator\python.exe" -m backend.profile validate   # cwd=$EVAL; OK 6줄(_measure,p1,p2,p25,p3,p4)
+```
+
+이미 `profile/eval` 이 있으면 `git -C $MAIN worktree add "$R\lt-wt\eval" profile/eval` 로 붙인다. 프로파일 브랜치가 갱신되면 `git -C $EVAL merge <branch>` 로 가져온다.
+
+> 브랜치별 충실도를 직접 확인하고 싶으면(코드가 yaml 외에 갈라졌는지) `git diff --name-only profile/base profile/<branch>` 가 `profiles/<이름>.{yaml,md}` 두 파일만 나와야 정상이다.
+
+### 10.2 파이썬 환경 (2종)
+
+| 환경 | 대상 | 만드는 법 | 비고 |
+|---|---|---|---|
+| **E-full** | **P4** | 새로 만들지 않음. 기존 conda env `live-translator`(Python 3.11.15, torch 2.6.0+cu124) 그대로 | 기준선 환경. 수정 금지 |
+| **E-lite** | P3, P2.5, P2, P1 | 아래 | torch/transformers/sentence-transformers 없음 |
+
+```powershell
+# E-lite (conda python 3.11 을 베이스로 venv — 새 패키지는 이 venv 에만 들어간다)
+& "C:\Users\User\miniconda3\envs\live-translator\python.exe" -m venv "$ENVS\lite"
+& "$ENVS\lite\Scripts\python.exe" -m pip install --disable-pip-version-check -r "$EVAL\backend\requirements-lite.txt"
+# 평가 스크립트가 쓰는 추가 패키지 (E-lite 와 E-full 에 이미 있는 것은 설치 불필요)
+& "$ENVS\lite\Scripts\python.exe" -m pip install soundfile scipy jiwer sacrebleu matplotlib websockets psutil
+```
+
+E-lite 검증 결과(2026-10-11, 격리 venv): `ctranslate2 4.8.2`, `faster-whisper 1.2.1`, `onnxruntime 1.31.0`, `nvidia-cublas-cu12 12.9`, `nvidia-cudnn-cu12 9.27` 설치 후 tiny 모델 `int8_float16` GPU 추론 통과(`add_nvidia_wheel_dll_dirs()` 경유), `torch` 미로드. HF 캐시 symlink 경고(`Developer Mode` 안내)는 무시해도 된다.
+
+설치 후 확인:
+
+```powershell
+$env:PYTHONUTF8 = "1"
+& "$ENVS\lite\Scripts\python.exe" -c "import sys, backend.config as c; import backend.main; print('torch' in sys.modules)"   # cwd=$EVAL, 환경변수 LT_PROFILE=p3 로도 한 번 → False
+```
+
+### 10.3 데이터·모델·바이너리 연결 (복사 없이 NTFS 정션)
+
+`backend/models/`, `data/wav/`, `data/json/`, `data/sessions/`, `llama-server/` 는 `.gitignore` 대상이라 worktree 에 없다. `$MAIN` 의 것을 정션으로 연결한다(원본은 읽기만 한다; 새 모델은 `$MAIN\backend\models` 에 받는다).
+
+```powershell
+foreach ($p in "backend\models","data\wav","data\json","data\sessions","llama-server") {
+  New-Item -ItemType Junction -Path "$EVAL\$p" -Target "$MAIN\$p" | Out-Null
+}
+```
+
+새 바이너리 폴더(`whisper-server`, `llama-server-vulkan`, `whisper-server-vulkan`)는 `$R\lt-shared\bin\<이름>` 에 풀고 같은 방식으로 `$EVAL\<이름>` 에 정션을 건다. 존재 확인:
+
+```powershell
+Test-Path "$EVAL\backend\models\google_gemma-3-12b-it-Q4_K_M.gguf"      # True
+(Get-ChildItem "$EVAL\data\wav" -Recurse -Filter *.wav).Count            # 150
+Test-Path "$EVAL\llama-server\llama-server.exe"                          # True (CUDA 12 빌드 b10453, llama-bench.exe 포함)
+```
+
+### 10.4 프로파일별로 필요한 것 (브랜치 → 환경·바이너리·모델)
+
+크기는 대략치이며 다운로드 전 실제 크기를 확인한다. "현재"는 개발기에 이미 있다는 뜻.
+
+| 브랜치 / LT_PROFILE | 파이썬 | STT | 번역 | 필요 바이너리 | 필요 모델 파일 |
+|---|---|---|---|---|---|
+| `profile/p4-16gb` / `p4` | E-full | Qwen3-ASR 1.7B (HF 자동, 첫 실행 시 다운로드; 캐시에 이미 있음) | llama-server(CUDA) | 현재 | 현재: `google_gemma-3-12b-it-Q4_K_M.gguf` (7.3GB) |
+| `profile/p3-10gb` / `p3` | E-lite | faster-whisper `large-v3-turbo` (HF 자동, 약 1.6GB) | llama-server(CUDA) | 현재 | 현재 12B GGUF |
+| `profile/p2.5-8gb` / `p25` | E-lite | 같음 | llama-server(CUDA), `-ngl 34` | 현재 | 현재 12B GGUF |
+| `profile/p2-4gb` / `p2` | E-lite | **whisper.cpp** `whisper-server` | llama-server(CUDA) + gemma-3-4b | **신규**: `whisper-server`(CUDA 12 또는 CPU 빌드) | **신규**: `ggml-large-v3-turbo-q5_0.bin`(≈0.6GB, HF `ggerganov/whisper.cpp`), `google_gemma-3-4b-it-Q4_K_M.gguf`(≈2.5GB, HF `bartowski/google_gemma-3-4b-it-GGUF`) |
+| `profile/p1-igpu` / `p1` | E-lite | **whisper.cpp** (Vulkan) | llama-server **Vulkan** + gemma-3-4b | **신규**: `whisper-server-vulkan`, `llama-server-vulkan` | P2 와 같은 2개 파일 |
+
+- whisper.cpp·llama.cpp 바이너리는 각 프로젝트의 GitHub Releases 의 Windows 빌드를 우선 확인하고(llama.cpp 는 `win-vulkan-x64` 등 제공), Vulkan 사전 빌드가 없으면 소스 빌드(`cmake -DGGML_VULKAN=1`; Vulkan SDK + VS Build Tools 필요). **미확인**: 어떤 사전 빌드가 있는지.
+- 이 기기에서 P2/P1 의 Vulkan·CUDA 빌드는 **RTX 4080 위에서** 돈다(§8.4). 어느 장치에서 실행됐는지 `manifest.json` 의 `device` 에 기록한다(llama.cpp: `llama-server --list-devices`). 속도는 DEV 값으로만 해석한다.
+- P2 의 Pascal(sm_61) 호환은 이 기기로 검증할 수 없다 — 평가 결과의 `미검증` 항목으로 남긴다.
+
+## 11. 구동 방법 (프로파일 공통 절차, 수동 기동)
+
+`$P` = 프로파일 이름(`p4|p3|p25|p2|p1`), `$PY` = P4 면 `C:\Users\User\miniconda3\envs\live-translator\python.exe`, 그 외면 `$ENVS\lite\Scripts\python.exe`. 모두 `$EVAL` 에서 실행. **지연 실측(L3)에는 `_measure` 오버레이를 켠다**(타임아웃 폴백 해제, 아니면 켜지 않고 품질만 본다).
+
+```powershell
+Set-Location $EVAL
+$env:PYTHONUTF8 = "1"
+$env:LT_PROFILE = $P                     # 예: "p3"
+$env:LT_PROFILE_OVERLAYS = "_measure"    # L3 때만. L1/L2 에서는 비움
+nvidia-smi --query-gpu=memory.used --format=csv,noheader   # 기동 전 기준 VRAM 기록 (~900MiB)
+
+# 1) whisper-server (프로파일에 whisper_server 섹션이 있을 때만: p2, p1)
+$w = & $PY -m backend.profile launch-args whisper $P 2>$null | ConvertFrom-Json
+if ($LASTEXITCODE -eq 0) {
+  Start-Process $w.exe -ArgumentList (@("-m", $w.model, "--port", $w.port) + $w.args) -WorkingDirectory $EVAL -WindowStyle Hidden `
+    -RedirectStandardOutput "$EVAL\whisper_server.log" -RedirectStandardError "$EVAL\whisper_server.err.log"
+}
+
+# 2) llama-server (번역)
+$l = & $PY -m backend.profile launch-args llama $P | ConvertFrom-Json
+Start-Process $l.exe -ArgumentList (@("-m", $l.model, "--port", $l.port) + $l.args) -WorkingDirectory $EVAL -WindowStyle Hidden `
+  -RedirectStandardOutput "$EVAL\llama_server.log" -RedirectStandardError "$EVAL\llama_server.err.log"
+# 준비 대기: 200 이 올 때까지  (Invoke-WebRequest http://127.0.0.1:$($l.port)/health)
+
+# 3) 백엔드
+Start-Process $PY -ArgumentList "-m","uvicorn","backend.main:app","--port","8000" -WorkingDirectory $EVAL -WindowStyle Hidden `
+  -RedirectStandardOutput "$EVAL\backend_run.log" -RedirectStandardError "$EVAL\backend_run.err.log"
+```
+
+**기동 성공 판정 — `backend_run.err.log`(uvicorn/로거는 stderr) 에서 다음을 모두 확인한다**(과거 파이프라인 변경 후 이 로그를 보지 않아 놓친 사례가 있다):
+1. `Profile '<P>' applied (N overrides)` (+ 오버레이 사용 시 overlays 표시)
+2. `STT model ready (engine=<STT_ENGINE>)`
+3. `Translation engine ready` 와 `verify_contract` 경고 없음(GBNF `grammar` 지원 확인)
+4. 에러·`Traceback` 없음. VAD/게이트 백엔드가 onnx 인 프로파일은 `Hallucination gate ready (…backend=onnx…)`.
+
+**종료**: 세 프로세스를 이름으로 정지하고(`Stop-Process -Name llama-server,whisper-server,uvicorn,python -Force` 는 다른 python 을 죽일 수 있으므로 **이 worktree 에서 띄운 PID 만** — `Start-Process -PassThru` 로 PID 를 변수에 담아 `Stop-Process -Id`), `nvidia-smi` 로 VRAM 반환을 확인한다.
+
+**P4 동등성 스모크**: `LT_PROFILE=p4` 와 미설정에서 기동 로그·응답이 같아야 한다(config 상수 덤프 동일은 이미 확인됨, §9.2).
+
+## 12. 평가 (프로파일 공통 — 정책은 §8, 이 절은 실행 절차)
+
+정책(기준선 고정, 비열등성, 개발기 효력 규칙, 판정표)은 §8 이 우선이다. 모든 프로파일(P4 포함)을 **같은 절차·같은 입력·같은 도구 버전**으로 돈다. 한 번의 평가 세션 = 한 프로파일 1회 전체 사이클.
+
+### 12.1 순서 (프로파일마다 반복)
+
+| 단계 | 내용 | 도구 | 산출 |
+|---|---|---|---|
+| E0 | 기동 + 판정(§11), `manifest.json` 초안 작성 | — | `manifest.json` |
+| E1 | **L1c 동등성(1회, base 기준)** — 프로파일과 무관, 이미 통과(§9.2). 새 환경에서 회귀 확인용으로만 재실행 | `scripts/verify_vad_parity.py`, `scripts/verify_gate_parity.py`, `scripts/verify_whisper_cpp_engine.py` | 콘솔 PASS |
+| E2 | **L1 STT 품질** — 프로파일 파이프라인 통과 150클립 | `run_pipeline.py --engine profile` (T1, **신규**) → `score_quantitative.py` | `out/<P>/pipeline_transcripts.jsonl`, `quant_summary.json` |
+| E3 | **L1 번역 품질** — llama-server 가 프로파일 모델로 떠 있는 상태에서 120클립 | `research/topic/20260826_translation_model_survey/src/translate_llm.py --label <P>` → `score_chrf.py --method <P>` | `out/<P>/…`, chrF++ |
+| E4 | **L2 자원** — 기동 직후/E2·E3 수행 중 VRAM·RAM 피크, `llama-bench -ngl` 스윕 | T2 (**신규**), `llama-server\llama-bench.exe` | `l2.json` |
+| E5 | **L3 종단 지연** — `_measure` 오버레이로 재기동 후 11분+ 실시간 재생 | T3 (**신규**) | `l3_events.jsonl`, `l3_summary.json` |
+| E6 | **L4** — 사용자 동참 필요(Chrome 확장으로 일본어 라이브 15분). 사용자가 없으면 `pending` 으로 표기하고 넘어간다 | `extension/` (unpacked) | 체크리스트 메모 |
+| E7 | 비교·판정 — 기준선(P4) 대비 페어드 부트스트랩 | T4 (**신규**) | `compare.json`, 판정표(§8.6) 갱신 |
+| E8 | 5-섹션 리포트 작성, 커밋·푸시 | — | `report/` |
+
+실행 순서: **P4 → P3 → P2.5 → P2 → P1** (기준선이 있어야 δ 와 비교가 가능). P4 의 E2·E3 결과가 `baseline-2026-10`. 이 기준선은 **재측정** 값이며 과거 서베이 수치를 쓰지 않는다(§8.2). 번역 L1 에서 grammar 사용 여부(기본 GBNF, 서베이는 일부 `--no-grammar`)는 **전 프로파일이 같은 설정**이어야 하며 manifest 에 기록한다.
+
+### 12.2 입력·고정 조건
+
+- STT: `data/wav` 150쌍(5카테고리×30, 총 약 11.3분), 로더·정규화는 `research/topic/20260826_stt_model_survey_gpu_full/src/common.py` 의 `load_dataset`/`normalize_ja`. 번역: `data/eval_set_2026-08-18.jsonl` 120클립(`ja_ref`→번역 vs `ko_ref`, STT 오류 배제).
+- 파이프라인 설정: 프로파일 yaml 만 다르고 그 외 `backend/config.py` 는 그대로. 한 비교 안에서 `PARTIAL_UPDATE_INTERVAL_S` 등을 임의로 바꾸지 않는다.
+- 측정 중 **다른 GPU 작업 금지**, 전원 모드 고성능, 순차 실행. 반복 측정은 3회 중앙값(워밍업 1회 제외).
+- EVAL.md §6 공정성: 각 번들은 문서화된 추론 경로·프로덕션 디코딩 파라미터로 돈다(예: whisper.cpp 는 `-bs 5` 서버 + 요청 필드). 후보가 나쁘게 나오면 결론 전에 셋업 편향부터 점검.
+
+### 12.3 아직 없는 도구 (평가 전에 `profile/eval` 에 먼저 구현·커밋)
+
+| ID | 파일 | 사양 |
+|---|---|---|
+| **T1** | `research/topic/20260827_vad_stt_survey/src/run_pipeline.py` 수정 | `--engine profile` 추가: `build_engine()` 이 `backend/main.py` startup 과 **같은 분기**(`config.STT_ENGINE` 로 qwen3-asr / faster-whisper / whisper-cpp)로 엔진을 만든다. `LT_PROFILE` 로 이미 적용된 config 를 그대로 사용. 출력 경로는 `out/profile-<P>/pipeline_transcripts.jsonl`. 기존 `--engine` 값은 그대로 동작해야 한다(회귀 금지). whisper-cpp 는 whisper-server 가 떠 있어야 한다 |
+| **T2** | `scripts/hwprof/vram_ram_sampler.py` | 0.5초 간격으로 `nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits`(**GPU 전체 사용량** — Windows WDDM 에서는 프로세스별 사용량이 N/A 로 나오는 경우가 많아 기준 차감 방식 사용) 와 `psutil` 로 대상 프로세스 트리 RSS 를 기록. 인자: `--baseline-s 10`(시작 전 유휴 평균), `--pids a,b,c`, `--out`. 출력 JSON: `baseline_mib, peak_mib, peak_delta_mib, ram_peak_mib, samples`. `peak_delta_mib` 가 프로파일의 VRAM 예산(`vram_budget_gb`) 판정에 쓰인다. 서버 로그의 `llama_model_load`/버퍼 크기 줄을 교차 확인용으로 함께 저장 |
+| **T3** | `scripts/hwprof/replay_latency.py` | 백엔드 WebSocket(`ws://127.0.0.1:8000/ws/audio`)에 **실제 시간 속도**로 오디오를 재생하는 클라이언트(`websockets`). ① 텍스트 `{"type":"start_session", ...}` 전송 ② 150클립을 `data/wav` 순서대로 16kHz mono PCM16 으로 바꿔 **0.3초(4800샘플=9600바이트) 바이너리 프레임**으로 벽시계 속도로 전송, 클립 사이에 무음 1.0초(VAD_SILENCE_MS=600 보다 길게) ③ 모든 수신 이벤트(`partial`/`final`, `segment_id`, `text`, `translation`)에 수신 시각 기록 ④ 마지막에 `{"type":"stop_session"}` 후 백엔드가 드레인할 때까지 수신(타임아웃 길게). 클립별 스트림 시각(시작/끝)을 기록해 `final` 을 클립에 매칭(`segment_id` 순서 + `normalize_ja` 편집거리로 `ja_ref` 와 정렬, 매칭 실패는 따로 집계). 출력: `l3_events.jsonl`(이벤트 원본+수신시각), `l3_summary.json`: `d_final = t_recv(final) − t_clip_end`(final 이벤트에 일본어와 한국어가 함께 실리므로 한 값) 의 p50/p95/max, 첫 partial 지연, **드리프트 기울기**(클립 종료 시각 대비 `d_final` 선형회귀 기울기, 초/분), 미수신 final 수(0이어야 함), 총 소요 시간. 클립 반복 없이 1회(≈11.3분+간격) |
+| **T4** | `scripts/hwprof/compare_profiles.py` | 기준선(P4)과 후보의 `quant_per_segment.jsonl` 을 seg_id 로 정렬해 CER·chrF++ 등의 **페어드 부트스트랩(500회, 95% CI)** 차이를 계산, §8.3 L1 합격 기준(δ) 적용. δ 는 P4 재측정 CI 반폭을 보고 사람이 정한 값을 `--delta-cer`, `--delta-chrf` 로 받는다. 출력 `compare.json` |
+| **T5(선택)** | `scripts/hwprof/make_manifest.py` | `manifest.json` 자동 생성(아래 스키마) |
+
+### 12.4 `manifest.json` 스키마 (모든 결과 폴더 필수)
+
+```json
+{
+  "profile": "p3", "profile_yaml_sha256": "...", "overlays": ["_measure"],
+  "baseline_version": "baseline-2026-10", "harness_commit": "<git rev-parse HEAD of $EVAL>",
+  "date": "2026-10-xx", "measured_on": "DEV(RTX 4080 SUPER, Windows 11)", "device": "CUDA0 ...",
+  "python_env": "E-lite", "packages": {"ctranslate2": "...", "onnxruntime": "...", "faster-whisper": "..."},
+  "binaries": {"llama-server": "version/build", "whisper-server": "version/build or null"},
+  "models": {"stt": "name+quant+sha256", "translation": "gguf filename+sha256"},
+  "decode": {"stt_beam_fast": 1, "stt_beam_final": 5, "llama_args": ["..."], "grammar": true},
+  "dataset": {"stt": "data/wav 150", "mt": "eval_set_2026-08-18.jsonl sha256"},
+  "unverified": ["Pascal sm_61 build", "..."]
+}
+```
+
+### 12.5 결과 저장·보고·푸시
+
+- 위치: `research/topic/<YYYYMMDD>_hw_profile_eval_<P>/` (5-섹션 리포트 형식, `README.md`+`report/`+`out/`+`src/` 규칙은 기존 토픽 따름). 스크립트는 기존 토픽 것을 **복제하지 말고** 경로로 호출. 동일 폴더를 덮어쓰지 말고 재실행은 날짜를 바꿔 새 폴더.
+- 요약 허브: `docs/eval/HW_PROFILES_RESULTS.md` — §8.6 표(프로파일×L1~L4, `측정환경` 열: `DEV(4080 SUPER)`/`추정(미실측)`)를 세션이 끝날 때마다 갱신, 갱신일·기준선 버전 기재.
+- 판정 규칙(§8.6): L1 불합격 또는 VRAM 예산 초과 = 탈락. 개발기에서도 드리프트 > 0 = "실시간 지속 불가". 개발기 통과는 "개발기 기준 통과 / 실기 미검증"으로만 표기. **지연 기준은 이 표를 보고 사용자가 정한다 — 세션이 임의로 합격선을 만들지 않는다.**
+- 푸시: 결과·도구는 `profile/eval` 에 커밋·푸시(`git -C $EVAL push -u origin profile/eval`). 프로파일 번들 yaml 을 평가 결과로 수정할 때는 해당 `profile/p*` 브랜치에 먼저 커밋하고 `profile/eval` 로 병합. `main` 에는 병합하지 않는다.
+- 세션 인계: 끝낼 때 `docs/planning/HARDWARE_PROFILES.md` §9.4 의 체크리스트를 갱신하고, 다음 세션이 이어갈 지점(어느 프로파일의 어느 단계까지 했는지)을 `docs/log/HANDOFF.md` 에 남긴다.
+
+### 12.6 알려진 함정
+
+- 한국어 Windows 콘솔(cp949): 일본어 출력이 깨지거나 pip 가 UTF-8 파일을 못 읽는다 → `PYTHONUTF8=1`, 요구사항 파일은 ASCII.
+- `*.log` 는 `.gitignore` 대상(서버 로그는 커밋되지 않음). 필요한 로그 발췌는 리포트에 인용.
+- HF 캐시 symlink 경고는 무시 가능. HF 비인증 경고도 동일.
+- Qwen3-ASR(P4)은 확률 기반 환각 필터가 inert, faster-whisper(P3·P2.5)는 활성 — 환각 건수를 L1 에서 별도로 비교(§9.3-7).
+- whisper-server 요청별 `beam_size` 지원·`verbose_json` 신뢰도 필드 지원은 미확인(§9.3-1,2). P2·P1 첫 기동 시 가짜 서버가 아닌 실제 서버로 `scripts/verify_whisper_cpp_engine.py` 와 같은 항목을 수동 확인하고 결과를 리포트에 적는다.
 
 ## 출처
 

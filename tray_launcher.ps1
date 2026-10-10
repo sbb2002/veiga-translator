@@ -46,8 +46,29 @@ foreach ($port in 8080, 8000) {
 # (partial translation is deprecated, finals are awaited sequentially), so the
 # default 4 parallel slots just reserve 4x the KV cache. One slot keeps VRAM
 # headroom for the STT engine sharing the GPU.
+# Hardware profile (profiles/README.md): when $env:LT_PROFILE is set, the
+# llama-server exe / model / port / args come from that profile. Unset = the
+# defaults below, which are the same command line as before profiles existed.
+$llamaPort = "8080"
+$llamaArgs = @("-ngl", "999", "-c", "8192", "-np", "1")
+if ($env:LT_PROFILE) {
+    $pythonExe = Join-Path (Split-Path -Parent (Split-Path -Parent $backendExe)) "python.exe"
+    Push-Location $root
+    try {
+        $launchJson = & $pythonExe -m backend.profile launch-args llama $env:LT_PROFILE
+        if ($LASTEXITCODE -ne 0) { throw "profile '$env:LT_PROFILE': launch-args llama failed" }
+    } finally {
+        Pop-Location
+    }
+    $launch = (@($launchJson) -join "") | ConvertFrom-Json
+    if ([System.IO.Path]::IsPathRooted($launch.exe)) { $llamaExe = $launch.exe } else { $llamaExe = Join-Path $root $launch.exe }
+    if ([System.IO.Path]::IsPathRooted($launch.model)) { $modelPath = $launch.model } else { $modelPath = Join-Path $root $launch.model }
+    $llamaPort = "$($launch.port)"
+    $llamaArgs = @($launch.args)
+}
+
 $llamaProc = Start-Process -FilePath $llamaExe `
-    -ArgumentList "-m", "`"$modelPath`"", "--port", "8080", "-ngl", "999", "-c", "8192", "-np", "1" `
+    -ArgumentList (@("-m", "`"$modelPath`"", "--port", $llamaPort) + $llamaArgs) `
     -WorkingDirectory $root -WindowStyle Hidden -PassThru `
     -RedirectStandardOutput $llamaLog -RedirectStandardError $llamaErrLog
 

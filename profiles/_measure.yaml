@@ -1,0 +1,11 @@
+# 측정용 오버레이: 지연(latency) 실측 시 타임아웃 폴백을 해제한다.
+# 사용: LT_PROFILE_OVERLAYS=_measure (단독 또는 다른 프로파일과 함께)
+# 근거: docs/planning/HARDWARE_PROFILES.md §8.3 L3 (종단 지연 재생).
+# 타임아웃이 짧으면 느린 호출이 폴백으로 잘려 실측값이 왜곡되므로 충분히 늘린다.
+name: _measure
+description: 지연 실측용 — 타임아웃 폴백 해제 (HARDWARE_PROFILES.md §8.3 L3)
+config:
+  LLAMA_SERVER_TIMEOUT_S: 600.0
+  LLAMA_FAST_TIMEOUT_S: 600.0
+  STT_FAST_TIMEOUT_S: 600.0
+  STT_FINAL_TIMEOUT_S: 600.0

@@ -20,3 +20,7 @@ pyyaml
 onnxruntime
 tokenizers
 huggingface_hub
+# CUDA runtime DLLs for CTranslate2 without torch (see backend/cuda_dll_path.py).
+# NVIDIA GPUs only; harmless to skip on CPU-only / Vulkan profiles.
+nvidia-cublas-cu12
+nvidia-cudnn-cu12

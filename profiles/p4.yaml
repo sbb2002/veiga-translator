@@ -1,0 +1,24 @@
+# P4 — RTX 4080+ (16GB+) 기준선. 현행 구성 그대로다.
+# 이 프로파일의 모든 값은 "초기 가설"이 아니라 "기준선 고정값"이다.
+# 프로파일을 켜도 기존 동작이 1비트도 달라지면 안 된다 (동등성 검증: 아래 주석 참고).
+#
+# 동등성 근거 (각 값 = 현재 기본값):
+#   STT_ENGINE: qwen3-asr                      == backend/config.py STT_ENGINE
+#   VAD_BACKEND: torch                         == backend/config.py VAD_BACKEND
+#   HALLUCINATION_GATE_BACKEND: sentence-transformers
+#                                              == backend/config.py HALLUCINATION_GATE_BACKEND
+#   llama_server.exe / model / port            == tray_launcher.ps1 $llamaExe / $modelPath / $llamaPort (8080)
+#   llama_server.args ["-ngl","999","-c","8192","-np","1"]
+#                                              == tray_launcher.ps1 $llamaArgs
+name: p4
+description: RTX 4080+ (16GB+) 기준선 — 현행 구성(Qwen3-ASR-1.7B + gemma-3-12b Q4_K_M)
+vram_budget_gb: 16
+config:
+  STT_ENGINE: qwen3-asr
+  VAD_BACKEND: torch
+  HALLUCINATION_GATE_BACKEND: sentence-transformers
+llama_server:
+  exe: llama-server/llama-server.exe
+  model: backend/models/google_gemma-3-12b-it-Q4_K_M.gguf
+  port: 8080
+  args: ["-ngl","999","-c","8192","-np","1"]

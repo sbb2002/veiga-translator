@@ -68,6 +68,20 @@ QWEN3_ASR_FAST_MAX_NEW_TOKENS = 128
 QWEN3_ASR_FINAL_MAX_NEW_TOKENS = 256
 QWEN3_ASR_FINAL_NUM_BEAMS = 5
 
+# whisper.cpp `whisper-server` engine (stt/whisper_cpp_engine.py) — selected by
+# STT_ENGINE = "whisper-cpp". HTTP base URL of the server handling the fast
+# (partial) pass. Each request also carries beam_size, but whether the server
+# honors a per-request beam is unverified: if it ignores it, the server's own
+# -bs flag applies. See whisper_cpp_engine.py's docstring.
+WHISPER_CPP_FAST_URL = "http://127.0.0.1:8081"
+# Base URL for the final pass. Empty string => reuse WHISPER_CPP_FAST_URL (one
+# server for both). Point it at a second server started with -bs 5 if the
+# fast and final passes need different beam sizes.
+WHISPER_CPP_FINAL_URL = ""
+# httpx transport-level timeout for each /inference request. Separate from the
+# STT_FAST_TIMEOUT_S / STT_FINAL_TIMEOUT_S wait_for() budgets in audio_session.py.
+WHISPER_CPP_TIMEOUT_S = 30.0
+
 # STT call timeouts (audio_session.py's asyncio.to_thread wraps the actual
 # transcribe() call in wait_for with these) — added after a live incident
 # where GPU contention with a busy llama-server (see STT_ENGINE's 2026-08-29

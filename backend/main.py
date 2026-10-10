@@ -30,8 +30,6 @@ from backend.glossary import Glossary
 # singing detection disabled — commented out, not deleted.
 # from backend.music_gate import MusicGate
 from backend.stt.base import STTEngine
-from backend.stt.faster_whisper_engine import FasterWhisperEngine
-from backend.stt.qwen3_asr_engine import Qwen3ASREngine
 from backend.translation.llama_server_engine import LlamaServerEngine
 from backend.vad import SileroVAD
 
@@ -199,10 +197,25 @@ async def startup() -> None:
     # Glossary.translation_hint()/latin_targets() whenever STT happens to
     # transcribe the term correctly on its own; it just no longer biases STT
     # itself toward "hearing" glossary terms.
+    # Engine modules are imported lazily here: qwen3_asr_engine pulls in torch/
+    # transformers, which a torch-free profile (whisper-cpp) must never load.
     if config.STT_ENGINE == "qwen3-asr":
+        from backend.stt.qwen3_asr_engine import Qwen3ASREngine
+
         _stt_engine = Qwen3ASREngine()
-    else:
+    elif config.STT_ENGINE == "faster-whisper":
+        from backend.stt.faster_whisper_engine import FasterWhisperEngine
+
         _stt_engine = FasterWhisperEngine()
+    elif config.STT_ENGINE == "whisper-cpp":
+        from backend.stt.whisper_cpp_engine import WhisperCppEngine
+
+        _stt_engine = WhisperCppEngine()
+    else:
+        raise ValueError(
+            f"Unknown config.STT_ENGINE={config.STT_ENGINE!r} "
+            "(expected 'qwen3-asr', 'faster-whisper', or 'whisper-cpp')"
+        )
     _stt_engine.warmup()
     logger.info("STT model ready (engine=%s).", config.STT_ENGINE)
 

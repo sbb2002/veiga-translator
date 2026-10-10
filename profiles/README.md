@@ -27,8 +27,10 @@ python -m backend.profile launch-args llama <name> # 런처용 JSON 한 줄
 
 `$env:LT_PROFILE` 이 설정된 상태에서 `start.cmd` 로 실행하면 `tray_launcher.ps1` 이
 `launch-args llama` 의 JSON 으로 llama-server 의 exe / model / port / args 를 대체한다.
-미설정이면 기존 하드코딩 명령을 그대로 쓴다. `whisper_server` 섹션은 `launch-args whisper`
-로 조회할 수 있으며, 현재 런처는 llama-server 만 분기한다.
+미설정이면 기존 하드코딩 명령을 그대로 쓴다.
+`whisper_server` 섹션이 있으면 `launch-args whisper` 가 성공할 때만 whisper-server 를 llama-server 보다 먼저
+숨김 창으로 띄우고 `whisper_server.log` / `whisper_server.err.log` 로 리다이렉트한다 (섹션이 없으면 조용히 건너뜀).
+포트 정리와 싱글 인스턴스 가드는 프로파일의 llama/whisper 포트까지 포함하며, 트레이 종료와 `stop.cmd` 는 whisper-server 도 정지한다.
 
 ## 스키마
 

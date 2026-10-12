@@ -1,0 +1,17 @@
+{
+  "n_clips": 30,
+  "n_events": 74,
+  "n_finals": 50,
+  "n_finals_nonempty": 48,
+  "n_clips_with_matched_final": 27,
+  "n_unmatched_finals": 14,
+  "stream_s": 189.33287820004625,
+  "total_s": 422.3206643000012,
+  "drained_quiet": true,
+  "d_final_p50": 124.28577990003396,
+  "d_final_p95": 172.95727799001617,
+  "d_final_max": 174.12849170004483,
+  "drift_slope_s_per_min": 46.524676944420506,
+  "first_partial_p50": 3.4644617500016466,
+  "n_final_without_translation": 0
+}

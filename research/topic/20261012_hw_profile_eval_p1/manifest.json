@@ -1,0 +1,42 @@
+{
+  "profile": "p1",
+  "variants": ["p1 (LLM gemma-3-4b)", "p1nmt (NLLB-600M CT2 CPU int8)"],
+  "profile_yaml_sha256_prefix": {"p1": "a77bf84526392f3d", "p1nmt": "acb14925a03a8a4f"},
+  "overlays": ["_measure (L3 and T1 re-run)", "none (T1 prod-timeout run, kept as *-PRODTIMEOUTS dirs)"],
+  "baseline_version": "NOT re-measured: P4 numbers are from past surveys (A_turbo, A_qwen3, gemma-3-12b-it chrF++ 31.1)",
+  "harness_commit_base": "d77f9d3 (+ T1/T3/NLLB changes committed together with this manifest)",
+  "date": "2026-10-12",
+  "measured_on": "TARGET-CLASS laptop (real P1-class HW, not the 4080 dev box): AMD Ryzen 3 PRO 5450U (4C/8T), Radeon Graphics iGPU (Vulkan, 8.3GB shared), RAM 16GB x1 DIMM (single channel, DDR4-3200), Windows 11",
+  "device": "Vulkan0: AMD Radeon(TM) Graphics (AMD proprietary driver), uma=1, fp16=1, matrix cores none",
+  "python_env": "E-lite variant: venv lt-envs/lite from system Python 3.13.11, requirements-lite.txt minus nvidia-* wheels (+ sentencepiece, ctranslate2 4.8.2)",
+  "packages": {"ctranslate2": "4.8.2", "onnxruntime": "1.31.0", "faster-whisper": "1.2.1", "sentencepiece": "0.2.2"},
+  "binaries": {
+    "llama-server": "llama.cpp b11559 win-vulkan-x64 and win-cpu-x64 prebuilt",
+    "whisper-server": "whisper.cpp v1.9.5 built from source with Visual Studio 2022 Build Tools, -DGGML_VULKAN=1 (no Windows Vulkan prebuilt exists); the CPU comparison used release b5454 whisper-bin-x64"
+  },
+  "models": {
+    "stt": "ggml-large-v3-turbo-q5_0.bin sha256 394221709cd5ad1f...",
+    "translation_llm": "google_gemma-3-4b-it-Q4_K_M.gguf sha256 4996030242583a40...",
+    "translation_nmt": "JustFrederik/nllb-200-distilled-600M-ct2-int8 (model.bin sha256 ed1beaf75134de75...), OpenNMT/nllb-200-distilled-1.3B-ct2-int8"
+  },
+  "decode": {
+    "stt_beam_fast": 1,
+    "stt_beam_final": 5,
+    "whisper_server_args": ["-l ja", "-bs 5", "-t 4", "-ac 512 (NOT in p1.yaml; added during this eval)"],
+    "llama_args": ["-ngl 999", "-c 4096 (p1.yaml says 2048: truncated=1, invalid)", "-np 1", "-t 4"],
+    "nllb": {"beam_final": 4, "no_repeat_ngram_size": 3, "max_decoding_length": 128, "threads": 4},
+    "grammar": true
+  },
+  "dataset": {
+    "stt": "data/wav 150 clips (678s)",
+    "mt": "data/eval_set_2026-08-18.jsonl 120 clips sha256 0e7313f84f9d270f..."
+  },
+  "unverified": [
+    "Intel iGPU (this box is AMD Radeon)",
+    "dual-channel RAM (this box is single channel)",
+    "P4 baseline not re-measured; comparisons use past survey numbers",
+    "L3 covers 30 clips (189s) only, not the full 150; LLM L3 is only an 8-clip smoke",
+    "RAM peak, AC vs battery, thermal throttling, L4 (live Chrome extension)",
+    "paired L1 STT/MT deltas vs a re-measured P4 (delta margin not set)"
+  ]
+}

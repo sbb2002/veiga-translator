@@ -220,7 +220,12 @@ async def startup() -> None:
     logger.info("STT model ready (engine=%s).", config.STT_ENGINE)
 
     logger.info("Connecting to llama-server translation backend...")
-    _translation_engine = LlamaServerEngine()
+    if config.TRANSLATION_ENGINE == "nllb-ct2":
+        from backend.translation.nllb_ct2_engine import NllbCt2Engine
+
+        _translation_engine = NllbCt2Engine()
+    else:
+        _translation_engine = LlamaServerEngine()
     await _translation_engine.verify_contract()
     logger.info("Translation engine ready (assumes llama-server is already running).")
 

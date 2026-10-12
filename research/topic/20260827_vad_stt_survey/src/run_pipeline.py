@@ -287,6 +287,7 @@ async def process_clip(
             on_event=collector,
             vad=vad,
             glossary=None,
+            gpu_lock=asyncio.Lock(),  # AudioSession requires it since 806585b
         )
 
         # Chunk the audio and feed it.
@@ -335,6 +336,24 @@ def build_engine(name: str) -> Any:
     reazonspeech); the other two need the live-translator env. Run one engine
     per invocation in the matching env — see RUNBOOK §1.
     """
+    if name == "profile":
+        # Same branch as backend/main.py startup: engine comes from the
+        # config.STT_ENGINE that LT_PROFILE already applied on import.
+        from backend import config
+
+        if config.STT_ENGINE == "qwen3-asr":
+            from backend.stt.qwen3_asr_engine import Qwen3ASREngine
+
+            return Qwen3ASREngine()
+        elif config.STT_ENGINE == "faster-whisper":
+            from backend.stt.faster_whisper_engine import FasterWhisperEngine
+
+            return FasterWhisperEngine()
+        elif config.STT_ENGINE == "whisper-cpp":
+            from backend.stt.whisper_cpp_engine import WhisperCppEngine
+
+            return WhisperCppEngine()
+        raise ValueError(f"unknown config.STT_ENGINE: {config.STT_ENGINE!r}")
     if name == "qwen3-asr-1.7b":
         from backend.stt.qwen3_asr_engine import Qwen3ASREngine
 
@@ -466,7 +485,14 @@ async def run_pipeline(engine_name: str, limit: int | None, realtime: bool) -> N
 
     vad = SileroVAD()
 
-    out_dir = OUT_DIR / engine_name
+    out_name = engine_name
+    if engine_name == "profile":
+        import os
+
+        out_name = "profile-" + os.environ.get("LT_PROFILE", "default")
+        if os.environ.get("LT_RUN_TAG"):
+            out_name += "-" + os.environ["LT_RUN_TAG"]
+    out_dir = OUT_DIR / out_name
     out_dir.mkdir(parents=True, exist_ok=True)
     out_suffix = "_realtime" if realtime else ""
     out_file = out_dir / f"pipeline_transcripts{out_suffix}.jsonl"
@@ -602,7 +628,7 @@ async def async_main() -> None:
     parser.add_argument(
         "--engine",
         type=str,
-        choices=["qwen3-asr-1.7b", "turbo", "reazonspeech"],
+        choices=["qwen3-asr-1.7b", "turbo", "reazonspeech", "profile"],
         default=None,
         help="STT engine to use (reazonspeech needs the reazonspeech conda env)",
     )

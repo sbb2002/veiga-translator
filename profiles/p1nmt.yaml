@@ -1,0 +1,10 @@
+# P1 + NMT: same STT as p1 (whisper.cpp Vulkan), translation swapped from the
+# gemma-3-4b LLM to NLLB-200-distilled-600M (CTranslate2, CPU int8).
+# Experiment profile: L1 quality must be re-evaluated (survey: NLLB-3.3B chrF++ 14.6 < LLMs).
+name: p1nmt
+description: P1 STT (whisper.cpp Vulkan) + NLLB-600M CT2 CPU int8 translation, torch-free
+extends: [p1]
+vram_budget_gb: 0
+config:
+  TRANSLATION_ENGINE: nllb-ct2
+  NLLB_MODEL_DIR: backend/models/nllb-200-distilled-600M-ct2-int8

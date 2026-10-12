@@ -395,6 +395,17 @@ CONTEXT_CHECK_EVERY_N_FINALS = 4
 # couple of sentences.
 CONTEXT_SUMMARY_HISTORY_SIZE = 10
 
+# Translation engine selection. "llama-server" (default) or "nllb-ct2"
+# (backend/translation/nllb_ct2_engine.py, CPU int8, for slow-hardware profiles).
+TRANSLATION_ENGINE = "llama-server"
+NLLB_MODEL_DIR = "backend/models/nllb-200-distilled-600M-ct2-int8"
+NLLB_COMPUTE_TYPE = "int8"
+NLLB_THREADS = 4
+NLLB_BEAM_FAST = 1
+NLLB_BEAM_FINAL = 4
+NLLB_MAX_DECODING_LENGTH = 128
+NLLB_NO_REPEAT_NGRAM = 3
+
 # Hardware profile overlay (profiles/<name>.yaml, opt-in via LT_PROFILE).
 # No-op when LT_PROFILE is unset. Must stay the last statement in this file.
 from backend.profile import apply_profile  # noqa: E402
